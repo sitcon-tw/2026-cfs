@@ -1,9 +1,8 @@
 name: Deploy static content to Pages
 
 on:
-    #push:
-    #    branches: ["main"]
-    #    paths: ["frontend/**"]
+    push:
+       branches: ["main"]
     workflow_dispatch:
 
 permissions:
@@ -34,20 +33,19 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: 22
-                  cache: "pnpm"
 
             - name: Install frontend dependencies
-              run: pnpm install --filter frontend
+              run: pnpm install --frozen-lockfile
 
             - name: Build frontend
-              run: pnpm --filter frontend build
+              run: pnpm build
 
             - name: Setup Pages
               uses: actions/configure-pages@v5
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v3
               with:
-                  path: "frontend/dist"
+                  path: "dist"
             - name: Deploy to GitHub Pages
               id: deployment
               uses: actions/deploy-pages@v4
