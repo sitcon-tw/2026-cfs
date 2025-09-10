@@ -1,5 +1,5 @@
 {
-	"printWidth": 700,
+	"printWidth": 200,
 	"tabWidth": 4,
 	"useTabs": true,
 	"semi": true,
@@ -10,7 +10,7 @@
 	"requirePragma": false,
 	"insertPragma": false,
 	"proseWrap": "never",
-	"plugins": ["prettier-plugin-astro", "prettier-plugin-organize-imports"],
+	"plugins": ["prettier-plugin-astro"],
 	"overrides": [
 		{
 			"files": "*.astro",

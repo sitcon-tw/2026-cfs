@@ -1,0 +1,24 @@
+{
+	"nav": {
+		"title": "SITCON 2026 贊助徵求書",
+		"data": "受眾數據",
+		"info": "活動資訊",
+		"plan": "贊助方案",
+		"langChange": "English Version",
+		"contact": "聯絡我們",
+		"export": "匯出 PDF"
+	},
+	"hero": {
+		"title": "支持開源",
+        "title2":"支持下一代的電資未來",
+		"subtitle": "學生計算機年會",
+		"subtitle2": "贊助徵求書"
+	},
+	"intro": {
+		"sentence1": "SITCON 是由學生組成、投身資訊教育與推廣開源精神的社群。",
+		"sentence2": "也`是一個由學生主辦的資訊研討會，給學生們一個發表交流技術的舞台。"
+	},
+	"about": {
+		"detail": "查看受眾與數據"
+	}
+}

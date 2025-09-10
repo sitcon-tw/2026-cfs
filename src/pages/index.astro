@@ -1,38 +1,91 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import Nav from "@components/Nav.astro";
-import Welcome from "@components/Welcome.astro";
-import Footer from "@components/Footer.astro";
-import * as i18n from "src/i18n";
-const lang = i18n.local(Astro.url.pathname);
-const t = i18n.t(lang, {
-	title: {
-		"zh-Hant": "Fastro - 毛哥EM的網站起始模板",
-		"zh-Hans": "Fastro - 毛哥EM的网站起始模板",
-		en: "Fastro - EM's Website Starter"
-	},
-	description: {
-		"zh-Hant": "毛哥EM的網站起始模板，使用Astro和Fastify構建。",
-		"zh-Hans": "毛哥EM的网站起始模板，使用Astro和Fastify构建。",
-		en: "Elvis Mao's Website starter template using Astro and Fastify."
-	}
-});
+import Nav from "@components/section/Nav.astro";
+import Hero from "@components/section/Hero.astro";
+import Intro from "@components/section/Intro.astro";
+import About from "@components/section/About.astro";
+import News from "@components/section/News.astro";
+import Sponsors from "@components/section/Sponsors.astro";
+import Cycle from "@components/section/Cycle.astro";
+import Time from "@components/section/Time.astro";
+import Items from "@components/section/Items.astro";
+import Plans from "@components/section/Plans.astro";
+import Addons from "@components/section/Addons.astro";
+import Form from "@components/section/Form.astro";
+import FAQ from "@components/section/FAQ.astro";
+import Footer from "@components/section/Footer.astro";
+const { lang = "zh-Hant" } = Astro.props;
+const t = await import(`../i18n/${lang}.json`).then(m => m.default);
+const sections = [Nav, Hero, Intro, About, News, Sponsors, Cycle, Time, Items, Plans, Addons, Form, FAQ, Footer];
 ---
 
-<Layout i18n={t.t} path="" title={t.title} description={t.description} theme="#333" lang={lang}>
-	<main>
-		<Nav />
-		<Welcome />
-		<Footer />
-	</main>
-</Layout>
+<html lang={lang}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<link rel="icon" type="image/svg+xml" href="/cfp/SITCON.svg" />
+		<title>{t.nav.title}</title>
+	</head>
+	<body class="emfont-LINESeedTW">
+		{
+			sections.map(Component => {
+				// 簡單來說就是複製貼上所有 HTML 上來，只是用 for 迴圈寫比較簡潔。
+				const key = Component.name.toLowerCase();
+				return <Component t={t[key]} />;
+			})
+		}
+		<script>
+			// 載入字型。如果有更新 HTML 文字，記得重新執行一次 emfont.init()
+			import "https://font.emtech.cc/emfont.js";
 
-<style>
-	main {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
-		min-height: 100svh;
-		padding: 2rem;
-	}
-</style>
+			emfont.init();
+
+			const isElementInViewport = (el: Element): boolean => {
+				const rect = el.getBoundingClientRect();
+				return rect.bottom < 0 || rect.top > window.innerHeight;
+			};
+
+			const addClassToVisibleElements = () => {
+				var aosElements = document.querySelectorAll(".aos");
+				aosElements.forEach(aosElement => {
+					if (!isElementInViewport(aosElement)) aosElement.classList.add("appeared");
+					else aosElement.classList.remove("appeared");
+				});
+			};
+
+			document.addEventListener("scroll", addClassToVisibleElements);
+			addClassToVisibleElements();
+		</script>
+		<style is:global>
+			/* is: global 代表是全域的 */
+			/* 如果你直接寫 <style> 在 components 的話不用擔心，你的 CSS 只會作用在裡面 */
+
+			:root {
+				--black: #1d1d1f;
+				--white: #ffffff;
+				--gray: #6e6e73;
+				--container: #f5f5f7;
+				--gray-container: #e8e8ec;
+			}
+
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				color: var(--black);
+			}
+
+			.aos-fadeIn {
+				opacity: 0;
+				transition: opacity 0.3s ease-out;
+			}
+
+			.aos-fadeIn.appeared {
+				opacity: 1;
+			}
+		</style>
+	</body>
+</html>

@@ -1,0 +1,47 @@
+---
+const { t } = Astro.props;
+---
+
+<section id="hero">
+	<div class="aos aos-fadeIn">
+		<img src="/cfs/SITCON.svg" alt="" />
+		<h2>{t.title}<br />{t.title2}</h2>
+		<p>{t.subtitle}<br />{t.subtitle2}</p>
+	</div>
+</section>
+
+<style>
+	section {
+		height: 100vh;
+		text-align: center;
+		padding: 1rem;
+		color: var(--black);
+	}
+
+	section,
+	div {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		gap: 1.75rem;
+	}
+
+	img {
+		display: block;
+	}
+
+	h2 {
+		font-size: 5rem;
+		line-height: 1.2;
+	}
+
+	p {
+		font-size: 1.5rem;
+		line-height: 1.33;
+	}
+
+	.aos-fadeIn {
+		transition: 1s opacity ease-in-out;
+	}
+</style>

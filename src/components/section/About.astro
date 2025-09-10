@@ -1,0 +1,9 @@
+---
+import DetailBtn from "@components/DetailBtn.astro";
+const { t } = Astro.props;
+---
+
+<section id="about">
+	<h2>About</h2>
+	<DetailBtn text={t.detail} />
+</section>

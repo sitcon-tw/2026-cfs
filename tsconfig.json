@@ -1,15 +1,17 @@
 {
-	"extends": "astro/tsconfigs/base",
-	"include": [".astro/types.d.ts", "**/*"],
-	"exclude": ["dist"],
+    "extends": "astro/tsconfigs/strict",
+    "include": [".astro/types.d.ts", "**/*"],
+    "exclude": ["dist"],
 	"compilerOptions": {
 		"checkJs": false,
-		"target": "es6",
+		"target": "es2022",
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
 		"baseUrl": ".",
 		"paths": {
 			"@components/*": ["src/components/*"],
-			"@layouts/*": ["src/layouts/*"],
-			"@assets/*": ["src/assets/*"]
+			"@assets/*": ["src/assets/*"],
+			"@i18n/*": ["src/i18n/*"]
 		}
 	}
 }
