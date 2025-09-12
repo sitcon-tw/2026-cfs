@@ -58,10 +58,10 @@ const categories = Object.keys(groupedItems);
 </section>
 
 <script>
-	import { isItemInterested } from "../../utils/local-storage.ts";
+	import { isItemInterested, addInterestedItem, removeInterestedItem, type InterestedItem } from "../../utils/local-storage.ts";
+	import itemsData from "../../data/items_data.json";
 
 	function updateHighlighting() {
-    console.log("test")
 		const addonCards = document.querySelectorAll(".addon-card");
 		addonCards.forEach(card => {
 			const itemIdStr = card.getAttribute("data-item-id");
@@ -76,9 +76,43 @@ const categories = Object.keys(groupedItems);
 		});
 	}
 
-	document.addEventListener("DOMContentLoaded", updateHighlighting);
+	function handleCardClick(event: Event) {
+		const card = event.currentTarget as HTMLElement;
+		const itemIdStr = card.getAttribute("data-item-id");
 
-	window.addEventListener("storage", updateHighlighting);
+		if (itemIdStr) {
+			const itemId = parseInt(itemIdStr);
+			const item = itemsData.find(i => i.id === itemId);
+
+			if (item) {
+				if (isItemInterested(itemId)) {
+					removeInterestedItem(itemId);
+				} else {
+					const addonItem: InterestedItem = {
+						id: item.id,
+						title: item.title,
+						category: item.category,
+						image: item.image,
+						deadline: item.deadline
+					};
+					addInterestedItem(addonItem);
+				}
+
+				updateHighlighting();
+			}
+		}
+	}
+
+	document.addEventListener("DOMContentLoaded", function () {
+		updateHighlighting();
+
+		const addonCards = document.querySelectorAll(".addon-card");
+		addonCards.forEach(card => {
+			card.addEventListener("click", handleCardClick);
+		});
+	});
+
+	window.addEventListener("itemsChange", updateHighlighting);
 
 	document.addEventListener("interested-items-changed", updateHighlighting);
 </script>

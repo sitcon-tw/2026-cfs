@@ -24,9 +24,9 @@ import plansData from "../../data/plans_data.json";
 			<div class="plans-content">
 				{
 					plansData.rows.map((row: any) => (
-						<div class="plan-row">
+						<div class="plan-row" data-row-id={row.id}>
 							{row.values.map((value: any, index: number) => (
-								<div class="plan-cell">
+								<div class={`plan-cell ${value.main !== "—" && value.main !== "" ? "clickable" : ""}`}>
 									{value.icon && <div class="cell-icon">{value.icon}</div>}
 									<div class={`cell-main ${/^([1-9]|10)\s*(份|張|次)$/.test(value.main) ? "cell-number" : "cell-text"}`}>{value.main}</div>{" "}
 									{value.sub && <div class="cell-sub">{value.sub}</div>}
@@ -39,6 +39,78 @@ import plansData from "../../data/plans_data.json";
 		</div>
 	</div>
 </section>
+
+<script>
+	import { isItemInterested, addInterestedItem, removeInterestedItem, type InterestedItem } from "../../utils/local-storage.ts";
+
+	function updateHighlighting() {
+		const planRows = document.querySelectorAll(".plan-row");
+		planRows.forEach(row => {
+			const rowIdStr = row.getAttribute("data-row-id");
+			if (rowIdStr) {
+				const rowId = parseInt(rowIdStr);
+				const isHighlighted = isItemInterested(rowId);
+				
+				const clickableCells = row.querySelectorAll(".plan-cell.clickable");
+				clickableCells.forEach(cell => {
+					if (isHighlighted) {
+						cell.classList.add("highlighted");
+					} else {
+						cell.classList.remove("highlighted");
+					}
+				});
+			}
+		});
+	}
+
+	function handleCellClick(event: Event) {
+		const cell = event.currentTarget as HTMLElement;
+		const row = cell.closest(".plan-row") as HTMLElement;
+		const rowIdStr = row?.getAttribute("data-row-id");
+
+		if (rowIdStr) {
+			const rowId = parseInt(rowIdStr);
+			
+			// Find the first non-empty, non-"—" value to use as the title
+			const values = Array.from(row.querySelectorAll(".plan-cell .cell-main"));
+			const titleElement = values.find(val => {
+				const text = val.textContent?.trim() || "";
+				return text !== "" && text !== "—";
+			});
+			const subElement = Array.from(row.querySelectorAll(".plan-cell .cell-sub")).find(sub => sub.textContent?.trim());
+			
+			const title = titleElement?.textContent?.trim() || "Plan Feature";
+			const subtitle = subElement?.textContent?.trim() || "";
+			
+			if (isItemInterested(rowId)) {
+				removeInterestedItem(rowId);
+			} else {
+				const planItem: InterestedItem = {
+					id: rowId,
+					title: title,
+					category: "plan",
+					image: "",
+					deadline: subtitle
+				};
+				addInterestedItem(planItem);
+			}
+
+			updateHighlighting();
+		}
+	}
+
+	document.addEventListener("DOMContentLoaded", function() {
+		updateHighlighting();
+
+		const clickableCells = document.querySelectorAll(".plan-cell.clickable");
+		clickableCells.forEach(cell => {
+			cell.addEventListener("click", handleCellClick);
+		});
+	});
+
+	window.addEventListener("itemsChange", updateHighlighting);
+	document.addEventListener("interested-items-changed", updateHighlighting);
+</script>
 
 <style>
 	section {
@@ -127,6 +199,29 @@ import plansData from "../../data/plans_data.json";
 		flex-direction: column;
 		align-items: center;
 		gap: 0.5rem;
+	}
+
+	.plan-cell.clickable {
+		cursor: pointer;
+		transition: all 0.2s ease;
+		border-radius: 0.5rem;
+		padding: 0.5rem;
+	}
+
+	.plan-cell.clickable:hover {
+		background-color: var(--container);
+		scale: 1.05;
+	}
+
+	.plan-cell.highlighted {
+		background-color: var(--items-green);
+		color: white;
+	}
+
+	.plan-cell.highlighted .cell-main,
+	.plan-cell.highlighted .cell-sub,
+	.plan-cell.highlighted .cell-icon {
+		color: white;
 	}
 
 	.cell-icon {
