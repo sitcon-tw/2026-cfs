@@ -35,12 +35,12 @@ const categories = Object.keys(groupedItems);
 	<div class="container">
 		<div class="addons-grid">
 			{
-				categories.map((category: string, categoryIndex: number) => (
+				categories.map((category: string) => (
 					<div class="category-section">
 						<h3 class="category-title">{category}</h3>
 						<div class="items-grid">
 							{groupedItems[category].map((item: Item, index: number) => (
-								<div class={`addon-card ${item.id === 2 && categoryIndex === 0 ? "highlighted" : ""}`}>
+								<div class="addon-card" data-item-id={item.id}>
 									<div class="card-icon">
 										<Flag />
 									</div>
@@ -56,6 +56,32 @@ const categories = Object.keys(groupedItems);
 		</div>
 	</div>
 </section>
+
+<script>
+	import { isItemInterested } from "../../utils/local-storage.ts";
+
+	function updateHighlighting() {
+    console.log("test")
+		const addonCards = document.querySelectorAll(".addon-card");
+		addonCards.forEach(card => {
+			const itemIdStr = card.getAttribute("data-item-id");
+			if (itemIdStr) {
+				const itemId = parseInt(itemIdStr);
+				if (isItemInterested(itemId)) {
+					card.classList.add("highlighted");
+				} else {
+					card.classList.remove("highlighted");
+				}
+			}
+		});
+	}
+
+	document.addEventListener("DOMContentLoaded", updateHighlighting);
+
+	window.addEventListener("storage", updateHighlighting);
+
+	document.addEventListener("interested-items-changed", updateHighlighting);
+</script>
 
 <style>
 	section {
@@ -114,7 +140,7 @@ const categories = Object.keys(groupedItems);
 	}
 
 	.addon-card {
-		background-color: #f5f5f5;
+		background-color: var(--container);
 		border-radius: 1rem;
 		padding: 0.8rem;
 		display: flex;
@@ -126,7 +152,7 @@ const categories = Object.keys(groupedItems);
 	}
 
 	.addon-card.highlighted {
-		background-color: #6fd195;
+		background-color: var(--items-green);
 		color: white;
 	}
 
