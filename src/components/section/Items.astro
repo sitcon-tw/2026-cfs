@@ -258,7 +258,8 @@ const config = shopConfig;
 
 			const removeButtons = listContainer.querySelectorAll(".remove-item");
 			removeButtons.forEach(button => {
-				button.addEventListener("click", function () {
+				button.addEventListener("click", function (e) {
+					e.stopPropagation();
 					const itemId = parseInt(button.getAttribute("data-item-id") || "0");
 					removeInterestedItem(itemId);
 					});
@@ -285,6 +286,8 @@ const config = shopConfig;
 
 			if (currentCount > previousInterestCount) {
 				setTimeout(() => openPopover(), 0);
+			} else if (interestPopover?.classList.contains("active")) {
+				setTimeout(() => positionPopover(), 0);
 			}
 
 			previousInterestCount = currentCount;
