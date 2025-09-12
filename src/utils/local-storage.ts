@@ -8,6 +8,15 @@ export interface InterestedItem {
 
 const INTEREST_ITEMS_KEY = 'interestItems';
 
+function dispatchItemsChangeEvent(): void {
+  if (typeof window === 'undefined') return;
+  
+  const event = new CustomEvent('itemsChange', {
+    detail: { items: getInterestedItems() }
+  });
+  window.dispatchEvent(event);
+}
+
 export function getInterestedItems(): InterestedItem[] {
   if (typeof window === 'undefined') return [];
 
@@ -30,6 +39,7 @@ export function addInterestedItem(item: InterestedItem): boolean {
     if (existingIndex === -1) {
       items.push(item);
       localStorage.setItem(INTEREST_ITEMS_KEY, JSON.stringify(items));
+      dispatchItemsChangeEvent();
       return true;
     }
     return false;
@@ -46,6 +56,7 @@ export function removeInterestedItem(itemId: number): boolean {
     const items = getInterestedItems();
     const filteredItems = items.filter(item => item.id !== itemId);
     localStorage.setItem(INTEREST_ITEMS_KEY, JSON.stringify(filteredItems));
+    dispatchItemsChangeEvent();
     return true;
   } catch (error) {
     console.error('Error removing interested item from localStorage:', error);
@@ -65,6 +76,7 @@ export function clearInterestedItems(): boolean {
 
   try {
     localStorage.removeItem(INTEREST_ITEMS_KEY);
+    dispatchItemsChangeEvent();
     return true;
   } catch (error) {
     console.error('Error clearing interested items from localStorage:', error);
