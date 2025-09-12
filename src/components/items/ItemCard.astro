@@ -1,0 +1,289 @@
+---
+const { t, card, shopConfig } = Astro.props;
+import { Plus, Check } from "@lucide/astro";
+---
+
+<div class="card" data-category={card.category} data-card-id={card.id}>
+	<div class="card-image">
+		<img src={card.image} alt={card.title} />
+		<div class="category-tag">{t.item_categories[card.category]}</div>
+	</div>
+	<div class="card-content">
+		<div class="title-row">
+			<h3>{t.item_titles[card.title]}</h3>
+			<button
+				type="button"
+				class="add-button"
+				data-item-id={card.id}
+				data-item-title={card.title}
+				data-item-category={card.category}
+				data-item-image={card.image}
+				data-item-deadline={card.deadline}
+			>
+				<span class="add-icon">
+					<Plus />
+				</span>
+				<span class="added-icon">
+					<Check />
+				</span>
+			</button>
+		</div>
+		<div class="countdown" data-deadline={card.deadline}>
+			<span class="remaining-time">
+				{t.remaining}
+				<span class="days">0</span>
+				{t.days}
+				<span class="hours">0</span>
+				{t.hours}
+				<span class="minutes">0</span>
+				{t.minutes}
+				<span class="seconds">0</span>
+				{t.seconds}
+			</span>
+			<span class="deadline">
+				（{new Date(card.deadline).toLocaleDateString("zh-TW")}
+				{t.deadline}）
+			</span>
+		</div>
+		<div class="progress-bar" data-start-time={shopConfig.startTime} data-deadline={card.deadline}>
+			<div class="progress-fill" style="width: 0%"></div>
+		</div>
+	</div>
+</div>
+
+<script is:inline>
+	(function () {
+		const scriptEl = document.currentScript;
+		const root = scriptEl ? scriptEl.previousElementSibling : null;
+		if (!root) return;
+
+		const addButton = root.querySelector(".add-button");
+		const progressBar = root.querySelector(".progress-bar");
+		if (!progressBar) return;
+
+		const id = Number(addButton?.getAttribute("data-item-id") || "0");
+		const title = addButton?.getAttribute("data-item-title") || "";
+		const category = addButton?.getAttribute("data-item-category") || "";
+		const image = addButton?.getAttribute("data-item-image") || "";
+		const progressDeadline = progressBar.getAttribute("data-deadline") || "";
+		const deadline = progressDeadline || addButton?.getAttribute("data-item-deadline") || "";
+		const startTime = progressBar.getAttribute("data-start-time") || "";
+
+		const KEY = "interestItems";
+
+		function getInterestedItems() {
+			try {
+				const items = localStorage.getItem(KEY);
+				return items ? JSON.parse(items) : [];
+			} catch {
+				return [];
+			}
+		}
+
+		function isItemInterested(itemId) {
+			return getInterestedItems().some(i => i.id === itemId);
+		}
+
+		function setItems(key, value) {
+			const oldValue = localStorage.getItem(key);
+			localStorage.setItem(key, value);
+			const event = new CustomEvent("itemsChange", { detail: { key, newValue: value, oldValue } });
+			window.dispatchEvent(event);
+		}
+
+		function addItem(item) {
+			const items = getInterestedItems();
+			if (!items.some(i => i.id === item.id)) {
+				items.push(item);
+				setItems(KEY, JSON.stringify(items));
+			}
+		}
+
+		function syncAddedClass() {
+			if (!addButton) return;
+			if (isItemInterested(id)) addButton.classList.add("added");
+			else addButton.classList.remove("added");
+		}
+
+		function updateCountdownAndProgress() {
+			const countdown = root.querySelector(".countdown");
+			if (!countdown) return;
+			const now = new Date();
+			const deadlineDate = new Date(deadline);
+			const timeDiff = deadlineDate.getTime() - now.getTime();
+
+			const daysSpan = countdown.querySelector(".days");
+			const hoursSpan = countdown.querySelector(".hours");
+			const minutesSpan = countdown.querySelector(".minutes");
+			const secondsSpan = countdown.querySelector(".seconds");
+
+			if (timeDiff <= 0) {
+				if (daysSpan) daysSpan.textContent = "0";
+				if (hoursSpan) hoursSpan.textContent = "0";
+				if (minutesSpan) minutesSpan.textContent = "0";
+				if (secondsSpan) secondsSpan.textContent = "0";
+			} else {
+				const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+				const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+				const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+				const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+				if (daysSpan) daysSpan.textContent = String(days);
+				if (hoursSpan) hoursSpan.textContent = String(hours);
+				if (minutesSpan) minutesSpan.textContent = String(minutes);
+				if (secondsSpan) secondsSpan.textContent = String(seconds);
+			}
+
+			const startDate = new Date(startTime);
+			const totalDuration = deadlineDate.getTime() - startDate.getTime();
+			const elapsed = now.getTime() - startDate.getTime();
+			let progress = 0;
+			if (totalDuration > 0) {
+				progress = Math.min(Math.max((elapsed / totalDuration) * 100, 0), 100);
+			}
+			const fill = progressBar.querySelector(".progress-fill");
+			if (fill) fill.style.width = `${progress}%`;
+		}
+
+		// Init
+		// Click handling is centralized in Items.astro via event delegation
+		syncAddedClass();
+		updateCountdownAndProgress();
+		setInterval(updateCountdownAndProgress, 1000);
+
+		// Items.astro listens to itemsChange and will trigger a full sync of buttons
+	})();
+</script>
+
+<style>
+	.card {
+		position: relative;
+		background-color: var(--white);
+		border-radius: 12px;
+		overflow: hidden;
+	}
+
+	.card-image {
+		position: relative;
+		width: 100%;
+		height: 200px;
+		overflow: hidden;
+	}
+
+	.card-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.category-tag {
+		position: absolute;
+		top: 1rem;
+		left: 1rem;
+		background-color: var(--items-brand-tag);
+		color: var(--black);
+		padding: 0.1rem 0.7rem;
+		border-radius: 20px;
+		font-size: 0.9rem;
+		font-weight: 500;
+	}
+
+	.card-content {
+		padding: 1.5rem;
+	}
+
+	.title-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1rem;
+	}
+
+	.card-content h3 {
+		color: var(--black);
+		font-size: 1.1rem;
+		margin: 0;
+		font-weight: 600;
+	}
+
+	.countdown {
+		margin-bottom: 1rem;
+	}
+
+	.remaining-time {
+		color: var(--black);
+		font-size: 0.9rem;
+		display: block;
+		margin-bottom: 0.5rem;
+		line-height: 1.4;
+	}
+
+	.deadline {
+		color: var(--black);
+		font-size: 0.8rem;
+		opacity: 0.8;
+	}
+
+	.progress-bar {
+		width: 100%;
+		height: 8px;
+		background-color: var(--items-progress-bg);
+		border-radius: 4px;
+		overflow: hidden;
+	}
+
+	.progress-fill {
+		height: 100%;
+		background-color: var(--items-progress);
+		transition: width 0.3s ease;
+	}
+
+	.add-button {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		background-color: var(--black);
+		color: var(--white);
+		border: none;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: transform 0.2s ease;
+	}
+
+	.add-button svg {
+		width: 20px;
+		height: 20px;
+	}
+
+	.add-icon,
+	.added-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		line-height: 1;
+	}
+
+	/* Icon toggle is driven by the button's `added` class */
+	.add-button .added-icon {
+		display: none;
+	}
+	.add-button.added .added-icon {
+		display: flex;
+	}
+	.add-button.added .add-icon {
+		display: none;
+	}
+
+	.add-button:hover {
+		transform: scale(1.1);
+	}
+
+	.add-button.added {
+		background-color: var(--items-progress);
+	}
+
+	.add-button.added:hover {
+		background-color: var(--items-progress);
+	}
+</style>

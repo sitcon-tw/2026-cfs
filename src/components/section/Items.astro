@@ -1,8 +1,9 @@
 ---
 const { t } = Astro.props;
-import { X, Plus, Check, Heart } from "@lucide/astro";
+import { X, Heart } from "@lucide/astro";
 import itemsData from "../../data/items_data.json";
 import shopConfig from "../../data/shop_config.json";
+import ItemCard from "@components/items/ItemCard.astro";
 ---
 
 <section id="items">
@@ -22,51 +23,7 @@ import shopConfig from "../../data/shop_config.json";
 
 		<div class="cards-container fade-active">
 			<div class="cards-grid">
-				{
-					itemsData.map((card: any) => (
-						<div class="card" data-category={card.category}>
-							<div class="card-image">
-								<img src={card.image} alt={card.title} />
-								<div class="category-tag">{t.item_categories[card.category]}</div>
-							</div>
-							<div class="card-content">
-								<div class="title-row">
-									<h3>{t.item_titles[card.title]}</h3>
-									<button
-										class="add-button"
-										data-item-id={card.id}
-										data-item-title={card.title}
-										data-item-category={card.category}
-										data-item-image={card.image}
-										data-item-deadline={card.deadline}
-									>
-										<span class="add-icon">
-											<Plus />
-										</span>
-										<span class="added-icon" style="display: none;">
-											<Check />
-										</span>
-									</button>
-								</div>
-								<div class="countdown" data-deadline={card.deadline}>
-									<span class="remaining-time">
-										{t.remaining} <span class="days">0</span>
-										{t.days} <span class="hours">0</span>
-										{t.hours} <span class="minutes">0</span>
-										{t.minutes} <span class="seconds">0</span>
-										{t.seconds}
-									</span>
-									<span class="deadline">
-										（{new Date(card.deadline).toLocaleDateString("zh-TW")} {t.deadline}）
-									</span>
-								</div>
-								<div class="progress-bar" data-start-time={shopConfig.startTime} data-deadline={card.deadline}>
-									<div class="progress-fill" style="width: 0%" />
-								</div>
-							</div>
-						</div>
-					))
-				}
+				{itemsData.map((card: any) => <ItemCard t={t} card={card} shopConfig={shopConfig} />)}
 			</div>
 			<div class="fade-overlay"></div>
 		</div>
@@ -104,14 +61,14 @@ import shopConfig from "../../data/shop_config.json";
 
 <script>
 	// Import local storage utilities
-	import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInterested, type InterestedItem } from "../../utils/local-storage.js";
+	import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInterested } from "../../utils/local-storage";
 
 	document.addEventListener("DOMContentLoaded", function () {
-		const expandButton = document.getElementById("expandButton") as HTMLButtonElement;
-		const cardsContainer = document.querySelector(".cards-container") as HTMLElement;
-		const showText = expandButton?.querySelector(".show-text") as HTMLElement;
-		const hideText = expandButton?.querySelector(".hide-text") as HTMLElement;
-		const arrow = expandButton?.querySelector(".arrow") as HTMLElement;
+		const expandButton = document.getElementById("expandButton");
+		const cardsContainer = document.querySelector(".cards-container");
+		const showText = expandButton ? expandButton.querySelector(".show-text") : null;
+		const hideText = expandButton ? expandButton.querySelector(".hide-text") : null;
+		const arrow = expandButton ? expandButton.querySelector(".arrow") : null;
 
 		if (!expandButton || !cardsContainer || !showText || !hideText || !arrow) return;
 
@@ -139,89 +96,20 @@ import shopConfig from "../../data/shop_config.json";
 			}
 		}
 
-
 		expandButton.addEventListener("click", function () {
 			isExpanded = !isExpanded;
 			applyExpandState();
 		});
 
-		// Countdown and progress functionality
-		function updateCountdownsAndProgress() {
-			const now = new Date();
-
-			// Update countdowns
-			const countdownElements = document.querySelectorAll(".countdown[data-deadline]");
-			countdownElements.forEach(element => {
-				const deadline = element.getAttribute("data-deadline");
-				if (!deadline) return;
-
-				const deadlineDate = new Date(deadline);
-				const timeDiff = deadlineDate.getTime() - now.getTime();
-
-				if (timeDiff <= 0) {
-					// Deadline passed
-					const daysSpan = element.querySelector(".days") as HTMLElement;
-					const hoursSpan = element.querySelector(".hours") as HTMLElement;
-					const minutesSpan = element.querySelector(".minutes") as HTMLElement;
-					const secondsSpan = element.querySelector(".seconds") as HTMLElement;
-
-					if (daysSpan) daysSpan.textContent = "0";
-					if (hoursSpan) hoursSpan.textContent = "0";
-					if (minutesSpan) minutesSpan.textContent = "0";
-					if (secondsSpan) secondsSpan.textContent = "0";
-				} else {
-					// Calculate remaining time
-					const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-					const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-					const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-					const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-
-					const daysSpan = element.querySelector(".days") as HTMLElement;
-					const hoursSpan = element.querySelector(".hours") as HTMLElement;
-					const minutesSpan = element.querySelector(".minutes") as HTMLElement;
-					const secondsSpan = element.querySelector(".seconds") as HTMLElement;
-
-					if (daysSpan) daysSpan.textContent = days.toString();
-					if (hoursSpan) hoursSpan.textContent = hours.toString();
-					if (minutesSpan) minutesSpan.textContent = minutes.toString();
-					if (secondsSpan) secondsSpan.textContent = seconds.toString();
-				}
-			});
-
-			// Update progress bars
-			const progressBars = document.querySelectorAll(".progress-bar[data-start-time][data-deadline]");
-			progressBars.forEach(progressBar => {
-				const startTime = progressBar.getAttribute("data-start-time");
-				const deadline = progressBar.getAttribute("data-deadline");
-				if (!startTime || !deadline) return;
-
-				const startDate = new Date(startTime);
-				const deadlineDate = new Date(deadline);
-				const totalDuration = deadlineDate.getTime() - startDate.getTime();
-				const elapsed = now.getTime() - startDate.getTime();
-
-				let progress = 0;
-				if (totalDuration > 0) {
-					progress = Math.min(Math.max((elapsed / totalDuration) * 100, 0), 100);
-				}
-
-				const progressFill = progressBar.querySelector(".progress-fill") as HTMLElement;
-				if (progressFill) {
-					progressFill.style.width = `${progress}%`;
-				}
-			});
-		}
-
-		updateCountdownsAndProgress();
-		setInterval(updateCountdownsAndProgress, 1000);
+		// Countdown/progress now handled within each ItemCard component
 
 		// Category filtering functionality
-		function filterCards(selectedCategory: string) {
+		function filterCards(selectedCategory) {
 			const cards = document.querySelectorAll(".card");
 			let visibleCount = 0;
 
 			cards.forEach(card => {
-				const cardElement = card as HTMLElement;
+				const cardElement = card;
 				const cardCategory = cardElement.getAttribute("data-category");
 
 				if (selectedCategory === "all" || cardCategory === selectedCategory) {
@@ -236,7 +124,7 @@ import shopConfig from "../../data/shop_config.json";
 			updateExpandButtonVisibility(visibleCount);
 		}
 
-		function getCardsPerRowThreshold(): number {
+		function getCardsPerRowThreshold() {
 			const width = window.innerWidth;
 			if (width <= 768) {
 				// Mobile: 1 column, show expand if more than 2 cards
@@ -249,7 +137,7 @@ import shopConfig from "../../data/shop_config.json";
 			}
 		}
 
-		function updateExpandButtonVisibility(visibleCount: number) {
+		function updateExpandButtonVisibility(visibleCount) {
 			const expandButton = document.getElementById("expandButton");
 			if (!expandButton) return;
 
@@ -272,7 +160,7 @@ import shopConfig from "../../data/shop_config.json";
 		const tabButtons = document.querySelectorAll(".tab");
 		tabButtons.forEach(button => {
 			button.addEventListener("click", function () {
-				const buttonElement = button as HTMLElement;
+				const buttonElement = button;
 
 				// Remove active class from all tabs
 				tabButtons.forEach(tab => tab.classList.remove("active"));
@@ -302,9 +190,42 @@ import shopConfig from "../../data/shop_config.json";
 		});
 
 		// Interest Items functionality
+
+		// Sync all add buttons' visual state with storage
+		function syncAllAddButtons() {
+			const items = getInterestedItems();
+			const ids = new Set(items.map(i => i.id));
+			document.querySelectorAll(".add-button").forEach(btn => {
+				const id = Number(btn.getAttribute("data-item-id") || "0");
+				if (ids.has(id)) btn.classList.add("added");
+				else btn.classList.remove("added");
+			});
+		}
+
+		// Delegate clicks for add/remove on item cards
+		document.addEventListener("click", function (e) {
+			const target = e.target;
+			if (!(target instanceof Element)) return;
+			const button = target.closest(".add-button");
+			if (!button) return;
+			e.preventDefault();
+			e.stopPropagation();
+			const id = Number(button.getAttribute("data-item-id") || "0");
+			const title = button.getAttribute("data-item-title") || "";
+			const category = button.getAttribute("data-item-category") || "";
+			const image = button.getAttribute("data-item-image") || "";
+			const deadline = button.getAttribute("data-item-deadline") || "";
+			if (isItemInterested(id)) {
+				removeInterestedItem(id);
+				button.classList.remove("added");
+			} else {
+				addInterestedItem({ id, title, category, image, deadline });
+				button.classList.add("added");
+			}
+		});
 		function updateInterestButton() {
 			const items = getInterestedItems();
-			const countElement = document.querySelector(".interest-count") as HTMLElement;
+			const countElement = document.querySelector(".interest-count");
 
 			if (countElement) {
 				if (items.length > 0) {
@@ -315,29 +236,7 @@ import shopConfig from "../../data/shop_config.json";
 			}
 		}
 
-		function updateAddButtons() {
-			const addButtons = document.querySelectorAll(".add-button");
-			addButtons.forEach(button => {
-				const buttonElement = button as HTMLElement;
-				const itemId = parseInt(buttonElement.getAttribute("data-item-id") || "0");
-				const isInterested = isItemInterested(itemId);
-
-				const addIcon = buttonElement.querySelector(".add-icon") as HTMLElement;
-				const addedIcon = buttonElement.querySelector(".added-icon") as HTMLElement;
-
-				if (addIcon && addedIcon) {
-					if (isInterested) {
-						addIcon.style.display = "none";
-						addedIcon.style.display = "inline";
-						buttonElement.classList.add("added");
-					} else {
-						addIcon.style.display = "inline";
-						addedIcon.style.display = "none";
-						buttonElement.classList.remove("added");
-					}
-				}
-			});
-		}
+		// Add-button state now handled within each ItemCard component
 
 		function renderInterestItemsList() {
 			const items = getInterestedItems();
@@ -354,7 +253,7 @@ import shopConfig from "../../data/shop_config.json";
 			listContainer.innerHTML = "";
 
 			// Get the remove icon template
-			const removeIconTemplate = document.getElementById("removeIconTemplate") as HTMLTemplateElement;
+			const removeIconTemplate = document.getElementById("removeIconTemplate");
 
 			items.forEach(item => {
 				const itemDiv = document.createElement("div");
@@ -388,42 +287,28 @@ import shopConfig from "../../data/shop_config.json";
 			const removeButtons = listContainer.querySelectorAll(".remove-item");
 			removeButtons.forEach(button => {
 				button.addEventListener("click", function () {
-					const itemId = parseInt((button as HTMLElement).getAttribute("data-item-id") || "0");
+					const itemId = parseInt(button.getAttribute("data-item-id") || "0");
 					removeInterestedItem(itemId);
-					updateInterestButton();
-					updateAddButtons();
-					renderInterestItemsList();
+					// itemsChange event from utils/items.ts will trigger listeners
 				});
 			});
 		}
 
-		// Add event listeners to add buttons
-		const addButtons = document.querySelectorAll(".add-button");
-		addButtons.forEach(button => {
-			button.addEventListener("click", function () {
-				const buttonElement = button as HTMLElement;
-				const itemId = parseInt(buttonElement.getAttribute("data-item-id") || "0");
-				const title = buttonElement.getAttribute("data-item-title") || "";
-				const category = buttonElement.getAttribute("data-item-category") || "";
-				const image = buttonElement.getAttribute("data-item-image") || "";
-				const deadline = buttonElement.getAttribute("data-item-deadline") || "";
-
-				if (isItemInterested(itemId)) {
-					removeInterestedItem(itemId);
-				} else {
-					const item: InterestedItem = {
-						id: itemId,
-						title,
-						category,
-						image,
-						deadline
-					};
-					addInterestedItem(item);
+		// Listen to centralized itemsChange events to update UI
+		window.addEventListener("itemsChange", function (e) {
+			updateInterestButton();
+			renderInterestItemsList();
+			// Open the popover if the interest list grew
+			try {
+				const detail = e && e.detail ? e.detail : e instanceof CustomEvent ? e.detail : null;
+				if (detail?.key === "interestItems") {
+					const oldLen = detail.oldValue ? JSON.parse(detail.oldValue).length : 0;
+					const newLen = detail.newValue ? JSON.parse(detail.newValue).length : 0;
+					if (newLen > oldLen) {
+						setTimeout(() => openPopover(), 0);
+					}
 				}
-
-				updateInterestButton();
-				updateAddButtons();
-			});
+			} catch {}
 		});
 
 		// Popover functionality
@@ -491,7 +376,7 @@ import shopConfig from "../../data/shop_config.json";
 
 		// Close popover when clicking outside
 		document.addEventListener("click", function (e) {
-			if (interestPopover?.classList.contains("active") && !interestPopover.contains(e.target as Node) && !interestButton?.contains(e.target as Node)) {
+			if (interestPopover?.classList.contains("active") && !interestPopover.contains(e.target) && !interestButton?.contains(e.target)) {
 				closePopover();
 			}
 		});
@@ -512,7 +397,7 @@ import shopConfig from "../../data/shop_config.json";
 
 		// Initialize
 		updateInterestButton();
-		updateAddButtons();
+		syncAllAddButtons();
 
 		// Interest button visibility management
 		const targetSections = ["items", "plans", "addons", "form"];
@@ -544,7 +429,7 @@ import shopConfig from "../../data/shop_config.json";
 				currentSection = foundSection;
 
 				interestButtons.forEach(button => {
-					const buttonElement = button as HTMLElement;
+					const buttonElement = button;
 					if (foundSection) {
 						buttonElement.style.display = "flex";
 					} else {
@@ -555,7 +440,7 @@ import shopConfig from "../../data/shop_config.json";
 		}
 
 		// Throttled scroll handler for performance
-		let scrollTimeout: number;
+		let scrollTimeout;
 		function handleScroll() {
 			if (scrollTimeout) {
 				cancelAnimationFrame(scrollTimeout);
@@ -568,6 +453,8 @@ import shopConfig from "../../data/shop_config.json";
 
 		// Initial check
 		setTimeout(updateInterestButtonVisibility, 100);
+		// Keep add buttons in sync when items change elsewhere
+		window.addEventListener("itemsChange", syncAllAddButtons);
 	});
 </script>
 
@@ -663,127 +550,6 @@ import shopConfig from "../../data/shop_config.json";
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		gap: 2rem;
-	}
-
-	.card {
-		position: relative;
-		background-color: var(--white);
-		border-radius: 12px;
-		overflow: hidden;
-	}
-
-	.card-image {
-		position: relative;
-		width: 100%;
-		height: 200px;
-		overflow: hidden;
-	}
-
-	.card-image img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
-
-	.category-tag {
-		position: absolute;
-		top: 1rem;
-		left: 1rem;
-		background-color: var(--items-brand-tag);
-		color: var(--black);
-		padding: 0.1rem 0.7rem;
-		border-radius: 20px;
-		font-size: 0.9rem;
-		font-weight: 500;
-	}
-
-	.card-content {
-		padding: 1.5rem;
-	}
-
-	.title-row {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 1rem;
-	}
-
-	.card-content h3 {
-		color: var(--black);
-		font-size: 1.1rem;
-		margin: 0;
-		font-weight: 600;
-	}
-
-	.countdown {
-		margin-bottom: 1rem;
-	}
-
-	.remaining-time {
-		color: var(--black);
-		font-size: 0.9rem;
-		display: block;
-		margin-bottom: 0.5rem;
-		line-height: 1.4;
-	}
-
-	.deadline {
-		color: var(--black);
-		font-size: 0.8rem;
-		opacity: 0.8;
-	}
-
-	.progress-bar {
-		width: 100%;
-		height: 8px;
-		background-color: var(--items-progress-bg);
-		border-radius: 4px;
-		overflow: hidden;
-	}
-
-	.progress-fill {
-		height: 100%;
-		background-color: var(--items-progress);
-		transition: width 0.3s ease;
-	}
-
-	.add-button {
-		width: 40px;
-		height: 40px;
-		border-radius: 50%;
-		background-color: var(--black);
-		color: var(--white);
-		border: none;
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		transition: transform 0.2s ease;
-	}
-
-	.add-button svg {
-		width: 20px;
-		height: 20px;
-	}
-
-	.add-icon,
-	.added-icon {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		line-height: 1;
-	}
-
-	.add-button:hover {
-		transform: scale(1.1);
-	}
-
-	.add-button.added {
-		background-color: var(--items-progress);
-	}
-
-	.add-button.added:hover {
-		background-color: var(--items-progress);
 	}
 
 	.expand-button {
