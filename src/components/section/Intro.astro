@@ -3,5 +3,184 @@ const { t } = Astro.props;
 ---
 
 <section id="intro">
-	<h2>Intro</h2>
+	<!-- 背景圖 -->
+	<img src="/cfs/sinica-hall.jpeg" alt="SITCON 背景" class="bg-image" />
+	<!-- 背景遮罩 -->
+	<div class="bg-overlay"></div>
+	<!-- 底部漸層遮罩 -->
+	<div class="overlay"></div>
+	<!-- 文字內容 -->
+	<div class="content">
+		<div class="text-container">
+			<span class="main-text text-animate" data-text="first">{t.sentence1}</span><span class="sub-text text-animate" data-text="second">{t.sentence2}</span>
+		</div>
+	</div>
 </section>
+
+<style>
+	section {
+		position: relative;
+		height: 56.625rem;
+		align-self: stretch;
+		overflow: hidden;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.bg-image {
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 94.5rem;
+		height: 56.625rem;
+		flex-shrink: 0;
+		object-fit: cover;
+		z-index: 1;
+	}
+
+	.bg-overlay {
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 94.5rem;
+		height: 56.625rem;
+		flex-shrink: 0;
+		background: linear-gradient(0deg, rgba(246, 246, 246, 0.88) 0%, rgba(246, 246, 246, 0.88) 100%);
+		z-index: 2;
+	}
+
+	.overlay {
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 94.5rem;
+		height: 12.875rem;
+		flex-shrink: 0;
+		background: linear-gradient(0deg, #fff 0%, rgba(255, 255, 255, 0) 100%);
+		z-index: 3;
+	}
+
+	.content {
+		position: relative;
+		z-index: 4;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.text-container {
+		width: 90%;
+		max-width: 60.75rem;
+		text-align: left;
+		padding: 0 1rem;
+		margin: 0 auto;
+		font-size: 3rem;
+		font-weight: 700;
+		line-height: 120%;
+	}
+
+	@media (max-width: 768px) {
+		.text-container {
+			width: 95%;
+			padding: 0 0.5rem;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.main-text,
+		.sub-text {
+			font-size: 2rem;
+		}
+	}
+
+	.main-text {
+		color: var(--Black, #1d1d1f);
+	}
+
+	.sub-text {
+		color: rgba(0, 0, 0, 0.29);
+	}
+
+	/* 動畫相關樣式 */
+	.text-animate {
+		opacity: 0.3;
+		transform: translateY(30px);
+		transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+		display: inline;
+	}
+
+	.text-animate.highlight {
+		opacity: 1;
+		transform: translateY(0);
+		transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.text-animate.highlight.main-text {
+		color: var(--Black, #1d1d1f);
+		text-shadow: 0 2px 8px rgba(29, 29, 31, 0.15);
+	}
+
+	.text-animate.highlight.sub-text {
+		color: rgba(0, 0, 0, 0.65);
+		text-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+	}
+</style>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const introSection = document.getElementById("intro");
+		if (!introSection) return;
+
+		const textElements = introSection.querySelectorAll(".text-animate");
+
+		// Intersection Observer 來偵測何時進入視窗
+		const observer = new IntersectionObserver(
+			entries => {
+				entries.forEach(entry => {
+					if (entry.isIntersecting) {
+						// 當進入視窗時，開始依序播放動畫
+						animateTexts(textElements);
+						// 只執行一次，之後停止觀察
+						observer.unobserve(entry.target);
+					}
+				});
+			},
+			{
+				threshold: 0.3, // 當 30% 的區域進入視窗時觸發
+				rootMargin: "-10% 0px -10% 0px" // 稍微延遲觸發時機
+			}
+		);
+
+		// 開始觀察 intro section
+		observer.observe(introSection);
+
+		function animateTexts(elements: NodeListOf<Element>) {
+			// 先 highlight 第一段文字
+			setTimeout(() => {
+				const firstText = Array.from(elements).find((el: Element) => {
+					return (el as HTMLElement).dataset.text === "first";
+				}) as HTMLElement;
+				if (firstText) {
+					firstText.classList.add("highlight");
+				}
+			}, 300);
+
+			// 再 highlight 第二段文字
+			setTimeout(() => {
+				const secondText = Array.from(elements).find((el: Element) => {
+					return (el as HTMLElement).dataset.text === "second";
+				}) as HTMLElement;
+				if (secondText) {
+					secondText.classList.add("highlight");
+				}
+			}, 1200); // 延遲 1.2 秒後播放第二段
+		}
+	});
+</script>
