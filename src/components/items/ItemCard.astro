@@ -1,6 +1,14 @@
 ---
-const { t, card, shopConfig } = Astro.props;
 import { Plus, Check } from "@lucide/astro";
+import type { Item, ShopConfig, ItemsTranslations } from "../../types/items";
+
+interface Props {
+	t: ItemsTranslations;
+	card: Item;
+	shopConfig: ShopConfig;
+}
+
+const { t, card, shopConfig } = Astro.props as Props;
 ---
 
 <div class="card" data-category={card.category} data-card-id={card.id}>
@@ -102,12 +110,12 @@ import { Plus, Check } from "@lucide/astro";
 			if (fill) fill.style.width = `${progress}%`;
 		}
 
-		// Init
-		// Click handling and add-button state are centralized in Items.astro
+		// Init countdown/progress for this card only
+		// Note: click handling and add-button state are centralized in Items.astro
 		updateCountdownAndProgress();
 		setInterval(updateCountdownAndProgress, 1000);
 
-		// Items.astro listens to itemsChange and will trigger a full sync of buttons
+		// Items.astro listens to itemsChange and triggers a full sync of buttons
 	})();
 </script>
 
