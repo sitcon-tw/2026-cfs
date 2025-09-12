@@ -20,5 +20,110 @@
 	},
 	"about": {
 		"detail": "查看受眾與數據"
+	},
+	"items": {
+		"title": "收藏感興趣的項目",
+		"subtitle": "分為四個等級，部分為加購項目。請注意截止期限。",
+		"startTime": "2025-08-30T00:00:00+08:00",
+		"tabs": {
+			"all": "全部",
+			"brand": "品牌曝光",
+			"interaction": "現場互動",
+			"recruitment": "招募推廣"
+		},
+		"remaining": "剩餘",
+		"days": "天",
+		"hours": "小時",
+		"minutes": "分鐘",
+		"seconds": "秒",
+		"deadline": "截止",
+		"expandAll": "展開所有項目",
+		"showLess": "收起",
+		"cards": [
+			{
+				"id": 1,
+				"category": "品牌曝光",
+				"title": "午餐旗・點心旗 (剩餘2/3)",
+				"image": "/src/assets/example.jpg",
+				"deadline": "2025-10-05T23:59:59+08:00"
+			},
+			{
+				"id": 2,
+				"category": "品牌曝光",
+				"title": "贈票",
+				"image": "/src/assets/example.jpg",
+				"deadline": "2026-06-05T23:59:59+08:00"
+			},
+			{
+				"id": 3,
+				"category": "現場互動",
+				"title": "會場攤位設置",
+				"image": "/src/assets/example.jpg",
+				"deadline": "2026-06-05T23:59:59+08:00"
+			},
+			{
+				"id": 4,
+				"category": "現場互動",
+				"title": "互動遊戲體驗區",
+				"image": "/src/assets/example.jpg",
+				"deadline": "2026-06-05T23:59:59+08:00"
+			},
+			{
+				"id": 5,
+				"category": "招募推廣",
+				"title": "人才招募說明會",
+				"image": "/src/assets/example.jpg",
+				"deadline": "2026-06-05T23:59:59+08:00"
+			},
+			{
+				"id": 6,
+				"category": "招募推廣",
+				"title": "履歷收集與面談",
+				"image": "/src/assets/example.jpg",
+				"deadline": "2026-06-05T23:59:59+08:00"
+			},
+						{
+				"id": 7,
+				"category": "品牌曝光",
+				"title": "午餐旗・點心旗 (剩餘2/3)",
+				"image": "/src/assets/example.jpg",
+				"deadline": "2025-10-05T23:59:59+08:00"
+			},
+			{
+				"id": 8,
+				"category": "品牌曝光",
+				"title": "贈票",
+				"image": "/src/assets/example.jpg",
+				"deadline": "2026-06-05T23:59:59+08:00"
+			},
+			{
+				"id": 9,
+				"category": "現場互動",
+				"title": "會場攤位設置",
+				"image": "/src/assets/example.jpg",
+				"deadline": "2026-06-05T23:59:59+08:00"
+			},
+			{
+				"id": 10,
+				"category": "現場互動",
+				"title": "互動遊戲體驗區",
+				"image": "/src/assets/example.jpg",
+				"deadline": "2026-06-05T23:59:59+08:00"
+			},
+			{
+				"id": 11,
+				"category": "招募推廣",
+				"title": "人才招募說明會",
+				"image": "/src/assets/example.jpg",
+				"deadline": "2026-06-05T23:59:59+08:00"
+			},
+			{
+				"id": 12,
+				"category": "招募推廣",
+				"title": "履歷收集與面談",
+				"image": "/src/assets/example.jpg",
+				"deadline": "2026-06-05T23:59:59+08:00"
+			}
+		]
 	}
 }

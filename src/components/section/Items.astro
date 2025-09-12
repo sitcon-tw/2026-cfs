@@ -3,5 +3,512 @@ const { t } = Astro.props;
 ---
 
 <section id="items">
-	<h2>Items</h2>
+	<div class="container">
+		<h2>{t.title}</h2>
+		<p class="subtitle">{t.subtitle}</p>
+
+		<div class="tabs">
+			<button class="tab active">{t.tabs.all}</button>
+			<button class="tab">{t.tabs.brand}</button>
+			<button class="tab">{t.tabs.interaction}</button>
+			<button class="tab">{t.tabs.recruitment}</button>
+		</div>
+
+		<div class="cards-container fade-active">
+			<div class="cards-grid">
+				{
+					t.cards.map((card: any) => (
+						<div class="card" data-category={card.category}>
+							<div class="card-image">
+								<img src={card.image} alt={card.title} />
+								<div class="category-tag">{card.category}</div>
+							</div>
+							<div class="card-content">
+								<div class="title-row">
+									<h3>{card.title}</h3>
+									<button class="add-button">+</button>
+								</div>
+								<div class="countdown" data-deadline={card.deadline}>
+									<span class="remaining-time">
+										{t.remaining} <span class="days">0</span>
+										{t.days} <span class="hours">0</span>
+										{t.hours} <span class="minutes">0</span>
+										{t.minutes} <span class="seconds">0</span>
+										{t.seconds}
+									</span>
+									<span class="deadline">
+										（{new Date(card.deadline).toLocaleDateString("zh-TW")} {t.deadline}）
+									</span>
+								</div>
+								<div class="progress-bar" data-start-time={t.startTime} data-deadline={card.deadline}>
+									<div class="progress-fill" style="width: 0%" />
+								</div>
+							</div>
+						</div>
+					))
+				}
+			</div>
+			<div class="fade-overlay"></div>
+		</div>
+
+		<button class="expand-button" id="expandButton">
+			<span class="show-text">{t.expandAll}</span>
+			<span class="hide-text" style="display: none;">{t.showLess}</span>
+			<span class="arrow">▼</span>
+		</button>
+	</div>
 </section>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const expandButton = document.getElementById("expandButton") as HTMLButtonElement;
+		const cardsContainer = document.querySelector(".cards-container") as HTMLElement;
+		const showText = expandButton?.querySelector(".show-text") as HTMLElement;
+		const hideText = expandButton?.querySelector(".hide-text") as HTMLElement;
+		const arrow = expandButton?.querySelector(".arrow") as HTMLElement;
+
+		if (!expandButton || !cardsContainer || !showText || !hideText || !arrow) return;
+
+		expandButton.addEventListener("click", function () {
+			if (cardsContainer.classList.contains("fade-active")) {
+				cardsContainer.classList.remove("fade-active");
+				cardsContainer.classList.add("fade-hidden");
+				showText.style.display = "none";
+				hideText.style.display = "inline";
+				arrow.style.transform = "rotate(180deg)";
+			} else {
+				cardsContainer.classList.remove("fade-hidden");
+				cardsContainer.classList.add("fade-active");
+				showText.style.display = "inline";
+				hideText.style.display = "none";
+				arrow.style.transform = "rotate(0deg)";
+			}
+		});
+
+		// Countdown and progress functionality
+		function updateCountdownsAndProgress() {
+			const now = new Date();
+
+			// Update countdowns
+			const countdownElements = document.querySelectorAll(".countdown[data-deadline]");
+			countdownElements.forEach(element => {
+				const deadline = element.getAttribute("data-deadline");
+				if (!deadline) return;
+
+				const deadlineDate = new Date(deadline);
+				const timeDiff = deadlineDate.getTime() - now.getTime();
+
+				if (timeDiff <= 0) {
+					// Deadline passed
+					const daysSpan = element.querySelector(".days") as HTMLElement;
+					const hoursSpan = element.querySelector(".hours") as HTMLElement;
+					const minutesSpan = element.querySelector(".minutes") as HTMLElement;
+					const secondsSpan = element.querySelector(".seconds") as HTMLElement;
+
+					if (daysSpan) daysSpan.textContent = "0";
+					if (hoursSpan) hoursSpan.textContent = "0";
+					if (minutesSpan) minutesSpan.textContent = "0";
+					if (secondsSpan) secondsSpan.textContent = "0";
+				} else {
+					// Calculate remaining time
+					const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+					const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+					const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+					const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+					const daysSpan = element.querySelector(".days") as HTMLElement;
+					const hoursSpan = element.querySelector(".hours") as HTMLElement;
+					const minutesSpan = element.querySelector(".minutes") as HTMLElement;
+					const secondsSpan = element.querySelector(".seconds") as HTMLElement;
+
+					if (daysSpan) daysSpan.textContent = days.toString();
+					if (hoursSpan) hoursSpan.textContent = hours.toString();
+					if (minutesSpan) minutesSpan.textContent = minutes.toString();
+					if (secondsSpan) secondsSpan.textContent = seconds.toString();
+				}
+			});
+
+			// Update progress bars
+			const progressBars = document.querySelectorAll(".progress-bar[data-start-time][data-deadline]");
+			progressBars.forEach(progressBar => {
+				const startTime = progressBar.getAttribute("data-start-time");
+				const deadline = progressBar.getAttribute("data-deadline");
+				if (!startTime || !deadline) return;
+
+				const startDate = new Date(startTime);
+				const deadlineDate = new Date(deadline);
+				const totalDuration = deadlineDate.getTime() - startDate.getTime();
+				const elapsed = now.getTime() - startDate.getTime();
+
+				let progress = 0;
+				if (totalDuration > 0) {
+					progress = Math.min(Math.max((elapsed / totalDuration) * 100, 0), 100);
+				}
+
+				const progressFill = progressBar.querySelector(".progress-fill") as HTMLElement;
+				if (progressFill) {
+					progressFill.style.width = `${progress}%`;
+				}
+			});
+		}
+
+		updateCountdownsAndProgress();
+		setInterval(updateCountdownsAndProgress, 1000);
+
+		// Category filtering functionality
+		function filterCards(selectedCategory: string) {
+			const cards = document.querySelectorAll(".card");
+			let visibleCount = 0;
+
+			cards.forEach(card => {
+				const cardElement = card as HTMLElement;
+				const cardCategory = cardElement.getAttribute("data-category");
+
+				if (selectedCategory === "all" || cardCategory === selectedCategory) {
+					cardElement.style.display = "block";
+					visibleCount++;
+				} else {
+					cardElement.style.display = "none";
+				}
+			});
+
+			// Show/hide expand button based on visible cards count
+			updateExpandButtonVisibility(visibleCount);
+		}
+
+		function getCardsPerRowThreshold(): number {
+			const width = window.innerWidth;
+			if (width <= 768) {
+				// Mobile: 1 column, show expand if more than 3 cards (3 rows)
+				return 3;
+			} else if (width <= 1024) {
+				// Tablet: 2 columns, show expand if more than 6 cards (3 rows × 2 cols)
+				return 6;
+			} else {
+				// Desktop: 3 columns, show expand if more than 9 cards (3 rows × 3 cols)
+				return 9;
+			}
+		}
+
+		function updateExpandButtonVisibility(visibleCount: number) {
+			const expandButton = document.getElementById("expandButton");
+			if (!expandButton) return;
+
+			const threshold = getCardsPerRowThreshold();
+
+			if (visibleCount > threshold) {
+				expandButton.style.display = "flex";
+			} else {
+				expandButton.style.display = "none";
+				// Also remove fade effect if not needed
+				const cardsContainer = document.querySelector(".cards-container");
+				if (cardsContainer) {
+					cardsContainer.classList.remove("fade-active");
+					cardsContainer.classList.add("fade-hidden");
+				}
+			}
+		}
+
+		// Add event listeners to tab buttons
+		const tabButtons = document.querySelectorAll(".tab");
+		tabButtons.forEach(button => {
+			button.addEventListener("click", function () {
+				const buttonElement = button as HTMLElement;
+
+				// Remove active class from all tabs
+				tabButtons.forEach(tab => tab.classList.remove("active"));
+
+				// Add active class to clicked tab
+				buttonElement.classList.add("active");
+
+				// Get category based on button text
+				const buttonText = buttonElement.textContent?.trim();
+				let category = "all";
+
+				switch (buttonText) {
+					case "全部":
+						category = "all";
+						break;
+					case "品牌曝光":
+						category = "品牌曝光";
+						break;
+					case "現場互動":
+						category = "現場互動";
+						break;
+					case "招募推廣":
+						category = "招募推廣";
+						break;
+					default:
+						category = "all";
+				}
+
+				// Filter cards
+				filterCards(category);
+			});
+		});
+
+		// Initialize expand button visibility on page load
+		const totalCards = document.querySelectorAll(".card").length;
+		updateExpandButtonVisibility(totalCards);
+
+		// Add resize event listener to update expand button on screen size change
+		window.addEventListener("resize", function () {
+			// Get current visible cards count
+			const visibleCards = document.querySelectorAll('.card[style*="display: block"], .card:not([style*="display: none"])');
+			updateExpandButtonVisibility(visibleCards.length);
+		});
+	});
+</script>
+
+<style>
+	section {
+		background-color: var(--items-bg);
+		padding: 4rem 0;
+		min-height: 100vh;
+	}
+
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 2rem;
+	}
+
+	h2 {
+		font-size: 3rem;
+		color: var(--black);
+		text-align: center;
+		margin-bottom: 1rem;
+		font-weight: bold;
+	}
+
+	.subtitle {
+		color: var(--black);
+		text-align: center;
+		margin-bottom: 3rem;
+		font-size: 1.1rem;
+	}
+
+	.tabs {
+		display: flex;
+		justify-content: center;
+		gap: 0;
+		margin-bottom: 3rem;
+	}
+
+	.tab {
+		padding: 0.75rem 1.5rem;
+		border: none;
+		background-color: var(--white);
+		color: var(--black);
+		cursor: pointer;
+		border-radius: 25px;
+		margin: 0 0.25rem;
+		font-size: 1rem;
+		transition: background-color 0.3s ease;
+	}
+
+	.tab.active {
+		background-color: var(--gray-container);
+	}
+
+	.tab:hover {
+		background-color: var(--gray-container);
+	}
+
+	.cards-container {
+		position: relative;
+		margin-bottom: 3rem;
+		transition: all 0.3s ease;
+	}
+
+	.cards-container.fade-active {
+		max-height: 800px;
+		overflow: hidden;
+	}
+
+	.cards-container.fade-hidden {
+		max-height: none;
+		overflow: visible;
+	}
+
+	.fade-overlay {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 150px;
+		background: linear-gradient(transparent, var(--items-bg));
+		pointer-events: none;
+		transition: opacity 0.3s ease;
+		z-index: 1;
+	}
+
+	.cards-container.fade-hidden .fade-overlay {
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	.cards-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 2rem;
+	}
+
+	.card {
+		position: relative;
+		background-color: var(--white);
+		border-radius: 12px;
+		overflow: hidden;
+	}
+
+	.card-image {
+		position: relative;
+		width: 100%;
+		height: 200px;
+		overflow: hidden;
+	}
+
+	.card-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.category-tag {
+		position: absolute;
+		top: 1rem;
+		left: 1rem;
+		background-color: var(--items-brand-tag);
+		color: var(--black);
+		padding: 0.1rem 0.7rem;
+		border-radius: 20px;
+		font-size: 0.9rem;
+		font-weight: 500;
+	}
+
+	.card-content {
+		padding: 1.5rem;
+	}
+
+	.title-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1rem;
+	}
+
+	.card-content h3 {
+		color: var(--black);
+		font-size: 1.1rem;
+		margin: 0;
+		font-weight: 600;
+	}
+
+	.countdown {
+		margin-bottom: 1rem;
+	}
+
+	.remaining-time {
+		color: var(--black);
+		font-size: 0.9rem;
+		display: block;
+		margin-bottom: 0.5rem;
+		line-height: 1.4;
+	}
+
+	.deadline {
+		color: var(--black);
+		font-size: 0.8rem;
+		opacity: 0.8;
+	}
+
+	.progress-bar {
+		width: 100%;
+		height: 8px;
+		background-color: var(--items-progress-bg);
+		border-radius: 4px;
+		overflow: hidden;
+	}
+
+	.progress-fill {
+		height: 100%;
+		background-color: var(--items-progress);
+		transition: width 0.3s ease;
+	}
+
+	.add-button {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		background-color: var(--black);
+		color: var(--white);
+		border: none;
+		cursor: pointer;
+		font-size: 1.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: transform 0.2s ease;
+	}
+
+	.add-button:hover {
+		transform: scale(1.1);
+	}
+
+	.expand-button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		margin: 0 auto;
+		padding: 1rem 2rem;
+		background: none;
+		border: none;
+		color: #007aff;
+		font-size: 1rem;
+		font-family: inherit;
+		font-weight: 700;
+		cursor: pointer;
+		position: relative;
+		z-index: 2;
+	}
+
+	.expand-button:hover {
+		color: #0056cc;
+	}
+
+	.expand-button .arrow {
+		transition: transform 0.3s ease;
+		font-size: 0.8rem;
+	}
+
+	@media (max-width: 768px) {
+		.cards-grid {
+			grid-template-columns: 1fr;
+		}
+
+		h2 {
+			font-size: 2rem;
+		}
+
+		.container {
+			padding: 0 1rem;
+		}
+
+		.tabs {
+			flex-wrap: wrap;
+			gap: 0.5rem;
+		}
+
+		.tab {
+			padding: 0.5rem 1rem;
+			font-size: 0.9rem;
+		}
+	}
+
+	@media (max-width: 1024px) and (min-width: 769px) {
+		.cards-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>
