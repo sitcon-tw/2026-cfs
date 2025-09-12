@@ -297,22 +297,35 @@ const config = shopConfig;
 			});
 		}
 
+		// Track previous count to detect additions
+		let previousInterestCount = getInterestedItems().length;
+
 		// Listen to centralized itemsChange events to update UI
 		window.addEventListener("itemsChange", function (e: Event) {
+			// Update badge and list
 			updateInterestButton();
 			renderInterestItemsList();
-			// Open the popover if the interest list grew
+
+			// Determine current count from event detail if available
+			let currentCount = previousInterestCount;
 			try {
-				const ce = e as CustomEvent;
-				const detail = ce && ce.detail ? ce.detail : null;
-				if (detail?.key === "interestItems") {
-					const oldLen = detail.oldValue ? JSON.parse(detail.oldValue).length : 0;
-					const newLen = detail.newValue ? JSON.parse(detail.newValue).length : 0;
-					if (newLen > oldLen) {
-						setTimeout(() => openPopover(), 0);
-					}
+				const ce = e as CustomEvent<{ items?: unknown[] }>;
+				if (ce?.detail && Array.isArray(ce.detail.items)) {
+					currentCount = ce.detail.items.length;
+				} else {
+					currentCount = getInterestedItems().length;
 				}
-			} catch {}
+			} catch {
+				currentCount = getInterestedItems().length;
+			}
+
+			// Open the popover if the interest list grew
+			if (currentCount > previousInterestCount) {
+				setTimeout(() => openPopover(), 0);
+			}
+
+			// Update previous count for next event
+			previousInterestCount = currentCount;
 		});
 
 		// Popover functionality
