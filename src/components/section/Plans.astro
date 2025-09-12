@@ -56,7 +56,7 @@ import plansData from "../../data/plans_data.json";
 			if (rowIdStr) {
 				const rowId = parseInt(rowIdStr);
 				const isHighlighted = isItemInterested(rowId);
-				
+
 				const clickableCells = row.querySelectorAll(".plan-cell");
 				clickableCells.forEach(cell => {
 					if (isHighlighted) {

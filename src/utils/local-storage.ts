@@ -10,7 +10,7 @@ const INTEREST_ITEMS_KEY = 'interestItems';
 
 function dispatchItemsChangeEvent(): void {
   if (typeof window === 'undefined') return;
-  
+
   const event = new CustomEvent('itemsChange', {
     detail: { items: getInterestedItems() }
   });
