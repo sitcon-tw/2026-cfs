@@ -37,24 +37,24 @@ const config = shopConfig;
 			<span class="arrow">▼</span>
 		</button>
 
-			<button class="interest-button" id="interestButton">
+		<button class="interest-button" id="interestButton">
 			<span class="heart-icon"><Heart /></span>
 			<span class="interest-count">0</span>
 		</button>
 
 		<div class="interest-popover" id="interestPopover">
 			<div class="popover-header">
-				<h3>感興趣的項目</h3>
+				<h3>{t.interestedItems}</h3>
 			</div>
 			<div class="popover-content">
-				<div class="interest-items-list" id="interestItemsList">
-				</div>
+				<div class="interest-items-list" id="interestItemsList"></div>
 			</div>
 		</div>
 
 		<template id="removeIconTemplate">
 			<X />
 		</template>
+		<div data-i18n-no-items style="display: none;">{t.noInterestedItems}</div>
 	</div>
 </section>
 
@@ -95,7 +95,6 @@ const config = shopConfig;
 			isExpanded = !isExpanded;
 			applyExpandState();
 		});
-
 
 		function filterCards(selectedCategory: string) {
 			const cards = document.querySelectorAll(".card");
@@ -168,7 +167,6 @@ const config = shopConfig;
 			updateExpandButtonVisibility(visibleCards.length);
 		});
 
-
 		function syncAllAddButtons() {
 			const items = getInterestedItems();
 			const ids = new Set(items.map(i => i.id));
@@ -221,7 +219,7 @@ const config = shopConfig;
 			if (!listContainer) return;
 
 			if (items.length === 0) {
-				listContainer.innerHTML = '<div class="empty-state">尚未收藏任何項目</div>';
+				listContainer.innerHTML = `<div class="empty-state">${document.querySelector("[data-i18n-no-items]")?.textContent}</div>`;
 				return;
 			}
 
@@ -262,7 +260,7 @@ const config = shopConfig;
 					e.stopPropagation();
 					const itemId = parseInt(button.getAttribute("data-item-id") || "0");
 					removeInterestedItem(itemId);
-					});
+				});
 			});
 		}
 

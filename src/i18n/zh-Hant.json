@@ -35,6 +35,8 @@
     "deadline": "截止",
     "expandAll": "展開所有項目",
     "showLess": "收起",
+    "interestedItems": "感興趣的項目",
+    "noInterestedItems": "尚未收藏任何項目",
     "categories": {
       "brand_exposure": "品牌曝光",
       "live_interaction": "現場互動",
