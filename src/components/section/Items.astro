@@ -1,9 +1,18 @@
 ---
-const { t } = Astro.props;
 import { X, Heart } from "@lucide/astro";
 import itemsData from "../../data/items_data.json";
 import shopConfig from "../../data/shop_config.json";
 import ItemCard from "@components/items/ItemCard.astro";
+import type { Item, ShopConfig, ItemsTranslations } from "../../types/items";
+
+interface Props {
+	t: ItemsTranslations;
+}
+const { t } = Astro.props as Props;
+
+// Provide typed aliases for data imports
+const items = itemsData as unknown as Item[];
+const config = shopConfig as unknown as ShopConfig;
 ---
 
 <section id="items">
@@ -13,7 +22,7 @@ import ItemCard from "@components/items/ItemCard.astro";
 
 		<div class="tabs">
 			{
-				shopConfig.categories.map((category: string, index: number) => (
+				config.categories.map((category: string, index: number) => (
 					<button class={`tab ${index === 0 ? "active" : ""}`} data-category={category}>
 						{t.item_categories[category]}
 					</button>
@@ -23,7 +32,7 @@ import ItemCard from "@components/items/ItemCard.astro";
 
 		<div class="cards-container fade-active">
 			<div class="cards-grid">
-				{itemsData.map((card: any) => <ItemCard t={t} card={card} shopConfig={shopConfig} />)}
+				{items.map((card: Item) => <ItemCard t={t} card={card} shopConfig={config} />)}
 			</div>
 			<div class="fade-overlay"></div>
 		</div>
@@ -61,7 +70,7 @@ import ItemCard from "@components/items/ItemCard.astro";
 
 <script>
 	// Import local storage utilities
-	import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInterested } from "../../utils/local-storage";
+	import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInterested } from "../../utils/local-storage.ts";
 
 	document.addEventListener("DOMContentLoaded", function () {
 		const expandButton = document.getElementById("expandButton");
@@ -82,17 +91,17 @@ import ItemCard from "@components/items/ItemCard.astro";
 			const shouldShowExpandedUI = !canExpand || isExpanded;
 
 			if (shouldShowExpandedUI) {
-				cardsContainer.classList.remove("fade-active");
-				cardsContainer.classList.add("fade-hidden");
-				showText.style.display = "none";
-				hideText.style.display = "inline";
-				arrow.style.transform = "rotate(180deg)";
+				cardsContainer!.classList.remove("fade-active");
+				cardsContainer!.classList.add("fade-hidden");
+				(showText as HTMLElement).style.display = "none";
+				(hideText as HTMLElement).style.display = "inline";
+				(arrow as HTMLElement).style.transform = "rotate(180deg)";
 			} else {
-				cardsContainer.classList.remove("fade-hidden");
-				cardsContainer.classList.add("fade-active");
-				showText.style.display = "inline";
-				hideText.style.display = "none";
-				arrow.style.transform = "rotate(0deg)";
+				cardsContainer!.classList.remove("fade-hidden");
+				cardsContainer!.classList.add("fade-active");
+				(showText as HTMLElement).style.display = "inline";
+				(hideText as HTMLElement).style.display = "none";
+				(arrow as HTMLElement).style.transform = "rotate(0deg)";
 			}
 		}
 
@@ -104,12 +113,12 @@ import ItemCard from "@components/items/ItemCard.astro";
 		// Countdown/progress now handled within each ItemCard component
 
 		// Category filtering functionality
-		function filterCards(selectedCategory) {
+		function filterCards(selectedCategory: string) {
 			const cards = document.querySelectorAll(".card");
 			let visibleCount = 0;
 
 			cards.forEach(card => {
-				const cardElement = card;
+				const cardElement = card as HTMLElement;
 				const cardCategory = cardElement.getAttribute("data-category");
 
 				if (selectedCategory === "all" || cardCategory === selectedCategory) {
@@ -137,7 +146,7 @@ import ItemCard from "@components/items/ItemCard.astro";
 			}
 		}
 
-		function updateExpandButtonVisibility(visibleCount) {
+		function updateExpandButtonVisibility(visibleCount: number) {
 			const expandButton = document.getElementById("expandButton");
 			if (!expandButton) return;
 
@@ -160,7 +169,7 @@ import ItemCard from "@components/items/ItemCard.astro";
 		const tabButtons = document.querySelectorAll(".tab");
 		tabButtons.forEach(button => {
 			button.addEventListener("click", function () {
-				const buttonElement = button;
+				const buttonElement = button as HTMLElement;
 
 				// Remove active class from all tabs
 				tabButtons.forEach(tab => tab.classList.remove("active"));
@@ -236,7 +245,7 @@ import ItemCard from "@components/items/ItemCard.astro";
 			}
 		}
 
-		// Add-button state now handled within each ItemCard component
+		// Add-button state is centralized here (delegated clicks + sync)
 
 		function renderInterestItemsList() {
 			const items = getInterestedItems();
@@ -253,7 +262,7 @@ import ItemCard from "@components/items/ItemCard.astro";
 			listContainer.innerHTML = "";
 
 			// Get the remove icon template
-			const removeIconTemplate = document.getElementById("removeIconTemplate");
+			const removeIconTemplate = document.getElementById("removeIconTemplate") as HTMLTemplateElement | null;
 
 			items.forEach(item => {
 				const itemDiv = document.createElement("div");
@@ -295,12 +304,13 @@ import ItemCard from "@components/items/ItemCard.astro";
 		}
 
 		// Listen to centralized itemsChange events to update UI
-		window.addEventListener("itemsChange", function (e) {
+		window.addEventListener("itemsChange", function (e: Event) {
 			updateInterestButton();
 			renderInterestItemsList();
 			// Open the popover if the interest list grew
 			try {
-				const detail = e && e.detail ? e.detail : e instanceof CustomEvent ? e.detail : null;
+				const ce = e as CustomEvent;
+				const detail = ce && ce.detail ? ce.detail : null;
 				if (detail?.key === "interestItems") {
 					const oldLen = detail.oldValue ? JSON.parse(detail.oldValue).length : 0;
 					const newLen = detail.newValue ? JSON.parse(detail.newValue).length : 0;
@@ -376,7 +386,7 @@ import ItemCard from "@components/items/ItemCard.astro";
 
 		// Close popover when clicking outside
 		document.addEventListener("click", function (e) {
-			if (interestPopover?.classList.contains("active") && !interestPopover.contains(e.target) && !interestButton?.contains(e.target)) {
+			if (interestPopover?.classList.contains("active") && !interestPopover.contains(e.target as Node) && !interestButton?.contains(e.target as Node)) {
 				closePopover();
 			}
 		});
@@ -429,7 +439,7 @@ import ItemCard from "@components/items/ItemCard.astro";
 				currentSection = foundSection;
 
 				interestButtons.forEach(button => {
-					const buttonElement = button;
+					const buttonElement = button as HTMLElement;
 					if (foundSection) {
 						buttonElement.style.display = "flex";
 					} else {
@@ -440,7 +450,7 @@ import ItemCard from "@components/items/ItemCard.astro";
 		}
 
 		// Throttled scroll handler for performance
-		let scrollTimeout;
+		let scrollTimeout: number | undefined;
 		function handleScroll() {
 			if (scrollTimeout) {
 				cancelAnimationFrame(scrollTimeout);
