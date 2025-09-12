@@ -1,7 +1,149 @@
 ---
 const { t } = Astro.props;
+import FormInput from "../FormInput.astro";
 ---
 
 <section id="form">
-	<h2>Form</h2>
+	<div class="form-title-container">
+		<h1 class="form-title">今天的支持，成就十年後的技術領袖</h1>
+	</div>
+
+	<div class="form-container">
+		<form class="form-body" id="sponsor-form">
+			<h2 class="form-title">公司贊助</h2>
+			<FormInput title="單位名稱" name="organization" required />
+			<FormInput title="部門/負責業務" name="department" description="單位名稱" />
+			<FormInput title="如何稱呼您？" name="name" required />
+			<FormInput title="聯絡方式" name="contact" placeholder="Telegram / @SITCONgeneral" description="Email、FB、LINE ID 或 Telegram ... 等，各式我們能聯絡到您的方式。" required />
+			<FormInput title="還有什麼想和我們說的嗎？" name="message" />
+			<button type="button" id="sponsor-form-submit" class="form-submit-button">
+				<span class="form-submit-button-text">送出</span>
+			</button>
+		</form>
+
+		<div class="divider"></div>
+
+		<div class="form-body">
+			<h2 class="form-title">或是以個人名義<br />贊助 SITCON</h2>
+			<button type="button" class="personal-sponsor-button">
+				<span class="personal-sponsor-button-text">立即贊助</span>
+			</button>
+		</div>
+	</div>
 </section>
+
+<script>
+	const apiUrl = "https://script.google.com/macros/s/AKfycbzjGqtt87QL_8bvH7suOvReCTawQeRmSqtGeJFDPBnJVRsQan628x9swGFBhcPs0LnH/exec";
+
+	const form = document.getElementById("sponsor-form") as HTMLFormElement;
+	const submitButton = document.getElementById("sponsor-form-submit");
+
+	submitButton?.removeEventListener("click", () => {});
+	submitButton?.addEventListener("click", event => {
+		console.log("a");
+		event.preventDefault(); // Prevent the default form submission
+		fetch(apiUrl + "?" + new URLSearchParams(new FormData(form) as any as Array<[string, string]>), {
+			method: "GET",
+			mode: "no-cors"
+		})
+			.then(() => {
+				alert("success");  // Temporary message
+				form.reset();
+			})
+			.catch((e) => {
+				console.error(e);
+			});
+	});
+</script>
+
+<style>
+	.personal-sponsor-button-text {
+		color: #fff;
+		text-align: center;
+		font-family: "LINE Seed TW_OTF";
+		font-size: 24px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: 100%; /* 24px */
+		letter-spacing: 1.2px;
+	}
+	.personal-sponsor-button {
+		display: flex;
+		height: 66px;
+		padding: 0 33px;
+		justify-content: center;
+		align-items: center;
+		gap: 10px;
+		border-radius: 10000px;
+		background: #0171e3;
+	}
+	.form-submit-button-text {
+		color: #fff;
+		font-family: "LINE Seed TW_OTF";
+		font-size: 16px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: 100%; /* 16px */
+		letter-spacing: 0.8px;
+	}
+	.form-submit-button {
+		display: flex;
+		height: 49px;
+		padding: 0 31px;
+		align-items: center;
+		gap: 10px;
+		border-radius: 8px;
+		background: #0171e3;
+	}
+	.form-title-container {
+		display: flex;
+		height: 357px;
+		padding: 225px 317px 65px 317px;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.form-title {
+		color: #000;
+		font-family: "LINE Seed TW_OTF";
+		font-size: 56px;
+		font-style: normal;
+		font-weight: 700;
+		line-height: 120%; /* 67.2px */
+		letter-spacing: -1.232px;
+	}
+
+	.form-container {
+		display: flex;
+		padding: 32px 0;
+		justify-content: center;
+		align-items: center;
+		gap: 93px;
+		align-self: stretch;
+	}
+
+	.form-body {
+		display: flex;
+		padding: 0 107px;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 35px;
+	}
+
+	.form-title {
+		align-self: stretch;
+		color: #000;
+		font-family: "LINE Seed TW_OTF";
+		font-size: 40px;
+		font-style: normal;
+		font-weight: 700;
+		line-height: 120%; /* 48px */
+		letter-spacing: -0.88px;
+	}
+
+	.divider {
+		background: #000;
+		width: 1px;
+		height: 813px;
+	}
+</style>
