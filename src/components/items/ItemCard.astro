@@ -103,12 +103,9 @@ const { t, card, shopConfig } = Astro.props;
 			if (fill) fill.style.width = `${progress}%`;
 		}
 
-		// Init countdown/progress for this card only
-		// Note: click handling and add-button state are centralized in Items.astro
 		updateCountdownAndProgress();
 		setInterval(updateCountdownAndProgress, 1000);
 
-		// Items.astro listens to itemsChange and triggers a full sync of buttons
 	})();
 </script>
 
@@ -222,7 +219,6 @@ const { t, card, shopConfig } = Astro.props;
 		line-height: 1;
 	}
 
-	/* Icon toggle is driven by the button's `added` class */
 	.add-button .added-icon {
 		display: none;
 	}

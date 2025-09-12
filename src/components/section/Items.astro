@@ -37,25 +37,21 @@ const config = shopConfig;
 			<span class="arrow">▼</span>
 		</button>
 
-		<!-- Interest Items Modal Trigger Button -->
-		<button class="interest-button" id="interestButton">
+			<button class="interest-button" id="interestButton">
 			<span class="heart-icon"><Heart /></span>
 			<span class="interest-count">0</span>
 		</button>
 
-		<!-- Interest Items Popover -->
 		<div class="interest-popover" id="interestPopover">
 			<div class="popover-header">
 				<h3>感興趣的項目</h3>
 			</div>
 			<div class="popover-content">
 				<div class="interest-items-list" id="interestItemsList">
-					<!-- Items will be populated here -->
 				</div>
 			</div>
 		</div>
 
-		<!-- Hidden template for remove button icon -->
 		<template id="removeIconTemplate">
 			<X />
 		</template>
@@ -63,7 +59,6 @@ const config = shopConfig;
 </section>
 
 <script>
-	// Import local storage utilities
 	import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInterested } from "../../utils/local-storage.ts";
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -75,13 +70,10 @@ const config = shopConfig;
 
 		if (!expandButton || !cardsContainer || !showText || !hideText || !arrow) return;
 
-		// Single source of truth for expanded/collapsed state
 		let isExpanded = false; // false = collapsed (fade-active), true = expanded (fade-hidden)
-		// Whether the list can be expanded (i.e., enough items to warrant a toggle)
 		let canExpand = true;
 
 		function applyExpandState() {
-			// If expanding isn't applicable, force expanded UI but don't modify isExpanded
 			const shouldShowExpandedUI = !canExpand || isExpanded;
 
 			if (shouldShowExpandedUI) {
@@ -104,9 +96,7 @@ const config = shopConfig;
 			applyExpandState();
 		});
 
-		// Countdown/progress now handled within each ItemCard component
 
-		// Category filtering functionality
 		function filterCards(selectedCategory: string) {
 			const cards = document.querySelectorAll(".card");
 			let visibleCount = 0;
@@ -123,17 +113,14 @@ const config = shopConfig;
 				}
 			});
 
-			// Show/hide expand button based on visible cards count
 			updateExpandButtonVisibility(visibleCount);
 		}
 
 		function getCardsPerRowThreshold() {
 			const width = window.innerWidth;
 			if (width <= 768) {
-				// Mobile: 1 column, show expand if more than 2 cards
 				return 2;
 			} else if (width <= 1024) {
-				// Tablet: 2 columns, show expand if more than 4 cards
 				return 4;
 			} else {
 				return 6;
@@ -149,52 +136,39 @@ const config = shopConfig;
 			if (visibleCount > threshold) {
 				canExpand = true;
 				expandButton.style.display = "flex";
-				// Respect current user preference
 				applyExpandState();
 			} else {
 				canExpand = false;
 				expandButton.style.display = "none";
-				// Force expanded UI without changing user preference
 				applyExpandState();
 			}
 		}
 
-		// Add event listeners to tab buttons
 		const tabButtons = document.querySelectorAll(".tab");
 		tabButtons.forEach(button => {
 			button.addEventListener("click", function () {
 				const buttonElement = button as HTMLElement;
 
-				// Remove active class from all tabs
 				tabButtons.forEach(tab => tab.classList.remove("active"));
 
-				// Add active class to clicked tab
 				buttonElement.classList.add("active");
 
-				// Get category from data attribute
 				const category = buttonElement.getAttribute("data-category") || "all";
 
-				// Filter cards
 				filterCards(category);
 			});
 		});
 
-		// Initialize expand button visibility on page load
 		const totalCards = document.querySelectorAll(".card").length;
 		updateExpandButtonVisibility(totalCards);
-		// Ensure initial UI matches the single source of truth
 		applyExpandState();
 
-		// Add resize event listener to update expand button on screen size change
 		window.addEventListener("resize", function () {
-			// Get current visible cards count
 			const visibleCards = document.querySelectorAll('.card[style*="display: block"], .card:not([style*="display: none"])');
 			updateExpandButtonVisibility(visibleCards.length);
 		});
 
-		// Interest Items functionality
 
-		// Sync all add buttons' visual state with storage
 		function syncAllAddButtons() {
 			const items = getInterestedItems();
 			const ids = new Set(items.map(i => i.id));
@@ -205,7 +179,6 @@ const config = shopConfig;
 			});
 		}
 
-		// Delegate clicks for add/remove on item cards
 		document.addEventListener("click", function (e) {
 			const target = e.target;
 			if (!(target instanceof Element)) return;
@@ -252,10 +225,8 @@ const config = shopConfig;
 				return;
 			}
 
-			// Clear the container first
 			listContainer.innerHTML = "";
 
-			// Get the remove icon template
 			const removeIconTemplate = document.getElementById("removeIconTemplate") as HTMLTemplateElement | null;
 
 			items.forEach(item => {
@@ -274,7 +245,6 @@ const config = shopConfig;
 				removeButton.className = "remove-item";
 				removeButton.setAttribute("data-item-id", item.id.toString());
 
-				// Clone the icon from template
 				if (removeIconTemplate) {
 					const iconClone = removeIconTemplate.content.cloneNode(true);
 					removeButton.appendChild(iconClone);
@@ -286,27 +256,21 @@ const config = shopConfig;
 				listContainer.appendChild(itemDiv);
 			});
 
-			// Add event listeners to remove buttons
 			const removeButtons = listContainer.querySelectorAll(".remove-item");
 			removeButtons.forEach(button => {
 				button.addEventListener("click", function () {
 					const itemId = parseInt(button.getAttribute("data-item-id") || "0");
 					removeInterestedItem(itemId);
-					// itemsChange event from utils/items.ts will trigger listeners
-				});
+					});
 			});
 		}
 
-		// Track previous count to detect additions
 		let previousInterestCount = getInterestedItems().length;
 
-		// Listen to centralized itemsChange events to update UI
 		window.addEventListener("itemsChange", function (e: Event) {
-			// Update badge and list
 			updateInterestButton();
 			renderInterestItemsList();
 
-			// Determine current count from event detail if available
 			let currentCount = previousInterestCount;
 			try {
 				const ce = e as CustomEvent<{ items?: unknown[] }>;
@@ -319,16 +283,13 @@ const config = shopConfig;
 				currentCount = getInterestedItems().length;
 			}
 
-			// Open the popover if the interest list grew
 			if (currentCount > previousInterestCount) {
 				setTimeout(() => openPopover(), 0);
 			}
 
-			// Update previous count for next event
 			previousInterestCount = currentCount;
 		});
 
-		// Popover functionality
 		const interestButton = document.getElementById("interestButton");
 		const interestPopover = document.getElementById("interestPopover");
 
@@ -339,25 +300,19 @@ const config = shopConfig;
 			const popoverRect = interestPopover.getBoundingClientRect();
 			const viewportHeight = window.innerHeight;
 
-			// Reset position
 			interestPopover.style.position = "fixed";
 
-			// Align right edges - popover's right edge aligns with button's right edge
-			let left = buttonRect.right - 300; // 300px is popover width
-			let top = buttonRect.top - popoverRect.height - 12; // 12px gap above button
+			let left = buttonRect.right - 300;
+			let top = buttonRect.top - popoverRect.height - 12;
 
-			// Adjust horizontal position if it goes off screen on the left
 			if (left < 16) {
 				left = 16;
 			}
 
-			// Check if there's enough space above
 			if (top < 16) {
-				// Not enough space above, position below
 				top = buttonRect.bottom + 12;
 			}
 
-			// Final check - if still off screen vertically, position within viewport
 			if (top + popoverRect.height > viewportHeight - 16) {
 				top = viewportHeight - popoverRect.height - 16;
 			}
@@ -391,39 +346,33 @@ const config = shopConfig;
 			});
 		}
 
-		// Close popover when clicking outside
 		document.addEventListener("click", function (e) {
 			if (interestPopover?.classList.contains("active") && !interestPopover.contains(e.target as Node) && !interestButton?.contains(e.target as Node)) {
 				closePopover();
 			}
 		});
 
-		// Close popover with ESC key
 		document.addEventListener("keydown", function (e) {
 			if (e.key === "Escape") {
 				closePopover();
 			}
 		});
 
-		// Reposition on window resize
 		window.addEventListener("resize", function () {
 			if (interestPopover?.classList.contains("active")) {
 				positionPopover();
 			}
 		});
 
-		// Initialize
 		updateInterestButton();
 		syncAllAddButtons();
 
-		// Interest button visibility management
 		const targetSections = ["items", "plans", "addons", "form"];
 		let currentSection = "";
 
 		function updateInterestButtonVisibility() {
 			const interestButtons = document.querySelectorAll(".interest-button");
 
-			// Check which section is currently in view
 			let foundSection = "";
 
 			for (const sectionName of targetSections) {
@@ -433,7 +382,6 @@ const config = shopConfig;
 					const sectionHeight = rect.height;
 					const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
 
-					// Consider section active if more than 30% is visible
 					if (visibleHeight > sectionHeight * 0.3) {
 						foundSection = sectionName;
 						break;
@@ -441,7 +389,6 @@ const config = shopConfig;
 				}
 			}
 
-			// Only update if section changed
 			if (foundSection !== currentSection) {
 				currentSection = foundSection;
 
@@ -456,7 +403,6 @@ const config = shopConfig;
 			}
 		}
 
-		// Throttled scroll handler for performance
 		let scrollTimeout: number | undefined;
 		function handleScroll() {
 			if (scrollTimeout) {
@@ -468,9 +414,7 @@ const config = shopConfig;
 		document.addEventListener("scroll", handleScroll);
 		window.addEventListener("resize", updateInterestButtonVisibility);
 
-		// Initial check
 		setTimeout(updateInterestButtonVisibility, 100);
-		// Keep add buttons in sync when items change elsewhere
 		window.addEventListener("itemsChange", syncAllAddButtons);
 	});
 </script>
@@ -596,7 +540,6 @@ const config = shopConfig;
 		font-size: 0.8rem;
 	}
 
-	/* Interest Button Styles */
 	.interest-button {
 		position: fixed;
 		bottom: 2rem;
@@ -659,7 +602,6 @@ const config = shopConfig;
 		transform: scale(1);
 	}
 
-	/* Popover Styles */
 	.interest-popover {
 		position: fixed;
 		width: 320px;
@@ -813,7 +755,6 @@ const config = shopConfig;
 			border-radius: 8px;
 		}
 
-		/* Mobile: Use smaller popover or fallback to bottom sheet */
 		.interest-popover {
 			width: calc(100vw - 32px);
 			max-width: 300px;
