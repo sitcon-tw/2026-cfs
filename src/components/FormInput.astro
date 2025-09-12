@@ -1,0 +1,57 @@
+---
+const { type = "text", title = "", name = "", description = "", placeholder = "您的回答", required = false } = Astro.props;
+---
+
+<div class="form-field">
+	<h3 class="form-field-name">
+		{title}
+		{required && <span class="required-signal">&nbsp;*</span>}
+	</h3>
+	{description && <p class="form-field-description">{description}</p>}
+	<input class="form-field-input" type={type} name={name} required={required} placeholder={placeholder} />
+</div>
+
+<style>
+	.form-field-description {
+		margin-top: 0.3em;
+		align-self: stretch;
+		color: var(--Strong, #1d1d1f);
+		font-family: "LINE Seed TW_OTF";
+		font-size: 14px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: 133%; /* 18.62px */
+	}
+	.form-field-input {
+		margin-top: 0.6em;
+		display: flex;
+		width: 412px;
+		height: 56px;
+		padding: 0 16px;
+		align-items: center;
+		gap: 10px;
+		border-radius: 12px;
+		border: 1px solid #86868b;
+	}
+
+	.required-signal {
+		color: #f00;
+		font-family: "LINE Seed TW_OTF";
+		font-size: 16px;
+		font-style: normal;
+		font-weight: 700;
+		line-height: 100%;
+		letter-spacing: 0.8px;
+	}
+
+	.form-field-name {
+		align-self: stretch;
+		color: var(--Strong, #1d1d1f);
+		font-family: "LINE Seed TW_OTF";
+		font-size: 16px;
+		font-style: normal;
+		font-weight: 700;
+		line-height: 100%; /* 16px */
+		letter-spacing: 0.8px;
+	}
+</style>
