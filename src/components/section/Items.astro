@@ -3,16 +3,10 @@ import { X, Heart } from "@lucide/astro";
 import itemsData from "../../data/items_data.json";
 import shopConfig from "../../data/shop_config.json";
 import ItemCard from "@components/items/ItemCard.astro";
-import type { Item, ShopConfig, ItemsTranslations } from "../../types/items";
 
-interface Props {
-	t: ItemsTranslations;
-}
-const { t } = Astro.props as Props;
-
-// Provide typed aliases for data imports
-const items = itemsData as unknown as Item[];
-const config = shopConfig as unknown as ShopConfig;
+const { t } = Astro.props;
+const items = itemsData;
+const config = shopConfig;
 ---
 
 <section id="items">
@@ -32,7 +26,7 @@ const config = shopConfig as unknown as ShopConfig;
 
 		<div class="cards-container fade-active">
 			<div class="cards-grid">
-				{items.map((card: Item) => <ItemCard t={t} card={card} shopConfig={config} />)}
+				{items.map(card => <ItemCard t={t} card={card} shopConfig={config} />)}
 			</div>
 			<div class="fade-overlay"></div>
 		</div>

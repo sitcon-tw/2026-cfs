@@ -1,14 +1,7 @@
 ---
 import { Plus, Check } from "@lucide/astro";
-import type { Item, ShopConfig, ItemsTranslations } from "../../types/items";
 
-interface Props {
-	t: ItemsTranslations;
-	card: Item;
-	shopConfig: ShopConfig;
-}
-
-const { t, card, shopConfig } = Astro.props as Props;
+const { t, card, shopConfig } = Astro.props;
 ---
 
 <div class="card" data-category={card.category} data-card-id={card.id}>
