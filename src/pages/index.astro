@@ -31,7 +31,7 @@ const sections = [Nav, Hero, Intro, About, News, Sponsors, Cycle, Time, Items, P
 			sections.map(Component => {
 				// 簡單來說就是複製貼上所有 HTML 上來，只是用 for 迴圈寫比較簡潔。
 				const key = Component.name.toLowerCase();
-				return <Component t={t[key]} />;
+				return <Component t={{ ...t[key], ...t.global }} />;
 			})
 		}
 		<script>
@@ -70,6 +70,7 @@ const sections = [Nav, Hero, Intro, About, News, Sponsors, Cycle, Time, Items, P
 				--items-brand-tag: #ffb6b1;
 				--items-progress: #00d959;
 				--items-progress-bg: #e2e2e2;
+				--border-light: #d2d2d7;
 			}
 
 			* {

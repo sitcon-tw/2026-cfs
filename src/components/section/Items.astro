@@ -1,5 +1,8 @@
 ---
 const { t } = Astro.props;
+import { X, Plus, Check, Heart } from "@lucide/astro";
+import itemsData from "../../data/items_data.json";
+import shopConfig from "../../data/shop_config.json";
 ---
 
 <section id="items">
@@ -8,25 +11,42 @@ const { t } = Astro.props;
 		<p class="subtitle">{t.subtitle}</p>
 
 		<div class="tabs">
-			<button class="tab active">{t.tabs.all}</button>
-			<button class="tab">{t.tabs.brand}</button>
-			<button class="tab">{t.tabs.interaction}</button>
-			<button class="tab">{t.tabs.recruitment}</button>
+			{
+				shopConfig.categories.map((category: string, index: number) => (
+					<button class={`tab ${index === 0 ? "active" : ""}`} data-category={category}>
+						{t.item_categories[category]}
+					</button>
+				))
+			}
 		</div>
 
 		<div class="cards-container fade-active">
 			<div class="cards-grid">
 				{
-					t.cards.map((card: any) => (
+					itemsData.map((card: any) => (
 						<div class="card" data-category={card.category}>
 							<div class="card-image">
 								<img src={card.image} alt={card.title} />
-								<div class="category-tag">{card.category}</div>
+								<div class="category-tag">{t.item_categories[card.category]}</div>
 							</div>
 							<div class="card-content">
 								<div class="title-row">
-									<h3>{card.title}</h3>
-									<button class="add-button">+</button>
+									<h3>{t.item_titles[card.title]}</h3>
+									<button
+										class="add-button"
+										data-item-id={card.id}
+										data-item-title={card.title}
+										data-item-category={card.category}
+										data-item-image={card.image}
+										data-item-deadline={card.deadline}
+									>
+										<span class="add-icon">
+											<Plus />
+										</span>
+										<span class="added-icon" style="display: none;">
+											<Check />
+										</span>
+									</button>
 								</div>
 								<div class="countdown" data-deadline={card.deadline}>
 									<span class="remaining-time">
@@ -40,7 +60,7 @@ const { t } = Astro.props;
 										（{new Date(card.deadline).toLocaleDateString("zh-TW")} {t.deadline}）
 									</span>
 								</div>
-								<div class="progress-bar" data-start-time={t.startTime} data-deadline={card.deadline}>
+								<div class="progress-bar" data-start-time={shopConfig.startTime} data-deadline={card.deadline}>
 									<div class="progress-fill" style="width: 0%" />
 								</div>
 							</div>
@@ -56,10 +76,36 @@ const { t } = Astro.props;
 			<span class="hide-text" style="display: none;">{t.showLess}</span>
 			<span class="arrow">▼</span>
 		</button>
+
+		<!-- Interest Items Modal Trigger Button -->
+		<button class="interest-button" id="interestButton">
+			<span class="heart-icon"><Heart /></span>
+			<span class="interest-count">0</span>
+		</button>
+
+		<!-- Interest Items Popover -->
+		<div class="interest-popover" id="interestPopover">
+			<div class="popover-header">
+				<h3>感興趣的項目</h3>
+			</div>
+			<div class="popover-content">
+				<div class="interest-items-list" id="interestItemsList">
+					<!-- Items will be populated here -->
+				</div>
+			</div>
+		</div>
+
+		<!-- Hidden template for remove button icon -->
+		<template id="removeIconTemplate">
+			<X />
+		</template>
 	</div>
 </section>
 
 <script>
+	// Import local storage utilities
+	import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInterested, type InterestedItem } from "../../utils/local-storage.js";
+
 	document.addEventListener("DOMContentLoaded", function () {
 		const expandButton = document.getElementById("expandButton") as HTMLButtonElement;
 		const cardsContainer = document.querySelector(".cards-container") as HTMLElement;
@@ -180,13 +226,12 @@ const { t } = Astro.props;
 			const width = window.innerWidth;
 			if (width <= 768) {
 				// Mobile: 1 column, show expand if more than 3 cards (3 rows)
-				return 3;
+				return 2;
 			} else if (width <= 1024) {
 				// Tablet: 2 columns, show expand if more than 6 cards (3 rows × 2 cols)
-				return 6;
+				return 4;
 			} else {
-				// Desktop: 3 columns, show expand if more than 9 cards (3 rows × 3 cols)
-				return 9;
+				return 6;
 			}
 		}
 
@@ -221,26 +266,8 @@ const { t } = Astro.props;
 				// Add active class to clicked tab
 				buttonElement.classList.add("active");
 
-				// Get category based on button text
-				const buttonText = buttonElement.textContent?.trim();
-				let category = "all";
-
-				switch (buttonText) {
-					case "全部":
-						category = "all";
-						break;
-					case "品牌曝光":
-						category = "品牌曝光";
-						break;
-					case "現場互動":
-						category = "現場互動";
-						break;
-					case "招募推廣":
-						category = "招募推廣";
-						break;
-					default:
-						category = "all";
-				}
+				// Get category from data attribute
+				const category = buttonElement.getAttribute("data-category") || "all";
 
 				// Filter cards
 				filterCards(category);
@@ -257,6 +284,274 @@ const { t } = Astro.props;
 			const visibleCards = document.querySelectorAll('.card[style*="display: block"], .card:not([style*="display: none"])');
 			updateExpandButtonVisibility(visibleCards.length);
 		});
+
+		// Interest Items functionality
+		function updateInterestButton() {
+			const items = getInterestedItems();
+			const countElement = document.querySelector(".interest-count") as HTMLElement;
+
+			if (countElement) {
+				if (items.length > 0) {
+					countElement.textContent = items.length.toString();
+				} else {
+					countElement.textContent = "";
+				}
+			}
+		}
+
+		function updateAddButtons() {
+			const addButtons = document.querySelectorAll(".add-button");
+			addButtons.forEach(button => {
+				const buttonElement = button as HTMLElement;
+				const itemId = parseInt(buttonElement.getAttribute("data-item-id") || "0");
+				const isInterested = isItemInterested(itemId);
+
+				const addIcon = buttonElement.querySelector(".add-icon") as HTMLElement;
+				const addedIcon = buttonElement.querySelector(".added-icon") as HTMLElement;
+
+				if (addIcon && addedIcon) {
+					if (isInterested) {
+						addIcon.style.display = "none";
+						addedIcon.style.display = "inline";
+						buttonElement.classList.add("added");
+					} else {
+						addIcon.style.display = "inline";
+						addedIcon.style.display = "none";
+						buttonElement.classList.remove("added");
+					}
+				}
+			});
+		}
+
+		function renderInterestItemsList() {
+			const items = getInterestedItems();
+			const listContainer = document.getElementById("interestItemsList");
+
+			if (!listContainer) return;
+
+			if (items.length === 0) {
+				listContainer.innerHTML = '<div class="empty-state">尚未收藏任何項目</div>';
+				return;
+			}
+
+			// Clear the container first
+			listContainer.innerHTML = "";
+
+			// Get the remove icon template
+			const removeIconTemplate = document.getElementById("removeIconTemplate") as HTMLTemplateElement;
+
+			items.forEach(item => {
+				const itemDiv = document.createElement("div");
+				itemDiv.className = "interest-item";
+				itemDiv.setAttribute("data-item-id", item.id.toString());
+
+				const contentDiv = document.createElement("div");
+				contentDiv.className = "item-content";
+
+				const titleSpan = document.createElement("span");
+				titleSpan.className = "item-title";
+				titleSpan.textContent = item.title;
+
+				const removeButton = document.createElement("button");
+				removeButton.className = "remove-item";
+				removeButton.setAttribute("data-item-id", item.id.toString());
+
+				// Clone the icon from template
+				if (removeIconTemplate) {
+					const iconClone = removeIconTemplate.content.cloneNode(true);
+					removeButton.appendChild(iconClone);
+				}
+
+				contentDiv.appendChild(titleSpan);
+				contentDiv.appendChild(removeButton);
+				itemDiv.appendChild(contentDiv);
+				listContainer.appendChild(itemDiv);
+			});
+
+			// Add event listeners to remove buttons
+			const removeButtons = listContainer.querySelectorAll(".remove-item");
+			removeButtons.forEach(button => {
+				button.addEventListener("click", function () {
+					const itemId = parseInt((button as HTMLElement).getAttribute("data-item-id") || "0");
+					removeInterestedItem(itemId);
+					updateInterestButton();
+					updateAddButtons();
+					renderInterestItemsList();
+				});
+			});
+		}
+
+		// Add event listeners to add buttons
+		const addButtons = document.querySelectorAll(".add-button");
+		addButtons.forEach(button => {
+			button.addEventListener("click", function () {
+				const buttonElement = button as HTMLElement;
+				const itemId = parseInt(buttonElement.getAttribute("data-item-id") || "0");
+				const title = buttonElement.getAttribute("data-item-title") || "";
+				const category = buttonElement.getAttribute("data-item-category") || "";
+				const image = buttonElement.getAttribute("data-item-image") || "";
+				const deadline = buttonElement.getAttribute("data-item-deadline") || "";
+
+				if (isItemInterested(itemId)) {
+					removeInterestedItem(itemId);
+				} else {
+					const item: InterestedItem = {
+						id: itemId,
+						title,
+						category,
+						image,
+						deadline
+					};
+					addInterestedItem(item);
+				}
+
+				updateInterestButton();
+				updateAddButtons();
+			});
+		});
+
+		// Popover functionality
+		const interestButton = document.getElementById("interestButton");
+		const interestPopover = document.getElementById("interestPopover");
+
+		function positionPopover() {
+			if (!interestButton || !interestPopover) return;
+
+			const buttonRect = interestButton.getBoundingClientRect();
+			const popoverRect = interestPopover.getBoundingClientRect();
+			const viewportHeight = window.innerHeight;
+
+			// Reset position
+			interestPopover.style.position = "fixed";
+
+			// Align right edges - popover's right edge aligns with button's right edge
+			let left = buttonRect.right - 300; // 300px is popover width
+			let top = buttonRect.top - popoverRect.height - 12; // 12px gap above button
+
+			// Adjust horizontal position if it goes off screen on the left
+			if (left < 16) {
+				left = 16;
+			}
+
+			// Check if there's enough space above
+			if (top < 16) {
+				// Not enough space above, position below
+				top = buttonRect.bottom + 12;
+			}
+
+			// Final check - if still off screen vertically, position within viewport
+			if (top + popoverRect.height > viewportHeight - 16) {
+				top = viewportHeight - popoverRect.height - 16;
+			}
+
+			interestPopover.style.left = `${left}px`;
+			interestPopover.style.top = `${top}px`;
+		}
+
+		function openPopover() {
+			if (interestPopover) {
+				renderInterestItemsList();
+				interestPopover.classList.add("active");
+				positionPopover();
+			}
+		}
+
+		function closePopover() {
+			if (interestPopover) {
+				interestPopover.classList.remove("active");
+			}
+		}
+
+		if (interestButton) {
+			interestButton.addEventListener("click", function (e) {
+				e.stopPropagation();
+				if (interestPopover?.classList.contains("active")) {
+					closePopover();
+				} else {
+					openPopover();
+				}
+			});
+		}
+
+		// Close popover when clicking outside
+		document.addEventListener("click", function (e) {
+			if (interestPopover?.classList.contains("active") && !interestPopover.contains(e.target as Node) && !interestButton?.contains(e.target as Node)) {
+				closePopover();
+			}
+		});
+
+		// Close popover with ESC key
+		document.addEventListener("keydown", function (e) {
+			if (e.key === "Escape") {
+				closePopover();
+			}
+		});
+
+		// Reposition on window resize
+		window.addEventListener("resize", function () {
+			if (interestPopover?.classList.contains("active")) {
+				positionPopover();
+			}
+		});
+
+		// Initialize
+		updateInterestButton();
+		updateAddButtons();
+
+		// Interest button visibility management
+		const targetSections = ["items", "plans", "addons", "form"];
+		let currentSection = "";
+
+		function updateInterestButtonVisibility() {
+			const interestButtons = document.querySelectorAll(".interest-button");
+
+			// Check which section is currently in view
+			let foundSection = "";
+
+			for (const sectionName of targetSections) {
+				const section = document.getElementById(sectionName);
+				if (section) {
+					const rect = section.getBoundingClientRect();
+					const sectionHeight = rect.height;
+					const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+
+					// Consider section active if more than 30% is visible
+					if (visibleHeight > sectionHeight * 0.3) {
+						foundSection = sectionName;
+						break;
+					}
+				}
+			}
+
+			// Only update if section changed
+			if (foundSection !== currentSection) {
+				currentSection = foundSection;
+
+				interestButtons.forEach(button => {
+					const buttonElement = button as HTMLElement;
+					if (foundSection) {
+						buttonElement.style.display = "flex";
+					} else {
+						buttonElement.style.display = "none";
+					}
+				});
+			}
+		}
+
+		// Throttled scroll handler for performance
+		let scrollTimeout: number;
+		function handleScroll() {
+			if (scrollTimeout) {
+				cancelAnimationFrame(scrollTimeout);
+			}
+			scrollTimeout = requestAnimationFrame(updateInterestButtonVisibility);
+		}
+
+		document.addEventListener("scroll", handleScroll);
+		window.addEventListener("resize", updateInterestButtonVisibility);
+
+		// Initial check
+		setTimeout(updateInterestButtonVisibility, 100);
 	});
 </script>
 
@@ -444,15 +739,35 @@ const { t } = Astro.props;
 		color: var(--white);
 		border: none;
 		cursor: pointer;
-		font-size: 1.5rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		transition: transform 0.2s ease;
 	}
 
+	.add-button svg {
+		width: 20px;
+		height: 20px;
+	}
+
+	.add-icon,
+	.added-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		line-height: 1;
+	}
+
 	.add-button:hover {
 		transform: scale(1.1);
+	}
+
+	.add-button.added {
+		background-color: var(--items-progress);
+	}
+
+	.add-button.added:hover {
+		background-color: var(--items-progress);
 	}
 
 	.expand-button {
@@ -482,6 +797,182 @@ const { t } = Astro.props;
 		font-size: 0.8rem;
 	}
 
+	/* Interest Button Styles */
+	.interest-button {
+		position: fixed;
+		bottom: 2rem;
+		right: 2rem;
+		width: 56px;
+		height: 56px;
+		border-radius: 50%;
+		background-color: var(--white);
+		border: none;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+		transition: all 0.2s ease;
+		z-index: 1000;
+	}
+
+	.interest-button:hover {
+		transform: scale(1.05);
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+	}
+
+	.interest-button .heart-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--black);
+		transition: all 0.2s ease;
+	}
+
+	.interest-button .heart-icon svg {
+		width: 20px;
+		height: 20px;
+		stroke-width: 2;
+	}
+
+	.interest-button .interest-count {
+		position: absolute;
+		top: -4px;
+		right: -4px;
+		background-color: var(--black);
+		color: var(--white);
+		font-size: 0.75rem;
+		font-weight: 600;
+		min-width: 18px;
+		height: 18px;
+		border-radius: 9px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		line-height: 1;
+		opacity: 0;
+		transform: scale(0.5);
+		transition: all 0.2s ease;
+	}
+
+	.interest-button .interest-count:not(:empty) {
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	/* Popover Styles */
+	.interest-popover {
+		position: fixed;
+		width: 320px;
+		max-height: 400px;
+		background-color: var(--white);
+		border-radius: 16px;
+		box-shadow:
+			0 8px 32px rgba(0, 0, 0, 0.12),
+			0 4px 16px rgba(0, 0, 0, 0.08);
+		z-index: 2000;
+		visibility: hidden;
+		opacity: 0;
+		transform: scale(0.95) translateY(-4px);
+		transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.interest-popover.active {
+		visibility: visible;
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
+
+	.popover-header {
+		padding: 1.25rem 1.5rem 1rem;
+		text-align: left;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+		position: relative;
+	}
+
+	.popover-header h3 {
+		margin: 0;
+		font-size: 1.1rem;
+		font-weight: 600;
+		color: var(--black);
+		letter-spacing: -0.01em;
+	}
+
+	.popover-content {
+		overflow-y: auto;
+		max-height: 320px;
+	}
+
+	.interest-items-list {
+		padding: 0.5rem 0 1rem;
+	}
+
+	.empty-state {
+		text-align: center;
+		color: var(--gray);
+		font-size: 0.9rem;
+		padding: 3rem 2rem;
+	}
+
+	.interest-item {
+		padding: 1rem 1.5rem;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+		transition: background-color 0.2s ease;
+	}
+
+	.interest-item:last-child {
+		border-bottom: none;
+	}
+
+	.interest-item:hover {
+		background-color: rgba(0, 0, 0, 0.02);
+	}
+
+	.item-content {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+		min-height: 28px;
+	}
+
+	.item-title {
+		font-size: 0.95rem;
+		color: var(--black);
+		flex: 1;
+		line-height: 1.4;
+		font-weight: 500;
+		text-align: left;
+		padding-right: 1rem;
+	}
+
+	.remove-item {
+		background: none;
+		border: none;
+		color: rgba(0, 0, 0, 0.4);
+		cursor: pointer;
+		width: 32px;
+		height: 32px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+		transition: all 0.2s ease;
+		flex-shrink: 0;
+	}
+
+	.remove-item svg {
+		width: 18px;
+		height: 18px;
+		stroke-width: 1.5;
+	}
+
+	.remove-item:hover {
+		background-color: rgba(0, 0, 0, 0.06);
+		color: rgba(0, 0, 0, 0.8);
+		transform: scale(1.05);
+	}
+
 	@media (max-width: 768px) {
 		.cards-grid {
 			grid-template-columns: 1fr;
@@ -503,6 +994,36 @@ const { t } = Astro.props;
 		.tab {
 			padding: 0.5rem 1rem;
 			font-size: 0.9rem;
+		}
+
+		.interest-button {
+			bottom: 1rem;
+			right: 1rem;
+			width: 50px;
+			height: 50px;
+		}
+
+		.interest-button .heart-icon svg {
+			width: 18px;
+			height: 18px;
+		}
+
+		.interest-button .interest-count {
+			font-size: 0.7rem;
+			min-width: 16px;
+			height: 16px;
+			border-radius: 8px;
+		}
+
+		/* Mobile: Use smaller popover or fallback to bottom sheet */
+		.interest-popover {
+			width: calc(100vw - 32px);
+			max-width: 300px;
+			max-height: 60vh;
+		}
+
+		.popover-content {
+			max-height: calc(60vh - 80px);
 		}
 	}
 

@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1,
+    "category": "brand_exposure",
+    "title": "lunch_flag",
+    "image": "/src/assets/example.jpg",
+    "deadline": "2025-10-05T23:59:59+08:00"
+  },
+  {
+    "id": 2,
+    "category": "brand_exposure",
+    "title": "ticket_giveaway",
+    "image": "/src/assets/example.jpg",
+    "deadline": "2026-06-05T23:59:59+08:00"
+  },
+  {
+    "id": 3,
+    "category": "live_interaction",
+    "title": "booth_setup",
+    "image": "/src/assets/example.jpg",
+    "deadline": "2026-06-05T23:59:59+08:00"
+  },
+  {
+    "id": 4,
+    "category": "live_interaction",
+    "title": "booth_setup",
+    "image": "/src/assets/example.jpg",
+    "deadline": "2026-06-05T23:59:59+08:00"
+  },
+  {
+    "id": 5,
+    "category": "live_interaction",
+    "title": "booth_setup",
+    "image": "/src/assets/example.jpg",
+    "deadline": "2026-06-05T23:59:59+08:00"
+  },
+  {
+    "id": 6,
+    "category": "live_interaction",
+    "title": "booth_setup",
+    "image": "/src/assets/example.jpg",
+    "deadline": "2026-06-05T23:59:59+08:00"
+  },
+  {
+    "id": 7,
+    "category": "live_interaction",
+    "title": "booth_setup",
+    "image": "/src/assets/example.jpg",
+    "deadline": "2026-06-05T23:59:59+08:00"
+  }
+]

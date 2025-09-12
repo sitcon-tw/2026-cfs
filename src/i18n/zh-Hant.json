@@ -1,129 +1,71 @@
 {
-	"nav": {
-		"title": "SITCON 2026 贊助徵求書",
-		"data": "受眾數據",
-		"info": "活動資訊",
-		"plan": "贊助方案",
-		"langChange": "English Version",
-		"contact": "聯絡我們",
-		"export": "匯出 PDF"
-	},
-	"hero": {
-		"title": "支持開源",
-		"title2": "支持下一代的電資未來",
-		"subtitle": "學生計算機年會",
-		"subtitle2": "贊助徵求書"
-	},
-	"intro": {
-		"sentence1": "SITCON 是由學生組成、投身資訊教育與推廣開源精神的社群。",
-		"sentence2": "也`是一個由學生主辦的資訊研討會，給學生們一個發表交流技術的舞台。"
-	},
-	"about": {
-		"detail": "查看受眾與數據"
-	},
-	"items": {
-		"title": "收藏感興趣的項目",
-		"subtitle": "分為四個等級，部分為加購項目。請注意截止期限。",
-		"startTime": "2025-08-30T00:00:00+08:00",
-		"tabs": {
-			"all": "全部",
-			"brand": "品牌曝光",
-			"interaction": "現場互動",
-			"recruitment": "招募推廣"
-		},
-		"remaining": "剩餘",
-		"days": "天",
-		"hours": "小時",
-		"minutes": "分鐘",
-		"seconds": "秒",
-		"deadline": "截止",
-		"expandAll": "展開所有項目",
-		"showLess": "收起",
-		"cards": [
-			{
-				"id": 1,
-				"category": "品牌曝光",
-				"title": "午餐旗・點心旗 (剩餘2/3)",
-				"image": "/src/assets/example.jpg",
-				"deadline": "2025-10-05T23:59:59+08:00"
-			},
-			{
-				"id": 2,
-				"category": "品牌曝光",
-				"title": "贈票",
-				"image": "/src/assets/example.jpg",
-				"deadline": "2026-06-05T23:59:59+08:00"
-			},
-			{
-				"id": 3,
-				"category": "現場互動",
-				"title": "會場攤位設置",
-				"image": "/src/assets/example.jpg",
-				"deadline": "2026-06-05T23:59:59+08:00"
-			},
-			{
-				"id": 4,
-				"category": "現場互動",
-				"title": "互動遊戲體驗區",
-				"image": "/src/assets/example.jpg",
-				"deadline": "2026-06-05T23:59:59+08:00"
-			},
-			{
-				"id": 5,
-				"category": "招募推廣",
-				"title": "人才招募說明會",
-				"image": "/src/assets/example.jpg",
-				"deadline": "2026-06-05T23:59:59+08:00"
-			},
-			{
-				"id": 6,
-				"category": "招募推廣",
-				"title": "履歷收集與面談",
-				"image": "/src/assets/example.jpg",
-				"deadline": "2026-06-05T23:59:59+08:00"
-			},
-						{
-				"id": 7,
-				"category": "品牌曝光",
-				"title": "午餐旗・點心旗 (剩餘2/3)",
-				"image": "/src/assets/example.jpg",
-				"deadline": "2025-10-05T23:59:59+08:00"
-			},
-			{
-				"id": 8,
-				"category": "品牌曝光",
-				"title": "贈票",
-				"image": "/src/assets/example.jpg",
-				"deadline": "2026-06-05T23:59:59+08:00"
-			},
-			{
-				"id": 9,
-				"category": "現場互動",
-				"title": "會場攤位設置",
-				"image": "/src/assets/example.jpg",
-				"deadline": "2026-06-05T23:59:59+08:00"
-			},
-			{
-				"id": 10,
-				"category": "現場互動",
-				"title": "互動遊戲體驗區",
-				"image": "/src/assets/example.jpg",
-				"deadline": "2026-06-05T23:59:59+08:00"
-			},
-			{
-				"id": 11,
-				"category": "招募推廣",
-				"title": "人才招募說明會",
-				"image": "/src/assets/example.jpg",
-				"deadline": "2026-06-05T23:59:59+08:00"
-			},
-			{
-				"id": 12,
-				"category": "招募推廣",
-				"title": "履歷收集與面談",
-				"image": "/src/assets/example.jpg",
-				"deadline": "2026-06-05T23:59:59+08:00"
-			}
-		]
-	}
+  "nav": {
+    "title": "SITCON 2026 贊助徵求書",
+    "data": "受眾數據",
+    "info": "活動資訊",
+    "plan": "贊助方案",
+    "langChange": "English Version",
+    "contact": "聯絡我們",
+    "export": "匯出 PDF"
+  },
+  "hero": {
+    "title": "支持開源",
+    "title2": "支持下一代的電資未來",
+    "subtitle": "學生計算機年會",
+    "subtitle2": "贊助徵求書"
+  },
+  "intro": {
+    "sentence1": "SITCON 是由學生組成、投身資訊教育與推廣開源精神的社群。",
+    "sentence2": "也`是一個由學生主辦的資訊研討會，給學生們一個發表交流技術的舞台。"
+  },
+  "about": {
+    "detail": "查看受眾與數據"
+  },
+  "plans": {
+    "title": "選擇適合你的方案"
+  },
+  "items": {
+    "title": "收藏感興趣的項目",
+    "subtitle": "分為四個等級，部分為加購項目。請注意截止期限。",
+    "remaining": "剩餘",
+    "days": "天",
+    "hours": "小時",
+    "minutes": "分鐘",
+    "seconds": "秒",
+    "deadline": "截止",
+    "expandAll": "展開所有項目",
+    "showLess": "收起",
+    "categories": {
+      "brand_exposure": "品牌曝光",
+      "live_interaction": "現場互動",
+      "recruitment_and_promotion": "招募推廣",
+      "exclusive_agenda": "獨家議程",
+      "others": "其他"
+    }
+  },
+  "global": {
+    "item_categories": {
+      "all": "全部",
+      "brand_exposure": "品牌曝光",
+      "live_interaction": "現場互動",
+      "recruitment_and_promotion": "招募推廣",
+      "exclusive_agenda": "獨家議程",
+      "others": "其他"
+    },
+    "item_titles": {
+      "lunch_flag": "午餐旗・點心旗（剩餘 2/3）",
+      "ticket_giveaway": "贈票",
+      "booth_setup": "會場攤位設置"
+    },
+    "tire_names": {
+      "flagship": "領航級",
+      "deep": "深耕級",
+      "forward": "前瞻級",
+      "sprout": "新芽級"
+    }
+  },
+  "addons": {
+    "title": "加購項目",
+    "subtitle": "點擊查看詳情"
+  }
 }
