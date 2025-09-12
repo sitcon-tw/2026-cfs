@@ -3,7 +3,308 @@ import DetailBtn from "@components/DetailBtn.astro";
 const { t } = Astro.props;
 ---
 
-<section id="about">
-	<h2>About</h2>
-	<DetailBtn text={t.detail} />
+<section id="about" class="about-section">
+	<div class="container">
+		<!-- 主標題 -->
+		<div class="title-section">
+			<h2 class="subtitle">12 年來</h2>
+			<h1 class="main-title">全東南亞最大的學生社群</h1>
+		</div>
+
+		<!-- 統計卡片 -->
+		<div class="stats-cards">
+			{
+				[
+					{
+						image: "/cfs/attendee-stat.jpg",
+						data: [
+							{
+								prefix: "",
+								number: "10000",
+								label: "名參與者"
+							}
+						]
+					},
+					{
+						image: "/cfs/speaker-stat.jpg",
+						data: [
+							{
+								prefix: "",
+								number: "450",
+								label: "名學生講者"
+							}
+						]
+					},
+					{
+						image: "/cfs/events-stat.jpg",
+						data: [
+							{
+								prefix: "",
+								number: "450",
+								label: "場聚會和講座"
+							},
+							{
+								prefix: "",
+								number: "9",
+								label: "場夏令營"
+							}
+						]
+					},
+					{
+						image: "/cfs/volunteer-stat.jpg",
+						data: [
+							{
+								prefix: "扶持近",
+								number: "1200",
+								label: "名熱愛資訊的志工"
+							}
+						]
+					}
+				].map(card => (
+					<div class="stat-card" style={`background: url(${card.image}) lightgray 50% / cover no-repeat;`}>
+						<div class="card-overlay" />
+						<div class="card-content">
+							{card.data.map(stat => (
+								<div class="stat-item">
+									{stat.prefix && <div class="stat-prefix">{stat.prefix}</div>}
+									<div class="stat-number">{stat.number}</div>
+									<div class="stat-label">{stat.label}</div>
+								</div>
+							))}
+						</div>
+					</div>
+				))
+			}
+		</div>
+
+		<!-- 2024年回顧 -->
+		<div class="review-section">
+			<h3 class="review-title">回顧 2024 年</h3>
+			<div class="review-stats">
+				<div class="review-item">
+					<span class="review-label">場館容納上限</span>
+					<span class="review-number">1300人</span>
+				</div>
+				<div class="review-item">
+					<span class="review-label">開放報名</span>
+					<span class="review-number">3秒</span>
+					<span class="review-note">內容記一空</span>
+				</div>
+				<div class="review-item">
+					<span class="review-label">來自海內外</span>
+					<span class="review-number">150所</span>
+					<span class="review-note">學校</span>
+				</div>
+			</div>
+		</div>
+
+		<DetailBtn text={t.detail} />
+	</div>
 </section>
+
+<style>
+	.about-section {
+		padding: 80px 0;
+	}
+
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 20px;
+		text-align: center;
+	}
+
+	.title-section {
+		margin-bottom: 60px;
+	}
+
+	.subtitle {
+		color: var(--Black, #1d1d1f);
+		text-align: center;
+		font-size: 2.4375rem;
+		font-style: normal;
+		font-weight: 700;
+		line-height: 120%; /* 2.925rem */
+	}
+
+	.main-title {
+		color: var(--Black, #1d1d1f);
+		text-align: center;
+		font-size: 3.375rem;
+		font-style: normal;
+		font-weight: 700;
+		line-height: 120%; /* 4.05rem */
+	}
+
+	.stats-cards {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 24px;
+		margin-bottom: 80px;
+	}
+
+	.stat-card {
+		position: relative;
+		border-radius: 1.75rem;
+		padding: 24px;
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+		transition:
+			transform 0.2s ease,
+			box-shadow 0.2s ease;
+		overflow: hidden;
+		height: 25rem;
+		display: flex;
+		align-items: flex-end;
+	}
+
+	.stat-card:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+	}
+
+	.card-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		border-radius: 1.75rem;
+		background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000 100%);
+		z-index: 1;
+	}
+
+	.card-content {
+		position: relative;
+		z-index: 2;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		column-gap: 1rem; /* space-x equivalent */
+	}
+
+	.stat-item {
+		margin-bottom: 1rem;
+	}
+
+	.stat-number {
+		color: var(--White, #fff);
+		font-family: "IBM Plex Mono";
+		font-size: 3.625rem;
+		font-weight: 700;
+		line-height: 122%; /* 4.4225rem */
+		letter-spacing: 0.0725rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		flex-shrink: 0;
+		margin-bottom: 4px;
+	}
+
+	.stat-prefix,
+	.stat-label {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		flex-shrink: 0;
+		color: var(--White, #fff);
+		font-size: 1.1875rem;
+		font-style: normal;
+		font-weight: 700;
+		line-height: 122%; /* 1.44875rem */
+		letter-spacing: 0.02375rem;
+	}
+
+	.review-section {
+		margin-bottom: 60px;
+	}
+
+	.review-title {
+		color: var(--Black, #1d1d1f);
+		text-align: center;
+		font-size: 1.625rem;
+		font-style: normal;
+		font-weight: 700;
+		line-height: 133%; /* 2.16125rem */
+		letter-spacing: 0.08125rem;
+		margin-bottom: 2.5rem;
+	}
+
+	.review-stats {
+		text-align: center;
+	}
+
+	.review-item {
+		display: block;
+		text-align: center;
+		margin-bottom: 16px;
+	}
+
+	.review-label,
+	.review-note {
+		color: var(--Black, #1d1d1f);
+		text-align: center;
+		font-size: 2.5625rem;
+		font-weight: 700;
+		line-height: 133%; /* 3.40813rem */
+		letter-spacing: 0.12813rem;
+	}
+
+	.review-number {
+		color: #708dfa;
+		font-size: 3.4375rem;
+		font-style: normal;
+		font-weight: 700;
+		line-height: 133%;
+		letter-spacing: 0.17188rem;
+	}
+
+	/* 響應式設計 */
+	@media (max-width: 768px) {
+		.about-section {
+			padding: 60px 0;
+		}
+
+		.main-title {
+			font-size: 2rem;
+		}
+
+		.stats-cards {
+			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+			gap: 16px;
+			margin-bottom: 60px;
+		}
+
+		.stat-card {
+			padding: 20px;
+			height: 180px;
+		}
+
+		.stat-number {
+			font-size: 2.5rem;
+			width: auto;
+			height: auto;
+		}
+
+		.stat-prefix,
+		.stat-label {
+			font-size: 1rem;
+			width: auto;
+			height: auto;
+		}
+
+		.review-stats {
+			text-align: center;
+		}
+
+		.review-number {
+			font-size: 1.5rem;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.review-item {
+			margin-bottom: 20px;
+		}
+	}
+</style>
