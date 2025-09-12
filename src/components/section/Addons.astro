@@ -58,8 +58,7 @@ const categories = Object.keys(groupedItems);
 </section>
 
 <script>
-	import { isItemInterested, addInterestedItem, removeInterestedItem, type InterestedItem } from "../../utils/local-storage.ts";
-	import itemsData from "../../data/items_data.json";
+	import { isItemInterested } from "../../utils/local-storage.ts";
 
 	function updateHighlighting() {
 		const addonCards = document.querySelectorAll(".addon-card");
@@ -76,40 +75,8 @@ const categories = Object.keys(groupedItems);
 		});
 	}
 
-	function handleCardClick(event: Event) {
-		const card = event.currentTarget as HTMLElement;
-		const itemIdStr = card.getAttribute("data-item-id");
-
-		if (itemIdStr) {
-			const itemId = parseInt(itemIdStr);
-			const item = itemsData.find(i => i.id === itemId);
-
-			if (item) {
-				if (isItemInterested(itemId)) {
-					removeInterestedItem(itemId);
-				} else {
-					const addonItem: InterestedItem = {
-						id: item.id,
-						title: item.title,
-						category: item.category,
-						image: item.image,
-						deadline: item.deadline
-					};
-					addInterestedItem(addonItem);
-				}
-
-				updateHighlighting();
-			}
-		}
-	}
-
 	document.addEventListener("DOMContentLoaded", function () {
 		updateHighlighting();
-
-		const addonCards = document.querySelectorAll(".addon-card");
-		addonCards.forEach(card => {
-			card.addEventListener("click", handleCardClick);
-		});
 	});
 
 	window.addEventListener("itemsChange", updateHighlighting);
@@ -130,9 +97,6 @@ const categories = Object.keys(groupedItems);
 		width: calc(100% - 4rem);
 		margin: 0 auto;
 		padding: 5rem;
-		flex: auto;
-		display: flex;
-		justify-content: center;
 	}
 
 	h2 {
@@ -153,6 +117,7 @@ const categories = Object.keys(groupedItems);
 	.addons-grid {
 		max-width: 1200px;
 		width: 100%;
+		margin: 0 auto;
 	}
 
 	.category-section {
@@ -169,7 +134,7 @@ const categories = Object.keys(groupedItems);
 
 	.items-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
 		gap: 1.5rem;
 	}
 
@@ -182,16 +147,11 @@ const categories = Object.keys(groupedItems);
 		justify-content: center;
 		gap: 1rem;
 		transition: all 0.2s ease;
-		cursor: pointer;
 	}
 
 	.addon-card.highlighted {
 		background-color: var(--items-green);
 		color: white;
-	}
-
-	.addon-card:hover {
-		scale: 1.02;
 	}
 
 	.card-icon {
@@ -221,8 +181,9 @@ const categories = Object.keys(groupedItems);
 		}
 
 		.items-grid {
-			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+			grid-template-columns: repeat(auto-fill, minmax(220px, 220px));
 			gap: 1rem;
+			justify-content: flex-start;
 		}
 
 		h2 {
@@ -249,6 +210,7 @@ const categories = Object.keys(groupedItems);
 
 		.items-grid {
 			grid-template-columns: 1fr;
+			justify-content: flex-start;
 		}
 
 		.addon-card {

@@ -4,4 +4,5 @@ declare module "@lucide/astro" {
   export const Check: any;
   export const Heart: any;
   export const Flag: any;
+  export const Container: any;
 }
