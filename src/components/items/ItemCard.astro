@@ -57,53 +57,11 @@ import { Plus, Check } from "@lucide/astro";
 		const root = scriptEl ? scriptEl.previousElementSibling : null;
 		if (!root) return;
 
-		const addButton = root.querySelector(".add-button");
 		const progressBar = root.querySelector(".progress-bar");
 		if (!progressBar) return;
 
-		const id = Number(addButton?.getAttribute("data-item-id") || "0");
-		const title = addButton?.getAttribute("data-item-title") || "";
-		const category = addButton?.getAttribute("data-item-category") || "";
-		const image = addButton?.getAttribute("data-item-image") || "";
-		const progressDeadline = progressBar.getAttribute("data-deadline") || "";
-		const deadline = progressDeadline || addButton?.getAttribute("data-item-deadline") || "";
+		const deadline = progressBar.getAttribute("data-deadline") || "";
 		const startTime = progressBar.getAttribute("data-start-time") || "";
-
-		const KEY = "interestItems";
-
-		function getInterestedItems() {
-			try {
-				const items = localStorage.getItem(KEY);
-				return items ? JSON.parse(items) : [];
-			} catch {
-				return [];
-			}
-		}
-
-		function isItemInterested(itemId) {
-			return getInterestedItems().some(i => i.id === itemId);
-		}
-
-		function setItems(key, value) {
-			const oldValue = localStorage.getItem(key);
-			localStorage.setItem(key, value);
-			const event = new CustomEvent("itemsChange", { detail: { key, newValue: value, oldValue } });
-			window.dispatchEvent(event);
-		}
-
-		function addItem(item) {
-			const items = getInterestedItems();
-			if (!items.some(i => i.id === item.id)) {
-				items.push(item);
-				setItems(KEY, JSON.stringify(items));
-			}
-		}
-
-		function syncAddedClass() {
-			if (!addButton) return;
-			if (isItemInterested(id)) addButton.classList.add("added");
-			else addButton.classList.remove("added");
-		}
 
 		function updateCountdownAndProgress() {
 			const countdown = root.querySelector(".countdown");
@@ -145,8 +103,7 @@ import { Plus, Check } from "@lucide/astro";
 		}
 
 		// Init
-		// Click handling is centralized in Items.astro via event delegation
-		syncAddedClass();
+		// Click handling and add-button state are centralized in Items.astro
 		updateCountdownAndProgress();
 		setInterval(updateCountdownAndProgress, 1000);
 
