@@ -115,8 +115,16 @@ import shopConfig from "../../data/shop_config.json";
 
 		if (!expandButton || !cardsContainer || !showText || !hideText || !arrow) return;
 
-		expandButton.addEventListener("click", function () {
-			if (cardsContainer.classList.contains("fade-active")) {
+		// Single source of truth for expanded/collapsed state
+		let isExpanded = false; // false = collapsed (fade-active), true = expanded (fade-hidden)
+		// Whether the list can be expanded (i.e., enough items to warrant a toggle)
+		let canExpand = true;
+
+		function applyExpandState() {
+			// If expanding isn't applicable, force expanded UI but don't modify isExpanded
+			const shouldShowExpandedUI = !canExpand || isExpanded;
+
+			if (shouldShowExpandedUI) {
 				cardsContainer.classList.remove("fade-active");
 				cardsContainer.classList.add("fade-hidden");
 				showText.style.display = "none";
@@ -129,6 +137,12 @@ import shopConfig from "../../data/shop_config.json";
 				hideText.style.display = "none";
 				arrow.style.transform = "rotate(0deg)";
 			}
+		}
+
+
+		expandButton.addEventListener("click", function () {
+			isExpanded = !isExpanded;
+			applyExpandState();
 		});
 
 		// Countdown and progress functionality
@@ -225,10 +239,10 @@ import shopConfig from "../../data/shop_config.json";
 		function getCardsPerRowThreshold(): number {
 			const width = window.innerWidth;
 			if (width <= 768) {
-				// Mobile: 1 column, show expand if more than 3 cards (3 rows)
+				// Mobile: 1 column, show expand if more than 2 cards
 				return 2;
 			} else if (width <= 1024) {
-				// Tablet: 2 columns, show expand if more than 6 cards (3 rows × 2 cols)
+				// Tablet: 2 columns, show expand if more than 4 cards
 				return 4;
 			} else {
 				return 6;
@@ -242,15 +256,15 @@ import shopConfig from "../../data/shop_config.json";
 			const threshold = getCardsPerRowThreshold();
 
 			if (visibleCount > threshold) {
+				canExpand = true;
 				expandButton.style.display = "flex";
+				// Respect current user preference
+				applyExpandState();
 			} else {
+				canExpand = false;
 				expandButton.style.display = "none";
-				// Also remove fade effect if not needed
-				const cardsContainer = document.querySelector(".cards-container");
-				if (cardsContainer) {
-					cardsContainer.classList.remove("fade-active");
-					cardsContainer.classList.add("fade-hidden");
-				}
+				// Force expanded UI without changing user preference
+				applyExpandState();
 			}
 		}
 
@@ -277,6 +291,8 @@ import shopConfig from "../../data/shop_config.json";
 		// Initialize expand button visibility on page load
 		const totalCards = document.querySelectorAll(".card").length;
 		updateExpandButtonVisibility(totalCards);
+		// Ensure initial UI matches the single source of truth
+		applyExpandState();
 
 		// Add resize event listener to update expand button on screen size change
 		window.addEventListener("resize", function () {
