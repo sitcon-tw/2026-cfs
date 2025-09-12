@@ -670,7 +670,7 @@ const config = shopConfig;
 	}
 
 	.popover-header {
-		padding: 1.25rem 1.5rem 1rem;
+		padding: 1.5rem;
 		text-align: left;
 		border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 		position: relative;
@@ -678,9 +678,8 @@ const config = shopConfig;
 
 	.popover-header h3 {
 		margin: 0;
-		font-size: 1.1rem;
-		font-weight: 600;
-		color: var(--black);
+		font-size: 1.6rem;
+		font-weight: 400;
 		letter-spacing: -0.01em;
 	}
 
@@ -690,31 +689,31 @@ const config = shopConfig;
 	}
 
 	.interest-items-list {
-		padding: 0.5rem 0 1rem;
+		padding: 1.5rem;
 	}
 
-	.empty-state {
+	:global(.empty-state) {
 		text-align: center;
 		color: var(--gray);
 		font-size: 0.9rem;
 		padding: 3rem 2rem;
 	}
 
-	.interest-item {
+	:global(.interest-item) {
 		padding: 1rem 1.5rem;
 		border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 		transition: background-color 0.2s ease;
 	}
 
-	.interest-item:last-child {
+	:global(.interest-item:last-child) {
 		border-bottom: none;
 	}
 
-	.interest-item:hover {
+	:global(.interest-item:hover) {
 		background-color: rgba(0, 0, 0, 0.02);
 	}
 
-	.item-content {
+	:global(.item-content) {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -722,7 +721,7 @@ const config = shopConfig;
 		min-height: 28px;
 	}
 
-	.item-title {
+	:global(.item-title) {
 		font-size: 0.95rem;
 		color: var(--black);
 		flex: 1;
@@ -732,7 +731,7 @@ const config = shopConfig;
 		padding-right: 1rem;
 	}
 
-	.remove-item {
+	:global(.remove-item) {
 		background: none;
 		border: none;
 		color: rgba(0, 0, 0, 0.4);
@@ -747,13 +746,13 @@ const config = shopConfig;
 		flex-shrink: 0;
 	}
 
-	.remove-item svg {
+	:global(.remove-item svg) {
 		width: 18px;
 		height: 18px;
 		stroke-width: 1.5;
 	}
 
-	.remove-item:hover {
+	:global(.remove-item:hover) {
 		background-color: rgba(0, 0, 0, 0.06);
 		color: rgba(0, 0, 0, 0.8);
 		transform: scale(1.05);
