@@ -3,5 +3,29 @@ const { t } = Astro.props;
 ---
 
 <section id="time">
-	<h2>Time</h2>
+	<img src="cfs/sitcon-volunteer.jpg" class="bg-image" alt="Sitcon2024 工作人員合照" />
+	<div class="bg-overlay"></div>
 </section>
+
+<style>
+	section {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		overflow: hidden;
+		position: relative;
+	}
+	.bg-image {
+		width: 94.625rem;
+		height: 52.1875rem;
+		flex-shrink: 0;
+	}
+	.bg-overlay {
+		position: absolute;
+		width: 94.625rem;
+		height: 52.1875rem;
+		flex-shrink: 0;
+		background: #000000;
+		opacity: 0.8;
+	}
+</style>
