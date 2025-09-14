@@ -27,11 +27,9 @@ import FormInput from "../FormInput.astro";
 
 		<div class="form-body">
 			<h2 class="form-title">或是以個人名義<br />贊助 SITCON</h2>
-			<!-- <a href="https://ocf.neticrm.tw/civicrm/contribute/transact?reset=1&id=76" target="_blank"> -->
-			<a type="button" class="personal-sponsor-button" href="https://ocf.neticrm.tw/civicrm/contribute/transact?reset=1&id=76" target="_blank">
+			<a class="personal-sponsor-button" href="https://ocf.neticrm.tw/civicrm/contribute/transact?reset=1&id=76" target="_blank">
 				<span class="personal-sponsor-button-text">立即贊助</span>
 			</a>
-			<!-- </a> -->
 		</div>
 	</div>
 </section>
@@ -53,7 +51,9 @@ import FormInput from "../FormInput.astro";
 					form.reset();
 				}
 				const message = document.getElementById("form-message");
-				message!.textContent = data.message;
+				if (message) {
+					message.textContent = data.message;
+				}
 			})
 			.catch(e => {
 				console.error(e);
@@ -154,12 +154,8 @@ import FormInput from "../FormInput.astro";
 	}
 
 	.divider {
-		display: flex;
-		padding: 2rem 0;
-		justify-content: center;
-		align-items: center;
-		gap: 5.8125rem;
-		align-self: stretch;
-		background: var(--White, #fff);
+		background: var(--Black, #1d1d1f);
+		width: 0.0625rem;
+		height: 50.8125rem;
 	}
 </style>
