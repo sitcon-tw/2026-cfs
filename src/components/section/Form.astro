@@ -17,6 +17,7 @@ import FormInput from "../FormInput.astro";
 			<FormInput title="聯絡方式" name="contact" placeholder="Telegram / @SITCONgeneral" description="Email、FB、LINE ID 或 Telegram ... 等，各式我們能聯絡到您的方式。" required />
 			<FormInput title="還有什麼想和我們說的嗎？" name="message" />
 			<div id="form-message"></div>
+
 			<button type="button" id="sponsor-form-submit" class="form-submit-button">
 				<span class="form-submit-button-text">送出</span>
 			</button>
@@ -26,9 +27,11 @@ import FormInput from "../FormInput.astro";
 
 		<div class="form-body">
 			<h2 class="form-title">或是以個人名義<br />贊助 SITCON</h2>
-			<button type="button" class="personal-sponsor-button">
-				<a class="personal-sponsor-button-text">立即贊助</a>
-			</button>
+			<a href="https://ocf.neticrm.tw/civicrm/contribute/transact?reset=1&id=76" target="_blank">
+				<button type="button" class="personal-sponsor-button">
+					<span class="personal-sponsor-button-text">立即贊助</span>
+				</button>
+			</a>
 		</div>
 	</div>
 </section>
