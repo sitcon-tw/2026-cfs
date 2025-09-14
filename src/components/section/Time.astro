@@ -1,10 +1,24 @@
 ---
 const { t } = Astro.props;
+import Popup from "@components/Popup.astro";
 ---
 
 <section id="time">
-	<img src="cfs/sitcon-volunteer.jpg" class="bg-image" alt="Sitcon2024 工作人員合照" />
+	<img src="cfs/sitcon-volunteer.jpg" class="bg-image" alt="sitcon 2024" />
 	<div class="bg-overlay"></div>
+	<div class="popup-btn">
+		<Popup btnText={t.popup_label} title={t.popup_label} id="place-staff-popup" background="cfs/r0.jpg" />
+	</div>
+	<div class="content">
+		<div class="title-box">
+			<p>{t.title1}</p>
+			<p>{t.title2}</p>
+		</div>
+		<div class="info-box">
+			<p>{t.date}</p>
+			<p>{t.location}</p>
+		</div>
+	</div>
 </section>
 
 <style>
@@ -21,11 +35,52 @@ const { t } = Astro.props;
 		flex-shrink: 0;
 	}
 	.bg-overlay {
+		z-index: 1;
 		position: absolute;
 		width: 94.625rem;
 		height: 52.1875rem;
 		flex-shrink: 0;
 		background: #000000;
 		opacity: 0.8;
+	}
+	.popup-btn {
+		position: absolute;
+		z-index: 4;
+		bottom: 2rem;
+		left: 50%;
+	}
+	@media screen and (max-width: 94.625rem) {
+		.content {
+			width: 100% !important;
+			margin-left: 5rem !important;
+		}
+	}
+	.content {
+		overflow: hidden;
+		height: 52.1875rem;
+		width: 94.625rem;
+		z-index: 2;
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		margin-top: 11rem;
+		margin-left: 11rem;
+	}
+	.title-box {
+		margin-bottom: 2.69rem;
+	}
+	.title-box p {
+		color: #ffffff;
+		font-size: 3.5625rem;
+		font-style: normal;
+		font-weight: 700;
+		line-height: 133%;
+	}
+	.info-box p {
+		color: #ffffff;
+		font-size: 1.6875rem;
+		font-style: normal;
+		font-weight: 700;
+		line-height: 133%;
 	}
 </style>
