@@ -16,6 +16,7 @@ import FormInput from "../FormInput.astro";
 			<FormInput title="如何稱呼您？" name="name" required />
 			<FormInput title="聯絡方式" name="contact" placeholder="Telegram / @SITCONgeneral" description="Email、FB、LINE ID 或 Telegram ... 等，各式我們能聯絡到您的方式。" required />
 			<FormInput title="還有什麼想和我們說的嗎？" name="message" />
+			<div id="form-message"></div>
 			<button type="button" id="sponsor-form-submit" class="form-submit-button">
 				<span class="form-submit-button-text">送出</span>
 			</button>
@@ -26,7 +27,7 @@ import FormInput from "../FormInput.astro";
 		<div class="form-body">
 			<h2 class="form-title">或是以個人名義<br />贊助 SITCON</h2>
 			<button type="button" class="personal-sponsor-button">
-				<span class="personal-sponsor-button-text">立即贊助</span>
+				<a class="personal-sponsor-button-text">立即贊助</a>
 			</button>
 		</div>
 	</div>
@@ -37,113 +38,123 @@ import FormInput from "../FormInput.astro";
 
 	const form = document.getElementById("sponsor-form") as HTMLFormElement;
 	const submitButton = document.getElementById("sponsor-form-submit");
-
-	submitButton?.removeEventListener("click", () => {});
 	submitButton?.addEventListener("click", event => {
-		console.log("a");
-		event.preventDefault(); // Prevent the default form submission
-		fetch(apiUrl + "?" + new URLSearchParams(new FormData(form) as any as Array<[string, string]>), {
-			method: "GET",
-			mode: "no-cors"
+		event.preventDefault();
+		fetch(apiUrl, {
+			method: "POST",
+			body: new FormData(form)
 		})
-			.then(() => {
-				alert("success");  // Temporary message
-				form.reset();
+			.then(async res => {
+				const data = await res.json();
+				if (data.status == 200) {
+					form.reset();
+				}
+				const message = document.getElementById("form-message");
+				message!.textContent = data.message;
 			})
-			.catch((e) => {
+			.catch(e => {
 				console.error(e);
 			});
 	});
 </script>
 
 <style>
+	#form-message {
+		color: #0171e3;
+		font-family: "LINE Seed TW_OTF";
+		font-size: 1rem;
+	}
 	.personal-sponsor-button-text {
-		color: #fff;
+		color: var(--White, #fff);
 		text-align: center;
 		font-family: "LINE Seed TW_OTF";
-		font-size: 24px;
+		font-size: 1.5rem;
 		font-style: normal;
 		font-weight: 400;
-		line-height: 100%; /* 24px */
-		letter-spacing: 1.2px;
+		line-height: 100%; /* 1.5rem */
+		letter-spacing: 0.075rem;
 	}
 	.personal-sponsor-button {
 		display: flex;
-		height: 66px;
-		padding: 0 33px;
+		height: 4.125rem;
+		padding: 0 2.0625rem;
 		justify-content: center;
 		align-items: center;
-		gap: 10px;
-		border-radius: 10000px;
+		gap: 0.625rem;
+		border-radius: 625rem;
 		background: #0171e3;
 	}
 	.form-submit-button-text {
-		color: #fff;
+		color: var(--White, #fff);
 		font-family: "LINE Seed TW_OTF";
-		font-size: 16px;
+		font-size: 1rem;
 		font-style: normal;
 		font-weight: 400;
-		line-height: 100%; /* 16px */
-		letter-spacing: 0.8px;
+		line-height: 100%; /* 1rem */
+		letter-spacing: 0.05rem;
 	}
 	.form-submit-button {
 		display: flex;
-		height: 49px;
-		padding: 0 31px;
+		height: 3.0625rem;
+		padding: 0 1.9375rem;
 		align-items: center;
-		gap: 10px;
-		border-radius: 8px;
+		gap: 0.625rem;
+		border-radius: 0.5rem;
 		background: #0171e3;
 	}
 	.form-title-container {
 		display: flex;
-		height: 357px;
-		padding: 225px 317px 65px 317px;
+		height: 22.3125rem;
+		padding: 14.0625rem 19.8125rem 4.0625rem 19.8125rem;
 		justify-content: center;
 		align-items: center;
+		background: linear-gradient(180deg, #f1f3fb 0%, #fff 32.86%);
 	}
-
 	.form-title {
-		color: #000;
+		color: var(--Black, #1d1d1f);
 		font-family: "LINE Seed TW_OTF";
-		font-size: 56px;
+		font-size: 3.5rem;
 		font-style: normal;
 		font-weight: 700;
-		line-height: 120%; /* 67.2px */
-		letter-spacing: -1.232px;
+		line-height: 120%; /* 4.2rem */
+		letter-spacing: -0.077rem;
 	}
 
 	.form-container {
+		background: var(--White, #fff);
 		display: flex;
-		padding: 32px 0;
+		padding: 2rem 0;
 		justify-content: center;
 		align-items: center;
-		gap: 93px;
+		gap: 5.8125rem;
 		align-self: stretch;
 	}
 
 	.form-body {
 		display: flex;
-		padding: 0 107px;
+		padding: 0 6.6875rem;
 		flex-direction: column;
 		align-items: flex-start;
-		gap: 35px;
+		gap: 2.1875rem;
 	}
 
 	.form-title {
-		align-self: stretch;
-		color: #000;
+		color: var(--Black, #1d1d1f);
 		font-family: "LINE Seed TW_OTF";
-		font-size: 40px;
+		font-size: 2.5rem;
 		font-style: normal;
 		font-weight: 700;
-		line-height: 120%; /* 48px */
-		letter-spacing: -0.88px;
+		line-height: 120%; /* 3rem */
+		letter-spacing: -0.055rem;
 	}
 
 	.divider {
-		background: #000;
-		width: 1px;
-		height: 813px;
+		display: flex;
+		padding: 2rem 0;
+		justify-content: center;
+		align-items: center;
+		gap: 5.8125rem;
+		align-self: stretch;
+		background: var(--White, #fff);
 	}
 </style>
