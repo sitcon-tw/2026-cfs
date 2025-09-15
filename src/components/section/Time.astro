@@ -37,6 +37,80 @@ const placeItems = [
 		img: "cfs/r0.jpg"
 	}
 ];
+const teams = [
+	{
+		title: "總召集人",
+		name: "黃映綺",
+		school: "國立中山大學",
+		major: "人科學程"
+	},
+	{
+		title: "副召集人",
+		name: "康智惟",
+		school: "國立臺灣科技大學",
+		major: "電機工程學系"
+	},
+	{
+		title: "行銷組長",
+		name: "曾煥軒",
+		school: "國立臺灣大學",
+		major: "資訊管理學系"
+	},
+	{
+		title: "議程組長",
+		name: "郭慕天",
+		school: "國立陽明交通大學",
+		major: "資訊工程學系"
+	},
+	{
+		title: "設計組長",
+		name: "吳昀臻",
+		school: "東海大學",
+		major: "資訊工程學系"
+	},
+	{
+		title: "財務組長",
+		name: "劉家琪",
+		school: "國立陽明交通大學",
+		major: "資訊工程學系"
+	},
+	{
+		title: "開發組長",
+		name: "陳威達",
+		school: "桃園高中階段",
+		major: "非學校型態實驗教育"
+	},
+	{
+		title: "場務組長",
+		name: "陳思惟",
+		school: "國立中央大學",
+		major: "資電不分系"
+	},
+	{
+		title: "行政組長",
+		name: "邱翊盛",
+		school: "內湖高工",
+		major: "電子科"
+	},
+	{
+		title: "製播組長",
+		name: "鄭弘易",
+		school: "國立彰化師範大學",
+		major: "資訊工程學系"
+	},
+	{
+		title: "紀錄組長",
+		name: "廖耿鋒",
+		school: "明道中學",
+		major: "資訊科"
+	},
+	{
+		title: "編輯組長",
+		name: "黃以信",
+		school: "輔仁大學",
+		major: "圖書資訊學系"
+	}
+];
 ---
 
 <section id="time">
@@ -83,7 +157,7 @@ const placeItems = [
 				{
 					placeItems.map((item, index) => (
 						<div id="place-item">
-							<div class=`place-item-box ${(index + 1) % 2 == 0 ? "reverse-flex" : ""}` >
+							<div class={`place-item-box ${(index + 1) % 2 == 0 ? "reverse-flex" : ""}`}>
 								<div class="place-item-content">
 									<div style="font-size: 3.75rem;font-weight: 700;margin-bottom: 5.31rem;line-height: 120%">
 										<p>{item.code}</p>
@@ -96,6 +170,21 @@ const placeItems = [
 						</div>
 					))
 				}
+			</section>
+			<section class="popup-section">
+				<p class="title">籌備團隊</p>
+				<div id="team-info">
+					{
+						teams.map(item => (
+							<div class="team-item">
+								<p class="team-item-title">{item.title}</p>
+								<p class="team-item-title">{item.name}</p>
+								<p>{item.school}</p>
+								<p>{item.major}</p>
+							</div>
+						))
+					}
+				</div>
 			</section>
 		</Popup>
 	</div>
@@ -112,6 +201,26 @@ const placeItems = [
 </section>
 
 <style>
+	#team-info {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr 1fr;
+		text-align: center;
+		margin-top: 5rem;
+	}
+
+	.team-item {
+		margin-bottom: 4.25rem;
+	}
+
+	.team-item-title {
+		font-size: 1.625rem;
+		font-weight: 700;
+	}
+
+	.team-item {
+		text-align: center;
+		line-height: 230%;
+	}
 	.reverse-flex {
 		flex-direction: row-reverse;
 	}
@@ -136,7 +245,7 @@ const placeItems = [
 		}
 	}
 
-	.reverse-flex .place-item-img{
+	.reverse-flex .place-item-img {
 		border-radius: 0 1.5625rem 1.5625rem 0;
 	}
 
@@ -200,7 +309,7 @@ const placeItems = [
 
 	#timeline-items #item {
 		display: grid;
-	grid-template-columns: 0.5fr 1fr;
+		grid-template-columns: 0.5fr 1fr;
 		gap: 0.5rem;
 	}
 
