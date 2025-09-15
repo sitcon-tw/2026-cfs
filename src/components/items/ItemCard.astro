@@ -7,7 +7,10 @@ const { t, card, shopConfig } = Astro.props;
 <div class="card" data-category={card.category} data-card-id={card.id}>
 	<div class="card-image">
 		<img src={card.image} alt={card.title} />
-		<div class="category-tag">{t.item_categories[card.category]}</div>
+		<div class="tag">
+			<div class="remaining-tag">{t.remaining} {card.remaining} {t.unit[card.unit]}</div>
+			<div class="deadline-tag">{`${new Date(card.deadline).getMonth() + 1}/${new Date(card.deadline).getDate()}`} {t.deadline}</div>
+		</div>
 	</div>
 	<div class="card-content">
 		<div class="title-row">
@@ -29,6 +32,9 @@ const { t, card, shopConfig } = Astro.props;
 				</span>
 			</button>
 		</div>
+    <div class="description">
+      {t.description[card.description]}
+    </div>
 		<div class="countdown" data-deadline={card.deadline}>
 			<span class="remaining-time">
 				{t.remaining}
@@ -40,10 +46,6 @@ const { t, card, shopConfig } = Astro.props;
 				{t.minutes}
 				<span class="seconds">0</span>
 				{t.seconds}
-			</span>
-			<span class="deadline">
-				（{new Date(card.deadline).toLocaleDateString("zh-TW")}
-				{t.deadline}）
 			</span>
 		</div>
 		<div class="progress-bar" data-start-time={shopConfig.startTime} data-deadline={card.deadline}>
@@ -105,7 +107,6 @@ const { t, card, shopConfig } = Astro.props;
 
 		updateCountdownAndProgress();
 		setInterval(updateCountdownAndProgress, 1000);
-
 	})();
 </script>
 
@@ -120,7 +121,7 @@ const { t, card, shopConfig } = Astro.props;
 	.card-image {
 		position: relative;
 		width: 100%;
-		height: 200px;
+		height: 150px;
 		overflow: hidden;
 	}
 
@@ -130,17 +131,30 @@ const { t, card, shopConfig } = Astro.props;
 		object-fit: cover;
 	}
 
-	.category-tag {
+	.tag {
 		position: absolute;
 		top: 1rem;
 		left: 1rem;
-		background-color: var(--items-brand-tag);
 		color: var(--black);
+    display: flex;
+    gap: 0.5rem;
+	}
+
+	.remaining-tag {
+		background-color: var(--items-remaining-tag);
 		padding: 0.1rem 0.7rem;
 		border-radius: 20px;
 		font-size: 0.9rem;
 		font-weight: 500;
 	}
+
+  .deadline-tag {
+    background-color: var(--items-deadline-tag);
+    padding: 0.1rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
 
 	.card-content {
 		padding: 1.5rem;

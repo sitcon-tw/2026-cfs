@@ -13,7 +13,7 @@ import plansData from "../../data/plans_data.json";
 					plansData.tiers.map((tier: any) => (
 						<div class="tier-column">
 							<div class="tier-name" style={`color: ${tier.textColor}`}>
-								{t.tier_names[tier.name]}
+								{t.tire_names[tier.name]}
 							</div>
 							<div class="tier-price">{tier.price}</div>
 						</div>
@@ -25,19 +25,33 @@ import plansData from "../../data/plans_data.json";
 				{
 					plansData.rows.map((row: any) => (
 						<div class="plan-row" data-row-id={row.id}>
-							{row.values.map((value: any, index: number) => (
-								<div class="plan-cell">
-									{value.icon && (
-										<div class="cell-icon">
-											{Array.from({ length: value.icon }, (_, i) => (
-												<Container key={i} />
-											))}
-										</div>
-									)}
-									<div class={`cell-main ${/^([1-9]|10)\s*(份|張|次)$/.test(value.main) ? "cell-number" : "cell-text"}`}>{value.main}</div>{" "}
-									{value.sub && <div class="cell-sub">{value.sub}</div>}
-								</div>
-							))}
+							{row.values.map((value: any, index: number) => {
+								// Handle number + unit structure
+								const hasNumber = value.number !== undefined;
+								const mainText = value.textKey ? t.features[value.textKey] : (value.main || '');
+								const subText = value.subKey ? t.features[value.subKey] : (value.sub || '');
+								const unitText = value.unitKey ? t.unit[value.unitKey.split('.').pop()] : '';
+
+								return (
+									<div class="plan-cell">
+										{value.icon && (
+											<div class="cell-icon">
+												{Array.from({ length: value.icon }, (_, i) => (
+													<Container key={i} />
+												))}
+											</div>
+										)}
+										{hasNumber ? (
+											<div class="cell-main cell-number">
+												{value.number} {unitText}
+											</div>
+										) : (
+											<div class="cell-main cell-text">{mainText}</div>
+										)}
+										{subText && <div class="cell-sub">{subText}</div>}
+									</div>
+								);
+							})}
 						</div>
 					))
 				}

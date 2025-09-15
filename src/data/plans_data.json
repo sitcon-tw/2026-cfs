@@ -28,21 +28,21 @@
       "values": [
         {
           "icon": 2,
-          "main": "兩倍大會場攤位",
+          "textKey": "booth_double",
           "sub": ""
         },
         {
           "icon": 1,
-          "main": "會場攤位",
+          "textKey": "booth_regular",
           "sub": ""
         },
         {
           "icon": 1,
-          "main": "會場攤位",
+          "textKey": "booth_regular",
           "sub": ""
         },
         {
-          "main": "—",
+          "textKey": "not_available",
           "sub": ""
         }
       ]
@@ -51,19 +51,21 @@
       "id": 2,
       "values": [
         {
-          "main": "60 秒",
-          "sub": "R0 影片輪播"
+          "number": 60,
+          "unitKey": "global.unit.second",
+          "subKey": "video_r0"
         },
         {
-          "main": "30 秒",
-          "sub": "R0 影片輪播"
+          "number": 30,
+          "unitKey": "global.unit.second",
+          "subKey": "video_r0"
         },
         {
-          "main": "Logo 顯示",
-          "sub": "R0 影片輪播"
+          "textKey": "video_logo_display",
+          "subKey": "video_r0"
         },
         {
-          "main": "—",
+          "textKey": "not_available",
           "sub": ""
         }
       ]
@@ -72,19 +74,22 @@
       "id": 3,
       "values": [
         {
-          "main": "3 份",
-          "sub": "迎賓袋文宣"
+          "number": 3,
+          "unitKey": "global.unit.copy",
+          "subKey": "welcome_bag"
         },
         {
-          "main": "2 份",
-          "sub": "迎賓袋文宣"
+          "number": 2,
+          "unitKey": "global.unit.copy",
+          "subKey": "welcome_bag"
         },
         {
-          "main": "1 份",
-          "sub": "迎賓袋文宣"
+          "number": 1,
+          "unitKey": "global.unit.copy",
+          "subKey": "welcome_bag"
         },
         {
-          "main": "—",
+          "textKey": "not_available",
           "sub": ""
         }
       ]
@@ -93,20 +98,24 @@
       "id": 4,
       "values": [
         {
-          "main": "10 張",
-          "sub": "贈票"
+          "number": 10,
+          "unitKey": "global.unit.ticket",
+          "subKey": "tickets"
         },
         {
-          "main": "6 張",
-          "sub": "贈票"
+          "number": 6,
+          "unitKey": "global.unit.ticket",
+          "subKey": "tickets"
         },
         {
-          "main": "4 張",
-          "sub": "贈票"
+          "number": 4,
+          "unitKey": "global.unit.ticket",
+          "subKey": "tickets"
         },
         {
-          "main": "2 張",
-          "sub": "贈票"
+          "number": 2,
+          "unitKey": "global.unit.ticket",
+          "subKey": "tickets"
         }
       ]
     },
@@ -115,18 +124,18 @@
       "values": [
         {
           "main": "",
-          "sub": "接駁車車內廣播"
+          "subKey": "shuttle_broadcast"
         },
         {
-          "main": "—",
+          "textKey": "not_available",
           "sub": ""
         },
         {
-          "main": "—",
+          "textKey": "not_available",
           "sub": ""
         },
         {
-          "main": "—",
+          "textKey": "not_available",
           "sub": ""
         }
       ]
@@ -135,19 +144,19 @@
       "id": 6,
       "values": [
         {
-          "main": "R0 議程前",
-          "sub": "夥伴宣讀"
+          "textKey": "partner_announcement_timing",
+          "subKey": "partner_announcement"
         },
         {
-          "main": "—",
+          "textKey": "not_available",
           "sub": ""
         },
         {
-          "main": "—",
+          "textKey": "not_available",
           "sub": ""
         },
         {
-          "main": "—",
+          "textKey": "not_available",
           "sub": ""
         }
       ]
@@ -156,19 +165,19 @@
       "id": 7,
       "values": [
         {
-          "main": "直播模板",
-          "sub": "Logo 曝光"
+          "textKey": "live_template",
+          "subKey": "logo_exposure"
         },
         {
-          "main": "直播模板",
-          "sub": "Logo 曝光"
+          "textKey": "live_template",
+          "subKey": "logo_exposure"
         },
         {
-          "main": "—",
+          "textKey": "not_available",
           "sub": ""
         },
         {
-          "main": "—",
+          "textKey": "not_available",
           "sub": ""
         }
       ]
@@ -177,19 +186,19 @@
       "id": 8,
       "values": [
         {
-          "main": "門口議程表",
-          "sub": "Logo 曝光"
+          "textKey": "entrance_schedule",
+          "subKey": "logo_exposure"
         },
         {
-          "main": "門口議程表",
-          "sub": "Logo 曝光"
+          "textKey": "entrance_schedule",
+          "subKey": "logo_exposure"
         },
         {
-          "main": "—",
+          "textKey": "not_available",
           "sub": ""
         },
         {
-          "main": "—",
+          "textKey": "not_available",
           "sub": ""
         }
       ]
@@ -198,19 +207,19 @@
       "id": 9,
       "values": [
         {
-          "main": "入口落地窗背板",
+          "textKey": "entrance_backdrop",
           "sub": ""
         },
         {
-          "main": "入口落地窗背板",
+          "textKey": "entrance_backdrop",
           "sub": ""
         },
         {
-          "main": "入口落地窗背板",
+          "textKey": "entrance_backdrop",
           "sub": ""
         },
         {
-          "main": "—",
+          "textKey": "not_available",
           "sub": ""
         }
       ]
@@ -219,19 +228,19 @@
       "id": 10,
       "values": [
         {
-          "main": "年會意象背板",
+          "textKey": "conference_backdrop",
           "sub": ""
         },
         {
-          "main": "年會意象背板",
+          "textKey": "conference_backdrop",
           "sub": ""
         },
         {
-          "main": "年會意象背板",
+          "textKey": "conference_backdrop",
           "sub": ""
         },
         {
-          "main": "—",
+          "textKey": "not_available",
           "sub": ""
         }
       ]
@@ -240,20 +249,20 @@
       "id": 11,
       "values": [
         {
-          "main": "年會共筆",
-          "sub": "Logo 曝光"
+          "textKey": "shared_notes",
+          "subKey": "logo_exposure"
         },
         {
-          "main": "年會共筆",
-          "sub": "Logo 曝光"
+          "textKey": "shared_notes",
+          "subKey": "logo_exposure"
         },
         {
-          "main": "年會共筆",
-          "sub": "Logo 曝光"
+          "textKey": "shared_notes",
+          "subKey": "logo_exposure"
         },
         {
-          "main": "年會共筆",
-          "sub": "Logo 曝光"
+          "textKey": "shared_notes",
+          "subKey": "logo_exposure"
         }
       ]
     },
@@ -261,19 +270,19 @@
       "id": 12,
       "values": [
         {
-          "main": "網頁 Logo 曝光",
+          "textKey": "website_logo",
           "sub": ""
         },
         {
-          "main": "網頁 Logo 曝光",
+          "textKey": "website_logo",
           "sub": ""
         },
         {
-          "main": "網頁 Logo 曝光",
+          "textKey": "website_logo",
           "sub": ""
         },
         {
-          "main": "網頁 Logo 曝光",
+          "textKey": "website_logo",
           "sub": ""
         }
       ]
@@ -282,20 +291,24 @@
       "id": 13,
       "values": [
         {
-          "main": "2 張",
-          "sub": "IG 限時動態"
+          "number": 2,
+          "unitKey": "global.unit.ticket",
+          "subKey": "ig_story"
         },
         {
-          "main": "1 張",
-          "sub": "IG 限時動態"
+          "number": 1,
+          "unitKey": "global.unit.ticket",
+          "subKey": "ig_story"
         },
         {
-          "main": "1 張",
-          "sub": "IG 限時動態"
+          "number": 1,
+          "unitKey": "global.unit.ticket",
+          "subKey": "ig_story"
         },
         {
-          "main": "1 張",
-          "sub": "IG 限時動態"
+          "number": 1,
+          "unitKey": "global.unit.ticket",
+          "subKey": "ig_story"
         }
       ]
     },
@@ -303,19 +316,22 @@
       "id": 14,
       "values": [
         {
-          "main": "2 張",
-          "sub": "IG 精選動態曝光"
+          "number": 2,
+          "unitKey": "global.unit.ticket",
+          "subKey": "ig_highlight"
         },
         {
-          "main": "1 張",
-          "sub": "IG 精選動態曝光"
+          "number": 1,
+          "unitKey": "global.unit.ticket",
+          "subKey": "ig_highlight"
         },
         {
-          "main": "1 張",
-          "sub": "IG 精選動態曝光"
+          "number": 1,
+          "unitKey": "global.unit.ticket",
+          "subKey": "ig_highlight"
         },
         {
-          "main": "—",
+          "textKey": "not_available",
           "sub": ""
         }
       ]
@@ -324,20 +340,24 @@
       "id": 15,
       "values": [
         {
-          "main": "3 次",
-          "sub": "約專曝光"
+          "number": 3,
+          "unitKey": "global.unit.time",
+          "subKey": "appointment_exposure"
         },
         {
-          "main": "2 次",
-          "sub": "約專曝光"
+          "number": 2,
+          "unitKey": "global.unit.time",
+          "subKey": "appointment_exposure"
         },
         {
-          "main": "1 次",
-          "sub": "約專曝光"
+          "number": 1,
+          "unitKey": "global.unit.time",
+          "subKey": "appointment_exposure"
         },
         {
-          "main": "1 次",
-          "sub": "約專曝光"
+          "number": 1,
+          "unitKey": "global.unit.time",
+          "subKey": "appointment_exposure"
         }
       ]
     }
