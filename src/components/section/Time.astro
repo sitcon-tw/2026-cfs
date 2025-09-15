@@ -11,11 +11,12 @@ const timelineItems = [
 	{ date: "01/29", event: "公布議程表" },
 	{ date: "03/08", event: "年會舉辦" }
 ];
+
 const placeItems = [
 	{
 		code: "R0",
 		name: "國際會議廳",
-		description: "總計 426 席位\n" + "當天的開場與 Keynote \n" + "也會於此會議廳進行。",
+		description: "總計 426 席位\n當天的開場與 Keynote \n也會於此會議廳進行。",
 		img: "cfs/r0.jpg"
 	},
 	{
@@ -37,79 +38,20 @@ const placeItems = [
 		img: "cfs/r0.jpg"
 	}
 ];
+
 const teams = [
-	{
-		title: "總召集人",
-		name: "黃映綺",
-		school: "國立中山大學",
-		major: "人科學程"
-	},
-	{
-		title: "副召集人",
-		name: "康智惟",
-		school: "國立臺灣科技大學",
-		major: "電機工程學系"
-	},
-	{
-		title: "行銷組長",
-		name: "曾煥軒",
-		school: "國立臺灣大學",
-		major: "資訊管理學系"
-	},
-	{
-		title: "議程組長",
-		name: "郭慕天",
-		school: "國立陽明交通大學",
-		major: "資訊工程學系"
-	},
-	{
-		title: "設計組長",
-		name: "吳昀臻",
-		school: "東海大學",
-		major: "資訊工程學系"
-	},
-	{
-		title: "財務組長",
-		name: "劉家琪",
-		school: "國立陽明交通大學",
-		major: "資訊工程學系"
-	},
-	{
-		title: "開發組長",
-		name: "陳威達",
-		school: "桃園高中階段",
-		major: "非學校型態實驗教育"
-	},
-	{
-		title: "場務組長",
-		name: "陳思惟",
-		school: "國立中央大學",
-		major: "資電不分系"
-	},
-	{
-		title: "行政組長",
-		name: "邱翊盛",
-		school: "內湖高工",
-		major: "電子科"
-	},
-	{
-		title: "製播組長",
-		name: "鄭弘易",
-		school: "國立彰化師範大學",
-		major: "資訊工程學系"
-	},
-	{
-		title: "紀錄組長",
-		name: "廖耿鋒",
-		school: "明道中學",
-		major: "資訊科"
-	},
-	{
-		title: "編輯組長",
-		name: "黃以信",
-		school: "輔仁大學",
-		major: "圖書資訊學系"
-	}
+	{ title: "總召集人", name: "黃映綺", school: "國立中山大學", major: "人科學程" },
+	{ title: "副召集人", name: "康智惟", school: "國立臺灣科技大學", major: "電機工程學系" },
+	{ title: "行銷組長", name: "曾煥軒", school: "國立臺灣大學", major: "資訊管理學系" },
+	{ title: "議程組長", name: "郭慕天", school: "國立陽明交通大學", major: "資訊工程學系" },
+	{ title: "設計組長", name: "吳昀臻", school: "東海大學", major: "資訊工程學系" },
+	{ title: "財務組長", name: "劉家琪", school: "國立陽明交通大學", major: "資訊工程學系" },
+	{ title: "開發組長", name: "陳威達", school: "桃園高中階段", major: "非學校型態實驗教育" },
+	{ title: "場務組長", name: "陳思惟", school: "國立中央大學", major: "資電不分系" },
+	{ title: "行政組長", name: "邱翊盛", school: "內湖高工", major: "電子科" },
+	{ title: "製播組長", name: "鄭弘易", school: "國立彰化師範大學", major: "資訊工程學系" },
+	{ title: "紀錄組長", name: "廖耿鋒", school: "明道中學", major: "資訊科" },
+	{ title: "編輯組長", name: "黃以信", school: "輔仁大學", major: "圖書資訊學系" }
 ];
 ---
 
@@ -130,60 +72,54 @@ const teams = [
 						</svg>
 					</div>
 					<div id="timeline-items">
-						{
-							timelineItems.map(item => (
-								<div id="item">
-									<p>{item.date}</p>
-									<p>{item.event}</p>
-								</div>
-							))
-						}
+						{timelineItems.map(item => (
+							<div id="item">
+								<p>{item.date}</p>
+								<p>{item.event}</p>
+							</div>
+						))}
 					</div>
 				</div>
 			</section>
 			<section class="popup-section">
 				<p class="title">場地詳情</p>
-				<div style="display: flex; justify-content: center; align-items: center;margin-top: 3rem;">
+				<div class="place-info-wrapper">
 					<div id="place-info">
 						<p id="name">中央研究院<br />人文社會科學館</p>
-						<div style="text-align: center;">
-							<p style="font-size: 1.8125rem;line-height: 120%;margin-bottom: 1rem;">場館預估容納人數上限</p>
+						<div class="people-info">
+							<p class="people-info-title">場館預估容納人數上限</p>
 							<p id="people">1,300 人</p>
 						</div>
 					</div>
 				</div>
 			</section>
 			<section id="place-items">
-				{
-					placeItems.map((item, index) => (
-						<div id="place-item">
-							<div class={`place-item-box ${(index + 1) % 2 == 0 ? "reverse-flex" : ""}`}>
-								<div class="place-item-content">
-									<div style="font-size: 3.75rem;font-weight: 700;margin-bottom: 5.31rem;line-height: 120%">
-										<p>{item.code}</p>
-										<p>{item.name}</p>
-									</div>
-									<p style="font-size: 1.875rem;color: #6E6E73;line-height: 120%;">{item.description}</p>
+				{placeItems.map((item, index) => (
+					<div id="place-item">
+						<div class={`place-item-box ${(index + 1) % 2 == 0 ? "reverse-flex" : ""}`}>
+							<div class="place-item-content">
+								<div class="place-item-header">
+									<p>{item.code}</p>
+									<p>{item.name}</p>
 								</div>
-								<img src={item.img} alt={item.name} class="place-item-img" />
+								<p class="place-item-desc">{item.description}</p>
 							</div>
+							<img src={item.img} alt={item.name} class="place-item-img" />
 						</div>
-					))
-				}
+					</div>
+				))}
 			</section>
 			<section class="popup-section">
 				<p class="title">籌備團隊</p>
 				<div id="team-info">
-					{
-						teams.map(item => (
-							<div class="team-item">
-								<p class="team-item-title">{item.title}</p>
-								<p class="team-item-title">{item.name}</p>
-								<p>{item.school}</p>
-								<p>{item.major}</p>
-							</div>
-						))
-					}
+					{teams.map(item => (
+						<div class="team-item">
+							<p class="team-item-title">{item.title}</p>
+							<p class="team-item-title">{item.name}</p>
+							<p>{item.school}</p>
+							<p>{item.major}</p>
+						</div>
+					))}
 				</div>
 			</section>
 		</Popup>
@@ -201,191 +137,195 @@ const teams = [
 </section>
 
 <style>
-	#team-info {
-		display: grid;
-		grid-template-columns: 1fr 1fr 1fr 1fr;
-		text-align: center;
-		margin-top: 5rem;
-	}
-
-	.team-item {
-		margin-bottom: 4.25rem;
-	}
-
-	.team-item-title {
-		font-size: 1.625rem;
-		font-weight: 700;
-	}
-
-	.team-item {
-		text-align: center;
-		line-height: 230%;
-	}
-	.reverse-flex {
-		flex-direction: row-reverse;
-	}
-
-	.place-item-content {
-		padding: 3rem;
-	}
-
-	.place-item-img {
-		width: 45rem;
-		height: 32.9375rem;
-		object-fit: cover;
-		border-radius: 1.5625rem 0 0 1.5625rem;
-	}
-
-	@media screen and (max-width: 1200px) {
-		.place-item-img {
-			border-radius: 1.5625rem 0 0 1.5625rem;
-			width: auto;
-			height: 32.9375rem;
-			overflow: hidden;
-		}
-	}
-
-	.reverse-flex .place-item-img {
-		border-radius: 0 1.5625rem 1.5625rem 0;
-	}
-
-	.place-item-box {
-		display: flex;
-		justify-content: space-between;
+	#time {
 		align-items: center;
-		margin: 5rem 0;
+		display: flex;
+		justify-content: center;
+		overflow: hidden;
+		position: relative;
+	}
+	.content {
+		display: flex;
+		flex-direction: column;
+		height: 52.2rem;
+		margin-left: 11rem;
+		margin-top: 11rem;
+		overflow: hidden;
+		position: absolute;
+		width: 94.6rem;
+		z-index: 2;
+	}
+	.popup-btn {
+		bottom: 2rem;
+		left: 50%;
+		position: absolute;
+		z-index: 4;
+	}
+
+	.bg-image {
+		flex-shrink: 0;
+		height: 52.2rem;
+		width: 94.6rem;
+	}
+	.bg-overlay {
+		background: #000;
+		flex-shrink: 0;
+		height: 52.2rem;
+		opacity: 0.8;
+		position: absolute;
+		width: 94.6rem;
+		z-index: 1;
+	}
+
+	.title-box {
+		margin-bottom: 2.7rem;
+	}
+	.title-box p {
+		color: #fff;
+		font-size: 3.6rem;
+		font-style: normal;
+		font-weight: 700;
+		line-height: 133%;
+	}
+	.info-box p {
+		color: #fff;
+		font-size: 1.7rem;
+		font-style: normal;
+		font-weight: 700;
+		line-height: 133%;
+	}
+
+	#timeline {
+		align-items: center;
+		display: flex;
+		gap: 5rem;
+		justify-content: center;
+		margin: 2rem;
+		padding: 1rem;
+	}
+	svg {
+		height: 31rem;
+		width: 4rem;
+	}
+	#timeline-items #item {
+		display: grid;
+		gap: 0.5rem;
+		grid-template-columns: 0.5fr 1fr;
+	}
+	#timeline-items #item p {
+		color: #000;
+		font-size: 2rem;
+		font-weight: 700;
+		line-height: 228%;
 	}
 
 	.popup-section {
 		padding: 2rem;
 	}
-
-	#time {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		overflow: hidden;
-		position: relative;
-	}
-
-	#place-info {
-		background: #e8e8ec;
-		display: inline-flex;
-		padding: 3.875rem 5.875rem;
-		justify-content: center;
-		align-items: center;
-		gap: 2.8125rem;
-		border-radius: 1rem;
-	}
-
-	#place-info p {
-		color: #000000;
-		line-height: 120%; /* 3.075rem */
-	}
-
-	#place-info #name {
-		font-size: 2.5625rem;
-		font-weight: 700;
-	}
-
-	#place-info #people {
-		font-size: 3.25rem;
-		font-weight: 700;
-	}
-
-	#timeline {
-		padding: 1rem;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		margin: 2rem;
-		gap: 5rem;
-	}
-
-	svg {
-		width: 4rem;
-		height: 31rem;
-	}
-
-	#timeline-items #item {
-		display: grid;
-		grid-template-columns: 0.5fr 1fr;
-		gap: 0.5rem;
-	}
-
-	#timeline-items #item p {
-		color: #000;
-		font-size: 2rem;
-		font-weight: 700;
-		line-height: 228%; /* 5.28388rem */
-	}
-
 	.title {
 		color: #000;
-		font-size: 3.75rem;
+		font-size: 3.7rem;
 		font-weight: 700;
 		line-height: 120%;
 	}
 
-	.bg-image {
-		width: 94.625rem;
-		height: 52.1875rem;
-		flex-shrink: 0;
+	.place-info-wrapper {
+		align-items: center;
+		display: flex;
+		justify-content: center;
+		margin-top: 3rem;
+	}
+	#place-info {
+		align-items: center;
+		background: #e8e8ec;
+		border-radius: 1rem;
+		display: inline-flex;
+		gap: 2.8rem;
+		justify-content: center;
+		padding: 3.9rem 5.9rem;
+	}
+	#place-info p {
+		color: #000;
+		line-height: 120%;
+	}
+	#place-info #name {
+		font-size: 2.6rem;
+		font-weight: 700;
+	}
+	.people-info {
+		text-align: center;
+	}
+	.people-info-title {
+		font-size: 1.8rem;
+		line-height: 120%;
+		margin-bottom: 1rem;
+	}
+	#place-info #people {
+		font-size: 3.3rem;
+		font-weight: 700;
 	}
 
-	.bg-overlay {
-		z-index: 1;
-		position: absolute;
-		width: 94.625rem;
-		height: 52.1875rem;
-		flex-shrink: 0;
-		background: #000000;
-		opacity: 0.8;
+	.place-item-box {
+		align-items: center;
+		display: flex;
+		justify-content: space-between;
+		margin: 5rem 0;
 	}
-
-	.popup-btn {
-		position: absolute;
-		z-index: 4;
-		bottom: 2rem;
-		left: 50%;
+	.place-item-content {
+		padding: 3rem;
 	}
-
-	@media screen and (max-width: 94.625rem) {
-		.content {
-			width: 100% !important;
-			margin-left: 5rem !important;
+	.place-item-header {
+		font-size: 3.7rem;
+		font-weight: 700;
+		line-height: 120%;
+		margin-bottom: 5.3rem;
+	}
+	.place-item-desc {
+		color: #6e6e73;
+		font-size: 1.9rem;
+		line-height: 120%;
+	}
+	.place-item-img {
+		border-radius: 1.6rem 0 0 1.6rem;
+		height: 32.9rem;
+		object-fit: cover;
+		width: 45rem;
+	}
+	.reverse-flex {
+		flex-direction: row-reverse;
+	}
+	.reverse-flex .place-item-img {
+		border-radius: 0 1.6rem 1.6rem 0;
+	}
+	@media screen and (max-width: 1200px) {
+		.place-item-img {
+			border-radius: 1.6rem 0 0 1.6rem;
+			height: 32.9rem;
+			overflow: hidden;
+			width: auto;
 		}
 	}
 
-	.content {
-		overflow: hidden;
-		height: 52.1875rem;
-		width: 94.625rem;
-		z-index: 2;
-		position: absolute;
-		display: flex;
-		flex-direction: column;
-		margin-top: 11rem;
-		margin-left: 11rem;
+	#team-info {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr 1fr;
+		margin-top: 5rem;
+		text-align: center;
 	}
-
-	.title-box {
-		margin-bottom: 2.69rem;
+	.team-item {
+		line-height: 230%;
+		margin-bottom: 4.3rem;
+		text-align: center;
 	}
-
-	.title-box p {
-		color: #ffffff;
-		font-size: 3.5625rem;
-		font-style: normal;
+	.team-item-title {
+		font-size: 1.6rem;
 		font-weight: 700;
-		line-height: 133%;
 	}
 
-	.info-box p {
-		color: #ffffff;
-		font-size: 1.6875rem;
-		font-style: normal;
-		font-weight: 700;
-		line-height: 133%;
+	@media screen and (max-width: 94.6rem) {
+		.content {
+			margin-left: 5rem !important;
+			width: 100% !important;
+		}
 	}
 </style>
