@@ -14,6 +14,7 @@ import Form from "@components/section/Form.astro";
 import FAQ from "@components/section/FAQ.astro";
 import Footer from "@components/section/Footer.astro";
 import Demo from "@components/section/Demo.astro";
+import ogImage from "#assets/image/og.webp";
 const { lang = "zh-Hant" } = Astro.props;
 const t = await import(`../i18n/${lang}.json`).then(m => m.default);
 const sections = [Nav, Hero, Demo, Intro, About, News, Sponsors, Cycle, Time, Items, Plans, Addons, Form, FAQ, Footer];
@@ -25,7 +26,34 @@ const sections = [Nav, Hero, Demo, Intro, About, News, Sponsors, Cycle, Time, It
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<link rel="icon" type="image/svg+xml" href="/cfp/SITCON.svg" />
-		<title>{t.nav.title}</title>
+		<title>{t.meta.title}</title>
+		<meta name="description" content={t.meta.description} />
+		<meta property="og:title" content={t.meta.title} />
+		<meta property="og:type" content="website" />
+		<meta property="og:image" content={ogImage.src} />
+		<meta property="og:description" content={t.meta.description} />
+		<meta property="og:site_name" content="SITCON Camp" />
+		<meta name="twitter:title" content={t.meta.title} />
+		<meta name="twitter:image" content={ogImage.src} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+		<link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
+		<link rel="shortcut icon" href="/favicon/favicon.ico" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+		<meta name="apple-mobile-web-app-title" content="SITCON" />
+		<link rel="manifest" href="/favicon/site.webmanifest" />
+		<meta name="theme-color" content="#77B55A" />
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-GVRT4CHSQJ" is:inline></script>
+		<script is:inline>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag("js", new Date());
+
+			gtag("config", "G-GVRT4CHSQJ");
+		</script>
 	</head>
 	<body class="emfont-LINESeedTW">
 		{
