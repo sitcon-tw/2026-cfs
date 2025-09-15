@@ -14,7 +14,7 @@ import Form from "@components/section/Form.astro";
 import FAQ from "@components/section/FAQ.astro";
 import Footer from "@components/section/Footer.astro";
 import Demo from "@components/section/Demo.astro";
-import ogImage from "#assets/image/og.webp";
+import ogImage from "@assets/img/og.webp";
 const { lang = "zh-Hant" } = Astro.props;
 const t = await import(`../i18n/${lang}.json`).then(m => m.default);
 const sections = [Nav, Hero, Demo, Intro, About, News, Sponsors, Cycle, Time, Items, Plans, Addons, Form, FAQ, Footer];
