@@ -1,19 +1,31 @@
 ---
 import { X, Plus } from "@lucide/astro";
-const { title, background, btnText, hero = true, id = Math.random().toString(36).slice(2, 9) } = Astro.props;
+const { title, background, btnText, hero = true, id = Math.random().toString(36).slice(2, 9), button = true } = Astro.props;
 ---
 
-<div class="detail-btn" id={id}>
-	<div class="text">{btnText}</div>
-	<div class="plus"><Plus stroke-width={3} /></div>
-</div>
+{
+	button ? (
+		<div class="detail-btn" id={id}>
+			<div class="text">{btnText}</div>
+			<div class="plus">
+				<Plus stroke-width={3} />
+			</div>
+		</div>
+	) : (
+		<div id={id} />
+	)
+}
 
 <div class="popup-bg">
-	<div class="popup">
-		<div class={hero ? "popup-hero" : "popup-hero no-hero"}>
-			{title && <h2>{title}</h2>}
-			{hero && background && <img src={background} alt="Popup Background" />}
-		</div>
+	<div class={hero ? "popup" : "popup no-hero"}>
+		{
+			hero && (
+				<div class="popup-hero">
+					{title && <h2>{title}</h2>}
+					{background && <img src={background} alt="Popup Background" />}
+				</div>
+			)
+		}
 		<slot />
 		<div class="close-btn"><X stroke-width={3} /></div>
 	</div>
@@ -56,6 +68,11 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 		width: 3.5rem;
 		aspect-ratio: 1 / 1;
 		bottom: 0;
+	}
+
+	.no-hero .close-btn {
+		position: fixed;
+		bottom: 2rem;
 	}
 
 	.detail-btn .plus {
@@ -103,6 +120,9 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 		position: relative;
 		padding-bottom: 2rem;
 	}
+	.no-hero.popup {
+		padding-bottom: 0;
+	}
 
 	.show .popup {
 		opacity: 1;
@@ -113,11 +133,6 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 		height: 25rem;
 		padding: 7rem 5rem 3rem;
 		position: relative;
-	}
-
-	.no-hero {
-		height: unset;
-		padding: 2rem 5rem;
 	}
 
 	.popup-hero img {
@@ -140,24 +155,11 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 	}
 </style>
 <script define:vars={{ id }}>
-	const btn = document.getElementById(id);
-	const popupBg = document.querySelector(`#${id} + .popup-bg`);
-	const closeBtn = popupBg.querySelector(".close-btn");
-
-	btn.addEventListener("click", () => {
-		popupBg.style.display = "block";
-		setTimeout(() => {
-			popupBg.scrollTo({
-				top: 0
-			});
-			popupBg.classList.add("show");
-		}, 0);
+	document.getElementById(id)?.addEventListener("click", () => {
+		popupCtrl(id, "open");
 	});
 
-	closeBtn.addEventListener("click", () => {
-		popupBg.classList.remove("show");
-		setTimeout(() => {
-			popupBg.style.display = "none";
-		}, 300);
+	document.querySelector(`#${id} + .popup-bg .close-btn`)?.addEventListener("click", () => {
+		popupCtrl(id, "close");
 	});
 </script>

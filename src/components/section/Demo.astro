@@ -27,6 +27,14 @@ import Popup from "@components/Popup.astro";
 			</p>
 		</div>
 	</Popup>
+
+	<h2 id="next">這一顆按鈕比較害羞一點</h2>
+
+	<button onclick="popupCtrl('another-popup', 'open')">我也是按鈕</button>
+
+	<Popup button={false} hero={false} id="another-popup">
+		<h2>好吧。</h2>
+	</Popup>
 </section>
 
 <style>
@@ -45,5 +53,14 @@ import Popup from "@components/Popup.astro";
 	p {
 		margin-bottom: 3rem;
 		line-height: 150%;
+	}
+
+	#next {
+		margin-top: 5rem;
+	}
+
+	button {
+		margin: auto;
+		display: block;
 	}
 </style>
