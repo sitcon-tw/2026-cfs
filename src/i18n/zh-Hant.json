@@ -26,7 +26,29 @@
     "description": "SITCON 是由學生組成、投身資訊教育與推廣開源精神的社群。也是一個由學生主辦的資訊研討會，給學生們一個發表交流技術的舞台。"
   },
   "plans": {
-    "title": "選擇適合你的方案"
+    "title": "選擇適合你的方案",
+    "features": {
+      "booth_double": "兩倍大會場攤位",
+      "booth_regular": "會場攤位",
+      "video_r0": "R0 影片輪播",
+      "video_logo_display": "Logo 顯示",
+      "welcome_bag": "迎賓袋文宣",
+      "tickets": "贈票",
+      "shuttle_broadcast": "接駁車車內廣播",
+      "partner_announcement": "夥伴宣讀",
+      "partner_announcement_timing": "R0 議程前",
+      "live_template": "直播模板",
+      "entrance_schedule": "門口議程表",
+      "entrance_backdrop": "入口落地窗背板",
+      "conference_backdrop": "年會意象背板",
+      "shared_notes": "年會共筆",
+      "website_logo": "網頁 Logo 曝光",
+      "ig_story": "IG 限時動態",
+      "ig_highlight": "IG 精選動態曝光",
+      "appointment_exposure": "約專曝光",
+      "logo_exposure": "Logo 曝光",
+      "not_available": "—"
+    }
   },
   "items": {
     "title": "收藏感興趣的項目",
@@ -41,15 +63,21 @@
     "showLess": "收起",
     "interestedItems": "感興趣的項目",
     "noInterestedItems": "尚未收藏任何項目",
-    "categories": {
-      "brand_exposure": "品牌曝光",
-      "live_interaction": "現場互動",
-      "recruitment_and_promotion": "招募推廣",
-      "exclusive_agenda": "獨家議程",
-      "others": "其他"
+    "description": {
+      "lunch_flag_description": "我們將在發放午餐時同時發送由 SITCON 精心設計的一次性紙餐墊，並在上面印製您的品牌圖文介紹，讓每一位與會者都能在餐墊上注意到您的品牌。"
     }
   },
   "global": {
+    "unit": {
+      "ticket": "張",
+      "booth": "個",
+      "agenda": "場",
+      "ad": "則",
+      "other": "項",
+      "copy": "份",
+      "second": "秒",
+      "time": "次"
+    },
     "item_categories": {
       "all": "全部",
       "brand_exposure": "品牌曝光",
