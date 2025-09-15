@@ -1,13 +1,101 @@
 ---
 const { t } = Astro.props;
 import Popup from "@components/Popup.astro";
+
+const timelineItems = [
+	{ date: "09/28", event: "年會籌備起跑" },
+	{ date: "10/19", event: "主題定案" },
+	{ date: "11/22", event: "公開宣傳、議程徵稿" },
+	{ date: "01/12", event: "開放售票" },
+	{ date: "01/21", event: "議程徵稿截止" },
+	{ date: "01/29", event: "公布議程表" },
+	{ date: "03/08", event: "年會舉辦" }
+];
+const placeItems = [
+	{
+		code: "R0",
+		name: "國際會議廳",
+		description: "總計 426 席位\n" + "當天的開場與 Keynote \n" + "也會於此會議廳進行。",
+		img: "cfs/r0.jpg"
+	},
+	{
+		code: "R1 R2",
+		name: "第一 / 第二會議室",
+		description: "兩間會議室皆為 112 席位，走道及會議廳後方可再容納更多人。",
+		img: "cfs/r0.jpg"
+	},
+	{
+		code: "R3",
+		name: "遠距會議室",
+		description: "總計 36 席位，舞台兩側、第一排座位前方及會議廳後方可再容納更多人。",
+		img: "cfs/r0.jpg"
+	},
+	{
+		code: "",
+		name: "交誼廳",
+		description: "寬敞無障礙物的開放式空間，擁有一整面陽光明媚的落地窗。不同於其他議程廳的演講形式，此空間可自由佈置桌椅，進行各式活動。",
+		img: "cfs/r0.jpg"
+	}
+];
 ---
 
 <section id="time">
 	<img src="cfs/sitcon-volunteer.jpg" class="bg-image" alt="sitcon 2024" />
 	<div class="bg-overlay"></div>
 	<div class="popup-btn">
-		<Popup btnText={t.popup_label} title={t.popup_label} id="place-staff-popup" background="cfs/r0.jpg" />
+		<Popup btnText={t.popup_label} title={t.popup_label} id="place-staff-popup" background="cfs/r0.jpg">
+			<section class="popup-section">
+				<p class="title">活動時程</p>
+				<div id="timeline">
+					<svg viewBox="0 0 38 527" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M5.66667 14C5.66667 21.3638 11.6362 27.3333 19 27.3333C26.3638 27.3333 32.3333 21.3638 32.3333 14C32.3333 6.6362 26.3638 0.666667 19 0.666667C11.6362 0.666667 5.66667 6.6362 5.66667 14ZM17.2322 525.768C18.2085 526.744 19.7914 526.744 20.7677 525.768L36.6776 509.858C37.654 508.882 37.654 507.299 36.6776 506.322C35.7013 505.346 34.1184 505.346 33.1421 506.322L19 520.464L4.85784 506.322C3.88153 505.346 2.29862 505.346 1.32231 506.322C0.345998 507.299 0.345998 508.882 1.32231 509.858L17.2322 525.768ZM19 14L16.5 14L16.5 524L19 524L21.5 524L21.5 14L19 14Z"
+							fill="black"
+							fill-opacity="0.59"></path>
+					</svg>
+					<div id="timeline-items">
+						{
+							timelineItems.map(item => (
+								<div id="item">
+									<p>{item.date}</p>
+									<p>{item.event}</p>
+								</div>
+							))
+						}
+					</div>
+				</div>
+			</section>
+			<section class="popup-section">
+				<p class="title">場地詳情</p>
+				<div style="display: flex; justify-content: center; align-items: center;margin-top: 1rem;">
+					<div id="place-info">
+						<p id="name">中央研究院<br />人文社會科學館</p>
+						<div style="text-align: center;">
+							<p style="font-size: 1.8125rem;line-height: 120%;margin-bottom: 1rem;">場館預估容納人數上限</p>
+							<p id="people">1,300 人</p>
+						</div>
+					</div>
+				</div>
+			</section>
+			<section id="place-items">
+				{
+					placeItems.map((item, index) => (
+						<div id="place-item">
+							<div class=`place-item-box ${(index + 1) % 2 == 0 ? "reverse-flex" : ""}` >
+								<div class="place-item-content">
+									<div style="font-size: 3.75rem;font-weight: 700;margin-bottom: 5.31rem;line-height: 120%">
+										<p>{item.code}</p>
+										<p>{item.name}</p>
+									</div>
+									<p style="font-size: 1.875rem;color: #6E6E73;line-height: 120%;">{item.description}</p>
+								</div>
+								<img src={item.img} alt={item.name} class="place-item-img" />
+							</div>
+						</div>
+					))
+				}
+			</section>
+		</Popup>
 	</div>
 	<div class="content">
 		<div class="title-box">
@@ -22,18 +110,117 @@ import Popup from "@components/Popup.astro";
 </section>
 
 <style>
-	section {
+	.reverse-flex {
+		flex-direction: row-reverse;
+	}
+
+	.place-item-content {
+		padding: 3rem;
+	}
+
+	.place-item-img {
+		width: 45rem;
+		height: 32.9375rem;
+		object-fit: cover;
+		border-radius: 1.5625rem 0 0 1.5625rem;
+	}
+
+	@media screen and (max-width: 1200px) {
+		.place-item-img {
+			border-radius: 1.5625rem 0 0 1.5625rem;
+			width: auto;
+			height: 32.9375rem;
+			overflow: hidden;
+		}
+	}
+
+	.reverse-flex .place-item-img{
+		border-radius: 0 1.5625rem 1.5625rem 0;
+	}
+
+	.place-item-box {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin: 5rem 0;
+	}
+
+	.popup-section {
+		padding: 2rem;
+	}
+
+	#time {
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		overflow: hidden;
 		position: relative;
 	}
+
+	#place-info {
+		background: #e8e8ec;
+		display: inline-flex;
+		padding: 3.875rem 5.875rem;
+		justify-content: center;
+		align-items: center;
+		gap: 2.8125rem;
+		border-radius: 1rem;
+	}
+
+	#place-info p {
+		color: #000000;
+		line-height: 120%; /* 3.075rem */
+	}
+
+	#place-info #name {
+		font-size: 2.5625rem;
+		font-weight: 700;
+	}
+
+	#place-info #people {
+		font-size: 3.25rem;
+		font-weight: 700;
+	}
+
+	#timeline {
+		padding: 1rem;
+		display: flex;
+		justify-content: center;
+		margin: 2rem;
+	}
+
+	svg {
+		margin: 0 5rem;
+		width: 4rem;
+		height: 31.875rem;
+		flex-shrink: 0;
+	}
+
+	#timeline-items #item {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
+
+	#timeline-items #item p {
+		color: #000;
+		font-size: 2rem;
+		font-weight: 700;
+		line-height: 228%; /* 5.28388rem */
+	}
+
+	.title {
+		color: #000;
+		font-size: 3.75rem;
+		font-weight: 700;
+		line-height: 120%;
+	}
+
 	.bg-image {
 		width: 94.625rem;
 		height: 52.1875rem;
 		flex-shrink: 0;
 	}
+
 	.bg-overlay {
 		z-index: 1;
 		position: absolute;
@@ -43,18 +230,21 @@ import Popup from "@components/Popup.astro";
 		background: #000000;
 		opacity: 0.8;
 	}
+
 	.popup-btn {
 		position: absolute;
 		z-index: 4;
 		bottom: 2rem;
 		left: 50%;
 	}
+
 	@media screen and (max-width: 94.625rem) {
 		.content {
 			width: 100% !important;
 			margin-left: 5rem !important;
 		}
 	}
+
 	.content {
 		overflow: hidden;
 		height: 52.1875rem;
@@ -66,9 +256,11 @@ import Popup from "@components/Popup.astro";
 		margin-top: 11rem;
 		margin-left: 11rem;
 	}
+
 	.title-box {
 		margin-bottom: 2.69rem;
 	}
+
 	.title-box p {
 		color: #ffffff;
 		font-size: 3.5625rem;
@@ -76,6 +268,7 @@ import Popup from "@components/Popup.astro";
 		font-weight: 700;
 		line-height: 133%;
 	}
+
 	.info-box p {
 		color: #ffffff;
 		font-size: 1.6875rem;
