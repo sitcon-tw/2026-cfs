@@ -35,12 +35,12 @@ const sections = [Nav, Hero, Demo, Intro, About, News, Sponsors, Cycle, Time, It
 		<meta name="twitter:title" content={t.meta.title} />
 		<meta name="twitter:image" content={ogImage.src} />
 		<meta name="twitter:card" content="summary_large_image" />
-		<link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
-		<link rel="icon" type="image/svg+xml" href="/SITCON.svg" />
-		<link rel="shortcut icon" href="/favicon/favicon.ico" />
-		<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+		<link rel="icon" type="image/png" href="/cfs/favicon/favicon-96x96.png" sizes="96x96" />
+		<link rel="icon" type="image/svg+xml" href="/cfs/SITCON.svg" />
+		<link rel="shortcut icon" href="/cfs/favicon/favicon.ico" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/cfs/favicon/apple-touch-icon.png" />
 		<meta name="apple-mobile-web-app-title" content="SITCON" />
-		<link rel="manifest" href="/favicon/site.webmanifest" />
+		<link rel="manifest" href="/cfs/favicon/site.webmanifest" />
 		<meta name="theme-color" content="#77B55A" />
 		<!-- Google tag (gtag.js) -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=G-GVRT4CHSQJ" is:inline></script>
@@ -52,6 +52,25 @@ const sections = [Nav, Hero, Demo, Intro, About, News, Sponsors, Cycle, Time, It
 			gtag("js", new Date());
 
 			gtag("config", "G-GVRT4CHSQJ");
+
+			// popup 控制
+			const popupCtrl = (id = "", action = "open") => {
+				const popupBg = document.querySelector(`#${id} + .popup-bg`);
+				if (action === "open") {
+					popupBg.style.display = "block";
+					setTimeout(() => {
+						popupBg.scrollTo({
+							top: 0
+						});
+						popupBg.classList.add("show");
+					}, 0);
+				} else {
+					popupBg.classList.remove("show");
+					setTimeout(() => {
+						popupBg.style.display = "none";
+					}, 300);
+				}
+			};
 		</script>
 	</head>
 	<body class="emfont-LINESeedTW">
