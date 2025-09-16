@@ -39,7 +39,7 @@ import FormInput from "../FormInput.astro";
 
 	const form = document.getElementById("sponsor-form") as HTMLFormElement;
 	const submitButton = document.getElementById("sponsor-form-submit");
-	let message = document.getElementById("form-message")?.textContent;
+	const messageElement = document.getElementById("form-message") as HTMLDivElement;
 	submitButton?.addEventListener("click", event => {
 		event.preventDefault();
 		fetch(apiUrl, {
@@ -48,16 +48,14 @@ import FormInput from "../FormInput.astro";
 		})
 			.then(async res => {
 				const data = await res.json();
-				if (data.status == 200) {
+				if (data.code == 200) {
 					form.reset();
 				}
-				if (message) {
-					message = data.message;
-				}
+				messageElement.textContent = data.message;
 			})
 			.catch(e => {
 				console.error(e);
-				message = "發生錯誤，請稍後再試";
+				messageElement.textContent = "發生錯誤，請稍後再試";
 			});
 	});
 </script>
