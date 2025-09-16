@@ -27,6 +27,7 @@
   },
   "plans": {
     "title": "選擇適合你的方案",
+    "plan_comparison": "方案比較",
     "features": {
       "booth_double": "兩倍大會場攤位",
       "booth_regular": "會場攤位",

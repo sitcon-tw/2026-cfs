@@ -1,0 +1,84 @@
+---
+import Popup from "../Popup.astro";
+
+const { item, t, popupId } = Astro.props;
+---
+
+<Popup
+	id={popupId || `plan-popup-${item.id}`}
+	title={t.item_titles[item.title]}
+	background={item.image}
+	button={false}
+	hero={false}
+>
+	<div class="popup-content">
+		<div class="item-details">
+			<h3>{t.item_titles[item.title]}</h3>
+			<p class="item-description">{t.item_descriptions[item.description]}</p>
+			<div class="item-meta">
+				<span class="remaining">{item.remaining} {t.unit[item.unit]} {t.remaining}</span>
+				<span class="category">{t.item_categories[item.category]}</span>
+			</div>
+		</div>
+
+	</div>
+</Popup>
+
+<style is:global>
+	.popup-content {
+		padding: 2rem 5rem;
+		display: flex;
+		flex-direction: column;
+		gap: 3rem;
+	}
+
+	.item-details h3 {
+		font-size: 2.5rem;
+		color: var(--black);
+		margin-bottom: 1rem;
+		font-weight: 700;
+	}
+
+	.item-description {
+		font-size: 1.2rem;
+		line-height: 1.6;
+		color: var(--black);
+		margin-bottom: 1.5rem;
+	}
+
+	.item-meta {
+		display: flex;
+		gap: 2rem;
+		align-items: center;
+	}
+
+	.remaining {
+		background-color: var(--items-green);
+		color: white;
+		padding: 0.5rem 1rem;
+		border-radius: 1rem;
+		font-weight: 600;
+		font-size: 0.9rem;
+	}
+
+	.category {
+		background-color: var(--gray);
+		color: var(--black);
+		padding: 0.5rem 1rem;
+		border-radius: 1rem;
+		font-weight: 500;
+		font-size: 0.9rem;
+	}
+
+
+	@media (max-width: 768px) {
+		.popup-content {
+			padding: 1.5rem 2rem;
+			gap: 2rem;
+		}
+
+		.item-details h3 {
+			font-size: 2rem;
+		}
+	}
+</style>
