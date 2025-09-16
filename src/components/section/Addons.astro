@@ -1,6 +1,7 @@
 ---
 const { t } = Astro.props;
 import { Flag } from "@lucide/astro";
+import ItemPopup from "../items/ItemPopup.astro";
 import itemsData from "../../data/items_data.json";
 
 // Define types
@@ -57,8 +58,25 @@ const categories = Object.keys(groupedItems);
 	</div>
 </section>
 
+{
+	itemsData.map((item: Item) => {
+		const matchingItem = itemsData.find((dataItem: Item) => dataItem.id === item.id);
+		if (matchingItem) {
+			return (
+				<ItemPopup
+					item={matchingItem}
+					t={t}
+					popupId={`addon-popup-${item.id}`}
+				/>
+			);
+		}
+	})
+}
+
 <script>
 	import { isItemInterested } from "../../utils/local-storage.ts";
+
+	declare function popupCtrl(id: string, action: string): void;
 
 	function updateHighlighting() {
 		const addonCards = document.querySelectorAll(".addon-card");
@@ -75,8 +93,24 @@ const categories = Object.keys(groupedItems);
 		});
 	}
 
+	function addCardClickHandlers() {
+		const addonCards = document.querySelectorAll(".addon-card") as NodeListOf<HTMLElement>;
+		addonCards.forEach(card => {
+			const itemIdStr = card.getAttribute("data-item-id");
+			if (itemIdStr) {
+				card.style.cursor = "pointer";
+				card.addEventListener("click", function(e) {
+					e.stopPropagation();
+					const popupId = `addon-popup-${itemIdStr}`;
+					popupCtrl(popupId, "open");
+				});
+			}
+		});
+	}
+
 	document.addEventListener("DOMContentLoaded", function () {
 		updateHighlighting();
+		addCardClickHandlers();
 	});
 
 	window.addEventListener("itemsChange", updateHighlighting);
