@@ -62,10 +62,7 @@
     "expandAll": "展開所有項目",
     "showLess": "收起",
     "interestedItems": "感興趣的項目",
-    "noInterestedItems": "尚未收藏任何項目",
-    "description": {
-      "lunch_flag_description": "我們將在發放午餐時同時發送由 SITCON 精心設計的一次性紙餐墊，並在上面印製您的品牌圖文介紹，讓每一位與會者都能在餐墊上注意到您的品牌。"
-    }
+    "noInterestedItems": "尚未收藏任何項目"
   },
   "global": {
     "unit": {
@@ -87,11 +84,14 @@
       "others": "其他"
     },
     "item_titles": {
-      "lunch_flag": "午餐旗・點心旗（剩餘 2/3）",
+      "lunch_flag": "午餐旗・點心旗",
       "ticket_giveaway": "贈票",
       "booth_setup": "會場攤位設置"
     },
-    "tire_names": {
+    "item_descriptions": {
+      "lunch_flag": "我們將在發放午餐時同時發送由 SITCON 精心設計的一次性紙餐墊，並在上面印製您的品牌圖文介紹，讓每一位與會者都能在餐墊上注意到您的品牌。"
+    },
+    "tier_names": {
       "flagship": "領航級",
       "deep": "深耕級",
       "forward": "前瞻級",
