@@ -59,18 +59,13 @@ const categories = Object.keys(groupedItems);
 </section>
 
 {
-	itemsData.map((item: Item) => {
-		const matchingItem = itemsData.find((dataItem: Item) => dataItem.id === item.id);
-		if (matchingItem) {
-			return (
-				<ItemPopup
-					item={matchingItem}
-					t={t}
-					popupId={`addon-popup-${item.id}`}
-				/>
-			);
-		}
-	})
+	itemsData.map((item: Item) => (
+		<ItemPopup
+			item={item}
+			t={t}
+			popupId={`addon-popup-${item.id}`}
+		/>
+	))
 }
 
 <script>
