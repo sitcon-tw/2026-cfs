@@ -1,65 +1,61 @@
 ---
+import type { ImageMetadata } from "astro";
 const { t } = Astro.props;
 import Popup from "@components/Popup.astro";
+import r0 from "@assets/img/r0.jpg";
+import volunteer from "@assets/img/sitcon-volunteer.jpg";
 
-const timelineItems = [
-	{ date: "09/28", event: "年會籌備起跑" },
-	{ date: "10/19", event: "主題定案" },
-	{ date: "11/22", event: "公開宣傳、議程徵稿" },
-	{ date: "01/12", event: "開放售票" },
-	{ date: "01/21", event: "議程徵稿截止" },
-	{ date: "01/29", event: "公布議程表" },
-	{ date: "03/08", event: "年會舉辦" }
-];
-
-const placeItems = [
+type timelineItem = {
+	date: string;
+	event: string;
+};
+type placeItem = {
+	code: string;
+	name: string;
+	description: string;
+	img: ImageMetadata;
+};
+type PersonInfo = {
+	title: string;
+	name: string;
+	school: string;
+	major: string;
+};
+const timelineItems: timelineItem[] = t.timeline_items;
+const teams: PersonInfo[] = t.teams;
+const placeItems: placeItem[] = [
 	{
 		code: "R0",
 		name: "國際會議廳",
 		description: "總計 426 席位\n當天的開場與 Keynote \n也會於此會議廳進行。",
-		img: "cfs/r0.jpg"
+		img: r0
 	},
 	{
 		code: "R1 R2",
 		name: "第一 / 第二會議室",
 		description: "兩間會議室皆為 112 席位，走道及會議廳後方可再容納更多人。",
-		img: "cfs/r0.jpg"
+		img: r0
 	},
 	{
 		code: "R3",
 		name: "遠距會議室",
 		description: "總計 36 席位，舞台兩側、第一排座位前方及會議廳後方可再容納更多人。",
-		img: "cfs/r0.jpg"
+		img: r0
 	},
 	{
 		code: "",
 		name: "交誼廳",
 		description: "寬敞無障礙物的開放式空間，擁有一整面陽光明媚的落地窗。不同於其他議程廳的演講形式，此空間可自由佈置桌椅，進行各式活動。",
-		img: "cfs/r0.jpg"
+		img: r0
 	}
-];
-
-const teams = [
-	{ title: "總召集人", name: "黃映綺", school: "國立中山大學", major: "人科學程" },
-	{ title: "副召集人", name: "康智惟", school: "國立臺灣科技大學", major: "電機工程學系" },
-	{ title: "行銷組長", name: "曾煥軒", school: "國立臺灣大學", major: "資訊管理學系" },
-	{ title: "議程組長", name: "郭慕天", school: "國立陽明交通大學", major: "資訊工程學系" },
-	{ title: "設計組長", name: "吳昀臻", school: "東海大學", major: "資訊工程學系" },
-	{ title: "財務組長", name: "劉家琪", school: "國立陽明交通大學", major: "資訊工程學系" },
-	{ title: "開發組長", name: "陳威達", school: "桃園高中階段", major: "非學校型態實驗教育" },
-	{ title: "場務組長", name: "陳思惟", school: "國立中央大學", major: "資電不分系" },
-	{ title: "行政組長", name: "邱翊盛", school: "內湖高工", major: "電子科" },
-	{ title: "製播組長", name: "鄭弘易", school: "國立彰化師範大學", major: "資訊工程學系" },
-	{ title: "紀錄組長", name: "廖耿鋒", school: "明道中學", major: "資訊科" },
-	{ title: "編輯組長", name: "黃以信", school: "輔仁大學", major: "圖書資訊學系" }
 ];
 ---
 
 <section id="time">
-	<img src="cfs/sitcon-volunteer.jpg" class="bg-image" alt="sitcon 2024" />
+	<img src={volunteer.src} class="bg-image" alt="sitcon 2024" />
 	<div class="bg-overlay"></div>
 	<div class="popup-btn">
-		<Popup btnText={t.popup_label} title={t.popup_label} id="place-staff-popup" background="cfs/r0.jpg">
+		<Popup btnText={t.popup_label} title={t.popup_label} id="place-staff-popup" background={r0.src}>
 			<section class="popup-section">
 				<p class="title">活動時程</p>
 				<div id="timeline">
@@ -72,12 +68,14 @@ const teams = [
 						</svg>
 					</div>
 					<div id="timeline-items">
-						{timelineItems.map(item => (
-							<div id="item">
-								<p>{item.date}</p>
-								<p>{item.event}</p>
-							</div>
-						))}
+						{
+							timelineItems.map(item => (
+								<div id="item">
+									<p>{item.date}</p>
+									<p>{item.event}</p>
+								</div>
+							))
+						}
 					</div>
 				</div>
 			</section>
@@ -94,32 +92,36 @@ const teams = [
 				</div>
 			</section>
 			<section id="place-items">
-				{placeItems.map((item, index) => (
-					<div id="place-item">
-						<div class={`place-item-box ${(index + 1) % 2 == 0 ? "reverse-flex" : ""}`}>
-							<div class="place-item-content">
-								<div class="place-item-header">
-									<p>{item.code}</p>
-									<p>{item.name}</p>
+				{
+					placeItems.map((item, index) => (
+						<div id="place-item">
+							<div class={`place-item-box ${(index + 1) % 2 == 0 ? "reverse-flex" : ""}`}>
+								<div class="place-item-content">
+									<div class="place-item-header">
+										<p>{item.code}</p>
+										<p>{item.name}</p>
+									</div>
+									<p class="place-item-desc">{item.description}</p>
 								</div>
-								<p class="place-item-desc">{item.description}</p>
+								<img src={item.img.src} alt={item.name} class="place-item-img" />
 							</div>
-							<img src={item.img} alt={item.name} class="place-item-img" />
 						</div>
-					</div>
-				))}
+					))
+				}
 			</section>
 			<section class="popup-section">
 				<p class="title">籌備團隊</p>
 				<div id="team-info">
-					{teams.map(item => (
-						<div class="team-item">
-							<p class="team-item-title">{item.title}</p>
-							<p class="team-item-title">{item.name}</p>
-							<p>{item.school}</p>
-							<p>{item.major}</p>
-						</div>
-					))}
+					{
+						teams.map(item => (
+							<div class="team-item">
+								<p class="team-item-title">{item.title}</p>
+								<p class="team-item-title">{item.name}</p>
+								<p>{item.school}</p>
+								<p>{item.major}</p>
+							</div>
+						))
+					}
 				</div>
 			</section>
 		</Popup>
