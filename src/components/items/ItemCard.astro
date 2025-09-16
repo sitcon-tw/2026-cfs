@@ -19,8 +19,8 @@ const { t, card, shopConfig } = Astro.props;
 				type="button"
 				class="add-button"
 				data-item-id={card.id}
-				data-item-title={card.title}
-				data-item-category={card.category}
+				data-item-title={t.item_titles[card.title]}
+				data-item-category={t.item_categories[card.category]}
 				data-item-image={card.image}
 				data-item-deadline={card.deadline}
 			>

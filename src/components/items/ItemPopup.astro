@@ -2,6 +2,8 @@
 import Popup from "../Popup.astro";
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import { X } from "@lucide/astro";
+import plansData from '../../data/plans_data.json';
 
 const { item, t, popupId } = Astro.props;
 
@@ -26,6 +28,10 @@ try {
 // Import images dynamically using import.meta.glob
 const images = import.meta.glob<{ default: ImageMetadata }>('./markdown/**/image.jpg');
 const imagePath = `./markdown/${item.id}/image.jpg`;
+
+// Find the matching plan row for this item
+const planRow = plansData.rows.find(row => row.id === item.id);
+const shouldShowPlanTiers = planRow !== undefined;
 ---
 
 <Popup
@@ -44,6 +50,49 @@ const imagePath = `./markdown/${item.id}/image.jpg`;
 			<div class="item-price">
 				<span class="price-value">{item.price}</span>
 			</div>
+
+			{shouldShowPlanTiers && planRow && (
+				<div class="plan-tiers">
+					{plansData.tiers.map((tier, index) => {
+						const value = planRow.values[index];
+						let displayText = "0";
+						let unit = "";
+
+						if (value.textKey === "not_available") {
+							displayText = "0";
+						} else if ('number' in value && value.number !== undefined) {
+							displayText = value.number.toString();
+							if ('unitKey' in value && value.unitKey) {
+								// Follow the same pattern as Plans.astro - use only the last part of unitKey
+								const unitKey = value.unitKey.split('.').pop();
+								unit = unitKey ? t.unit[unitKey] || "" : "";
+							}
+						} else if ('icon' in value && value.icon !== undefined) {
+							displayText = value.icon.toString();
+							// For icon values, we can use a default unit if needed
+							unit = "個"; // or whatever unit makes sense for icons
+						} else {
+							// For other types (main, textKey that aren't not_available), don't show anything
+							displayText = "0";
+						}
+
+						return (
+							<div class="tier-item" style={`color: ${tier.textColor}`}>
+								<span class="tier-name">{t.tier_names[tier.name]}</span>
+								<span class="tier-arrow">→</span>
+								{displayText === "0" ? (
+									<span class="tier-value tier-unavailable">
+										<X size={20} />
+									</span>
+								) : (
+									<span class="tier-value">{displayText} {unit}</span>
+								)}
+							</div>
+						);
+					})}
+				</div>
+			)}
+
 			{hasMarkdownContent ? (
 				<div class="markdown-content">
 					<MarkdownContent />
@@ -174,6 +223,52 @@ const imagePath = `./markdown/${item.id}/image.jpg`;
 	}
 
 
+	.plan-tiers {
+		margin: 1rem 0;
+		padding: 0;
+	}
+
+	.tier-item {
+		display: flex;
+		align-items: center;
+		margin-bottom: 0.8rem;
+		font-size: 1.3rem;
+		font-weight: 600;
+	}
+
+	.tier-item:last-child {
+		margin-bottom: 0;
+	}
+
+	.tier-name {
+		font-weight: 700;
+		font-size: 1.4rem;
+	}
+
+	.tier-arrow {
+		margin: 0 1.5rem;
+		font-weight: 700;
+		opacity: 0.7;
+		font-size: 1.3rem;
+	}
+
+	.tier-value {
+		font-weight: 700;
+		font-size: 1.5rem;
+	}
+
+	.tier-unavailable {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		opacity: 0.6;
+	}
+
+	.tier-unavailable svg {
+		width: 24px;
+		height: 24px;
+	}
+
 	@media (max-width: 768px) {
 		.popup-content {
 			padding: 1.5rem 0;
@@ -196,6 +291,35 @@ const imagePath = `./markdown/${item.id}/image.jpg`;
 
 		.item-image img {
 			border-radius: 15px;
+		}
+
+		.plan-tiers {
+			margin: 0.8rem 0;
+			padding: 0;
+		}
+
+		.tier-item {
+			font-size: 1.1rem;
+			margin-bottom: 0.6rem;
+		}
+
+		.tier-name {
+			min-width: 110px;
+			font-size: 1.2rem;
+		}
+
+		.tier-arrow {
+			font-size: 1.1rem;
+			margin: 0 1rem;
+		}
+
+		.tier-value {
+			font-size: 1.3rem;
+		}
+
+		.tier-unavailable svg {
+			width: 20px;
+			height: 20px;
 		}
 	}
 </style>

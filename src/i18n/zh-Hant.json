@@ -54,7 +54,6 @@
   "items": {
     "title": "收藏感興趣的項目",
     "subtitle": "分為四個等級，部分為加購項目。請注意截止期限。",
-    "remaining": "剩餘",
     "days": "天",
     "hours": "小時",
     "minutes": "分鐘",
@@ -67,6 +66,7 @@
     "noInterestedItems": "尚未收藏任何項目"
   },
   "global": {
+    "remaining": "剩餘",
     "unit": {
       "ticket": "張",
       "booth": "個",
