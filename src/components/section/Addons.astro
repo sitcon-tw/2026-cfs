@@ -7,10 +7,13 @@ import itemsData from "../../data/items_data.json";
 // Define types
 interface Item {
 	id: number;
+	remaining: number;
+	unit: string;
 	category: string;
 	title: string;
-	image: string;
+	description: string;
 	deadline: string;
+	price: string;
 }
 
 interface GroupedItems {
