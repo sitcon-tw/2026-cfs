@@ -38,16 +38,18 @@ import FormInput from "../FormInput.astro";
 	const apiUrl = "https://script.google.com/macros/s/AKfycbzjGqtt87QL_8bvH7suOvReCTawQeRmSqtGeJFDPBnJVRsQan628x9swGFBhcPs0LnH/exec";
 
 	const form = document.getElementById("sponsor-form") as HTMLFormElement;
-	const submitButton = document.getElementById("sponsor-form-submit");
+	const submitButton = document.getElementById("sponsor-form-submit") as HTMLButtonElement;
 	const messageElement = document.getElementById("form-message") as HTMLDivElement;
 	submitButton?.addEventListener("click", event => {
 		event.preventDefault();
+		submitButton.disabled = true;
 		fetch(apiUrl, {
 			method: "POST",
 			body: new FormData(form)
 		})
 			.then(async res => {
 				const data = await res.json();
+				submitButton.disabled = false;
 				if (data.code == 200) {
 					form.reset();
 				}
