@@ -1,7 +1,9 @@
 ---
 const { t } = Astro.props;
 import { Container } from "@lucide/astro";
+import Popup from "../Popup.astro";
 import plansData from "../../data/plans_data.json";
+import itemsData from "../../data/items_data.json";
 ---
 
 <section id="plans">
@@ -13,7 +15,7 @@ import plansData from "../../data/plans_data.json";
 					plansData.tiers.map((tier: any) => (
 						<div class="tier-column">
 							<div class="tier-name" style={`color: ${tier.textColor}`}>
-								{t.tire_names[tier.name]}
+								{t.tier_names[tier.name]}
 							</div>
 							<div class="tier-price">{tier.price}</div>
 						</div>
@@ -60,6 +62,72 @@ import plansData from "../../data/plans_data.json";
 	</div>
 </section>
 
+{
+	plansData.rows.map((row: any) => {
+		const matchingItem = itemsData.find((item: any) => item.id === row.id);
+		if (matchingItem) {
+			return (
+				<Popup
+					id={`plan-popup-${row.id}`}
+					title={t.item_titles[matchingItem.title]}
+					background={matchingItem.image}
+					btnText=""
+					hero={true}
+				>
+					<div class="popup-content">
+						<div class="item-details">
+							<h3>{t.item_titles[matchingItem.title]}</h3>
+							<p class="item-description">{t.item_descriptions[matchingItem.description]}</p>
+							<div class="item-meta">
+								<span class="remaining">{matchingItem.remaining} {t.unit[matchingItem.unit]} {t.remaining}</span>
+								<span class="category">{t.item_categories[matchingItem.category]}</span>
+							</div>
+						</div>
+
+						<div class="plan-comparison">
+							<h4>{t.plan_comparison}</h4>
+							<div class="tier-comparison">
+								{row.values.map((value: any, index: number) => {
+									const tier = plansData.tiers[index];
+									const hasNumber = value.number !== undefined;
+									const mainText = value.textKey ? t.features[value.textKey] : (value.main || '');
+									const subText = value.subKey ? t.features[value.subKey] : (value.sub || '');
+									const unitText = value.unitKey ? t.unit[value.unitKey.split('.').pop()] : '';
+
+									return (
+										<div class="tier-item" style={`border-color: ${tier.textColor}`}>
+											<div class="tier-name" style={`color: ${tier.textColor}`}>
+												{t.tier_names[tier.name]}
+											</div>
+											<div class="tier-value">
+												{value.icon && (
+													<div class="tier-icons">
+														{Array.from({ length: value.icon }, (_, i) => (
+															<Container key={i} />
+														))}
+													</div>
+												)}
+												{hasNumber ? (
+													<div class="tier-number">
+														{value.number} {unitText}
+													</div>
+												) : (
+													<div class="tier-text">{mainText}</div>
+												)}
+												{subText && <div class="tier-sub">{subText}</div>}
+											</div>
+										</div>
+									);
+								})}
+							</div>
+						</div>
+					</div>
+				</Popup>
+			);
+		}
+	})
+}
+
 <script>
 	import { isItemInterested } from "../../utils/local-storage.ts";
 
@@ -83,8 +151,31 @@ import plansData from "../../data/plans_data.json";
 		});
 	}
 
+	function addRowClickHandlers() {
+		const planRows = document.querySelectorAll(".plan-row") as NodeListOf<HTMLElement>;
+		planRows.forEach(row => {
+			const rowIdStr = row.getAttribute("data-row-id");
+			if (rowIdStr) {
+				row.style.cursor = "pointer";
+				row.addEventListener("click", function(e) {
+					e.stopPropagation();
+					const popupId = `plan-popup-${rowIdStr}`;
+					const popup = document.querySelector(`#${popupId} + .popup-bg`) as HTMLElement;
+					if (popup) {
+						popup.style.display = "block";
+						setTimeout(() => {
+							popup.scrollTo({ top: 0 });
+							popup.classList.add("show");
+						}, 0);
+					}
+				});
+			}
+		});
+	}
+
 	document.addEventListener("DOMContentLoaded", function() {
 		updateHighlighting();
+		addRowClickHandlers();
 	});
 
 	window.addEventListener("itemsChange", updateHighlighting);
@@ -302,6 +393,143 @@ import plansData from "../../data/plans_data.json";
 		.plans-header,
 		.plan-row {
 			min-width: 500px;
+		}
+	}
+
+	/* Plan row hover effect */
+	.plan-row:hover {
+		background-color: var(--items-bg);
+		border-radius: 0.5rem;
+		transition: background-color 0.2s ease;
+	}
+</style>
+
+<style is:global>
+	/* Popup content styling */
+	.popup-content {
+		padding: 2rem 5rem;
+		display: flex;
+		flex-direction: column;
+		gap: 3rem;
+	}
+
+	.item-details h3 {
+		font-size: 2.5rem;
+		color: var(--black);
+		margin-bottom: 1rem;
+		font-weight: 700;
+	}
+
+	.item-description {
+		font-size: 1.2rem;
+		line-height: 1.6;
+		color: var(--black);
+		margin-bottom: 1.5rem;
+	}
+
+	.item-meta {
+		display: flex;
+		gap: 2rem;
+		align-items: center;
+	}
+
+	.remaining {
+		background-color: var(--items-green);
+		color: white;
+		padding: 0.5rem 1rem;
+		border-radius: 1rem;
+		font-weight: 600;
+		font-size: 0.9rem;
+	}
+
+	.category {
+		background-color: var(--gray);
+		color: var(--black);
+		padding: 0.5rem 1rem;
+		border-radius: 1rem;
+		font-weight: 500;
+		font-size: 0.9rem;
+	}
+
+	.plan-comparison h4 {
+		font-size: 2rem;
+		color: var(--black);
+		margin-bottom: 2rem;
+		font-weight: 600;
+	}
+
+	.tier-comparison {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.tier-item {
+		border: 2px solid;
+		border-radius: 1rem;
+		padding: 1.5rem;
+		background-color: var(--white);
+	}
+
+	.tier-name {
+		font-size: 1.5rem;
+		font-weight: 700;
+		margin-bottom: 1rem;
+		text-align: center;
+	}
+
+	.tier-value {
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.tier-icons {
+		display: flex;
+		gap: 0.25rem;
+		justify-content: center;
+		margin-bottom: 0.5rem;
+	}
+
+	.tier-icons svg {
+		width: 1.25rem;
+		height: 1.25rem;
+	}
+
+	.tier-number {
+		font-size: 1.5rem;
+		font-weight: bold;
+		color: var(--black);
+	}
+
+	.tier-text {
+		font-size: 1rem;
+		color: var(--black);
+	}
+
+	.tier-sub {
+		font-size: 0.9rem;
+		color: var(--black);
+		opacity: 0.8;
+	}
+
+	@media (max-width: 768px) {
+		.popup-content {
+			padding: 1.5rem 2rem;
+			gap: 2rem;
+		}
+
+		.item-details h3 {
+			font-size: 2rem;
+		}
+
+		.plan-comparison h4 {
+			font-size: 1.5rem;
+		}
+
+		.tier-comparison {
+			grid-template-columns: 1fr;
 		}
 	}
 </style>

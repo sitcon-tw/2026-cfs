@@ -5,7 +5,7 @@
     "unit": "ticket",
     "category": "brand_exposure",
     "title": "lunch_flag",
-    "description": "lunch_flag_description",
+    "description": "lunch_flag",
     "image": "/src/assets/example.jpg",
     "deadline": "2025-10-05T23:59:59+08:00"
   },
@@ -15,7 +15,7 @@
     "unit": "ticket",
     "category": "brand_exposure",
     "title": "ticket_giveaway",
-    "description": "lunch_flag_description",
+    "description": "lunch_flag",
     "image": "/src/assets/example.jpg",
     "deadline": "2026-06-05T23:59:59+08:00"
   },
@@ -25,7 +25,7 @@
     "unit": "ticket",
     "category": "live_interaction",
     "title": "booth_setup",
-    "description": "lunch_flag_description",
+    "description": "lunch_flag",
     "image": "/src/assets/example.jpg",
     "deadline": "2026-06-05T23:59:59+08:00"
   },
@@ -35,7 +35,7 @@
     "unit": "ticket",
     "category": "live_interaction",
     "title": "booth_setup",
-    "description": "lunch_flag_description",
+    "description": "lunch_flag",
     "image": "/src/assets/example.jpg",
     "deadline": "2026-06-05T23:59:59+08:00"
   },
@@ -45,7 +45,7 @@
     "unit": "ticket",
     "category": "live_interaction",
     "title": "booth_setup",
-    "description": "lunch_flag_description",
+    "description": "lunch_flag",
     "image": "/src/assets/example.jpg",
     "deadline": "2026-06-05T23:59:59+08:00"
   },
@@ -55,7 +55,7 @@
     "unit": "ticket",
     "category": "live_interaction",
     "title": "booth_setup",
-    "description": "lunch_flag_description",
+    "description": "lunch_flag",
     "image": "/src/assets/example.jpg",
     "deadline": "2026-06-05T23:59:59+08:00"
   },
@@ -65,7 +65,7 @@
     "unit": "ticket",
     "category": "live_interaction",
     "title": "booth_setup",
-    "description": "lunch_flag_description",
+    "description": "lunch_flag",
     "image": "/src/assets/example.jpg",
     "deadline": "2026-06-05T23:59:59+08:00"
   }
