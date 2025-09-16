@@ -109,7 +109,7 @@ const config = shopConfig;
 			let visibleCount = 0;
 
 			cards.forEach(card => {
-				const cardElement = card;
+				const cardElement = card as HTMLElement;
 				const cardCategory = cardElement.getAttribute("data-category");
 
 				if (selectedCategory === "all" || cardCategory === selectedCategory) {
@@ -391,7 +391,7 @@ const config = shopConfig;
 		}
 
 		document.addEventListener("click", function (e) {
-			if (interestPopover?.classList.contains("active") && !interestPopover.contains(e.target) && !interestButton?.contains(e.target)) {
+			if (interestPopover?.classList.contains("active") && !interestPopover.contains(e.target as Node) && !interestButton?.contains(e.target as Node)) {
 				closePopover();
 			}
 		});
@@ -437,7 +437,7 @@ const config = shopConfig;
 				currentSection = foundSection;
 
 				interestButtons.forEach(button => {
-					const buttonElement = button;
+					const buttonElement = button as HTMLElement;
 					if (foundSection) {
 						buttonElement.style.display = "flex";
 					} else {

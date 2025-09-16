@@ -27,7 +27,7 @@ import itemsData from "../../data/items_data.json";
 				{
 					plansData.rows.map((row: any) => (
 						<div class="plan-row" data-row-id={row.id}>
-							{row.values.map((value: any, index: number) => {
+							{row.values.map((value: any) => {
 								// Handle number + unit structure
 								const hasNumber = value.number !== undefined;
 								const mainText = value.textKey ? t.features[value.textKey] : (value.main || '');

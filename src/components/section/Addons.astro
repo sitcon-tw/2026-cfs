@@ -40,7 +40,7 @@ const categories = Object.keys(groupedItems);
 					<div class="category-section">
 						<h3 class="category-title">{category}</h3>
 						<div class="items-grid">
-							{groupedItems[category].map((item: Item, index: number) => (
+							{groupedItems[category].map((item: Item) => (
 								<div class="addon-card" data-item-id={item.id}>
 									<div class="card-icon">
 										<Flag />
