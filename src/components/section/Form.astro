@@ -39,6 +39,7 @@ import FormInput from "../FormInput.astro";
 
 	const form = document.getElementById("sponsor-form") as HTMLFormElement;
 	const submitButton = document.getElementById("sponsor-form-submit");
+	let message = document.getElementById("form-message")?.textContent;
 	submitButton?.addEventListener("click", event => {
 		event.preventDefault();
 		fetch(apiUrl, {
@@ -50,13 +51,13 @@ import FormInput from "../FormInput.astro";
 				if (data.status == 200) {
 					form.reset();
 				}
-				const message = document.getElementById("form-message");
 				if (message) {
-					message.textContent = data.message;
+					message = data.message;
 				}
 			})
 			.catch(e => {
 				console.error(e);
+				message = "發生錯誤，請稍後再試";
 			});
 	});
 </script>
@@ -73,7 +74,7 @@ import FormInput from "../FormInput.astro";
 		text-decoration: none;
 		font-family: "LINE Seed TW_OTF";
 		font-size: 1.5rem;
-		font-style: normal;
+		font-style: nor mal;
 		font-weight: 400;
 		line-height: 100%; /* 1.5rem */
 		letter-spacing: 0.075rem;
@@ -81,7 +82,7 @@ import FormInput from "../FormInput.astro";
 	.personal-sponsor-button {
 		display: flex;
 		height: 4.125rem;
-		padding: 0 2.0625rem;
+		padding: 0 2rem;
 		text-decoration: none;
 		justify-content: center;
 		align-items: center;
@@ -100,8 +101,7 @@ import FormInput from "../FormInput.astro";
 	}
 	.form-submit-button {
 		display: flex;
-		height: 3.0625rem;
-		padding: 0 1.9375rem;
+		padding: 0 2rem;
 		align-items: center;
 		gap: 0.625rem;
 		border-radius: 0.5rem;
@@ -110,7 +110,7 @@ import FormInput from "../FormInput.astro";
 	.form-title-container {
 		display: flex;
 		height: 22.3125rem;
-		padding: 14.0625rem 19.8125rem 4.0625rem 19.8125rem;
+		padding: 14rem 19.8rem 4rem 19.8rem;
 		justify-content: center;
 		align-items: center;
 		background: linear-gradient(180deg, #f1f3fb 0%, #fff 32.86%);
@@ -131,7 +131,7 @@ import FormInput from "../FormInput.astro";
 		padding: 2rem 0;
 		justify-content: center;
 		align-items: center;
-		gap: 5.8125rem;
+		gap: 5.8rem;
 		align-self: stretch;
 	}
 
@@ -140,7 +140,7 @@ import FormInput from "../FormInput.astro";
 		padding: 0 6.6875rem;
 		flex-direction: column;
 		align-items: flex-start;
-		gap: 2.1875rem;
+		gap: 2.19rem;
 	}
 
 	.form-title {
