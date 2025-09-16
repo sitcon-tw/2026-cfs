@@ -1,35 +1,93 @@
 ---
 import Popup from "../Popup.astro";
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 
 const { item, t, popupId } = Astro.props;
+
+// Get current locale from t object or default to zh-Hant
+const locale = "zh-Hant"; // You can extract this from the t object structure if needed
+
+// Try to load markdown content for this item
+let MarkdownContent = null;
+let hasMarkdownContent = false;
+
+try {
+	const markdownPath = `./markdown/${item.id}/${locale}.md`;
+	const markdownModule = await import(markdownPath);
+	MarkdownContent = markdownModule.Content;
+	hasMarkdownContent = true;
+} catch (error) {
+	// Fallback to regular description if markdown file doesn't exist
+	console.log(`No markdown found for item ${item.id} in locale ${locale}`);
+	hasMarkdownContent = false;
+}
+
+// Import images dynamically using import.meta.glob
+const images = import.meta.glob<{ default: ImageMetadata }>('./markdown/**/image.jpg');
+const imagePath = `./markdown/${item.id}/image.jpg`;
 ---
 
 <Popup
 	id={popupId || `plan-popup-${item.id}`}
 	title={t.item_titles[item.title]}
-	background={item.image}
 	button={false}
 	hero={false}
 >
 	<div class="popup-content">
 		<div class="item-details">
-			<h3>{t.item_titles[item.title]}</h3>
-			<p class="item-description">{t.item_descriptions[item.description]}</p>
 			<div class="item-meta">
-				<span class="remaining">{item.remaining} {t.unit[item.unit]} {t.remaining}</span>
-				<span class="category">{t.item_categories[item.category]}</span>
+				<span class="remaining">{t.remaining} {item.remaining} {t.unit[item.unit]}</span>
+				<span class="category">{`${new Date(item.deadline).getMonth() + 1}/${new Date(item.deadline).getDate()}`} {t.deadline}</span>
 			</div>
+			<h3>{t.item_titles[item.title]}</h3>
+			<div class="item-price">
+				<span class="price-value">{item.price}</span>
+			</div>
+			{hasMarkdownContent ? (
+				<div class="markdown-content">
+					<MarkdownContent />
+				</div>
+			) : (
+				<p class="item-description">{t.item_descriptions[item.description]}</p>
+			)}
 		</div>
-
+		<div class="item-image">
+			{images[imagePath] ? (
+				<Image src={images[imagePath]()} alt={t.item_titles[item.title]} />
+			) : (
+				<img src={item.image} alt={t.item_titles[item.title]} />
+			)}
+		</div>
 	</div>
 </Popup>
 
 <style is:global>
 	.popup-content {
+		padding: 2rem 0;
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 2rem;
+		height: calc(100vh - 8rem);
+		min-height: 600px;
+	}
+
+	/* Desktop and tablet layout */
+	@media (min-width: 769px) {
+		.popup-content {
+			grid-template-columns: 1fr 1fr;
+			gap: 0;
+			padding: 0;
+		}
+	}
+
+	.item-details {
 		padding: 2rem 5rem;
 		display: flex;
 		flex-direction: column;
-		gap: 3rem;
+		justify-content: flex-start;
+		overflow-y: auto;
+		height: 100%;
 	}
 
 	.item-details h3 {
@@ -46,39 +104,98 @@ const { item, t, popupId } = Astro.props;
 		margin-bottom: 1.5rem;
 	}
 
+	.item-price {
+		margin-bottom: 1.5rem;
+	}
+
+	.price-value {
+		font-size: 1.4rem;
+		color: var(--black);
+		font-weight: 700;
+		display: block;
+	}
+
 	.item-meta {
 		display: flex;
-		gap: 2rem;
+		gap: 1rem;
 		align-items: center;
+		margin-bottom: 1rem;
 	}
 
 	.remaining {
-		background-color: var(--items-green);
-		color: white;
-		padding: 0.5rem 1rem;
-		border-radius: 1rem;
-		font-weight: 600;
+		background-color: #F6D46C;
+		padding: 0.1rem 0.7rem;
+		border-radius: 20px;
 		font-size: 0.9rem;
+		font-weight: 500;
 	}
 
 	.category {
-		background-color: var(--gray);
-		color: var(--black);
-		padding: 0.5rem 1rem;
-		border-radius: 1rem;
-		font-weight: 500;
-		font-size: 0.9rem;
+		background-color: #69F147;
+    padding: 0.1rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+	}
+
+	.item-image {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		order: 1;
+	}
+
+	.item-details {
+		order: 2;
+	}
+
+	.item-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: 0;
+	}
+
+	/* Desktop and tablet image styles */
+	@media (min-width: 769px) {
+		.item-image {
+			height: 100%;
+			order: 0;
+		}
+
+		.item-details {
+			order: 0;
+		}
+
+		.item-image img {
+			border-radius: 0 25px 25px 0;
+		}
 	}
 
 
 	@media (max-width: 768px) {
 		.popup-content {
-			padding: 1.5rem 2rem;
+			padding: 1.5rem 0;
 			gap: 2rem;
+			height: auto;
+		}
+
+		.item-details {
+			padding: 0 2rem;
 		}
 
 		.item-details h3 {
 			font-size: 2rem;
+		}
+
+		.item-image {
+			height: 250px;
+			margin: 0 2rem;
+		}
+
+		.item-image img {
+			border-radius: 15px;
 		}
 	}
 </style>

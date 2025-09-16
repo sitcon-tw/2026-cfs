@@ -7,7 +7,8 @@
     "title": "lunch_flag",
     "description": "lunch_flag",
     "image": "/src/assets/example.jpg",
-    "deadline": "2025-10-05T23:59:59+08:00"
+    "deadline": "2025-10-05T23:59:59+08:00",
+    "price": "NT$ 5,000"
   },
   {
     "id": 2,
@@ -17,7 +18,8 @@
     "title": "ticket_giveaway",
     "description": "lunch_flag",
     "image": "/src/assets/example.jpg",
-    "deadline": "2026-06-05T23:59:59+08:00"
+    "deadline": "2026-06-05T23:59:59+08:00",
+    "price": "NT$ 3,000"
   },
   {
     "id": 3,
@@ -27,7 +29,8 @@
     "title": "booth_setup",
     "description": "lunch_flag",
     "image": "/src/assets/example.jpg",
-    "deadline": "2026-06-05T23:59:59+08:00"
+    "deadline": "2026-06-05T23:59:59+08:00",
+    "price": "NT$ 15,000"
   },
   {
     "id": 4,
@@ -37,7 +40,8 @@
     "title": "booth_setup",
     "description": "lunch_flag",
     "image": "/src/assets/example.jpg",
-    "deadline": "2026-06-05T23:59:59+08:00"
+    "deadline": "2026-06-05T23:59:59+08:00",
+    "price": "NT$ 15,000"
   },
   {
     "id": 5,
@@ -47,7 +51,8 @@
     "title": "booth_setup",
     "description": "lunch_flag",
     "image": "/src/assets/example.jpg",
-    "deadline": "2026-06-05T23:59:59+08:00"
+    "deadline": "2026-06-05T23:59:59+08:00",
+    "price": "NT$ 15,000"
   },
   {
     "id": 6,
@@ -57,7 +62,8 @@
     "title": "booth_setup",
     "description": "lunch_flag",
     "image": "/src/assets/example.jpg",
-    "deadline": "2026-06-05T23:59:59+08:00"
+    "deadline": "2026-06-05T23:59:59+08:00",
+    "price": "NT$ 15,000"
   },
   {
     "id": 7,
@@ -67,6 +73,7 @@
     "title": "booth_setup",
     "description": "lunch_flag",
     "image": "/src/assets/example.jpg",
-    "deadline": "2026-06-05T23:59:59+08:00"
+    "deadline": "2026-06-05T23:59:59+08:00",
+    "price": "NT$ 15,000"
   }
 ]
