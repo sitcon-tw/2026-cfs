@@ -182,7 +182,7 @@ const config = shopConfig;
 			const items = getInterestedItems();
 			const ids = new Set(items.map(i => i.id));
 			document.querySelectorAll(".add-button").forEach(btn => {
-				const id = Number(btn.getAttribute("data-item-id") || "0");
+				const id = btn.getAttribute("data-item-id") || "";
 				if (ids.has(id)) btn.classList.add("added");
 				else btn.classList.remove("added");
 			});
@@ -210,9 +210,8 @@ const config = shopConfig;
 		function updateCardHighlighting() {
 			const cards = document.querySelectorAll(".card");
 			cards.forEach(card => {
-				const cardIdStr = card.getAttribute("data-card-id");
-				if (cardIdStr) {
-					const cardId = parseInt(cardIdStr);
+				const cardId = card.getAttribute("data-card-id");
+				if (cardId) {
 					if (isItemInterested(cardId)) {
 						card.classList.add("highlighted");
 					} else {
@@ -229,7 +228,7 @@ const config = shopConfig;
 			if (!button) return;
 			e.preventDefault();
 			e.stopPropagation();
-			const id = Number(button.getAttribute("data-item-id") || "0");
+			const id = button.getAttribute("data-item-id") || "";
 			const title = button.getAttribute("data-item-title") || "";
 			const category = button.getAttribute("data-item-category") || "";
 			const image = button.getAttribute("data-item-image") || "";
@@ -275,7 +274,7 @@ const config = shopConfig;
 			items.forEach(item => {
 				const itemDiv = document.createElement("div");
 				itemDiv.className = "interest-item";
-				itemDiv.setAttribute("data-item-id", item.id.toString());
+				itemDiv.setAttribute("data-item-id", item.id);
 
 				const contentDiv = document.createElement("div");
 				contentDiv.className = "item-content";
@@ -286,7 +285,7 @@ const config = shopConfig;
 
 				const removeButton = document.createElement("button");
 				removeButton.className = "remove-item";
-				removeButton.setAttribute("data-item-id", item.id.toString());
+				removeButton.setAttribute("data-item-id", item.id);
 
 				if (removeIconTemplate) {
 					const iconClone = removeIconTemplate.content.cloneNode(true);
@@ -303,7 +302,7 @@ const config = shopConfig;
 			removeButtons.forEach(button => {
 				button.addEventListener("click", function (e) {
 					e.stopPropagation();
-					const itemId = parseInt(button.getAttribute("data-item-id") || "0");
+					const itemId = button.getAttribute("data-item-id") || "";
 					removeInterestedItem(itemId);
 				});
 			});

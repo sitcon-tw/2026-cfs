@@ -1,5 +1,5 @@
 export interface InterestedItem {
-  id: number;
+  id: string;
   title: string;
   category: string;
   image: string;
@@ -49,7 +49,7 @@ export function addInterestedItem(item: InterestedItem): boolean {
   }
 }
 
-export function removeInterestedItem(itemId: number): boolean {
+export function removeInterestedItem(itemId: string): boolean {
   if (typeof window === 'undefined') return false;
 
   try {
@@ -64,7 +64,7 @@ export function removeInterestedItem(itemId: number): boolean {
   }
 }
 
-export function isItemInterested(itemId: number): boolean {
+export function isItemInterested(itemId: string): boolean {
   if (typeof window === 'undefined') return false;
 
   const items = getInterestedItems();

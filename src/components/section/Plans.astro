@@ -87,9 +87,8 @@ const itemsData = await loadItemsData(lang);
 	function updateHighlighting() {
 		const planRows = document.querySelectorAll(".plan-row");
 		planRows.forEach(row => {
-			const rowIdStr = row.getAttribute("data-row-id");
-			if (rowIdStr) {
-				const rowId = parseInt(rowIdStr);
+			const rowId = row.getAttribute("data-row-id");
+			if (rowId) {
 				const isHighlighted = isItemInterested(rowId);
 
 				const clickableCells = row.querySelectorAll(".plan-cell");
