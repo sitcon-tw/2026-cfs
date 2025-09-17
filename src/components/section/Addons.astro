@@ -71,9 +71,8 @@ const categories = Object.keys(groupedItems);
 	function updateHighlighting() {
 		const addonCards = document.querySelectorAll(".addon-card");
 		addonCards.forEach(card => {
-			const itemIdStr = card.getAttribute("data-item-id");
-			if (itemIdStr) {
-				const itemId = parseInt(itemIdStr);
+			const itemId = card.getAttribute("data-item-id");
+			if (itemId) {
 				if (isItemInterested(itemId)) {
 					card.classList.add("highlighted");
 				} else {
