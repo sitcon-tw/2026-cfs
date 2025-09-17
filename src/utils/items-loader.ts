@@ -54,7 +54,7 @@ function extractLocalizedData(rawData: ItemDataRaw, locale: string): ItemData {
 
 export async function loadItemsData(locale: string = 'zh-Hant'): Promise<ItemData[]> {
   // Import all data.json files from markdown folders
-  const dataFiles = import.meta.glob<{ default: ItemDataRaw }>('../components/items/markdown/**/data.json');
+  const dataFiles = import.meta.glob<{ default: ItemDataRaw }>('../data/items/**/data.json');
 
   const items: ItemData[] = [];
 
@@ -75,7 +75,7 @@ export async function loadItemsData(locale: string = 'zh-Hant'): Promise<ItemDat
 
 export async function loadItemData(id: string, locale: string = 'zh-Hant'): Promise<ItemData | null> {
   try {
-    const module = await import(`../components/items/markdown/${id}/data.json`);
+    const module = await import(`@data/items/${id}/data.json`);
     return extractLocalizedData(module.default, locale);
   } catch (error) {
     console.error(`Failed to load item data for ID ${id}:`, error);
@@ -89,12 +89,11 @@ export async function loadItemsByCategory(category: string, locale: string = 'zh
 }
 
 export async function getAvailableItemIds(): Promise<string[]> {
-  const dataFiles = import.meta.glob('../components/items/markdown/**/data.json');
+  const dataFiles = import.meta.glob('@data/items/**/data.json');
   const ids: string[] = [];
 
   for (const path in dataFiles) {
-    // Extract ID from path: ../components/items/markdown/item-id/data.json
-    const match = path.match(/\/markdown\/([^\/]+)\/data\.json$/);
+    const match = path.match(/\/items\/([^\/]+)\/data\.json$/);
     if (match) {
       ids.push(match[1]);
     }
