@@ -13,23 +13,23 @@ const imagePath = `./markdown/${card.id}/image.jpg`;
 <div class="card" data-category={card.category} data-card-id={card.id}>
 	<div class="card-image">
 		{images[imagePath] ? (
-			<Image src={images[imagePath]()} alt={t.item_titles[card.title]} />
+			<Image src={images[imagePath]()} alt={card.title} />
 		) : (
 			<div class="placeholder-image">No Image</div>
 		)}
 		<div class="tag">
-			<div class="remaining-tag">{t.remaining} {card.remaining} {t.unit[card.unit]}</div>
+			<div class="remaining-tag">{t.remaining} {card.remaining} {card.unit}</div>
 			<div class="deadline-tag">{`${new Date(card.deadline).getMonth() + 1}/${new Date(card.deadline).getDate()}`} {t.deadline}</div>
 		</div>
 	</div>
 	<div class="card-content">
 		<div class="title-row">
-			<h3>{t.item_titles[card.title]}</h3>
+			<h3>{card.title}</h3>
 			<button
 				type="button"
 				class="add-button"
 				data-item-id={card.id}
-				data-item-title={t.item_titles[card.title]}
+				data-item-title={card.title}
 				data-item-category={t.item_categories[card.category]}
 				data-item-image={images[imagePath] ? imagePath : ""}
 				data-item-deadline={card.deadline}
@@ -43,7 +43,7 @@ const imagePath = `./markdown/${card.id}/image.jpg`;
 			</button>
 		</div>
     <div class="description">
-      {t.item_descriptions[card.description]}
+      {card.description}
     </div>
 		<div class="countdown" data-deadline={card.deadline}>
 			<span class="remaining-time">

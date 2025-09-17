@@ -7,8 +7,7 @@ import plansData from '../../data/plans_data.json';
 
 const { item, t, popupId } = Astro.props;
 
-// Get current locale from t object or default to zh-Hant
-const locale = "zh-Hant"; // You can extract this from the t object structure if needed
+const locale = Astro.currentLocale || "zh-Hant";
 
 // Try to load markdown content for this item
 let MarkdownContent = null;
@@ -43,10 +42,10 @@ const shouldShowPlanTiers = planRow !== undefined;
 	<div class="popup-content">
 		<div class="item-details">
 			<div class="item-meta">
-				<span class="remaining">{t.remaining} {item.remaining} {t.unit[item.unit]}</span>
+				<span class="remaining">{t.remaining} {item.remaining} {item.unit}</span>
 				<span class="category">{`${new Date(item.deadline).getMonth() + 1}/${new Date(item.deadline).getDate()}`} {t.deadline}</span>
 			</div>
-			<h3>{t.item_titles[item.title]}</h3>
+			<h3>{item.title}</h3>
 			<div class="item-price">
 				<span class="price-value">{item.price}</span>
 			</div>
@@ -98,14 +97,14 @@ const shouldShowPlanTiers = planRow !== undefined;
 					<MarkdownContent />
 				</div>
 			) : (
-				<p class="item-description">{t.item_descriptions[item.description]}</p>
+				<p class="item-description">{item.description}</p>
 			)}
 		</div>
 		<div class="item-image">
 			{images[imagePath] ? (
-				<Image src={images[imagePath]()} alt={t.item_titles[item.title]} />
+				<Image src={images[imagePath]()} alt={item.title} />
 			) : (
-				<img src={item.image} alt={t.item_titles[item.title]} />
+				<img src={item.image} alt={item.title} />
 			)}
 		</div>
 	</div>

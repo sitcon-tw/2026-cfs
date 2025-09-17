@@ -24,7 +24,7 @@
   ],
   "rows": [
     {
-      "id": 1,
+      "id": "brand-exposure-lunch-flag",
       "values": [
         {
           "icon": 2,
@@ -48,7 +48,7 @@
       ]
     },
     {
-      "id": 2,
+      "id": "brand-exposure-ticket-giveaway",
       "values": [
         {
           "number": 60,
@@ -71,7 +71,7 @@
       ]
     },
     {
-      "id": 3,
+      "id": "live-interaction-booth-setup-1",
       "values": [
         {
           "number": 3,
@@ -95,7 +95,7 @@
       ]
     },
     {
-      "id": 4,
+      "id": "live-interaction-booth-setup-2",
       "values": [
         {
           "number": 10,
@@ -120,7 +120,7 @@
       ]
     },
     {
-      "id": 5,
+      "id": "live-interaction-booth-setup-3",
       "values": [
         {
           "main": "",
@@ -141,7 +141,7 @@
       ]
     },
     {
-      "id": 6,
+      "id": "live-interaction-booth-setup-4",
       "values": [
         {
           "textKey": "partner_announcement_timing",
@@ -162,7 +162,7 @@
       ]
     },
     {
-      "id": 7,
+      "id": "live-interaction-booth-setup-5",
       "values": [
         {
           "textKey": "live_template",

@@ -2,27 +2,19 @@
 const { t } = Astro.props;
 import { Flag } from "@lucide/astro";
 import ItemPopup from "../items/ItemPopup.astro";
-import itemsData from "../../data/items_data.json";
+import { loadItemsData, type ItemData } from "../../utils/items-loader";
+
+const lang = Astro.currentLocale || "zh-Hant";
+const itemsData = await loadItemsData(lang);
 
 // Define types
-interface Item {
-	id: number;
-	remaining: number;
-	unit: string;
-	category: string;
-	title: string;
-	description: string;
-	deadline: string;
-	price: string;
-}
-
 interface GroupedItems {
-	[key: string]: Item[];
+	[key: string]: ItemData[];
 }
 
 // Group items by category
 const groupedItems: GroupedItems = {};
-itemsData.forEach((item: Item) => {
+itemsData.forEach((item: ItemData) => {
 	const displayCategory = t.item_categories[item.category] || item.category;
 	if (!groupedItems[displayCategory]) {
 		groupedItems[displayCategory] = [];
@@ -43,13 +35,13 @@ const categories = Object.keys(groupedItems);
 					<div class="category-section">
 						<h3 class="category-title">{category}</h3>
 						<div class="items-grid">
-							{groupedItems[category].map((item: Item) => (
+							{groupedItems[category].map((item: ItemData) => (
 								<div class="addon-card" data-item-id={item.id}>
 									<div class="card-icon">
 										<Flag />
 									</div>
 									<div class="card-content">
-										<div class="card-title">{t.item_titles[item.title]}</div>
+										<div class="card-title">{item.title}</div>
 									</div>
 								</div>
 							))}
@@ -62,7 +54,7 @@ const categories = Object.keys(groupedItems);
 </section>
 
 {
-	itemsData.map((item: Item) => (
+	itemsData.map((item: ItemData) => (
 		<ItemPopup
 			item={item}
 			t={t}
