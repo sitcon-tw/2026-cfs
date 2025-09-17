@@ -28,6 +28,7 @@
   "plans": {
     "title": "選擇適合你的方案",
     "plan_comparison": "方案比較",
+    "interested": "感興趣",
     "features": {
       "booth_double": "兩倍大會場攤位",
       "booth_regular": "會場攤位",
@@ -86,14 +87,6 @@
       "recruitment_and_promotion": "招募推廣",
       "exclusive_agenda": "獨家議程",
       "others": "其他"
-    },
-    "item_titles": {
-      "lunch_flag": "午餐旗・點心旗",
-      "ticket_giveaway": "贈票",
-      "booth_setup": "會場攤位設置"
-    },
-    "item_descriptions": {
-      "lunch_flag": "我們將在發放午餐時同時發送由 SITCON 精心設計的一次性紙餐墊，並在上面印製您的品牌圖文介紹，讓每一位與會者都能在餐墊上注意到您的品牌。"
     },
     "tier_names": {
       "flagship": "領航級",
