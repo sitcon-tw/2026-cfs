@@ -24,6 +24,12 @@
     "date": "2026 年 3 月 28 日 (六)",
     "location": "中央研究院 人文社會科學館",
     "popup_label": "查看活動詳情與籌備團隊",
+    "activity_schedule": "活動時程",
+    "place_detail": "場地詳情",
+    "location_name": "中央研究院<br />人文社會科學館",
+    "max_people": "場館預估容納人數上限",
+    "people_count_unit": "1,300 人",
+    "team": "籌備團隊",
     "timeline_items": {
       "0928": "年會籌備起跑",
       "1019": "主題定案",
