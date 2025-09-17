@@ -6,8 +6,8 @@ import type { ImageMetadata } from 'astro';
 const { t, card, shopConfig } = Astro.props;
 
 // Import images dynamically using import.meta.glob
-const images = import.meta.glob<{ default: ImageMetadata }>('./markdown/**/image.jpg');
-const imagePath = `./markdown/${card.id}/image.jpg`;
+const images = import.meta.glob<{ default: ImageMetadata }>('../../data/items/**/image.jpg');
+const imagePath = `../../data/items/${card.id}/image.jpg`;
 ---
 
 <div class="card" data-category={card.category} data-card-id={card.id}>

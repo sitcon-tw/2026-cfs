@@ -3,13 +3,13 @@ import Popup from "../Popup.astro";
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { X } from "@lucide/astro";
-import plansData from '../../data/plans_data.json';
+import plansData from '@data/plans_data.json';
 
 const { item, t, popupId } = Astro.props;
 
 const locale = Astro.currentLocale || "zh-Hant";
 
-const markdownFiles = import.meta.glob<{ Content: any }>('./markdown/**/*.md', { eager: true });
+const markdownFiles = import.meta.glob<{ Content: any }>('@data/items/**/*.md', { eager: true });
 
 // Try to load markdown content for this item
 let MarkdownContent = null;
@@ -28,8 +28,8 @@ if (markdownModule && markdownModule.Content) {
 }
 
 // Import images dynamically using import.meta.glob
-const images = import.meta.glob<{ default: ImageMetadata }>('./markdown/**/image.jpg');
-const imagePath = `./markdown/${item.id}/image.jpg`;
+const images = import.meta.glob<{ default: ImageMetadata }>('../../data/items/**/image.jpg');
+const imagePath = `../../data/items/${item.id}/image.jpg`;
 
 // Find the matching plan row for this item
 const planRow = plansData.rows.find(row => row.id === item.id);
