@@ -3,7 +3,10 @@ const { t } = Astro.props;
 import { Container } from "@lucide/astro";
 import ItemPopup from "../items/ItemPopup.astro";
 import plansData from "../../data/plans_data.json";
-import itemsData from "../../data/items_data.json";
+import { loadItemsData } from "../../utils/items-loader";
+
+const lang = Astro.currentLocale || "zh-Hant";
+const itemsData = await loadItemsData(lang);
 ---
 
 <section id="plans">
