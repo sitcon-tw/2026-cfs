@@ -274,12 +274,11 @@ const config = shopConfig;
 			const title = button.getAttribute("data-item-title") || "";
 			const category = button.getAttribute("data-item-category") || "";
 			const image = button.getAttribute("data-item-image") || "";
-			const deadline = button.getAttribute("data-item-deadline") || "";
 			if (isItemInterested(id)) {
 				removeInterestedItem(id);
 				button.classList.remove("added");
 			} else {
-				addInterestedItem({ id, title, category, image, deadline });
+				addInterestedItem({ id, title, category, image });
 				button.classList.add("added");
 			}
 		});
