@@ -94,7 +94,15 @@ const itemsData = await loadItemsData(lang);
 				const clickableCells = row.querySelectorAll(".plan-cell");
 				clickableCells.forEach(cell => {
 					if (isHighlighted) {
-						cell.classList.add("highlighted");
+						// Check if cell contains unavailable content
+						const cellText = cell.textContent?.trim();
+						const isUnavailable = cellText === "" || cellText === "—" || cellText === "-" || cellText?.includes("不適用") || cellText?.includes("N/A");
+
+						if (!isUnavailable) {
+							cell.classList.add("highlighted");
+						} else {
+							cell.classList.remove("highlighted");
+						}
 					} else {
 						cell.classList.remove("highlighted");
 					}
