@@ -63,7 +63,7 @@ const placeItems: placeItem[] = [
 	<div class="popup-btn">
 		<Popup btnText={t.popup_label} title={t.popup_label} id="place-staff-popup" background={r0.src}>
 			<section class="popup-section">
-				<p class="title">活動時程</p>
+				<p class="title">{t.activity_schedule}</p>
 				<div id="timeline">
 					<div id="timeline-items">
 						{
@@ -90,13 +90,13 @@ const placeItems: placeItem[] = [
 				</div>
 			</section>
 			<section class="popup-section">
-				<p class="title">場地詳情</p>
+				<p class="title">{t.place_detail}</p>
 				<div class="place-info-wrapper">
 					<div id="place-info">
-						<p id="name">中央研究院<br />人文社會科學館</p>
+						<p id="name" set:html={t.location_name} />
 						<div class="people-info">
-							<p class="people-info-title">場館預估容納人數上限</p>
-							<p id="people">1,300 人</p>
+							<p class="people-info-title">{t.max_people}</p>
+							<p id="people">{t.people_count_unit}</p>
 						</div>
 					</div>
 				</div>
@@ -118,7 +118,7 @@ const placeItems: placeItem[] = [
 				}
 			</section>
 			<section class="popup-section">
-				<p class="title">籌備團隊</p>
+				<p class="title">{t.team}</p>
 				<div id="team-info">
 					{
 						teams.map(item => (
@@ -169,7 +169,7 @@ const placeItems: placeItem[] = [
 		padding-left: 10rem;
 		z-index: 1;
 	}
-	@media screen and (max-width: 94.6rem) {
+	@media screen and (max-width: 74.6rem) {
 		.content {
 			padding-left: 2rem;
 		}
