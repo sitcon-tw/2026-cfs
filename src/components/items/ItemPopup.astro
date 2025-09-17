@@ -9,16 +9,19 @@ const { item, t, popupId } = Astro.props;
 
 const locale = Astro.currentLocale || "zh-Hant";
 
+const markdownFiles = import.meta.glob<{ Content: any }>('./markdown/**/*.md', { eager: true });
+
 // Try to load markdown content for this item
 let MarkdownContent = null;
 let hasMarkdownContent = false;
 
-try {
-	const markdownPath = `./markdown/${item.id}/${locale}.md`;
-	const markdownModule = await import(markdownPath);
+const markdownPath = `./markdown/${item.id}/${locale}.md`;
+const markdownModule = markdownFiles[markdownPath];
+
+if (markdownModule && markdownModule.Content) {
 	MarkdownContent = markdownModule.Content;
 	hasMarkdownContent = true;
-} catch (error) {
+} else {
 	// Fallback to regular description if markdown file doesn't exist
 	console.log(`No markdown found for item ${item.id} in locale ${locale}`);
 	hasMarkdownContent = false;
