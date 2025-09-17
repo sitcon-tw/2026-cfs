@@ -4,7 +4,7 @@ import { Image } from "astro:assets";
 import type { ImageMetadata } from 'astro';
 import { getItemDescription } from "../../utils/items-loader";
 
-const { t, card, shopConfig, selectedCategory = "all" } = Astro.props;
+const { t, card, selectedCategory = "all" } = Astro.props;
 
 // Import images dynamically using import.meta.glob
 const images = import.meta.glob<{ default: ImageMetadata }>('../../data/items/**/image.jpg');
