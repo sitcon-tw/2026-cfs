@@ -1,6 +1,6 @@
 ---
 const { t } = Astro.props;
-import { Container } from "@lucide/astro";
+import { Container, Heart, X } from "@lucide/astro";
 import ItemPopup from "../items/ItemPopup.astro";
 import plansData from "@data/plans_data.json";
 import { loadItemsData } from "../../utils/items-loader";
@@ -21,6 +21,9 @@ const itemsData = await loadItemsData(lang);
 								{t.tier_names[tier.name]}
 							</div>
 							<div class="tier-price">{tier.price}</div>
+							<button class="tier-interest-button" data-tier-name={tier.name} data-tier-title={t.tier_names[tier.name]}>
+								{t.interested}
+							</button>
 						</div>
 					))
 				}
@@ -80,7 +83,7 @@ const itemsData = await loadItemsData(lang);
 }
 
 <script>
-	import { isItemInterested } from "../../utils/local-storage.ts";
+	import { isItemInterested, getInterestedItems, addInterestedItem, removeInterestedItem } from "../../utils/local-storage.ts";
 
 	declare function popupCtrl(id: string, action: string): void;
 
@@ -126,13 +129,64 @@ const itemsData = await loadItemsData(lang);
 		});
 	}
 
+	function addTierInterestHandlers() {
+		const tierButtons = document.querySelectorAll(".tier-interest-button");
+		tierButtons.forEach(button => {
+			const tierName = button.getAttribute("data-tier-name");
+			const tierTitle = button.getAttribute("data-tier-title");
+			if (tierName && tierTitle) {
+				button.addEventListener("click", function(e) {
+					e.stopPropagation();
+					const tierItem = {
+						id: `tier-${tierName}`,
+						title: tierTitle,
+						category: "plan",
+						image: "",
+						deadline: ""
+					};
+
+					if (isItemInterested(tierItem.id)) {
+						removeInterestedItem(tierItem.id);
+						button.classList.remove("interested");
+					} else {
+						addInterestedItem(tierItem);
+						button.classList.add("interested");
+					}
+				});
+			}
+		});
+	}
+
+	function updateTierButtonStates() {
+		const tierButtons = document.querySelectorAll(".tier-interest-button");
+		tierButtons.forEach(button => {
+			const tierName = button.getAttribute("data-tier-name");
+			if (tierName) {
+				const tierId = `tier-${tierName}`;
+				if (isItemInterested(tierId)) {
+					button.classList.add("interested");
+				} else {
+					button.classList.remove("interested");
+				}
+			}
+		});
+	}
+
 	document.addEventListener("DOMContentLoaded", function() {
 		updateHighlighting();
 		addRowClickHandlers();
+		addTierInterestHandlers();
+		updateTierButtonStates();
 	});
 
-	window.addEventListener("itemsChange", updateHighlighting);
-	document.addEventListener("interested-items-changed", updateHighlighting);
+	window.addEventListener("itemsChange", function() {
+		updateHighlighting();
+		updateTierButtonStates();
+	});
+	document.addEventListener("interested-items-changed", function() {
+		updateHighlighting();
+		updateTierButtonStates();
+	});
 </script>
 
 <style>
@@ -202,6 +256,39 @@ const itemsData = await loadItemsData(lang);
 		font-size: 2rem;
 		font-weight: 600;
 		color: var(--black);
+		margin-bottom: 1rem;
+	}
+
+	.tier-interest-button {
+		background: transparent;
+		border: 1px solid var(--black);
+		cursor: pointer;
+		padding: 0.5rem 1rem;
+		border-radius: 25px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.2s ease;
+		margin: 0 auto;
+		font-size: 0.9rem;
+		color: var(--black);
+		white-space: nowrap;
+	}
+
+	.tier-interest-button:hover {
+		background-color: var(--gray-container);
+		transform: scale(1.02);
+	}
+
+	.tier-interest-button.interested {
+		background-color: var(--items-green);
+		border-color: var(--items-green);
+		color: var(--white);
+	}
+
+	.tier-interest-button.interested:hover {
+		background-color: var(--items-green);
+		opacity: 0.9;
 	}
 
 	.plans-content {
@@ -281,6 +368,11 @@ const itemsData = await loadItemsData(lang);
 			font-size: 1.5rem;
 		}
 
+		.tier-interest-button {
+			font-size: 0.8rem;
+			padding: 0.4rem 0.8rem;
+		}
+
 		.plans-header,
 		.plan-row {
 			min-width: 800px;
@@ -312,6 +404,11 @@ const itemsData = await loadItemsData(lang);
 
 		.tier-price {
 			font-size: 1rem;
+		}
+
+		.tier-interest-button {
+			font-size: 0.7rem;
+			padding: 0.3rem 0.6rem;
 		}
 
 		.plans-header,
