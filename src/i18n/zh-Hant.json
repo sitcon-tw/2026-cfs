@@ -64,7 +64,8 @@
     "showLess": "收起",
     "interestedItems": "感興趣的項目",
     "noInterestedItems": "尚未收藏任何項目",
-    "shareInterestedItemsText": "你可以在下方表單和我們分享你感興趣的項目"
+    "shareInterestedItemsText": "你可以在下方表單和我們分享你感興趣的項目",
+    "introduction": "介紹"
   },
   "global": {
     "remaining": "剩餘",

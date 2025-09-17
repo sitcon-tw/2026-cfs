@@ -17,7 +17,7 @@ export interface ItemData {
   unit: string;
   category: string;
   title: string;
-  description: string;
+  description: string | { [key: string]: string };
   deadline: string;
   price: string;
 }
@@ -100,4 +100,16 @@ export async function getAvailableItemIds(): Promise<string[]> {
   }
 
   return ids.sort();
+}
+
+export function getItemDescription(item: ItemData, category: string = 'all'): string {
+  if (typeof item.description === 'string') {
+    return item.description;
+  }
+
+  if (typeof item.description === 'object' && item.description) {
+    return item.description[category] || item.description['all'] || '';
+  }
+
+  return '';
 }

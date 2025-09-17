@@ -96,12 +96,35 @@ const shouldShowPlanTiers = planRow !== undefined;
 				</div>
 			)}
 
-			{hasMarkdownContent ? (
+			<div class="structured-descriptions">
+				{typeof item.description === 'object' && item.description ? (
+					<>
+						{item.description.all && (
+							<>
+								<h1>{t.introduction}</h1>
+								<p>{item.description.all}</p>
+							</>
+						)}
+
+						{Object.entries(item.description).filter(([key]) => key !== 'all').map(([categoryKey, description]) => (
+							<>
+								<h1>{t.item_categories[categoryKey]}</h1>
+								<p>{description}</p>
+							</>
+						))}
+					</>
+				) : (
+					<>
+						<h1>{t.introduction}</h1>
+						<p class="item-description">{item.description}</p>
+					</>
+				)}
+			</div>
+
+			{hasMarkdownContent && (
 				<div class="markdown-content">
 					<MarkdownContent />
 				</div>
-			) : (
-				<p class="item-description">{item.description}</p>
 			)}
 		</div>
 		<div class="item-image">
@@ -267,6 +290,8 @@ const shouldShowPlanTiers = planRow !== undefined;
 		width: 24px;
 		height: 24px;
 	}
+
+
 
 	@media (max-width: 768px) {
 		.popup-content {

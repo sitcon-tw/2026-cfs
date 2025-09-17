@@ -2,15 +2,22 @@
 import { Plus, Check } from "@lucide/astro";
 import { Image } from "astro:assets";
 import type { ImageMetadata } from 'astro';
+import { getItemDescription } from "../../utils/items-loader";
 
-const { t, card, shopConfig } = Astro.props;
+const { t, card, shopConfig, selectedCategory = "all" } = Astro.props;
 
 // Import images dynamically using import.meta.glob
 const images = import.meta.glob<{ default: ImageMetadata }>('../../data/items/**/image.jpg');
 const imagePath = `../../data/items/${card.id}/image.jpg`;
+
+// Get current description based on selected category
+const currentDescription = getItemDescription(card, selectedCategory);
+
+// Prepare description data for client-side updates
+const descriptionData = typeof card.description === 'object' ? JSON.stringify(card.description) : JSON.stringify({ all: card.description });
 ---
 
-<div class="card" data-category={card.category} data-card-id={card.id}>
+<div class="card" data-category={card.category} data-card-id={card.id} data-descriptions={descriptionData}>
 	<div class="card-image">
 		{images[imagePath] ? (
 			<Image src={images[imagePath]()} alt={card.title} />
@@ -43,7 +50,7 @@ const imagePath = `../../data/items/${card.id}/image.jpg`;
 			</button>
 		</div>
     <div class="description">
-      {card.description}
+      {currentDescription}
     </div>
 		<div class="countdown" data-deadline={card.deadline}>
 			<span class="remaining-time">
@@ -263,6 +270,14 @@ const imagePath = `../../data/items/${card.id}/image.jpg`;
 
 	.add-button.added:hover {
 		background-color: var(--items-progress);
+	}
+
+	.description {
+		color: var(--black);
+		font-size: 0.9rem;
+		line-height: 1.4;
+		margin-bottom: 1rem;
+		opacity: 0.8;
 	}
 
 	.placeholder-image {

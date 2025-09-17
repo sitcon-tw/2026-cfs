@@ -30,7 +30,7 @@ const config = shopConfig;
 
 		<div class="cards-container fade-active">
 			<div class="cards-grid">
-				{items.map(card => <ItemCard t={t} card={card} shopConfig={config} />)}
+				{items.map(card => <ItemCard t={t} card={card} shopConfig={config} selectedCategory="all" />)}
 			</div>
 			<div class="fade-overlay"></div>
 		</div>
@@ -107,21 +107,46 @@ const config = shopConfig;
 			applyExpandState();
 		});
 
-		function filterCards(selectedCategory: string) {
-			const cards = document.querySelectorAll(".card");
-			let visibleCount = 0;
+		function sortCards(selectedCategory: string) {
+			const cardsGrid = document.querySelector(".cards-grid");
+			if (!cardsGrid) return;
 
+			const cards = Array.from(cardsGrid.querySelectorAll(".card")) as HTMLElement[];
+			let visibleCount = cards.length;
+
+			if (selectedCategory === "all") {
+				// For "all", maintain original order (sort by data-card-id)
+				cards.sort((a, b) => {
+					const idA = a.getAttribute("data-card-id") || "";
+					const idB = b.getAttribute("data-card-id") || "";
+					return idA.localeCompare(idB);
+				});
+			} else {
+				// Sort by category - selected category first, others maintain original order
+				cards.sort((a, b) => {
+					const categoryA = a.getAttribute("data-category");
+					const categoryB = b.getAttribute("data-category");
+					const idA = a.getAttribute("data-card-id") || "";
+					const idB = b.getAttribute("data-card-id") || "";
+
+					if (categoryA === selectedCategory && categoryB !== selectedCategory) {
+						return -1; // A (selected category) comes first
+					}
+					if (categoryA !== selectedCategory && categoryB === selectedCategory) {
+						return 1; // B (selected category) comes first
+					}
+					// Both same priority, maintain original order by ID
+					return idA.localeCompare(idB);
+				});
+			}
+
+			// Update ItemCard descriptions based on selected category
 			cards.forEach(card => {
-				const cardElement = card as HTMLElement;
-				const cardCategory = cardElement.getAttribute("data-category");
-
-				if (selectedCategory === "all" || cardCategory === selectedCategory) {
-					cardElement.style.display = "block";
-					visibleCount++;
-				} else {
-					cardElement.style.display = "none";
-				}
+				updateCardDescription(card, selectedCategory);
 			});
+
+			// Reorder cards in the DOM
+			cards.forEach(card => cardsGrid.appendChild(card));
 
 			updateExpandButtonVisibility(visibleCount);
 		}
@@ -134,6 +159,23 @@ const config = shopConfig;
 				return 4;
 			} else {
 				return 6;
+			}
+		}
+
+		function updateCardDescription(card: HTMLElement, selectedCategory: string) {
+			const descriptionElement = card.querySelector(".description");
+			if (!descriptionElement) return;
+
+			// Get stored description data from card attributes
+			const descriptionData = card.getAttribute("data-descriptions");
+			if (descriptionData) {
+				try {
+					const descriptions = JSON.parse(descriptionData);
+					const newDescription = descriptions[selectedCategory] || descriptions['all'] || '';
+					descriptionElement.textContent = newDescription;
+				} catch (e) {
+					// Fallback to original description if JSON parsing fails
+				}
 			}
 		}
 
@@ -165,7 +207,7 @@ const config = shopConfig;
 
 				const category = buttonElement.getAttribute("data-category") || "all";
 
-				filterCards(category);
+				sortCards(category);
 			});
 		});
 
@@ -174,8 +216,8 @@ const config = shopConfig;
 		applyExpandState();
 
 		window.addEventListener("resize", function () {
-			const visibleCards = document.querySelectorAll('.card[style*="display: block"], .card:not([style*="display: none"])');
-			updateExpandButtonVisibility(visibleCards.length);
+			const allCards = document.querySelectorAll('.card');
+			updateExpandButtonVisibility(allCards.length);
 		});
 
 		function syncAllAddButtons() {
