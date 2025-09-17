@@ -1,6 +1,6 @@
 ---
 const { t } = Astro.props;
-import { Container, Heart, X } from "@lucide/astro";
+import { Container } from "@lucide/astro";
 import ItemPopup from "../items/ItemPopup.astro";
 import plansData from "@data/plans_data.json";
 import { loadItemsData } from "../../utils/items-loader";
@@ -83,7 +83,7 @@ const itemsData = await loadItemsData(lang);
 }
 
 <script>
-	import { isItemInterested, getInterestedItems, addInterestedItem, removeInterestedItem } from "../../utils/local-storage.ts";
+	import { isItemInterested, addInterestedItem, removeInterestedItem } from "../../utils/local-storage.ts";
 
 	declare function popupCtrl(id: string, action: string): void;
 

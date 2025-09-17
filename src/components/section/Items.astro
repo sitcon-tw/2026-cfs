@@ -55,6 +55,14 @@ const config = shopConfig;
 			</div>
 			<div class="popover-footer">
 				<p class="footer-text">{t.shareInterestedItemsText}</p>
+				<div class="action-buttons">
+					<button class="action-button download-quote-btn">
+						{t.downloadQuote}
+					</button>
+					<button class="action-button view-plan-btn" id="viewPlanBtn">
+						<span id="viewPlanBtnText">{t.viewPlanDetails}</span>
+					</button>
+				</div>
 			</div>
 		</div>
 
@@ -278,7 +286,7 @@ const config = shopConfig;
 				removeInterestedItem(id);
 				button.classList.remove("added");
 			} else {
-				addInterestedItem({ id, title, category, image });
+				addInterestedItem({ id, title, category, image, deadline: "" });
 				button.classList.add("added");
 			}
 		});
@@ -389,7 +397,7 @@ const config = shopConfig;
 
 			interestPopover.style.position = "fixed";
 
-			let left = buttonRect.right - 300;
+			let left = buttonRect.right - 250;
 			let top = buttonRect.top - popoverRect.height - 12;
 
 			if (left < 16) {
@@ -451,11 +459,54 @@ const config = shopConfig;
 			}
 		});
 
+		// Add click handler for view plan details button
+		document.addEventListener("click", function (e) {
+			const target = e.target as Element;
+			if (target.closest(".view-plan-btn")) {
+				e.preventDefault();
+
+				if (hasVisitedPlans) {
+					// Navigate to Form section if user has already visited Plans
+					const formSection = document.getElementById("form");
+					if (formSection) {
+						formSection.scrollIntoView({ behavior: "smooth" });
+						closePopover();
+					}
+				} else {
+					// Navigate to Plans section if user hasn't visited Plans yet
+					const plansSection = document.getElementById("plans");
+					if (plansSection) {
+						plansSection.scrollIntoView({ behavior: "smooth" });
+						closePopover();
+						// Mark that user has visited plans
+						hasVisitedPlans = true;
+						updateViewPlanButtonText();
+					}
+				}
+			}
+		});
+
 		updateInterestButton();
 		syncAllAddButtons();
 
 		const targetSections = ["items", "plans", "addons", "form"];
 		let currentSection = "";
+		let hasVisitedPlans = false;
+
+		// Store text constants for JavaScript access
+		const viewPlanDetailsText = document.getElementById("viewPlanBtnText")?.textContent || "檢視方案詳情";
+		const contactUsText = "聯絡我們";
+
+		function updateViewPlanButtonText() {
+			const viewPlanBtnText = document.getElementById("viewPlanBtnText");
+			if (viewPlanBtnText) {
+				if (hasVisitedPlans) {
+					viewPlanBtnText.textContent = contactUsText;
+				} else {
+					viewPlanBtnText.textContent = viewPlanDetailsText;
+				}
+			}
+		}
 
 		function updateInterestButtonVisibility() {
 			const interestButtons = document.querySelectorAll(".interest-button");
@@ -478,6 +529,12 @@ const config = shopConfig;
 
 			if (foundSection !== currentSection) {
 				currentSection = foundSection;
+
+				// Check if user has visited the plans section
+				if (foundSection === "plans" && !hasVisitedPlans) {
+					hasVisitedPlans = true;
+					updateViewPlanButtonText();
+				}
 
 				interestButtons.forEach(button => {
 					const buttonElement = button as HTMLElement;
@@ -694,7 +751,7 @@ const config = shopConfig;
 
 	.interest-popover {
 		position: fixed;
-		width: 320px;
+		width: 250px;
 		max-height: 400px;
 		background-color: var(--white);
 		border-radius: 16px;
@@ -808,7 +865,33 @@ const config = shopConfig;
 	:global(.remove-item:hover) {
 		background-color: rgba(0, 0, 0, 0.06);
 		color: rgba(0, 0, 0, 0.8);
-		transform: scale(1.05);
+	}
+
+	.action-buttons {
+		display: flex;
+		gap: 0.5rem;
+		margin-top: 1rem;
+	}
+
+	.action-button {
+		flex: 1;
+		padding: 0.2rem;
+		background-color: var(--button-dark);
+		color: var(--white);
+		border: none;
+		border-radius: 25px;
+		font-size: 0.9rem;
+		font-weight: 400;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		text-align: center;
+		white-space: nowrap;
+	}
+
+	.action-button:hover {
+		background-color: #404040;
+		transform: translateY(-1px);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 	}
 
 	@media (max-width: 768px) {
