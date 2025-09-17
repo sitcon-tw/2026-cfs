@@ -75,8 +75,8 @@ export async function loadItemsData(locale: string = 'zh-Hant'): Promise<ItemDat
 
 export async function loadItemData(id: string, locale: string = 'zh-Hant'): Promise<ItemData | null> {
   try {
-    const module = await import(`@data/items/${id}/data.json`);
-    return extractLocalizedData(module.default, locale);
+    const allItems = await loadItemsData(locale);
+    return allItems.find(item => item.id === id) || null;
   } catch (error) {
     console.error(`Failed to load item data for ID ${id}:`, error);
     return null;
