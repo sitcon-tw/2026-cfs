@@ -1,7 +1,124 @@
 ---
+import Popup from "@components/Popup.astro";
+import NewsScreenshots from "@assets/img/news_screenshots.png";
+import hk from "@assets/img/sitcon_hk.png";
+import groups from "@assets/img/groups.png";
+import edu from "@assets/img/edu.png";
+import hackathon from "@assets/img/hackathon.png";
+import type { ImageMetadata } from "astro";
+
 const { t } = Astro.props;
+type News = {
+	img: ImageMetadata;
+	title: string;
+	description: string;
+};
+const news: News[] = [
+	{
+		img: hk,
+		title: t.things[0].title,
+		description: t.things[0].description
+	},
+	{
+		img: groups,
+		title: t.things[1].title,
+		description: t.things[1].description
+	},
+	{
+		img: edu,
+		title: t.things[2].title,
+		description: t.things[2].description
+	},
+	{
+		img: hackathon,
+		title: t.things[3].title,
+		description: t.things[3].description
+	}
+];
 ---
 
 <section id="news">
-	<h2>News</h2>
+	<div id="news-content">
+		<img src={NewsScreenshots.src} alt="sitcon news screenshots" id="screenshots" />
+	</div>
+	<Popup hero={false} btnText={t.title}>
+		<div id="popup-content">
+			<p class="title">{t.title}</p>
+			<div id="things-area">
+				{
+					news.map(item => (
+						<div class="things-item">
+							<img src={item.img.src} alt={item.title} class="things-img" />
+							<div class="content">
+								<p class="things-title">{item.title}</p>
+								<p class="things-desctiption">{item.description}</p>
+							</div>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</Popup>
 </section>
+
+<style>
+	#news-content {
+		max-width: 1200px;
+		gap: 2rem;
+		margin: auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		overflow: hidden;
+	}
+	#screenshots {
+		max-width: 700px;
+	}
+	.title {
+		font-size: 4rem;
+		font-weight: 700;
+		line-height: 120%;
+		letter-spacing: -0.088rem;
+		padding: 2rem;
+	}
+	#things-area {
+		display: flex;
+		overflow-x: scroll;
+		gap: 2.7rem;
+		padding-bottom: 2rem;
+	}
+	.things-item {
+		background: #ffffff;
+		flex: 0 0 auto;
+		border-radius: 1.5rem;
+		overflow: hidden;
+		width: 30rem;
+		height: 35rem;
+	}
+	.things-item:first-child {
+		margin-left: 2rem;
+	}
+	.things-item:last-child {
+		margin-right: 2rem;
+	}
+	.things-item .content {
+		padding: 2rem;
+		display: inline-flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+	.things-img {
+		width: 30rem;
+		height: 15rem;
+		object-fit: cover;
+	}
+	.things-title {
+		font-size: 2.3rem;
+		font-weight: 700;
+	}
+	.things-desctiption {
+		font-size: 1.4rem;
+		font-weight: 400;
+		line-height: 134%;
+	}
+</style>
