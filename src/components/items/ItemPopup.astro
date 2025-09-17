@@ -9,13 +9,14 @@ const { item, t, popupId } = Astro.props;
 
 const locale = Astro.currentLocale || "zh-Hant";
 
-const markdownFiles = import.meta.glob<{ Content: any }>('@data/items/**/*.md', { eager: true });
+const markdownFiles = import.meta.glob<{ Content: any }>('../../data/items/**/*.md', { eager: true });
 
 // Try to load markdown content for this item
 let MarkdownContent = null;
 let hasMarkdownContent = false;
 
-const markdownPath = `./markdown/${item.id}/${locale}.md`;
+const markdownPath = `../../data/items/${item.id}/${locale}.md`;
+
 const markdownModule = markdownFiles[markdownPath];
 
 if (markdownModule && markdownModule.Content) {
