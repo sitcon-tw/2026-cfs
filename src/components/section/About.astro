@@ -63,10 +63,10 @@ import Popup from "@components/Popup.astro";
 			</div>
 		</div>
 	</div>
-	<Popup btnText={t.detail} title={t.popup.title} background="/cfs/sinica-hall.jpeg" id="stat-popup" class="popup">
+	<Popup btnText={t.detail} title={t.detail} background="/cfs/sinica-hall.jpeg" id="stat-popup" class="popup">
 		<div class="container">
-			<h2>{t.popup.title}</h2>
-			{t.popup.content.map((p: string) => <p>{p}</p>)}
+			<h2>{t.detail}</h2>
+			<!-- {t.about.content.map((p: string) => <p>{p}</p>)} -->
 		</div>
 	</Popup>
 </section>
@@ -92,7 +92,6 @@ import Popup from "@components/Popup.astro";
 	}
 
 	.subtitle {
-		color: var(--Black, #1d1d1f);
 		text-align: center;
 		font-size: 2.4375rem;
 		font-style: normal;
@@ -101,7 +100,6 @@ import Popup from "@components/Popup.astro";
 	}
 
 	.main-title {
-		color: var(--Black, #1d1d1f);
 		text-align: center;
 		font-size: 3.375rem;
 		font-style: normal;
@@ -162,7 +160,6 @@ import Popup from "@components/Popup.astro";
 
 	.stat-number {
 		color: var(--White, #fff);
-		font-family: "IBM Plex Mono";
 		font-size: 3.625rem;
 		font-weight: 700;
 		line-height: 122%; /* 4.4225rem */
@@ -193,7 +190,6 @@ import Popup from "@components/Popup.astro";
 	}
 
 	.review-title {
-		color: var(--Black, #1d1d1f);
 		text-align: center;
 		font-size: 1.625rem;
 		font-style: normal;
@@ -215,7 +211,6 @@ import Popup from "@components/Popup.astro";
 
 	.review-label,
 	.review-note {
-		color: var(--Black, #1d1d1f);
 		text-align: center;
 		font-size: 2.5625rem;
 		font-weight: 700;

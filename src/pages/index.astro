@@ -13,11 +13,10 @@ import Addons from "@components/section/Addons.astro";
 import Form from "@components/section/Form.astro";
 import FAQ from "@components/section/FAQ.astro";
 import Footer from "@components/section/Footer.astro";
-import Demo from "@components/section/Demo.astro";
 import ogImage from "@assets/img/og.webp";
 const { lang = "zh-Hant" } = Astro.props;
 const t = await import(`../i18n/${lang}.json`).then(m => m.default);
-const sections = [Nav, Hero, Demo, Intro, About, News, Sponsors, Cycle, Time, Items, Plans, Addons, Form, FAQ, Footer];
+const sections = [Nav, Hero, Intro, About, News, Sponsors, Cycle, Time, Items, Plans, Addons, Form, FAQ, Footer];
 ---
 
 <html lang={lang}>
@@ -112,8 +111,8 @@ const sections = [Nav, Hero, Demo, Intro, About, News, Sponsors, Cycle, Time, It
 				--container: #f5f5f7;
 				--gray-container: #e8e8ec;
 				--items-bg: #f1f3fb;
-				--items-remaining-tag: #FFE9A8;
-				--items-deadline-tag: #C1FFB1;
+				--items-remaining-tag: #ffe9a8;
+				--items-deadline-tag: #c1ffb1;
 				--items-green: #00d959;
 				--items-progress: var(--items-green);
 				--items-progress-bg: #e2e2e2;
@@ -150,19 +149,35 @@ const sections = [Nav, Hero, Demo, Intro, About, News, Sponsors, Cycle, Time, It
 
 			.description {
 				font-size: 0.75rem;
-				color: #97979B;
+				color: #97979b;
 				line-height: 1.4;
 				display: -webkit-box;
 				-webkit-line-clamp: 2;
 				-webkit-box-orient: vertical;
 				overflow: hidden;
 				margin-bottom: 1rem;
-      }
-      
-			button, textarea, input {
+			}
+
+			button,
+			textarea,
+			input {
 				font-family: inherit;
 				font-size: inherit;
 				color: inherit;
+			}
+
+			h2 {
+				font-size: 3.5rem;
+				margin-bottom: 2rem;
+				text-align: center;
+			}
+
+			@media (max-width: 45rem) {
+				h2 {
+					font-size: 2.5rem;
+					margin-bottom: 1.5rem;
+				}	
+				
 			}
 		</style>
 	</body>
