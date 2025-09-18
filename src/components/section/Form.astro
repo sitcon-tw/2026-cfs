@@ -5,7 +5,7 @@ import FormInput from "../FormInput.astro";
 
 <section id="form">
 	<div class="form-title-container">
-		<h1 class="form-title">今天的支持，成就十年後的技術領袖</h1>
+		<h1 id="form-section-title" class="form-title">今天的支持，<br class="rwd-hidden" />成就十年後的技術領袖</h1>
 	</div>
 
 	<div class="form-container">
@@ -16,134 +16,215 @@ import FormInput from "../FormInput.astro";
 			<FormInput title="如何稱呼您？" name="name" required />
 			<FormInput title="聯絡方式" name="contact" placeholder="Telegram / @SITCONgeneral" description="Email、FB、LINE ID 或 Telegram ... 等，各式我們能聯絡到您的方式。" required />
 			<FormInput title="還有什麼想和我們說的嗎？" name="message" />
-			<button type="button" id="sponsor-form-submit" class="form-submit-button">
-				<span class="form-submit-button-text">送出</span>
-			</button>
+
+			<div id="submit-section">
+				<button type="button" id="sponsor-form-submit" class="form-submit-button">
+					<span id="sponsor-form-submit-button-text" class="form-submit-button-text">送出</span>
+				</button>
+
+				<div id="form-message"></div>
+			</div>
 		</form>
 
 		<div class="divider"></div>
 
 		<div class="form-body">
-			<h2 class="form-title">或是以個人名義<br />贊助 SITCON</h2>
-			<button type="button" class="personal-sponsor-button">
+			<h2 class="form-title">或是以個人名義贊助 SITCON</h2>
+			<a class="personal-sponsor-button" href="https://ocf.neticrm.tw/civicrm/contribute/transact?reset=1&id=76" target="_blank">
 				<span class="personal-sponsor-button-text">立即贊助</span>
-			</button>
+			</a>
 		</div>
 	</div>
 </section>
 
 <script>
-	const apiUrl = "https://script.google.com/macros/s/AKfycbzjGqtt87QL_8bvH7suOvReCTawQeRmSqtGeJFDPBnJVRsQan628x9swGFBhcPs0LnH/exec";
+	const apiUrl = "https://script.google.com/macros/s/AKfycbyykeFH0wcHMu8_kM3GWa3DWOvJt7Fq0wNc5hROMO1pN8PTjazUTJQi30OEkSrmVZpO/exec";
 
 	const form = document.getElementById("sponsor-form") as HTMLFormElement;
-	const submitButton = document.getElementById("sponsor-form-submit");
+	const submitButton = document.getElementById("sponsor-form-submit") as HTMLButtonElement;
+	const messageElement = document.getElementById("form-message") as HTMLDivElement;
+	const submitButtonText = document.getElementById("sponsor-form-submit-button-text") as HTMLSpanElement;
 
-	submitButton?.removeEventListener("click", () => {});
+	const checkForm = () => {
+		const formData = new FormData(form);
+		if (!formData.get("organization") || !formData.get("name") || !formData.get("contact")) {
+			messageElement.textContent = "請確認必填欄位";
+			return false;
+		}
+		if (
+			(formData.get("contact") && formData.get("contact")?.toString()[0] == "=") ||
+			(formData.get("name") && formData.get("name")?.toString()[0] == "=") ||
+			(formData.get("organization") && formData.get("organization")?.toString()[0] == "=") ||
+			(formData.get("department") && formData.get("department")?.toString()[0] == "=") ||
+			(formData.get("message") && formData.get("message")?.toString()[0] == "=")
+		) {
+			messageElement.textContent = "回答的第一個字不可是=";
+			return false;
+		}
+		messageElement.textContent = "";
+		return true;
+	};
+
 	submitButton?.addEventListener("click", event => {
-		console.log("a");
-		event.preventDefault(); // Prevent the default form submission
-		fetch(apiUrl + "?" + new URLSearchParams(new FormData(form) as any as Array<[string, string]>), {
-			method: "GET",
-			mode: "no-cors"
-		})
-			.then(() => {
-				alert("success");  // Temporary message
-				form.reset();
+		event.preventDefault();
+		submitButton.disabled = true;
+		submitButtonText.textContent = "送出中...";
+		if (checkForm()) {
+			fetch(apiUrl, {
+				method: "POST",
+				body: new FormData(form)
 			})
-			.catch((e) => {
-				console.error(e);
-			});
+				.then(async res => {
+					const data = await res.json();
+					if (data.code == 200) {
+						form.reset();
+						submitButton.disabled = false;
+						submitButtonText.textContent = "送出";
+					}
+					messageElement.textContent = data.message;
+				})
+				.catch(e => {
+					console.error(e);
+					messageElement.textContent = "發生錯誤，請稍後再試";
+				});
+		} else {
+			submitButton.disabled = false;
+			submitButtonText.textContent = "送出";
+		}
 	});
 </script>
 
 <style>
-	.personal-sponsor-button-text {
-		color: #fff;
-		text-align: center;
+	#form-section-title {
+		font-size: 4rem;
+	}
+	#submit-section {
+		gap: 1rem;
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: center;
+		justify-items: start;
+		width: 30rem;
+	}
+	#form-message {
+		color: #0171e3;
 		font-family: "LINE Seed TW_OTF";
-		font-size: 24px;
+		font-size: 1rem;
+	}
+	.personal-sponsor-button-text {
+		color: var(--White, #fff);
+		text-align: center;
+		text-decoration: none;
+		font-family: "LINE Seed TW_OTF";
+		font-size: 1.5rem;
 		font-style: normal;
 		font-weight: 400;
-		line-height: 100%; /* 24px */
-		letter-spacing: 1.2px;
+		line-height: 100%; /* 1.5rem */
+		letter-spacing: 0.075rem;
 	}
 	.personal-sponsor-button {
 		display: flex;
-		height: 66px;
-		padding: 0 33px;
+		height: 4.125rem;
+		padding: 0 2rem;
+		text-decoration: none;
 		justify-content: center;
 		align-items: center;
-		gap: 10px;
-		border-radius: 10000px;
+		gap: 0.625rem;
+		border: none;
+		outline: transparent;
+		border-radius: 625rem;
 		background: #0171e3;
 	}
 	.form-submit-button-text {
-		color: #fff;
+		color: var(--White, #fff);
 		font-family: "LINE Seed TW_OTF";
-		font-size: 16px;
+		font-size: 1rem;
 		font-style: normal;
 		font-weight: 400;
-		line-height: 100%; /* 16px */
-		letter-spacing: 0.8px;
+		line-height: 100%; /* 1rem */
+		letter-spacing: 0.05rem;
 	}
 	.form-submit-button {
 		display: flex;
-		height: 49px;
-		padding: 0 31px;
+		padding: 0 2rem;
+		height: 3rem;
 		align-items: center;
-		gap: 10px;
-		border-radius: 8px;
+		gap: 0.625rem;
+		border-radius: 0.5rem;
+		align-self: flex-start;
+		border: none;
+		outline: transparent;
 		background: #0171e3;
 	}
 	.form-title-container {
 		display: flex;
-		height: 357px;
-		padding: 225px 317px 65px 317px;
+		height: 20rem;
 		justify-content: center;
 		align-items: center;
+		background: linear-gradient(180deg, #f1f3fb 0%, #fff 32.86%);
 	}
-
 	.form-title {
-		color: #000;
+		color: var(--Black, #1d1d1f);
 		font-family: "LINE Seed TW_OTF";
-		font-size: 56px;
+		font-size: 3.5rem;
 		font-style: normal;
+		text-align: center;
 		font-weight: 700;
-		line-height: 120%; /* 67.2px */
-		letter-spacing: -1.232px;
+		line-height: 120%; /* 4.2rem */
+		letter-spacing: -0.077rem;
 	}
 
 	.form-container {
-		display: flex;
-		padding: 32px 0;
+		background: var(--White, #fff);
+		display: grid;
+		padding: 2rem 0;
 		justify-content: center;
 		align-items: center;
-		gap: 93px;
 		align-self: stretch;
+		grid-template-columns: 1fr 1px 1fr;
 	}
 
 	.form-body {
 		display: flex;
-		padding: 0 107px;
 		flex-direction: column;
-		align-items: flex-start;
-		gap: 35px;
+		align-items: center;
+		gap: 2.2rem;
+	}
+	.rwd-hidden {
+		display: none;
 	}
 
 	.form-title {
-		align-self: stretch;
-		color: #000;
+		color: var(--Black, #1d1d1f);
 		font-family: "LINE Seed TW_OTF";
-		font-size: 40px;
+		font-size: 2.5rem;
 		font-style: normal;
 		font-weight: 700;
-		line-height: 120%; /* 48px */
-		letter-spacing: -0.88px;
+		line-height: 120%; /* 3rem */
+		letter-spacing: -0.055rem;
 	}
 
 	.divider {
-		background: #000;
+		background: var(--Black, #1d1d1f);
 		width: 1px;
-		height: 813px;
+		height: 50.8125rem;
+	}
+
+	@media (max-width: 927px) {
+		.form-container {
+			grid-template-columns: 1fr;
+			gap: 3rem;
+			width: 100vw;
+		}
+		.divider {
+			width: 100%;
+			height: 1px;
+			align-self: center;
+			margin-top: 3rem;
+			margin-bottom: 3rem;
+		}
+		.rwd-hidden {
+			display: inline;
+		}
 	}
 </style>
