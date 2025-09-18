@@ -1,7 +1,955 @@
 ---
+import { X, Heart } from "@lucide/astro";
+import { loadItemsData } from "../../utils/items-loader";
+import shopConfig from "@data/shop_config.json";
+import ItemCard from "@components/items/ItemCard.astro";
+import ItemPopup from "@components/items/ItemPopup.astro";
+
 const { t } = Astro.props;
+
+const lang = Astro.currentLocale || "zh-Hant";
+
+const items = await loadItemsData(lang);
+const config = shopConfig;
 ---
 
 <section id="items">
-	<h2>Items</h2>
+	<div class="container">
+		<h2>{t.title}</h2>
+		<p class="subtitle">{t.subtitle}</p>
+
+		<div class="tabs">
+			{
+				config.categories.map((category: string, index: number) => (
+					<button class={`tab ${index === 0 ? "active" : ""}`} data-category={category}>
+						{t.item_categories[category]}
+					</button>
+				))
+			}
+		</div>
+
+		<div class="cards-container fade-active">
+			<div class="cards-grid">
+				{items.map(card => <ItemCard t={t} card={card} shopConfig={config} selectedCategory="all" />)}
+			</div>
+			<div class="fade-overlay"></div>
+		</div>
+
+		<button class="expand-button" id="expandButton">
+			<span class="show-text">{t.expandAll}</span>
+			<span class="hide-text" style="display: none;">{t.showLess}</span>
+			<span class="arrow">▼</span>
+		</button>
+
+		<button class="interest-button" id="interestButton">
+			<span class="heart-icon"><Heart /></span>
+			<span class="interest-count">0</span>
+		</button>
+
+		<div class="interest-popover" id="interestPopover">
+			<div class="popover-header">
+				<h3>{t.interestedItems}</h3>
+			</div>
+			<div class="popover-content">
+				<div class="interest-items-list" id="interestItemsList"></div>
+			</div>
+			<div class="popover-footer">
+				<p class="footer-text">{t.shareInterestedItemsText}</p>
+				<div class="action-buttons">
+					<button class="action-button download-quote-btn">
+						{t.downloadQuote}
+					</button>
+					<button class="action-button view-plan-btn" id="viewPlanBtn">
+						<span id="viewPlanBtnText">{t.viewPlanDetails}</span>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<template id="removeIconTemplate">
+			<X />
+		</template>
+		<div data-i18n-no-items style="display: none;">{t.noInterestedItems}</div>
+	</div>
 </section>
+
+{items.map(item => <ItemPopup item={item} t={t} popupId={`item-popup-${item.id}`} />)}
+
+<script>
+	import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInterested } from "../../utils/local-storage.ts";
+
+	declare function popupCtrl(id: string, action: string): void;
+
+	document.addEventListener("DOMContentLoaded", function () {
+		const expandButton = document.getElementById("expandButton");
+		const cardsContainer = document.querySelector(".cards-container");
+		const showText = expandButton ? expandButton.querySelector(".show-text") : null;
+		const hideText = expandButton ? expandButton.querySelector(".hide-text") : null;
+		const arrow = expandButton ? expandButton.querySelector(".arrow") : null;
+
+		if (!expandButton || !cardsContainer || !showText || !hideText || !arrow) return;
+
+		let isExpanded = false; // false = collapsed (fade-active), true = expanded (fade-hidden)
+		let canExpand = true;
+
+		function applyExpandState() {
+			const shouldShowExpandedUI = !canExpand || isExpanded;
+
+			if (shouldShowExpandedUI) {
+				cardsContainer!.classList.remove("fade-active");
+				cardsContainer!.classList.add("fade-hidden");
+				(showText as HTMLElement).style.display = "none";
+				(hideText as HTMLElement).style.display = "inline";
+				(arrow as HTMLElement).style.transform = "rotate(180deg)";
+			} else {
+				cardsContainer!.classList.remove("fade-hidden");
+				cardsContainer!.classList.add("fade-active");
+				(showText as HTMLElement).style.display = "inline";
+				(hideText as HTMLElement).style.display = "none";
+				(arrow as HTMLElement).style.transform = "rotate(0deg)";
+			}
+		}
+
+		expandButton.addEventListener("click", function () {
+			isExpanded = !isExpanded;
+			applyExpandState();
+		});
+
+		function sortCards(selectedCategory: string) {
+			const cardsGrid = document.querySelector(".cards-grid");
+			if (!cardsGrid) return;
+
+			const cards = Array.from(cardsGrid.querySelectorAll(".card")) as HTMLElement[];
+			let visibleCount = cards.length;
+
+			if (selectedCategory === "all") {
+				// For "all", maintain original order (sort by data-card-id)
+				cards.sort((a, b) => {
+					const idA = a.getAttribute("data-card-id") || "";
+					const idB = b.getAttribute("data-card-id") || "";
+					return idA.localeCompare(idB);
+				});
+			} else {
+				// Sort by category - selected category first, others maintain original order
+				cards.sort((a, b) => {
+					const categoryA = a.getAttribute("data-category");
+					const categoryB = b.getAttribute("data-category");
+					const idA = a.getAttribute("data-card-id") || "";
+					const idB = b.getAttribute("data-card-id") || "";
+
+					if (categoryA === selectedCategory && categoryB !== selectedCategory) {
+						return -1; // A (selected category) comes first
+					}
+					if (categoryA !== selectedCategory && categoryB === selectedCategory) {
+						return 1; // B (selected category) comes first
+					}
+					// Both same priority, maintain original order by ID
+					return idA.localeCompare(idB);
+				});
+			}
+
+			// Update ItemCard descriptions based on selected category
+			cards.forEach(card => {
+				updateCardDescription(card, selectedCategory);
+			});
+
+			// Reorder cards in the DOM
+			cards.forEach(card => cardsGrid.appendChild(card));
+
+			updateExpandButtonVisibility(visibleCount);
+		}
+
+		function getCardsPerRowThreshold() {
+			const width = window.innerWidth;
+			if (width <= 768) {
+				return 2;
+			} else if (width <= 1024) {
+				return 4;
+			} else {
+				return 6;
+			}
+		}
+
+		function updateCardDescription(card: HTMLElement, selectedCategory: string) {
+			const descriptionElement = card.querySelector(".description");
+			if (!descriptionElement) return;
+
+			// Get stored description data from card attributes
+			const descriptionData = card.getAttribute("data-descriptions");
+			if (descriptionData) {
+				try {
+					const descriptions = JSON.parse(descriptionData);
+					const newDescription = descriptions[selectedCategory] || descriptions['all'] || '';
+					descriptionElement.textContent = newDescription;
+				} catch (e) {
+					// Fallback to original description if JSON parsing fails
+				}
+			}
+		}
+
+		function updateExpandButtonVisibility(visibleCount:number) {
+			const expandButton = document.getElementById("expandButton");
+			if (!expandButton) return;
+
+			const threshold = getCardsPerRowThreshold();
+
+			if (visibleCount > threshold) {
+				canExpand = true;
+				expandButton.style.display = "flex";
+				applyExpandState();
+			} else {
+				canExpand = false;
+				expandButton.style.display = "none";
+				applyExpandState();
+			}
+		}
+
+		const tabButtons = document.querySelectorAll(".tab");
+		tabButtons.forEach(button => {
+			button.addEventListener("click", function () {
+				const buttonElement = button;
+
+				tabButtons.forEach(tab => tab.classList.remove("active"));
+
+				buttonElement.classList.add("active");
+
+				const category = buttonElement.getAttribute("data-category") || "all";
+
+				sortCards(category);
+			});
+		});
+
+		const totalCards = document.querySelectorAll(".card").length;
+		updateExpandButtonVisibility(totalCards);
+		applyExpandState();
+
+		window.addEventListener("resize", function () {
+			const allCards = document.querySelectorAll('.card');
+			updateExpandButtonVisibility(allCards.length);
+		});
+
+		function syncAllAddButtons() {
+			const items = getInterestedItems();
+			const ids = new Set(items.map(i => i.id));
+			document.querySelectorAll(".add-button").forEach(btn => {
+				const id = btn.getAttribute("data-item-id") || "";
+				if (ids.has(id)) btn.classList.add("added");
+				else btn.classList.remove("added");
+			});
+		}
+
+		function addCardClickHandlers() {
+			const cards = document.querySelectorAll(".card") as NodeListOf<HTMLElement>;
+			cards.forEach(card => {
+				const itemIdStr = card.getAttribute("data-card-id");
+				if (itemIdStr) {
+					card.style.cursor = "pointer";
+					card.addEventListener("click", function (e) {
+						const target = e.target as Element;
+						if (target.closest(".add-button")) {
+							return;
+						}
+						e.stopPropagation();
+						const popupId = `item-popup-${itemIdStr}`;
+						popupCtrl(popupId, "open");
+					});
+				}
+			});
+		}
+
+		function updateCardHighlighting() {
+			const cards = document.querySelectorAll(".card");
+			cards.forEach(card => {
+				const cardId = card.getAttribute("data-card-id");
+				if (cardId) {
+					if (isItemInterested(cardId)) {
+						card.classList.add("highlighted");
+					} else {
+						card.classList.remove("highlighted");
+					}
+				}
+			});
+		}
+
+		document.addEventListener("click", function (e) {
+			const target = e.target;
+			if (!(target instanceof Element)) return;
+			const button = target.closest(".add-button");
+			if (!button) return;
+			e.preventDefault();
+			e.stopPropagation();
+			const id = button.getAttribute("data-item-id") || "";
+			const title = button.getAttribute("data-item-title") || "";
+			const category = button.getAttribute("data-item-category") || "";
+			const image = button.getAttribute("data-item-image") || "";
+			if (isItemInterested(id)) {
+				removeInterestedItem(id);
+				button.classList.remove("added");
+			} else {
+				addInterestedItem({ id, title, category, image, deadline: "" });
+				button.classList.add("added");
+			}
+		});
+		function updateInterestButton() {
+			const items = getInterestedItems();
+			const countElement = document.querySelector(".interest-count");
+
+			if (countElement) {
+				if (items.length > 0) {
+					countElement.textContent = items.length.toString();
+				} else {
+					countElement.textContent = "";
+				}
+			}
+		}
+
+		// Add-button state is centralized here (delegated clicks + sync)
+
+		function renderInterestItemsList() {
+			const items = getInterestedItems();
+			const listContainer = document.getElementById("interestItemsList");
+
+			if (!listContainer) return;
+
+			if (items.length === 0) {
+				listContainer.innerHTML = `<div class="empty-state">${document.querySelector("[data-i18n-no-items]")?.textContent}</div>`;
+				return;
+			}
+
+			listContainer.innerHTML = "";
+
+			const removeIconTemplate = document.getElementById("removeIconTemplate") as HTMLTemplateElement | null;
+
+			items.forEach(item => {
+				const itemDiv = document.createElement("div");
+				itemDiv.className = "interest-item";
+				itemDiv.setAttribute("data-item-id", item.id);
+
+				const contentDiv = document.createElement("div");
+				contentDiv.className = "item-content";
+
+				const titleSpan = document.createElement("span");
+				titleSpan.className = "item-title";
+				titleSpan.textContent = item.title;
+
+				const removeButton = document.createElement("button");
+				removeButton.className = "remove-item";
+				removeButton.setAttribute("data-item-id", item.id);
+
+				if (removeIconTemplate) {
+					const iconClone = removeIconTemplate.content.cloneNode(true);
+					removeButton.appendChild(iconClone);
+				}
+
+				contentDiv.appendChild(titleSpan);
+				contentDiv.appendChild(removeButton);
+				itemDiv.appendChild(contentDiv);
+				listContainer.appendChild(itemDiv);
+			});
+
+			const removeButtons = listContainer.querySelectorAll(".remove-item");
+			removeButtons.forEach(button => {
+				button.addEventListener("click", function (e) {
+					e.stopPropagation();
+					const itemId = button.getAttribute("data-item-id") || "";
+					removeInterestedItem(itemId);
+				});
+			});
+		}
+
+		let previousInterestCount = getInterestedItems().length;
+
+		window.addEventListener("itemsChange", function (e: Event) {
+			updateInterestButton();
+			renderInterestItemsList();
+			updateCardHighlighting();
+
+			let currentCount = previousInterestCount;
+			try {
+				const ce = e as CustomEvent<{ items?: unknown[] }>;
+				if (ce?.detail && Array.isArray(ce.detail.items)) {
+					currentCount = ce.detail.items.length;
+				} else {
+					currentCount = getInterestedItems().length;
+				}
+			} catch {
+				currentCount = getInterestedItems().length;
+			}
+
+			if (currentCount > previousInterestCount) {
+				setTimeout(() => openPopover(), 0);
+			} else if (interestPopover?.classList.contains("active")) {
+				setTimeout(() => positionPopover(), 0);
+			}
+
+			previousInterestCount = currentCount;
+		});
+
+		const interestButton = document.getElementById("interestButton");
+		const interestPopover = document.getElementById("interestPopover");
+
+		function positionPopover() {
+			if (!interestButton || !interestPopover) return;
+
+			const buttonRect = interestButton.getBoundingClientRect();
+			const popoverRect = interestPopover.getBoundingClientRect();
+			const viewportHeight = window.innerHeight;
+
+			interestPopover.style.position = "fixed";
+
+			let left = buttonRect.right - 250;
+			let top = buttonRect.top - popoverRect.height - 12;
+
+			if (left < 16) {
+				left = 16;
+			}
+
+			if (top < 16) {
+				top = buttonRect.bottom + 12;
+			}
+
+			if (top + popoverRect.height > viewportHeight - 16) {
+				top = viewportHeight - popoverRect.height - 16;
+			}
+
+			interestPopover.style.left = `${left}px`;
+			interestPopover.style.top = `${top}px`;
+		}
+
+		function openPopover() {
+			if (interestPopover) {
+				renderInterestItemsList();
+				interestPopover.classList.add("active");
+				positionPopover();
+			}
+		}
+
+		function closePopover() {
+			if (interestPopover) {
+				interestPopover.classList.remove("active");
+			}
+		}
+
+		if (interestButton) {
+			interestButton.addEventListener("click", function (e) {
+				e.stopPropagation();
+				if (interestPopover?.classList.contains("active")) {
+					closePopover();
+				} else {
+					openPopover();
+				}
+			});
+		}
+
+		document.addEventListener("click", function (e) {
+			if (interestPopover?.classList.contains("active") && !interestPopover.contains(e.target as Node) && !interestButton?.contains(e.target as Node)) {
+				closePopover();
+			}
+		});
+
+		document.addEventListener("keydown", function (e) {
+			if (e.key === "Escape") {
+				closePopover();
+			}
+		});
+
+		window.addEventListener("resize", function () {
+			if (interestPopover?.classList.contains("active")) {
+				positionPopover();
+			}
+		});
+
+		// Add click handler for view plan details button
+		document.addEventListener("click", function (e) {
+			const target = e.target as Element;
+			if (target.closest(".view-plan-btn")) {
+				e.preventDefault();
+
+				if (hasVisitedPlans) {
+					// Navigate to Form section if user has already visited Plans
+					const formSection = document.getElementById("form");
+					if (formSection) {
+						formSection.scrollIntoView({ behavior: "smooth" });
+						closePopover();
+					}
+				} else {
+					// Navigate to Plans section if user hasn't visited Plans yet
+					const plansSection = document.getElementById("plans");
+					if (plansSection) {
+						plansSection.scrollIntoView({ behavior: "smooth" });
+						closePopover();
+						// Mark that user has visited plans
+						hasVisitedPlans = true;
+						updateViewPlanButtonText();
+					}
+				}
+			}
+		});
+
+		updateInterestButton();
+		syncAllAddButtons();
+
+		const targetSections = ["items", "plans", "addons", "form"];
+		let currentSection = "";
+		let hasVisitedPlans = false;
+
+		// Store text constants for JavaScript access
+		const viewPlanDetailsText = document.getElementById("viewPlanBtnText")?.textContent || "檢視方案詳情";
+		const contactUsText = "聯絡我們";
+
+		function updateViewPlanButtonText() {
+			const viewPlanBtnText = document.getElementById("viewPlanBtnText");
+			if (viewPlanBtnText) {
+				if (hasVisitedPlans) {
+					viewPlanBtnText.textContent = contactUsText;
+				} else {
+					viewPlanBtnText.textContent = viewPlanDetailsText;
+				}
+			}
+		}
+
+		function updateInterestButtonVisibility() {
+			const interestButtons = document.querySelectorAll(".interest-button");
+
+			let foundSection = "";
+
+			for (const sectionName of targetSections) {
+				const section = document.getElementById(sectionName);
+				if (section) {
+					const rect = section.getBoundingClientRect();
+					const sectionHeight = rect.height;
+					const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+
+					if (visibleHeight > sectionHeight * 0.3) {
+						foundSection = sectionName;
+						break;
+					}
+				}
+			}
+
+			if (foundSection !== currentSection) {
+				currentSection = foundSection;
+
+				// Check if user has visited the plans section
+				if (foundSection === "plans" && !hasVisitedPlans) {
+					hasVisitedPlans = true;
+					updateViewPlanButtonText();
+				}
+
+				interestButtons.forEach(button => {
+					const buttonElement = button as HTMLElement;
+					if (foundSection) {
+						buttonElement.style.display = "flex";
+					} else {
+						buttonElement.style.display = "none";
+					}
+				});
+			}
+		}
+
+		let scrollTimeout: number | undefined;
+		function handleScroll() {
+			if (scrollTimeout) {
+				cancelAnimationFrame(scrollTimeout);
+			}
+			scrollTimeout = requestAnimationFrame(updateInterestButtonVisibility);
+		}
+
+		document.addEventListener("scroll", handleScroll);
+		window.addEventListener("resize", updateInterestButtonVisibility);
+
+		setTimeout(updateInterestButtonVisibility, 100);
+		window.addEventListener("itemsChange", syncAllAddButtons);
+		document.addEventListener("interested-items-changed", updateCardHighlighting);
+		addCardClickHandlers();
+		updateCardHighlighting();
+	});
+</script>
+
+<style>
+	section {
+		background-color: var(--items-bg);
+		padding: 4rem 0;
+		min-height: 100vh;
+	}
+
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 2rem;
+	}
+
+	h2 {
+		font-size: 3rem;
+		color: var(--black);
+		text-align: center;
+		margin-bottom: 1rem;
+		font-weight: bold;
+	}
+
+	.subtitle {
+		color: var(--black);
+		text-align: center;
+		margin-bottom: 3rem;
+		font-size: 1.1rem;
+	}
+
+	.tabs {
+		display: flex;
+		justify-content: center;
+		gap: 0;
+		margin-bottom: 3rem;
+	}
+
+	.tab {
+		padding: 0.75rem 1.5rem;
+		border: none;
+		background-color: var(--white);
+		color: var(--black);
+		cursor: pointer;
+		border-radius: 25px;
+		margin: 0 0.25rem;
+		font-size: 1rem;
+		transition: background-color 0.3s ease;
+	}
+
+	.tab.active {
+		background-color: var(--gray-container);
+	}
+
+	.tab:hover {
+		background-color: var(--gray-container);
+	}
+
+	.cards-container {
+		position: relative;
+		margin-bottom: 3rem;
+		transition: all 0.3s ease;
+	}
+
+	.cards-container.fade-active {
+		max-height: 800px;
+		overflow: hidden;
+	}
+
+	.cards-container.fade-hidden {
+		max-height: none;
+		overflow: visible;
+	}
+
+	.fade-overlay {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 150px;
+		background: linear-gradient(transparent, var(--items-bg));
+		pointer-events: none;
+		transition: opacity 0.3s ease;
+		z-index: 1;
+	}
+
+	.cards-container.fade-hidden .fade-overlay {
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	.cards-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 2rem;
+	}
+
+	.expand-button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		margin: 0 auto;
+		padding: 1rem 2rem;
+		background: none;
+		border: none;
+		color: #007aff;
+		font-size: 1rem;
+		font-family: inherit;
+		font-weight: 700;
+		cursor: pointer;
+		position: relative;
+		z-index: 2;
+	}
+
+	.expand-button:hover {
+		color: #0056cc;
+	}
+
+	.expand-button .arrow {
+		transition: transform 0.3s ease;
+		font-size: 0.8rem;
+	}
+
+	.interest-button {
+		position: fixed;
+		bottom: 2rem;
+		right: 2rem;
+		width: 56px;
+		height: 56px;
+		border-radius: 50%;
+		background-color: var(--white);
+		border: none;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+		transition: all 0.2s ease;
+		z-index: 1000;
+	}
+
+	.interest-button:hover {
+		transform: scale(1.05);
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+	}
+
+	.interest-button .heart-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--black);
+		transition: all 0.2s ease;
+	}
+
+	.interest-button .heart-icon svg {
+		width: 20px;
+		height: 20px;
+		stroke-width: 2;
+	}
+
+	.interest-button .interest-count {
+		position: absolute;
+		top: -4px;
+		right: -4px;
+		background-color: var(--black);
+		color: var(--white);
+		font-size: 0.75rem;
+		font-weight: 600;
+		min-width: 18px;
+		height: 18px;
+		border-radius: 9px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		line-height: 1;
+		opacity: 0;
+		transform: scale(0.5);
+		transition: all 0.2s ease;
+	}
+
+	.interest-button .interest-count:not(:empty) {
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	.interest-popover {
+		position: fixed;
+		width: 250px;
+		max-height: 400px;
+		background-color: var(--white);
+		border-radius: 16px;
+		box-shadow:
+			0 8px 32px rgba(0, 0, 0, 0.12),
+			0 4px 16px rgba(0, 0, 0, 0.08);
+		z-index: 2000;
+		visibility: hidden;
+		opacity: 0;
+		transform: scale(0.95) translateY(-4px);
+		transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.interest-popover.active {
+		visibility: visible;
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
+
+	.popover-header {
+		padding: 1rem;
+		text-align: left;
+		position: relative;
+	}
+
+	.popover-header h3 {
+		margin: 0;
+		font-size: 1.5rem;
+		font-weight: 400;
+		letter-spacing: -0.01em;
+	}
+
+	.popover-content {
+		overflow-y: auto;
+		max-height: 320px;
+	}
+
+	.popover-footer {
+		padding: 1rem;
+		border-top: 1px solid rgba(0, 0, 0, 0.04);
+		background-color: rgba(0, 0, 0, 0.01);
+	}
+
+	.footer-text {
+		margin: 0;
+		font-size: 0.85rem;
+		color: var(--gray);
+		text-align: left;
+		line-height: 1.4;
+	}
+
+	.interest-items-list {
+		padding: 0rem 1rem;
+	}
+
+	:global(.empty-state) {
+		text-align: center;
+		color: var(--gray);
+		font-size: 0.9rem;
+		padding: 3rem 2rem;
+	}
+
+	:global(.interest-item) {
+		border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+		transition: background-color 0.2s ease;
+	}
+
+	:global(.interest-item:last-child) {
+		border-bottom: none;
+	}
+
+	:global(.item-content) {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+		min-height: 28px;
+	}
+
+	:global(.item-title) {
+		font-size: 0.95rem;
+		color: var(--black);
+		flex: 1;
+		line-height: 1.4;
+		font-weight: 500;
+		text-align: left;
+		padding-right: 1rem;
+	}
+
+	:global(.remove-item) {
+		background: none;
+		border: none;
+		color: rgba(0, 0, 0, 0.4);
+		cursor: pointer;
+		width: 32px;
+		height: 32px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+		transition: all 0.2s ease;
+		flex-shrink: 0;
+	}
+
+	:global(.remove-item svg) {
+		width: 18px;
+		height: 18px;
+		stroke-width: 1.5;
+	}
+
+	:global(.remove-item:hover) {
+		background-color: rgba(0, 0, 0, 0.06);
+		color: rgba(0, 0, 0, 0.8);
+	}
+
+	.action-buttons {
+		display: flex;
+		gap: 0.5rem;
+		margin-top: 1rem;
+	}
+
+	.action-button {
+		flex: 1;
+		padding: 0.2rem;
+		background-color: var(--button-dark);
+		color: var(--white);
+		border: none;
+		border-radius: 25px;
+		font-size: 0.9rem;
+		font-weight: 400;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		text-align: center;
+		white-space: nowrap;
+	}
+
+	.action-button:hover {
+		background-color: #404040;
+		transform: translateY(-1px);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	}
+
+	@media (max-width: 768px) {
+		.cards-grid {
+			grid-template-columns: 1fr;
+		}
+
+		h2 {
+			font-size: 2rem;
+		}
+
+		.container {
+			padding: 0 1rem;
+		}
+
+		.tabs {
+			flex-wrap: wrap;
+			gap: 0.5rem;
+		}
+
+		.tab {
+			padding: 0.5rem 1rem;
+			font-size: 0.9rem;
+		}
+
+		.interest-button {
+			bottom: 1rem;
+			right: 1rem;
+			width: 50px;
+			height: 50px;
+		}
+
+		.interest-button .heart-icon svg {
+			width: 18px;
+			height: 18px;
+		}
+
+		.interest-button .interest-count {
+			font-size: 0.7rem;
+			min-width: 16px;
+			height: 16px;
+			border-radius: 8px;
+		}
+
+		.interest-popover {
+			width: calc(100vw - 32px);
+			max-width: 300px;
+			max-height: 60vh;
+		}
+
+		.popover-content {
+			max-height: calc(60vh - 80px);
+		}
+	}
+
+	@media (max-width: 1024px) and (min-width: 769px) {
+		.cards-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>

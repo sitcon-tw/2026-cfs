@@ -1,0 +1,17 @@
+{
+  "id": "live-interaction-booth-setup-3",
+  "remaining": 5,
+  "category": "live_interaction",
+  "deadline": "2026-06-05T23:59:59+08:00",
+  "price": "NT$ 15,000",
+  "zh-Hant": {
+    "unit": "張",
+    "title": "會場攤位設置",
+    "description": {
+      "all": "這是一個簡單的攤位佈置服務，包含桌椅租借、基本裝飾等，讓您的攤位在活動中更具吸引力。",
+      "live_interaction": "透過精心設計的攤位與參會者建立連結",
+      "brand_exposure": "利用攤位空間最大化品牌曝光效果",
+      "recruitment_and_promotion": "創造理想的招募環境和推廣平台"
+    }
+  }
+}
