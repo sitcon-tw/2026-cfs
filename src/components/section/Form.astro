@@ -4,35 +4,24 @@ import FormInput from "../FormInput.astro";
 ---
 
 <section id="form">
-	<div class="form-title-container">
-		<h1 id="form-section-title" class="form-title">今天的支持，<br class="rwd-hidden" />成就十年後的技術領袖</h1>
-	</div>
-
-	<div class="form-container">
-		<form class="form-body" id="sponsor-form">
-			<h2 class="form-title">公司贊助</h2>
+	<h2>今天的支持，<br class="rwd-hidden" />成就十年後的技術領袖</h2>
+	<div class="container">
+		<form id="sponsor-form">
+			<h3>公司贊助</h3>
 			<FormInput title="單位名稱" name="organization" required />
 			<FormInput title="部門/負責業務" name="department" description="單位名稱" />
 			<FormInput title="如何稱呼您？" name="name" required />
 			<FormInput title="聯絡方式" name="contact" placeholder="Telegram / @SITCONgeneral" description="Email、FB、LINE ID 或 Telegram ... 等，各式我們能聯絡到您的方式。" required />
 			<FormInput title="還有什麼想和我們說的嗎？" name="message" />
-
 			<div id="submit-section">
-				<button type="button" id="sponsor-form-submit" class="form-submit-button">
-					<span id="sponsor-form-submit-button-text" class="form-submit-button-text">送出</span>
-				</button>
-
-				<div id="form-message"></div>
+				<button id="submit">送出</button>
+				<span id="form-message"></span>
 			</div>
 		</form>
-
 		<div class="divider"></div>
-
-		<div class="form-body">
-			<h2 class="form-title">或是以個人名義贊助 SITCON</h2>
-			<a class="personal-sponsor-button" href="https://ocf.neticrm.tw/civicrm/contribute/transact?reset=1&id=76" target="_blank">
-				<span class="personal-sponsor-button-text">立即贊助</span>
-			</a>
+		<div class="personal">
+			<h3>或是以個人名義贊助 SITCON</h3>
+			<a class="personal-button" href="https://ocf.neticrm.tw/civicrm/contribute/transact?reset=1&id=76" target="_blank">立即贊助</a>
 		</div>
 	</div>
 </section>
@@ -41,9 +30,9 @@ import FormInput from "../FormInput.astro";
 	const apiUrl = "https://script.google.com/macros/s/AKfycbyykeFH0wcHMu8_kM3GWa3DWOvJt7Fq0wNc5hROMO1pN8PTjazUTJQi30OEkSrmVZpO/exec";
 
 	const form = document.getElementById("sponsor-form") as HTMLFormElement;
-	const submitButton = document.getElementById("sponsor-form-submit") as HTMLButtonElement;
+	const submitButton = document.getElementById("submit") as HTMLButtonElement;
 	const messageElement = document.getElementById("form-message") as HTMLDivElement;
-	const submitButtonText = document.getElementById("sponsor-form-submit-button-text") as HTMLSpanElement;
+	const submitButtonText = document.getElementById("submit") as HTMLSpanElement;
 
 	const checkForm = () => {
 		const formData = new FormData(form);
@@ -95,136 +84,108 @@ import FormInput from "../FormInput.astro";
 </script>
 
 <style>
-	#form-section-title {
-		font-size: 4rem;
+	section {
+		background: linear-gradient(#f1f3fb, #fff 8rem);
+		padding: 2rem;
 	}
-	#submit-section {
-		gap: 1rem;
-		display: grid;
-		grid-template-columns: 1fr auto;
-		align-items: center;
-		justify-items: start;
-		width: 30rem;
+	h2 {
+		padding-block: 10rem 5rem;
 	}
-	#form-message {
-		color: #0171e3;
-		font-family: "LINE Seed TW_OTF";
-		font-size: 1rem;
-	}
-	.personal-sponsor-button-text {
-		color: var(--White, #fff);
-		text-align: center;
-		text-decoration: none;
-		font-family: "LINE Seed TW_OTF";
-		font-size: 1.5rem;
-		font-style: normal;
-		font-weight: 400;
-		line-height: 100%; /* 1.5rem */
-		letter-spacing: 0.075rem;
-	}
-	.personal-sponsor-button {
-		display: flex;
-		height: 4.125rem;
-		padding: 0 2rem;
-		text-decoration: none;
-		justify-content: center;
-		align-items: center;
-		gap: 0.625rem;
-		border: none;
-		outline: transparent;
-		border-radius: 625rem;
-		background: #0171e3;
-	}
-	.form-submit-button-text {
-		color: var(--White, #fff);
-		font-family: "LINE Seed TW_OTF";
-		font-size: 1rem;
-		font-style: normal;
-		font-weight: 400;
-		line-height: 100%; /* 1rem */
-		letter-spacing: 0.05rem;
-	}
-	.form-submit-button {
-		display: flex;
-		padding: 0 2rem;
-		height: 3rem;
-		align-items: center;
-		gap: 0.625rem;
-		border-radius: 0.5rem;
-		align-self: flex-start;
-		border: none;
-		outline: transparent;
-		background: #0171e3;
-	}
-	.form-title-container {
-		display: flex;
-		height: 20rem;
-		justify-content: center;
-		align-items: center;
-		background: linear-gradient(180deg, #f1f3fb 0%, #fff 32.86%);
-	}
-	.form-title {
-		color: var(--Black, #1d1d1f);
-		font-family: "LINE Seed TW_OTF";
-		font-size: 3.5rem;
-		font-style: normal;
-		text-align: center;
-		font-weight: 700;
-		line-height: 120%; /* 4.2rem */
-		letter-spacing: -0.077rem;
-	}
-
-	.form-container {
-		background: var(--White, #fff);
-		display: grid;
-		padding: 2rem 0;
-		justify-content: center;
-		align-items: center;
-		align-self: stretch;
-		grid-template-columns: 1fr 1px 1fr;
-	}
-
-	.form-body {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 2.2rem;
-	}
-	.rwd-hidden {
-		display: none;
-	}
-
-	.form-title {
-		color: var(--Black, #1d1d1f);
-		font-family: "LINE Seed TW_OTF";
+	h3 {
 		font-size: 2.5rem;
-		font-style: normal;
+	}
+
+	.container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 1rem;
+		margin: auto;
+	}
+
+	#sponsor-form,
+	.personal {
+		flex: 1;
+		max-width: 33rem;
+	}
+
+	#sponsor-form h3 {
+		margin-bottom: 1.5rem;
+	}
+
+	#form-message {
+		margin-top: 0.5rem;
+		color: #0171e3;
+	}
+
+	.form-title {
+		font-size: 2.5rem;
 		font-weight: 700;
 		line-height: 120%; /* 3rem */
-		letter-spacing: -0.055rem;
+	}
+
+	.personal {
+		text-align: center;
+	}
+	.personal-button {
+		padding: 0.75rem 1.5rem;
+		text-decoration: none;
+		border-radius: 100px;
+		margin-top: 1rem;
+		display: inline-block;
 	}
 
 	.divider {
 		background: var(--Black, #1d1d1f);
 		width: 1px;
-		height: 50.8125rem;
+		height: 30rem;
 	}
 
-	@media (max-width: 927px) {
-		.form-container {
-			grid-template-columns: 1fr;
-			gap: 3rem;
-			width: 100vw;
-		}
-		.divider {
-			width: 100%;
-			height: 1px;
-			align-self: center;
-			margin-top: 3rem;
-			margin-bottom: 3rem;
-		}
+	.rwd-hidden {
+		display: none;
+	}
+
+	#submit {
+		padding: 0.5rem 1.5rem;
+		border-radius: 0.25rem;
+		margin: .25rem 1rem 1rem 0rem;
+	}
+
+	.personal-button,
+	#submit {
+		border: none;
+		cursor: pointer;
+		background-color: #0171e3;
+		color: var(--white);
+		transition: background-color 0.3s ease;
+	}
+
+	.personal-button:hover,
+	#submit:hover {
+		background-color: #0a7bec;
+	}
+
+	.personal-button:active,
+	#submit:active {
+		background-color: #0056b3;
+	}
+
+	@media (max-width: 65rem) {
 		.rwd-hidden {
 			display: inline;
+		}
+	}
+
+	@media (max-width: 60rem) {
+		h2 {
+		}
+		.divider {
+			display: none;
+		}
+
+		.container {
+			flex-direction: column;
+			gap: 5rem;
 		}
 	}
 </style>
