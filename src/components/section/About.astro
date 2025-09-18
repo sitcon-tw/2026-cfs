@@ -1,5 +1,6 @@
 ---
 const { t } = Astro.props;
+import Popup from "@components/Popup.astro";
 ---
 
 <section id="about" class="about-section">
@@ -76,32 +77,53 @@ const { t } = Astro.props;
 			}
 		</div>
 
-		<!-- 2024年回顧 -->
 		<div class="review-section">
-			<h3 class="review-title">回顧 2024 年</h3>
+			<h3 class="review-title">回顧 2025 年</h3>
 			<div class="review-stats">
 				<div class="review-item">
-					<span class="review-label">場館容納上限</span>
-					<span class="review-number">1300人</span>
-				</div>
-				<div class="review-item">
-					<span class="review-label">開放報名</span>
-					<span class="review-number">3秒</span>
-					<span class="review-note">瞬間秒殺</span>
+					<span class="review-label">會場</span>
+					<span class="review-number">1300 人次</span>
 				</div>
 				<div class="review-item">
 					<span class="review-label">來自海內外</span>
 					<span class="review-number">150所</span>
 					<span class="review-note">學校</span>
 				</div>
+				<div class="review-item">
+					<span class="review-number">7 成</span>
+					<span class="review-note">為大專院校或研究所背景參與者</span>
+				</div>
+				<div class="review-item">
+					<span class="review-number">1/3</span>
+					<span class="review-note">活躍於資訊社群</span>
+				</div>
 			</div>
 		</div>
-
-		<DetailBtn text={t.detail} />
 	</div>
+	<Popup btnText="查看受眾與統計" title="About SITCON" background="https://farm3.staticflickr.com/2900/14412625957_6b97c8396a_k.jpg" id="stat-popup" class="popup">
+		<div class="container">
+			<h2>這是一個關於 SITCON 的彈出視窗範例。</h2>
+			<p>
+				SITCON 年會每年皆是許多志工奉獻時間與精神所舉辦，沒有大家的付出，就不可能會有如此內容豐富且高品質的年會， 希望大家在參加之餘，也不要忘記背後工作人員的付出。 若你對參與 SITCON
+				年會的籌備有興趣，歡迎填寫跳坑表單或是關注 SITCON 的郵件論壇，明年的籌備開始時，你就會收到相關的資訊！
+			</p>
+			<p>
+				SITCON 年會每年皆是許多志工奉獻時間與精神所舉辦，沒有大家的付出，就不可能會有如此內容豐富且高品質的年會， 希望大家在參加之餘，也不要忘記背後工作人員的付出。 若你對參與 SITCON
+				年會的籌備有興趣，歡迎填寫跳坑表單或是關注 SITCON 的郵件論壇，明年的籌備開始時，你就會收到相關的資訊！
+			</p>
+			<p>
+				SITCON 年會每年皆是許多志工奉獻時間與精神所舉辦，沒有大家的付出，就不可能會有如此內容豐富且高品質的年會， 希望大家在參加之餘，也不要忘記背後工作人員的付出。 若你對參與 SITCON
+				年會的籌備有興趣，歡迎填寫跳坑表單或是關注 SITCON 的郵件論壇，明年的籌備開始時，你就會收到相關的資訊！
+			</p>
+		</div>
+	</Popup>
 </section>
 
 <style>
+	.popup .container p {
+		margin-bottom: 3rem;
+		line-height: 150%;
+	}
 	.about-section {
 		padding: 80px 0;
 	}
