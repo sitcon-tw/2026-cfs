@@ -53,15 +53,7 @@ const categories = Object.keys(groupedItems);
 	</div>
 </section>
 
-{
-	itemsData.map((item: ItemData) => (
-		<ItemPopup
-			item={item}
-			t={t}
-			popupId={`addon-popup-${item.id}`}
-		/>
-	))
-}
+{itemsData.map((item: ItemData) => <ItemPopup item={item} t={t} popupId={`addon-popup-${item.id}`} />)}
 
 <script>
 	import { isItemInterested } from "../../utils/local-storage.ts";
@@ -88,7 +80,7 @@ const categories = Object.keys(groupedItems);
 			const itemIdStr = card.getAttribute("data-item-id");
 			if (itemIdStr) {
 				card.style.cursor = "pointer";
-				card.addEventListener("click", function(e) {
+				card.addEventListener("click", function (e) {
 					e.stopPropagation();
 					const popupId = `addon-popup-${itemIdStr}`;
 					popupCtrl(popupId, "open");
