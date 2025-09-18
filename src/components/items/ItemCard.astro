@@ -1,0 +1,194 @@
+---
+import { Plus, Check } from "@lucide/astro";
+import { Image } from "astro:assets";
+import type { ImageMetadata } from 'astro';
+import { getItemDescription } from "../../utils/items-loader";
+
+const { t, card, selectedCategory = "all" } = Astro.props;
+
+// Import images dynamically using import.meta.glob
+const images = import.meta.glob<{ default: ImageMetadata }>('../../data/items/**/image.jpg');
+const imagePath = `../../data/items/${card.id}/image.jpg`;
+
+// Get current description based on selected category
+const currentDescription = getItemDescription(card, selectedCategory);
+
+// Prepare description data for client-side updates
+const descriptionData = typeof card.description === 'object' ? JSON.stringify(card.description) : JSON.stringify({ all: card.description });
+---
+
+<div class="card" data-category={card.category} data-card-id={card.id} data-descriptions={descriptionData}>
+	<div class="card-image">
+		{images[imagePath] ? (
+			<Image src={images[imagePath]()} alt={card.title} />
+		) : (
+			<div class="placeholder-image">No Image</div>
+		)}
+		<div class="tag">
+			<div class="remaining-tag">{t.remaining} {card.remaining} {card.unit}</div>
+			<div class="deadline-tag">{`${new Date(card.deadline).getMonth() + 1}/${new Date(card.deadline).getDate()}`} {t.deadline}</div>
+		</div>
+	</div>
+	<div class="card-content">
+		<div class="title-row">
+			<h3>{card.title}</h3>
+			<button
+				type="button"
+				class="add-button"
+				data-item-id={card.id}
+				data-item-title={card.title}
+				data-item-category={t.item_categories[card.category]}
+				data-item-image={images[imagePath] ? imagePath : ""}
+			>
+				<span class="add-icon">
+					<Plus />
+				</span>
+				<span class="added-icon">
+					<Check />
+				</span>
+			</button>
+		</div>
+    <div class="description">
+      {currentDescription}
+    </div>
+	</div>
+</div>
+
+
+<style>
+	.card {
+		position: relative;
+		background-color: var(--white);
+		border-radius: 12px;
+		overflow: hidden;
+	}
+
+	.card-image {
+		position: relative;
+		width: 100%;
+		height: 150px;
+		overflow: hidden;
+	}
+
+	.card-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.tag {
+		position: absolute;
+		top: 1rem;
+		left: 1rem;
+		color: var(--black);
+    display: flex;
+    gap: 0.5rem;
+	}
+
+	.remaining-tag {
+		background-color: var(--items-remaining-tag);
+		padding: 0.1rem 0.7rem;
+		border-radius: 20px;
+		font-size: 0.9rem;
+		font-weight: 500;
+	}
+
+  .deadline-tag {
+    background-color: var(--items-deadline-tag);
+    padding: 0.1rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+	.card-content {
+		padding: 1.5rem;
+	}
+
+	.title-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1rem;
+	}
+
+	.card-content h3 {
+		color: var(--black);
+		font-size: 1.1rem;
+		margin: 0;
+		font-weight: 600;
+	}
+
+
+	.add-button {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		background-color: var(--black);
+		color: var(--white);
+		border: none;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: transform 0.2s ease;
+	}
+
+	.add-button svg {
+		width: 20px;
+		height: 20px;
+	}
+
+	.add-icon,
+	.added-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		line-height: 1;
+	}
+
+	.add-button .added-icon {
+		display: none;
+	}
+	.add-button.added .added-icon {
+		display: flex;
+	}
+	.add-button.added .add-icon {
+		display: none;
+	}
+
+	.add-button:hover {
+		transform: scale(1.1);
+	}
+
+	.add-button.added {
+		background-color: var(--items-progress);
+	}
+
+	.add-button.added:hover {
+		background-color: var(--items-progress);
+	}
+
+	.description {
+		color: var(--black);
+		font-size: 0.9rem;
+		line-height: 1.4;
+		margin-bottom: 1rem;
+		opacity: 0.8;
+		display: -webkit-box;
+		-webkit-line-clamp: 4;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.placeholder-image {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: var(--gray-container);
+		color: var(--gray);
+		font-size: 0.9rem;
+	}
+</style>
