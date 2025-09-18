@@ -5,7 +5,7 @@ import FormInput from "../FormInput.astro";
 
 <section id="form">
 	<div class="form-title-container">
-		<h1 id="form-section-title" class="form-title">今天的支持，成就十年後的技術領袖</h1>
+		<h1 id="form-section-title" class="form-title">今天的支持，<br class="rwd-hidden" />成就十年後的技術領袖</h1>
 	</div>
 
 	<div class="form-container">
@@ -158,7 +158,7 @@ import FormInput from "../FormInput.astro";
 	}
 	.form-title-container {
 		display: flex;
-		height: 15rem;
+		height: 20rem;
 		justify-content: center;
 		align-items: center;
 		background: linear-gradient(180deg, #f1f3fb 0%, #fff 32.86%);
@@ -190,6 +190,9 @@ import FormInput from "../FormInput.astro";
 		align-items: center;
 		gap: 2.2rem;
 	}
+	.rwd-hidden {
+		display: none;
+	}
 
 	.form-title {
 		color: var(--Black, #1d1d1f);
@@ -219,6 +222,9 @@ import FormInput from "../FormInput.astro";
 			align-self: center;
 			margin-top: 3rem;
 			margin-bottom: 3rem;
+		}
+		.rwd-hidden {
+			display: inline;
 		}
 	}
 </style>
