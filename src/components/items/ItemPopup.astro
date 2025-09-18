@@ -1,15 +1,15 @@
 ---
 import Popup from "../Popup.astro";
-import { Image } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
 import { X } from "@lucide/astro";
-import plansData from '@data/plans_data.json';
+import plansData from "@data/plans_data.json";
 
 const { item, t, popupId } = Astro.props;
 
 const locale = Astro.currentLocale || "zh-Hant";
 
-const markdownFiles = import.meta.glob<{ Content: any }>('../../data/items/**/*.md', { eager: true });
+const markdownFiles = import.meta.glob<{ Content: any }>("../../data/items/**/*.md", { eager: true });
 
 // Try to load markdown content for this item
 let MarkdownContent = null;
@@ -29,7 +29,7 @@ if (markdownModule && markdownModule.Content) {
 }
 
 // Import images dynamically using import.meta.glob
-const images = import.meta.glob<{ default: ImageMetadata }>('../../data/items/**/image.jpg');
+const images = import.meta.glob<{ default: ImageMetadata }>("../../data/items/**/image.jpg");
 const imagePath = `../../data/items/${item.id}/image.jpg`;
 
 // Find the matching plan row for this item
@@ -37,11 +37,7 @@ const planRow = plansData.rows.find(row => row.id === item.id);
 const shouldShowPlanTiers = planRow !== undefined;
 ---
 
-<Popup
-	id={popupId || `plan-popup-${item.id}`}
-	button={false}
-	hero={false}
->
+<Popup id={popupId || `plan-popup-${item.id}`} button={false} hero={false}>
 	<div class="popup-content">
 		<div class="item-details">
 			<div class="item-meta">
@@ -53,85 +49,91 @@ const shouldShowPlanTiers = planRow !== undefined;
 				<span class="price-value">{item.price}</span>
 			</div>
 
-			{shouldShowPlanTiers && planRow && (
-				<div class="plan-tiers">
-					{plansData.tiers.map((tier, index) => {
-						const value = planRow.values[index];
-						let displayText = "0";
-						let unit = "";
+			{
+				shouldShowPlanTiers && planRow && (
+					<div class="plan-tiers">
+						{plansData.tiers.map((tier, index) => {
+							const value = planRow.values[index];
+							let displayText = "0";
+							let unit = "";
 
-						if (value.textKey === "not_available") {
-							displayText = "0";
-						} else if ('number' in value && value.number !== undefined) {
-							displayText = value.number.toString();
-							if ('unitKey' in value && value.unitKey) {
-								// Follow the same pattern as Plans.astro - use only the last part of unitKey
-								const unitKey = value.unitKey.split('.').pop();
-								unit = unitKey ? t.unit[unitKey] || "" : "";
+							if (value.textKey === "not_available") {
+								displayText = "0";
+							} else if ("number" in value && value.number !== undefined) {
+								displayText = value.number.toString();
+								if ("unitKey" in value && value.unitKey) {
+									// Follow the same pattern as Plans.astro - use only the last part of unitKey
+									const unitKey = value.unitKey.split(".").pop();
+									unit = unitKey ? t.unit[unitKey] || "" : "";
+								}
+							} else if ("icon" in value && value.icon !== undefined) {
+								displayText = value.icon.toString();
+								// For icon values, we can use a default unit if needed
+								unit = "個"; // or whatever unit makes sense for icons
+							} else {
+								// For other types (main, textKey that aren't not_available), don't show anything
+								displayText = "0";
 							}
-						} else if ('icon' in value && value.icon !== undefined) {
-							displayText = value.icon.toString();
-							// For icon values, we can use a default unit if needed
-							unit = "個"; // or whatever unit makes sense for icons
-						} else {
-							// For other types (main, textKey that aren't not_available), don't show anything
-							displayText = "0";
-						}
 
-						return (
-							<div class="tier-item" style={`color: ${tier.textColor}`}>
-								<span class="tier-name">{t.tier_names[tier.name]}</span>
-								<span class="tier-arrow">→</span>
-								{displayText === "0" ? (
-									<span class="tier-value tier-unavailable">
-										<X size={20} />
-									</span>
-								) : (
-									<span class="tier-value">{displayText} {unit}</span>
-								)}
-							</div>
-						);
-					})}
-				</div>
-			)}
+							return (
+								<div class="tier-item" style={`color: ${tier.textColor}`}>
+									<span class="tier-name">{t.tier_names[tier.name]}</span>
+									<span class="tier-arrow">→</span>
+									{displayText === "0" ? (
+										<span class="tier-value tier-unavailable">
+											<X size={20} />
+										</span>
+									) : (
+										<span class="tier-value">
+											{displayText} {unit}
+										</span>
+									)}
+								</div>
+							);
+						})}
+					</div>
+				)
+			}
 
 			<div class="structured-descriptions">
-				{typeof item.description === 'object' && item.description ? (
-					<>
-						{item.description.all && (
-							<>
-								<h1>{t.introduction}</h1>
-								<p>{item.description.all}</p>
-							</>
-						)}
+				{
+					typeof item.description === "object" && item.description ? (
+						<>
+							{item.description.all && (
+								<>
+									<h1>{t.introduction}</h1>
+									<p>{item.description.all}</p>
+								</>
+							)}
 
-						{Object.entries(item.description).filter(([key]) => key !== 'all').map(([categoryKey, description]) => (
-							<>
-								<h1>{t.item_categories[categoryKey]}</h1>
-								<p>{description}</p>
-							</>
-						))}
-					</>
-				) : (
-					<>
-						<h1>{t.introduction}</h1>
-						<p class="item-description">{item.description}</p>
-					</>
-				)}
+							{Object.entries(item.description)
+								.filter(([key]) => key !== "all")
+								.map(([categoryKey, description]) => (
+									<>
+										<h1>{t.item_categories[categoryKey]}</h1>
+										<p>{description}</p>
+									</>
+								))}
+						</>
+					) : (
+						<>
+							<h1>{t.introduction}</h1>
+							<p class="item-description">{item.description}</p>
+						</>
+					)
+				}
 			</div>
 
-			{hasMarkdownContent && (
-				<div class="markdown-content">
-					<MarkdownContent />
-				</div>
-			)}
+			{
+				hasMarkdownContent && (
+					<div class="markdown-content">
+						<MarkdownContent />
+					</div>
+				)
+			}
 		</div>
 		<div class="item-image">
-			{images[imagePath] ? (
-				<Image src={images[imagePath]()} alt={item.title} />
-			) : (
-				<img src={item.image} alt={item.title} />
-			)}
+			{images[imagePath] ? <Image src={images[imagePath]()} alt={item.title} /> : <img src={item.image} alt={item.title} />}
 		</div>
 	</div>
 </Popup>
@@ -193,7 +195,7 @@ const shouldShowPlanTiers = planRow !== undefined;
 	}
 
 	.remaining {
-		background-color: #F6D46C;
+		background-color: #f6d46c;
 		padding: 0.1rem 0.7rem;
 		border-radius: 20px;
 		font-size: 0.9rem;
@@ -201,11 +203,11 @@ const shouldShowPlanTiers = planRow !== undefined;
 	}
 
 	.category {
-		background-color: #69F147;
-    padding: 0.1rem 0.7rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 500;
+		background-color: #69f147;
+		padding: 0.1rem 0.7rem;
+		border-radius: 20px;
+		font-size: 0.9rem;
+		font-weight: 500;
 	}
 
 	.item-image {
@@ -242,7 +244,6 @@ const shouldShowPlanTiers = planRow !== undefined;
 			border-radius: 0 25px 25px 0;
 		}
 	}
-
 
 	.plan-tiers {
 		margin: 1rem 0;
@@ -289,8 +290,6 @@ const shouldShowPlanTiers = planRow !== undefined;
 		width: 24px;
 		height: 24px;
 	}
-
-
 
 	@media (max-width: 768px) {
 		.popup-content {
