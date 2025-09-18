@@ -2,62 +2,36 @@
 const { type = "text", title = "", name = "", description = "", placeholder = "您的回答", required = false } = Astro.props;
 ---
 
-<div class="form-field">
-	<h3 class="form-field-name">
-		{title}
-		{required && <span class="required-signal">&nbsp;*</span>}
-	</h3>
-	{description && <p class="form-field-description">{description}</p>}
-	<input class="form-field-input" type={type} name={name} required={required} placeholder={placeholder} />
-</div>
+<label for={name} class={required ? "required" : ""}>{title}</label>
+{description && <p>{description}</p>}
+<input type={type} name={name} required={required} placeholder={placeholder} id={name} />
 
 <style>
-	.form-field-description {
-		color: var(--Black, #1d1d1f);
-		font-family: "LINE Seed TW_OTF";
-		font-size: 0.875rem;
-		font-style: normal;
-		font-weight: 400;
-		line-height: 133%; /* 1.16375rem */
-		align-self: stretch;
-		margin-top: 0.3rem;
-		max-width: 25rem;
+	label {
+		font-weight: 600;
+		font-size: 1rem;
+		display: block;
+		margin-bottom: 0.4rem;
 	}
-	.form-field-input {
-		display: flex;
-		height: 3.5rem;
-		padding: 0 1rem;
-		align-items: center;
-		gap: 0.625rem;
+	p {
+		font-size: 0.875rem;
+		line-height: 133%;
+		margin-bottom: .8rem;
+		padding-left: .1rem;
+		color: var(--gray);
+	}
+
+	input {
 		border-radius: 0.75rem;
 		border: 1px solid #86868b;
-		margin-top: 0.7rem;
+		padding: .5rem 1rem;
+		margin-bottom: 1.6rem;
 		width: 100%;
+		max-width: 23rem;
 	}
 
-	.required-signal {
+	.required::after {
 		color: #f00;
-		font-family: "LINE Seed TW_OTF";
-		font-size: 1rem;
-		font-style: normal;
-		font-weight: 700;
-		line-height: 100%;
-		letter-spacing: 0.05rem;
-	}
-
-	.form-field-name {
-		align-self: stretch;
-		color: var(--Black, #1d1d1f);
-		font-family: "LINE Seed TW_OTF";
-		font-size: 1rem;
-		font-style: normal;
-		font-weight: 700;
-		line-height: 100%; /* 1rem */
-		letter-spacing: 0.05rem;
-	}
-
-	.form-field {
-		align-self: center;
-		width: 30rem;
+		content: " *";
 	}
 </style>

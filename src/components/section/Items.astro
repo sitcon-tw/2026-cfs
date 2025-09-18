@@ -179,7 +179,7 @@ const config = shopConfig;
 			if (descriptionData) {
 				try {
 					const descriptions = JSON.parse(descriptionData);
-					const newDescription = descriptions[selectedCategory] || descriptions['all'] || '';
+					const newDescription = descriptions[selectedCategory] || descriptions["all"] || "";
 					descriptionElement.textContent = newDescription;
 				} catch (e) {
 					// Fallback to original description if JSON parsing fails
@@ -187,7 +187,7 @@ const config = shopConfig;
 			}
 		}
 
-		function updateExpandButtonVisibility(visibleCount:number) {
+		function updateExpandButtonVisibility(visibleCount: number) {
 			const expandButton = document.getElementById("expandButton");
 			if (!expandButton) return;
 
@@ -224,7 +224,7 @@ const config = shopConfig;
 		applyExpandState();
 
 		window.addEventListener("resize", function () {
-			const allCards = document.querySelectorAll('.card');
+			const allCards = document.querySelectorAll(".card");
 			updateExpandButtonVisibility(allCards.length);
 		});
 
