@@ -121,7 +121,6 @@ const sections = [Nav, Hero, Demo, Intro, About, News, Sponsors, Cycle, Time, It
 
 			body {
 				color: var(--black);
-				padding-top: 3.625rem; /* Account for fixed navbar height */
 			}
 
 			body:has(.show) {
@@ -140,7 +139,9 @@ const sections = [Nav, Hero, Demo, Intro, About, News, Sponsors, Cycle, Time, It
 			section {
 				position: relative;
 			}
-			button, textarea, input {
+			button,
+			textarea,
+			input {
 				font-family: inherit;
 				font-size: inherit;
 				color: inherit;
