@@ -2,4 +2,180 @@
 const { t } = Astro.props;
 ---
 
-<nav aria-label="Main Navigation"></nav>
+<nav aria-label="Main Navigation" class="navbar">
+	<div class="nav-container">
+		<h1 class="nav-title">{t.title}</h1>
+		<button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+			<span class="hamburger-line"></span>
+			<span class="hamburger-line"></span>
+			<span class="hamburger-line"></span>
+		</button>
+		<div class="nav-menu" id="nav-menu">
+			<a href="#data" class="nav-link">{t.data}</a>
+			<a href="#info" class="nav-link">{t.info}</a>
+			<a href="#plan" class="nav-link">{t.plan}</a>
+			<a href="/en" class="nav-link lang-switch">{t.langChange}</a>
+			<a href="#contact" class="nav-link contact-btn">{t.contact}</a>
+			<button class="nav-link export-btn">{t.export}</button>
+		</div>
+	</div>
+</nav>
+
+<style>
+	.navbar {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 1000;
+		background: rgba(250, 250, 252, 0.8);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+	}
+
+	.nav-container {
+		padding: 1rem 2rem;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin: auto;
+		max-width: 1200px;
+	}
+
+	.nav-title {
+		font-size: 1.3rem;
+		font-weight: bold;
+	}
+
+	.nav-menu {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.nav-link {
+		text-decoration: none;
+		color: inherit;
+		transition: 0.2s ease-out;
+	}
+
+	.nav-link:hover {
+		color: #6b6b73;
+	}
+
+	.contact-btn,
+	.export-btn {
+		border-radius: 5rem;
+		padding: 0.25rem 1.25rem;
+	}
+
+	.contact-btn {
+		background-color: #00d959;
+	}
+
+	.contact-btn:hover {
+		background-color: #00bb4b;
+		color: inherit;
+	}
+
+	.export-btn {
+		background-color: #e8e8ed;
+		border: none;
+		outline: transparent;
+	}
+
+	.export-btn:hover {
+		background-color: #d0d0d5;
+		color: #000;
+	}
+
+	/* Hamburger Menu */
+	.hamburger {
+		display: none;
+		flex-direction: column;
+		justify-content: space-around;
+		width: 1.5rem;
+		height: 1.5rem;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		padding: 0;
+		z-index: 1001;
+	}
+
+	.hamburger-line {
+		width: 1.5rem;
+		height: 0.15rem;
+		background-color: #000000;
+		transition: all 0.3s ease;
+		transform-origin: center;
+	}
+
+	.hamburger.active .hamburger-line:nth-child(1) {
+		transform: rotate(45deg) translate(0.35rem, 0.35rem);
+	}
+
+	.hamburger.active .hamburger-line:nth-child(2) {
+		opacity: 0;
+	}
+
+	.hamburger.active .hamburger-line:nth-child(3) {
+		transform: rotate(-45deg) translate(0.35rem, -0.35rem);
+	}
+
+	@media (max-width: 60rem) {
+		.hamburger {
+			display: flex;
+		}
+
+		.nav-menu {
+			position: fixed;
+			top: 4rem;
+			left: 0;
+			right: 0;
+			flex-direction: column;
+			padding: 3rem 1rem 1rem;
+			gap: 2rem;
+			opacity: 0;
+			background: rgba(250, 250, 252, 0.95);
+			backdrop-filter: blur(10px);
+			-webkit-backdrop-filter: blur(10px);
+			border-top: 1px solid rgba(232, 232, 237, 0.6);
+			transition: opacity 0.3s ease;
+			height: calc(100vh - 4rem);
+			pointer-events: none;
+		}
+
+		.nav-menu.active {
+			opacity: 1;
+			pointer-events: auto;
+		}
+
+		.nav-link {
+			text-align: center;
+		}
+	}
+
+	@media (max-width: 30rem) {
+		.nav-menu {
+			padding: 2rem 1rem 1rem;
+		}
+		.nav-title {
+			font-size: 1.1rem;
+		}
+		.hamburger{
+			scale: .95;
+		}
+	}
+</style>
+
+<script>
+	const hamburger = document.querySelector(".hamburger") as HTMLButtonElement;
+	const navMenu = document.querySelector(".nav-menu") as HTMLDivElement;
+	hamburger.addEventListener("click", () => {
+		const isExpanded = hamburger.getAttribute("aria-expanded") === "true";
+		hamburger.setAttribute("aria-expanded", String(!isExpanded));
+		hamburger.classList.toggle("active");
+		navMenu.classList.toggle("active");
+	});
+</script>
