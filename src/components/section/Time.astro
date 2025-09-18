@@ -1,7 +1,374 @@
 ---
+import type { ImageMetadata } from "astro";
 const { t } = Astro.props;
+import Popup from "@components/Popup.astro";
+import r0 from "@assets/img/r0.jpg";
+import volunteer from "@assets/img/sitcon-volunteer.jpg";
+
+type timelineItem = {
+	date: string;
+	event: string;
+};
+type placeItem = {
+	code: string;
+	name: string;
+	description: string;
+	img: ImageMetadata;
+};
+type PersonInfo = {
+	title: string;
+	name: string;
+	school: string;
+	major: string;
+};
+const timelineItems: timelineItem[] = [
+	{ date: "09/28", event: t.timeline_items["0928"] },
+	{ date: "10/19", event: t.timeline_items["1019"] },
+	{ date: "11/22", event: t.timeline_items["1122"] },
+	{ date: "01/12", event: t.timeline_items["0112"] },
+	{ date: "01/21", event: t.timeline_items["0121"] },
+	{ date: "01/29", event: t.timeline_items["0129"] },
+	{ date: "03/08", event: t.timeline_items["0308"] }
+];
+const teams: PersonInfo[] = t.teams;
+const placeItems: placeItem[] = [
+	{
+		code: "R0",
+		name: t.place_items.R0.name,
+		description: t.place_items.R0.description,
+		img: r0
+	},
+	{
+		code: "R1 R2",
+		name: t.place_items.R1R2.name,
+		description: t.place_items.R1R2.description,
+		img: r0
+	},
+	{
+		code: "R3",
+		name: t.place_items.R3.name,
+		description: t.place_items.R3.description,
+		img: r0
+	},
+	{
+		code: "",
+		name: t.place_items.lounge.name,
+		description: t.place_items.lounge.description,
+		img: r0
+	}
+];
 ---
 
 <section id="time">
-	<h2>Time</h2>
+	<div class="popup-btn">
+		<Popup btnText={t.popup_label} title={t.popup_label} id="place-staff-popup" background={r0.src}>
+			<section class="popup-section">
+				<p class="title">{t.activity_schedule}</p>
+				<div id="timeline">
+					<div id="timeline-items">
+						{
+							timelineItems.map(item => (
+								<div id="item">
+									<p>{item.date}</p>
+									<p>{item.event}</p>
+								</div>
+							))
+						}
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							class="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6"></path></svg
+						>
+					</div>
+				</div>
+			</section>
+			<section class="popup-section">
+				<p class="title">{t.place_detail}</p>
+				<div class="place-info-wrapper">
+					<div id="place-info">
+						<p id="name" set:html={t.location_name} />
+						<div class="people-info">
+							<p class="people-info-title">{t.max_people}</p>
+							<p id="people">{t.people_count_unit}</p>
+						</div>
+					</div>
+				</div>
+			</section>
+			<section id="place-items">
+				{
+					placeItems.map((item, index) => (
+						<div class="place-item-box">
+							<div class="place-item-content">
+								<div class="place-item-header">
+									<p>{item.code}</p>
+									<p>{item.name}</p>
+								</div>
+								<p class="place-item-desc">{item.description}</p>
+							</div>
+							<img src={item.img.src} alt={item.name} class="place-item-img" />
+						</div>
+					))
+				}
+			</section>
+			<section class="popup-section">
+				<p class="title">{t.team}</p>
+				<div id="team-info">
+					{
+						teams.map(item => (
+							<div class="team-item">
+								<p class="team-item-title">{item.title}</p>
+								<p class="team-item-title">{item.name}</p>
+								<p>{item.school}</p>
+								<p>{item.major}</p>
+							</div>
+						))
+					}
+				</div>
+			</section>
+		</Popup>
+	</div>
+	<img src={volunteer.src} class="bg-image" alt="sitcon 2024" />
+	<div class="bg-overlay"></div>
+	<div class="content">
+		<div class="text-content">
+			<div class="title-box">
+				<p>{t.title1}</p>
+				<p>{t.title2}</p>
+			</div>
+			<div class="info-box">
+				<p>{t.date}</p>
+				<p>{t.location}</p>
+			</div>
+		</div>
+	</div>
 </section>
+
+<style>
+	#time {
+		overflow: hidden;
+		max-width: 94.6rem;
+		margin: auto;
+		display: flex;
+		justify-content: center;
+	}
+	.content {
+		display: flex;
+		left: 0;
+		flex-direction: column;
+		height: 52.2rem;
+		overflow: hidden;
+		position: absolute;
+		padding-top: 10rem;
+		padding-left: 10rem;
+		z-index: 1;
+	}
+	@media screen and (max-width: 74.6rem) {
+		.content {
+			padding-left: 2rem;
+		}
+	}
+	.popup-btn {
+		bottom: 2rem;
+		left: 50%;
+		position: absolute;
+		z-index: 4;
+	}
+	.bg-image {
+		flex-shrink: 0;
+		height: 52.2rem;
+		width: 94.6rem;
+	}
+	.bg-overlay {
+		background: #000;
+		flex-shrink: 0;
+		height: 52.2rem;
+		opacity: 0.8;
+		position: absolute;
+		width: 94.6rem;
+		z-index: 1;
+	}
+
+	.title-box {
+		margin-bottom: 2.7rem;
+	}
+	.title-box p {
+		color: #fff;
+		font-size: 3.6rem;
+		font-style: normal;
+		font-weight: 700;
+		line-height: 133%;
+	}
+	.info-box p {
+		color: #fff;
+		font-size: 1.7rem;
+		font-style: normal;
+		font-weight: 700;
+		line-height: 133%;
+	}
+
+	#timeline {
+		align-items: center;
+		display: flex;
+		gap: 5rem;
+		justify-content: center;
+		margin: 2rem;
+		padding: 1rem;
+	}
+	#timeline-items::before {
+		content: "";
+		position: absolute;
+		width: 2rem;
+		height: 2rem;
+		border-radius: 50%;
+		background: #646565;
+		left: -0.15rem;
+		transform: translate(-50%, -50%);
+	}
+	.lucide-chevron-down-icon {
+		position: absolute;
+		width: 4rem;
+		color: #646565;
+		height: 4rem;
+		left: -0.15rem;
+		transform: translate(-50%, -60%);
+	}
+	#timeline-items::after {
+		content: "";
+	}
+	#timeline-items {
+		position: relative;
+		border-left: #646565 0.3rem solid;
+		padding-left: 5rem;
+	}
+	#timeline-items #item {
+		display: grid;
+		gap: 0.5rem;
+		grid-template-columns: 0.5fr 1fr;
+		margin: 2rem 0;
+	}
+	#timeline-items #item p {
+		color: #000;
+		font-size: 2rem;
+		font-weight: 700;
+	}
+	@media screen and (max-width: 700px) {
+		#timeline-items #item {
+			display: block;
+		}
+	}
+
+	.popup-section {
+		padding: 2rem;
+	}
+	.title {
+		color: #000;
+		font-size: 3.7rem;
+		font-weight: 700;
+		line-height: 120%;
+	}
+
+	.place-info-wrapper {
+		align-items: center;
+		display: flex;
+		justify-content: center;
+		margin-top: 3rem;
+	}
+	#place-info {
+		align-items: center;
+		background: #e8e8ec;
+		border-radius: 1rem;
+		display: inline-flex;
+		gap: 2.8rem;
+		justify-content: center;
+		padding: 3.9rem 5.9rem;
+	}
+	#place-info p {
+		color: #000;
+		line-height: 120%;
+	}
+	#place-info #name {
+		font-size: 2.6rem;
+		font-weight: 700;
+	}
+	.people-info {
+		text-align: center;
+	}
+	.people-info-title {
+		font-size: 1.8rem;
+		line-height: 120%;
+		margin-bottom: 1rem;
+	}
+	#place-info #people {
+		font-size: 3.3rem;
+		font-weight: 700;
+	}
+
+	.place-item-box {
+		align-items: center;
+		display: flex;
+		justify-content: space-between;
+		margin: 5rem 0;
+	}
+	.place-item-box:nth-child(2n) {
+		flex-direction: row-reverse;
+	}
+	.place-item-content {
+		padding: 3rem;
+	}
+	.place-item-header {
+		font-size: 3.7rem;
+		font-weight: 700;
+		line-height: 120%;
+		margin-bottom: 5.3rem;
+	}
+	.place-item-desc {
+		color: #6e6e73;
+		font-size: 1.9rem;
+		line-height: 120%;
+	}
+	.place-item-img {
+		border-radius: 1.6rem 0 0 1.6rem;
+		height: 32.9rem;
+		object-fit: cover;
+		width: 45rem;
+	}
+	.place-item-box:nth-child(2n) .place-item-img {
+		border-radius: 0 1.6rem 1.6rem 0;
+	}
+	@media screen and (max-width: 1200px) {
+		.place-item-img {
+			border-radius: 1.6rem 0 0 1.6rem;
+			height: 32.9rem;
+			overflow: hidden;
+			width: auto;
+		}
+	}
+
+	#team-info {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr 1fr;
+		margin-top: 5rem;
+		text-align: center;
+	}
+	@media screen and (max-width: 800px) {
+		#team-info {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+	.team-item {
+		line-height: 230%;
+		margin-bottom: 4.3rem;
+		text-align: center;
+	}
+	.team-item-title {
+		font-size: 1.6rem;
+		font-weight: 700;
+	}
+</style>
