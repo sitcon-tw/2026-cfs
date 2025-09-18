@@ -1,4 +1,221 @@
 {
+  "nav": {
+    "title": "SITCON 2026 贊助徵求書",
+    "data": "受眾數據",
+    "info": "活動資訊",
+    "plan": "贊助方案",
+    "langChange": "English Version",
+    "contact": "聯絡我們",
+    "export": "匯出 PDF"
+  },
+  "hero": {
+    "title": "支持開源",
+    "title2": "支持下一代的電資未來",
+    "subtitle": "學生計算機年會",
+    "subtitle2": "贊助徵求書"
+  },
+  "intro": {
+    "sentence1": "SITCON 是由學生組成、投身資訊教育與推廣開源精神的社群。",
+    "sentence2": "也`是一個由學生主辦的資訊研討會，給學生們一個發表交流技術的舞台。"
+  },
+  "time": {
+    "title1": "一年一度的時刻，",
+    "title2": "我們準備好了。",
+    "date": "2026 年 3 月 28 日 (六)",
+    "location": "中央研究院 人文社會科學館",
+    "popup_label": "查看活動詳情與籌備團隊",
+    "activity_schedule": "活動時程",
+    "place_detail": "場地詳情",
+    "location_name": "中央研究院<br />人文社會科學館",
+    "max_people": "場館預估容納人數上限",
+    "people_count_unit": "1,300 人",
+    "team": "籌備團隊",
+    "timeline_items": {
+      "0928": "年會籌備起跑",
+      "1019": "主題定案",
+      "1122": "公開宣傳、議程徵稿",
+      "0112": "開放售票",
+      "0121": "議程徵稿截止",
+      "0129": "公布議程表",
+      "0308": "年會舉辦"
+    },
+    "place_items": {
+      "R0": {
+        "name": "國際會議廳",
+        "description": "總計 426 席位\n當天的開場與 Keynote \n也會於此會議廳進行。"
+      },
+      "R1R2": {
+        "name": "第一 / 第二會議室",
+        "description": "兩間會議室皆為 112 席位，走道及會議廳後方可再容納更多人。"
+      },
+      "R3": {
+        "name": "遠距會議室",
+        "description": "總計 36 席位，舞台兩側、第一排座位前方及會議廳後方可再容納更多人。"
+      },
+      "lounge": {
+        "name": "交誼廳",
+        "description": "寬敞無障礙物的開放式空間，擁有一整面陽光明媚的落地窗。不同於其他議程廳的演講形式，此空間可自由佈置桌椅，進行各式活動。"
+      }
+    },
+    "teams": [
+      {
+        "title": "總召集人",
+        "name": "黃映綺",
+        "school": "國立中山大學",
+        "major": "人科學程"
+      },
+      {
+        "title": "副召集人",
+        "name": "康智惟",
+        "school": "國立臺灣科技大學",
+        "major": "電機工程學系"
+      },
+      {
+        "title": "行銷組長",
+        "name": "曾煥軒",
+        "school": "國立臺灣大學",
+        "major": "資訊管理學系"
+      },
+      {
+        "title": "議程組長",
+        "name": "郭慕天",
+        "school": "國立陽明交通大學",
+        "major": "資訊工程學系"
+      },
+      {
+        "title": "設計組長",
+        "name": "吳昀臻",
+        "school": "東海大學",
+        "major": "資訊工程學系"
+      },
+      {
+        "title": "財務組長",
+        "name": "劉家琪",
+        "school": "國立陽明交通大學",
+        "major": "資訊工程學系"
+      },
+      {
+        "title": "開發組長",
+        "name": "陳威達",
+        "school": "桃園高中階段",
+        "major": "非學校型態實驗教育"
+      },
+      {
+        "title": "場務組長",
+        "name": "陳思惟",
+        "school": "國立中央大學",
+        "major": "資電不分系"
+      },
+      {
+        "title": "行政組長",
+        "name": "邱翊盛",
+        "school": "內湖高工",
+        "major": "電子科"
+      },
+      {
+        "title": "製播組長",
+        "name": "鄭弘易",
+        "school": "國立彰化師範大學",
+        "major": "資訊工程學系"
+      },
+      {
+        "title": "紀錄組長",
+        "name": "廖耿鋒",
+        "school": "明道中學",
+        "major": "資訊科"
+      },
+      {
+        "title": "編輯組長",
+        "name": "黃以信",
+        "school": "輔仁大學",
+        "major": "圖書資訊學系"
+      }
+    ]
+  },
+  "about": {
+    "detail": "查看受眾與數據"
+  },
+  "meta": {
+    "title": "SITCON 2026 贊助徵求書 - 支持開源，支持下一代的電資未來",
+    "description": "SITCON 是由學生組成、投身資訊教育與推廣開源精神的社群。也是一個由學生主辦的資訊研討會，給學生們一個發表交流技術的舞台。"
+  },
+  "plans": {
+    "title": "選擇適合你的方案",
+    "plan_comparison": "方案比較",
+    "interested": "感興趣",
+    "features": {
+      "booth_double": "兩倍大會場攤位",
+      "booth_regular": "會場攤位",
+      "video_r0": "R0 影片輪播",
+      "video_logo_display": "Logo 顯示",
+      "welcome_bag": "迎賓袋文宣",
+      "tickets": "贈票",
+      "shuttle_broadcast": "接駁車車內廣播",
+      "partner_announcement": "夥伴宣讀",
+      "partner_announcement_timing": "R0 議程前",
+      "live_template": "直播模板",
+      "entrance_schedule": "門口議程表",
+      "entrance_backdrop": "入口落地窗背板",
+      "conference_backdrop": "年會意象背板",
+      "shared_notes": "年會共筆",
+      "website_logo": "網頁 Logo 曝光",
+      "ig_story": "IG 限時動態",
+      "ig_highlight": "IG 精選動態曝光",
+      "appointment_exposure": "約專曝光",
+      "logo_exposure": "Logo 曝光",
+      "not_available": "—"
+    }
+  },
+  "items": {
+    "title": "收藏感興趣的項目",
+    "subtitle": "分為四個等級，部分為加購項目。請注意截止期限。",
+    "days": "天",
+    "hours": "小時",
+    "minutes": "分鐘",
+    "seconds": "秒",
+    "deadline": "截止",
+    "price": "價格",
+    "expandAll": "展開所有項目",
+    "showLess": "收起",
+    "interestedItems": "感興趣的項目",
+    "noInterestedItems": "尚未收藏任何項目",
+    "shareInterestedItemsText": "你可以在下方表單和我們分享你感興趣的項目",
+    "introduction": "介紹",
+    "downloadQuote": "下載報價單",
+    "viewPlanDetails": "檢視方案詳情",
+    "contactUs": "聯絡我們"
+  },
+  "global": {
+    "remaining": "剩餘",
+    "unit": {
+      "ticket": "張",
+      "booth": "個",
+      "agenda": "場",
+      "ad": "則",
+      "other": "項",
+      "copy": "份",
+      "second": "秒",
+      "time": "次"
+    },
+    "item_categories": {
+      "all": "全部",
+      "brand_exposure": "品牌曝光",
+      "live_interaction": "現場互動",
+      "recruitment_and_promotion": "招募推廣",
+      "exclusive_agenda": "獨家議程",
+      "others": "其他"
+    },
+    "tier_names": {
+      "flagship": "領航級",
+      "deep": "深耕級",
+      "forward": "前瞻級",
+      "sprout": "新芽級"
+    }
+  },
+  "addons": {
+    "title": "加購項目",
+    "subtitle": "點擊查看詳情"
+  }
 	"nav": {
 		"title": "SITCON 2026 贊助徵求書",
 		"data": "受眾統計",
@@ -16,13 +233,71 @@
 	},
 	"intro": {
 		"sentence1": "SITCON 是由學生組成、投身資訊教育與推廣開源精神的社群。",
-		"sentence2": "也`是一個由學生主辦的資訊研討會，給學生們一個發表交流技術的舞台。"
+		"sentence2": "也是一個由學生主辦的資訊研討會，給學生們一個發表交流技術的舞台。"
 	},
 	"about": {
-		"detail": "查看受眾與數據"
-	},
-	"meta": {
-		"title": "SITCON 2026 贊助徵求書 - 支持開源，支持下一代的電資未來",
-		"description": "SITCON 是由學生組成、投身資訊教育與推廣開源精神的社群。也是一個由學生主辦的資訊研討會，給學生們一個發表交流技術的舞台。"
+		"detail": "查看受眾與統計",
+		"subtitle": "12 年來",
+		"title": "全東南亞最大的學生社群",
+		"stats": [
+			{
+				"prefix": "",
+				"number": "10000",
+				"label": "名參與者"
+			},
+			{
+				"prefix": "",
+				"number": "450",
+				"label": "名學生講者"
+			},
+			{
+				"prefix": "",
+				"number": "450",
+				"label": "場聚會和講座"
+			},
+			{
+				"prefix": "",
+				"number": "9",
+				"label": "場夏令營"
+			},
+			{
+				"prefix": "扶持近",
+				"number": "1200",
+				"label": "名熱愛資訊的志工"
+			}
+		],
+		"review": {
+			"title": "回顧 2025 年",
+			"stats": [
+				{
+					"label": "會場",
+					"number": "1300人次",
+					"note": ""
+				},
+				{
+					"label": "來自海內外",
+					"number": "150所",
+					"note": "學校"
+				},
+				{
+					"label": "",
+					"number": "7成",
+					"note": "為大專院校或研究所背景參與者"
+				},
+				{
+					"label": "",
+					"number": "1/3",
+					"note": "活躍於資訊社群"
+				}
+			]
+		},
+		"popup": {
+			"title": "About SITCON",
+			"content": [
+				"SITCON 年會每年皆是許多志工奉獻時間與精神所舉辦，沒有大家的付出，就不可能會有如此內容豐富且高品質的年會， 希望大家在參加之餘，也不要忘記背後工作人員的付出。 若你對參與 SITCON 年會的籌備有興趣，歡迎填寫跳坑表單或是關注 SITCON 的郵件論壇，明年的籌備開始時，你就會收到相關的資訊！",
+				"SITCON 年會每年皆是許多志工奉獻時間與精神所舉辦，沒有大家的付出，就不可能會有如此內容豐富且高品質的年會， 希望大家在參加之餘，也不要忘記背後工作人員的付出。 若你對參與 SITCON 年會的籌備有興趣，歡迎填寫跳坑表單或是關注 SITCON 的郵件論壇，明年的籌備開始時，你就會收到相關的資訊！",
+				"SITCON 年會每年皆是許多志工奉獻時間與精神所舉辦，沒有大家的付出，就不可能會有如此內容豐富且高品質的年會， 希望大家在參加之餘，也不要忘記背後工作人員的付出。 若你對參與 SITCON 年會的籌備有興趣，歡迎填寫跳坑表單或是關注 SITCON 的郵件論壇，明年的籌備開始時，你就會收到相關的資訊！"
+			]
+		}
 	}
 }

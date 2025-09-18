@@ -21,10 +21,10 @@ const { type = "text", title = "", name = "", description = "", placeholder = "æ
 		line-height: 133%; /* 1.16375rem */
 		align-self: stretch;
 		margin-top: 0.3rem;
+		max-width: 25rem;
 	}
 	.form-field-input {
 		display: flex;
-		width: 25.75rem;
 		height: 3.5rem;
 		padding: 0 1rem;
 		align-items: center;
@@ -32,6 +32,7 @@ const { type = "text", title = "", name = "", description = "", placeholder = "æ
 		border-radius: 0.75rem;
 		border: 1px solid #86868b;
 		margin-top: 0.7rem;
+		width: 100%;
 	}
 
 	.required-signal {
@@ -53,5 +54,10 @@ const { type = "text", title = "", name = "", description = "", placeholder = "æ
 		font-weight: 700;
 		line-height: 100%; /* 1rem */
 		letter-spacing: 0.05rem;
+	}
+
+	.form-field {
+		align-self: center;
+		width: 30rem;
 	}
 </style>
