@@ -251,12 +251,17 @@ const placeItems: placeItem[] = [
 		display: grid;
 		gap: 0.5rem;
 		grid-template-columns: 0.5fr 1fr;
+		margin: 2rem 0;
 	}
 	#timeline-items #item p {
 		color: #000;
 		font-size: 2rem;
 		font-weight: 700;
-		line-height: 228%;
+	}
+	@media screen and (max-width: 700px) {
+		#timeline-items #item {
+			display: block;
+		}
 	}
 
 	.popup-section {
@@ -351,6 +356,11 @@ const placeItems: placeItem[] = [
 		grid-template-columns: 1fr 1fr 1fr 1fr;
 		margin-top: 5rem;
 		text-align: center;
+	}
+	@media screen and (max-width: 800px) {
+		#team-info {
+			grid-template-columns: 1fr 1fr;
+		}
 	}
 	.team-item {
 		line-height: 230%;
