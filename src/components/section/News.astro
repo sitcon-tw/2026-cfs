@@ -1,7 +1,221 @@
 ---
+import Popup from "@components/Popup.astro";
+import appleNews from "@assets/img/news/apple-news.png";
+import owlNews from "@assets/img/news/owlnews.png";
+import posuNews from "@assets/img/news/pc-posu.png";
+import taiwanNews from "@assets/img/news/taiwan-news.png";
+import yahooNews from "@assets/img/news/yahoo.png";
+import hk from "@assets/img/sitcon_hk.png";
+import groups from "@assets/img/groups.png";
+import edu from "@assets/img/edu.png";
+import hackathon from "@assets/img/hackathon.png";
+import type { ImageMetadata } from "astro";
+
 const { t } = Astro.props;
+type News = {
+	img: ImageMetadata;
+	title: string;
+	description: string;
+};
+const news: News[] = [
+	{
+		img: hk,
+		title: t.things[0].title,
+		description: t.things[0].description
+	},
+	{
+		img: groups,
+		title: t.things[1].title,
+		description: t.things[1].description
+	},
+	{
+		img: edu,
+		title: t.things[2].title,
+		description: t.things[2].description
+	},
+	{
+		img: hackathon,
+		title: t.things[3].title,
+		description: t.things[3].description
+	}
+];
+const newsImages = [
+	{ src: appleNews.src, alt: "applealmond.com", link: "https://applealmond.com/posts/224233" },
+	{ src: owlNews.src, alt: "news.owlting.com", link: "https://news.owlting.com/articles/631704" },
+	{ src: posuNews.src, alt: "pc.posu.tw", link: "https://pc.posu.tw/life_view.php?new_sn=11433" },
+	{ src: taiwanNews.src, alt: "newstaiwan.net", link: "https://newstaiwan.net/2025/03/08/289040/" },
+	{
+		src: yahooNews.src,
+		alt: "tw.news.yahoo.com",
+		link: "https://tw.news.yahoo.com/%E5%A4%A7%E8%AB%87ai%E8%88%87%E7%A7%91%E6%8A%80%E6%95%99%E8%82%B2%E7%99%BC%E5%B1%95-sitcon-2024%E5%B9%B4%E6%9C%83%E5%9C%93%E6%BB%BF%E8%90%BD%E5%B9%95-134127533.html?guccounter=1"
+	}
+];
 ---
 
 <section id="news">
-	<h2>News</h2>
+	<div id="news-content">
+		{
+			newsImages.map((image, index) => (
+				<a href={image.link} target="_blank">
+					<img src={image.src} alt={image.alt} class="news-img" />
+				</a>
+			))
+		}
+	</div>
+	<Popup hero={false} btnText={t.title}>
+		<div id="popup-content">
+			<p class="title">{t.title}</p>
+			<div id="things-area">
+				{
+					news.map(item => (
+						<div class="things-item">
+							<img src={item.img.src} alt={item.title} class="things-img" />
+							<div class="content">
+								<p class="things-title">{item.title}</p>
+								<p class="things-desctiption">{item.description}</p>
+							</div>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</Popup>
 </section>
+
+<style>
+	#news-content {
+		max-width: 1200px;
+		margin: auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		height: 70rem;
+		overflow: hidden;
+	}
+
+	#news-content a {
+		position: absolute;
+	}
+
+	.news-img {
+		width: 35rem;
+		transition: 0.3s;
+		box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+	}
+
+	a:hover .news-img {
+		transform: scale(1.05);
+	}
+
+	@media screen and (max-width: 800px) {
+		#news-content {
+			height: 65rem;
+			overflow: hidden;
+		}
+		#news-content a {
+			position: relative;
+		}
+		a {
+			text-align: center;
+			position: relative;
+			top: 13rem;
+		}
+		.news-img {
+			width: 20rem;
+		}
+		a:nth-child(2) {
+			transform: translate(5rem, -5rem);
+		}
+		a:nth-child(3) {
+			transform: translate(-5rem, -15rem);
+		}
+		a:nth-child(4) {
+			transform: translate(5rem, -20rem);
+		}
+		a:nth-child(5) {
+			transform: translate(-5rem, -25rem);
+		}
+	}
+
+	@media screen and (min-width: 800px) {
+		#news-content a:nth-child(1) {
+			transform: translate(-10rem, 0);
+			top: 2rem;
+		}
+		#news-content a:nth-child(2) {
+			transform: translate(10rem, 5rem);
+			top: 2rem;
+			z-index: 2;
+		}
+		#news-content a:nth-child(3) {
+			transform: translate(-5rem, -5rem);
+			z-index: 2;
+		}
+		#news-content a:nth-child(4) {
+			transform: translate(15rem, -5rem);
+			bottom: 2rem;
+			z-index: 3;
+		}
+		#news-content a:nth-child(5) {
+			transform: translate(-10rem, 15rem);
+			z-index: 2;
+		}
+	}
+
+	.title {
+		font-size: 4rem;
+		font-weight: 700;
+		line-height: 120%;
+		letter-spacing: -0.088rem;
+		padding: 2rem;
+	}
+
+	#things-area {
+		display: flex;
+		overflow-x: scroll;
+		gap: 2.7rem;
+		padding-bottom: 2rem;
+	}
+
+	.things-item {
+		background: #ffffff;
+		flex: 0 0 auto;
+		border-radius: 1.5rem;
+		overflow: hidden;
+		width: 30rem;
+		height: 35rem;
+	}
+
+	.things-item:first-child {
+		margin-left: 2rem;
+	}
+
+	.things-item:last-child {
+		margin-right: 2rem;
+	}
+
+	.things-item .content {
+		padding: 2rem;
+		display: inline-flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.things-img {
+		width: 30rem;
+		height: 15rem;
+		object-fit: cover;
+	}
+
+	.things-title {
+		font-size: 2.3rem;
+		font-weight: 700;
+	}
+
+	.things-desctiption {
+		font-size: 1.4rem;
+		font-weight: 400;
+		line-height: 134%;
+	}
+</style>
