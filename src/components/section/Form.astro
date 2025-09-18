@@ -19,7 +19,7 @@ import FormInput from "../FormInput.astro";
 			<div id="form-message"></div>
 
 			<button type="button" id="sponsor-form-submit" class="form-submit-button">
-				<span class="form-submit-button-text">送出</span>
+				<span id="sponsor-form-submit-button-text" class="form-submit-button-text">送出</span>
 			</button>
 		</form>
 
@@ -40,9 +40,11 @@ import FormInput from "../FormInput.astro";
 	const form = document.getElementById("sponsor-form") as HTMLFormElement;
 	const submitButton = document.getElementById("sponsor-form-submit") as HTMLButtonElement;
 	const messageElement = document.getElementById("form-message") as HTMLDivElement;
+	const submitButtonText = document.getElementById("sponsor-form-submit-button-text") as HTMLSpanElement;
 	submitButton?.addEventListener("click", event => {
 		event.preventDefault();
 		submitButton.disabled = true;
+		submitButtonText.textContent = "送出中...";
 		fetch(apiUrl, {
 			method: "POST",
 			body: new FormData(form)
@@ -50,6 +52,7 @@ import FormInput from "../FormInput.astro";
 			.then(async res => {
 				const data = await res.json();
 				submitButton.disabled = false;
+				submitButtonText.textContent = "送出";
 				if (data.code == 200) {
 					form.reset();
 				}
@@ -87,6 +90,8 @@ import FormInput from "../FormInput.astro";
 		justify-content: center;
 		align-items: center;
 		gap: 0.625rem;
+		border: none;
+		outline: transparent;
 		border-radius: 625rem;
 		background: #0171e3;
 	}
@@ -106,6 +111,8 @@ import FormInput from "../FormInput.astro";
 		align-items: center;
 		gap: 0.625rem;
 		border-radius: 0.5rem;
+		border: none;
+		outline: transparent;
 		background: #0171e3;
 	}
 	.form-title-container {
