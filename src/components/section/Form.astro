@@ -41,27 +41,53 @@ import FormInput from "../FormInput.astro";
 	const submitButton = document.getElementById("sponsor-form-submit") as HTMLButtonElement;
 	const messageElement = document.getElementById("form-message") as HTMLDivElement;
 	const submitButtonText = document.getElementById("sponsor-form-submit-button-text") as HTMLSpanElement;
+
+	const checkForm = () => {
+		const formData = new FormData(form);
+		if (!formData.get("organization") || !formData.get("name") || !formData.get("contact")) {
+			messageElement.textContent = "請確認必填欄位";
+			return false;
+		}
+		if (
+			(formData.get("contact") && formData.get("contact")?.toString()[0] == "=") ||
+			(formData.get("name") && formData.get("name")?.toString()[0] == "=") ||
+			(formData.get("organization") && formData.get("organization")?.toString()[0] == "=") ||
+			(formData.get("department") && formData.get("department")?.toString()[0] == "=") ||
+			(formData.get("message") && formData.get("message")?.toString()[0] == "=")
+		) {
+			messageElement.textContent = "回答的第一個字不可是=";
+			return false;
+		}
+		messageElement.textContent = "";
+		return true;
+	};
+
 	submitButton?.addEventListener("click", event => {
 		event.preventDefault();
 		submitButton.disabled = true;
 		submitButtonText.textContent = "送出中...";
-		fetch(apiUrl, {
-			method: "POST",
-			body: new FormData(form)
-		})
-			.then(async res => {
-				const data = await res.json();
-				submitButton.disabled = false;
-				submitButtonText.textContent = "送出";
-				if (data.code == 200) {
-					form.reset();
-				}
-				messageElement.textContent = data.message;
+		if (checkForm()) {
+			fetch(apiUrl, {
+				method: "POST",
+				body: new FormData(form)
 			})
-			.catch(e => {
-				console.error(e);
-				messageElement.textContent = "發生錯誤，請稍後再試";
-			});
+				.then(async res => {
+					const data = await res.json();
+					if (data.code == 200) {
+						form.reset();
+						submitButton.disabled = false;
+						submitButtonText.textContent = "送出";
+					}
+					messageElement.textContent = data.message;
+				})
+				.catch(e => {
+					console.error(e);
+					messageElement.textContent = "發生錯誤，請稍後再試";
+				});
+		} else {
+			submitButton.disabled = false;
+			submitButtonText.textContent = "送出";
+		}
 	});
 </script>
 
