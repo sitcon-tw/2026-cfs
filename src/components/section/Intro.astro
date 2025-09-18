@@ -11,8 +11,13 @@ const { t } = Astro.props;
 	<div class="overlay"></div>
 	<!-- 文字內容 -->
 	<div class="content">
+		<!-- 第一個定位點 -->
+		<div class="anchor first-anchor" id="first-trigger"></div>
+		<!-- 第二個定位點 -->
+		<div class="anchor second-anchor" id="second-trigger"></div>
+
 		<div class="text-container">
-			<span class="main-text text-animate" data-text="first">{t.sentence1}</span><span class="sub-text text-animate" data-text="second">{t.sentence2}</span>
+			<span class="main-text first-text">{t.sentence1}</span><span class="sub-text second-text">{t.sentence2}</span>
 		</div>
 	</div>
 </section>
@@ -20,6 +25,7 @@ const { t } = Astro.props;
 <style>
 	section {
 		position: relative;
+		min-height: 100vh;
 		height: 56.625rem;
 		align-self: stretch;
 		overflow: hidden;
@@ -108,79 +114,69 @@ const { t } = Astro.props;
 		color: rgba(0, 0, 0, 0.29);
 	}
 
-	/* 動畫相關樣式 */
-	.text-animate {
-		opacity: 0.3;
+	/* 定位點樣式 */
+	.anchor {
+		position: absolute;
+		height: 1px;
+		width: 1px;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.first-anchor {
+		top: 40%;
+	}
+
+	.second-anchor {
+		top: 60%;
+	}
+
+	/* 文字動畫樣式 */
+	.first-text {
+		opacity: 0;
 		transform: translateY(30px);
 		transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
 		display: inline;
 	}
 
-	.text-animate.highlight {
-		opacity: 1;
-		transform: translateY(0);
-		transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+	.second-text {
+		opacity: 0;
+		transform: translateY(30px);
+		transition: all 1s cubic-bezier(0.4, 0, 0.2, 1) 0.5s;
+		display: inline;
 	}
 
-	.text-animate.highlight.main-text {
+	/* 當定位點觸發時的樣式 */
+	.first-anchor.triggered ~ .text-container .first-text {
+		opacity: 1;
+		transform: translateY(0);
 		color: var(--Black, #1d1d1f);
 		text-shadow: 0 2px 8px rgba(29, 29, 31, 0.15);
 	}
 
-	.text-animate.highlight.sub-text {
+	.second-anchor.triggered ~ .text-container .second-text {
+		opacity: 1;
+		transform: translateY(0);
 		color: rgba(0, 0, 0, 0.65);
 		text-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
 	}
 </style>
 
 <script>
-	document.addEventListener("DOMContentLoaded", function () {
-		const introSection = document.getElementById("intro");
-		if (!introSection) return;
+	const firstAnchor = document.getElementById("first-trigger");
+	const secondAnchor = document.getElementById("second-trigger");
 
-		const textElements = introSection.querySelectorAll(".text-animate");
-
-		// Intersection Observer 來偵測何時進入視窗
-		const observer = new IntersectionObserver(
-			entries => {
-				entries.forEach(entry => {
-					if (entry.isIntersecting) {
-						// 當進入視窗時，開始依序播放動畫
-						animateTexts(textElements);
-						// 只執行一次，之後停止觀察
-						observer.unobserve(entry.target);
-					}
-				});
-			},
-			{
-				threshold: 0.3, // 當 30% 的區域進入視窗時觸發
-				rootMargin: "-10% 0px -10% 0px" // 稍微延遲觸發時機
-			}
-		);
-
-		// 開始觀察 intro section
-		observer.observe(introSection);
-
-		function animateTexts(elements: NodeListOf<Element>) {
-			// 先 highlight 第一段文字
-			setTimeout(() => {
-				const firstText = Array.from(elements).find((el: Element) => {
-					return (el as HTMLElement).dataset.text === "first";
-				}) as HTMLElement;
-				if (firstText) {
-					firstText.classList.add("highlight");
+	const observer = new IntersectionObserver(
+		entries => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add("triggered");
 				}
-			}, 300);
+			});
+		},
+		{ threshold: 0.5 }
+	);
 
-			// 再 highlight 第二段文字
-			setTimeout(() => {
-				const secondText = Array.from(elements).find((el: Element) => {
-					return (el as HTMLElement).dataset.text === "second";
-				}) as HTMLElement;
-				if (secondText) {
-					secondText.classList.add("highlight");
-				}
-			}, 1200); // 延遲 1.2 秒後播放第二段
-		}
-	});
+	if (firstAnchor) observer.observe(firstAnchor);
+	if (secondAnchor) observer.observe(secondAnchor);
 </script>
