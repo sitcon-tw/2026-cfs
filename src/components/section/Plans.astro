@@ -36,9 +36,9 @@ const itemsData = await loadItemsData(lang);
 							{row.values.map((value: any) => {
 								// Handle number + unit structure
 								const hasNumber = value.number !== undefined;
-								const mainText = value.textKey ? t.features[value.textKey] : (value.main || '');
-								const subText = value.subKey ? t.features[value.subKey] : (value.sub || '');
-								const unitText = value.unitKey ? t.unit[value.unitKey.split('.').pop()] : '';
+								const mainText = value.textKey ? t.features[value.textKey] : value.main || "";
+								const subText = value.subKey ? t.features[value.subKey] : value.sub || "";
+								const unitText = value.unitKey ? t.unit[value.unitKey.split(".").pop()] : "";
 
 								return (
 									<div class="plan-cell">
@@ -72,12 +72,7 @@ const itemsData = await loadItemsData(lang);
 	plansData.rows.map((row: any) => {
 		const matchingItem = itemsData.find((item: any) => item.id === row.id);
 		if (matchingItem) {
-			return (
-				<ItemPopup
-					item={matchingItem}
-					t={t}
-				/>
-			);
+			return <ItemPopup item={matchingItem} t={t} />;
 		}
 	})
 }
@@ -120,7 +115,7 @@ const itemsData = await loadItemsData(lang);
 			const rowIdStr = row.getAttribute("data-row-id");
 			if (rowIdStr) {
 				row.style.cursor = "pointer";
-				row.addEventListener("click", function(e) {
+				row.addEventListener("click", function (e) {
 					e.stopPropagation();
 					const popupId = `plan-popup-${rowIdStr}`;
 					popupCtrl(popupId, "open");
@@ -135,7 +130,7 @@ const itemsData = await loadItemsData(lang);
 			const tierName = button.getAttribute("data-tier-name");
 			const tierTitle = button.getAttribute("data-tier-title");
 			if (tierName && tierTitle) {
-				button.addEventListener("click", function(e) {
+				button.addEventListener("click", function (e) {
 					e.stopPropagation();
 					const tierItem = {
 						id: `tier-${tierName}`,
@@ -172,18 +167,18 @@ const itemsData = await loadItemsData(lang);
 		});
 	}
 
-	document.addEventListener("DOMContentLoaded", function() {
+	document.addEventListener("DOMContentLoaded", function () {
 		updateHighlighting();
 		addRowClickHandlers();
 		addTierInterestHandlers();
 		updateTierButtonStates();
 	});
 
-	window.addEventListener("itemsChange", function() {
+	window.addEventListener("itemsChange", function () {
 		updateHighlighting();
 		updateTierButtonStates();
 	});
-	document.addEventListener("interested-items-changed", function() {
+	document.addEventListener("interested-items-changed", function () {
 		updateHighlighting();
 		updateTierButtonStates();
 	});
@@ -310,7 +305,6 @@ const itemsData = await loadItemsData(lang);
 		align-items: center;
 		gap: 0.5rem;
 	}
-
 
 	.plan-cell.highlighted .cell-main,
 	.plan-cell.highlighted .cell-sub,
@@ -454,5 +448,4 @@ const itemsData = await loadItemsData(lang);
 	}
 </style>
 
-<style is:global>
-</style>
+<style is:global></style>
