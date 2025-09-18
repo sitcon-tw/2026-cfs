@@ -4,9 +4,7 @@ const { t } = Astro.props;
 
 <nav aria-label="Main Navigation" class="navbar">
 	<div class="nav-container">
-		<div class="nav-logo">
-			<span class="nav-title">{t.title}</span>
-		</div>
+		<h1 class="nav-title">{t.title}</h1>
 		<button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
 			<span class="hamburger-line"></span>
 			<span class="hamburger-line"></span>
@@ -36,68 +34,59 @@ const { t } = Astro.props;
 	}
 
 	.nav-container {
+		padding: 1rem 2rem;
 		display: flex;
-		height: 4rem;
-		padding: 1rem 16rem;
-		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
-		gap: 0.5rem;
-		flex-shrink: 0;
-		margin: 0 auto;
-		max-width: 100vw;
-	}
-
-	.nav-logo {
-		display: flex;
-		align-items: center;
+		margin: auto;
+		max-width: 1200px;
 	}
 
 	.nav-title {
-		font-size: 1.125rem;
-		font-weight: 600;
-		color: #000000;
-		text-decoration: none;
+		font-size: 1.3rem;
+		font-weight: bold;
 	}
 
 	.nav-menu {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
+		gap: 1rem;
 	}
 
 	.nav-link {
-		font-size: 1rem;
-		color: #000000;
 		text-decoration: none;
-		padding: 0.1rem 0.5rem;
-		border-radius: 5rem;
-		transition: all 0.2s ease;
-		border: none;
+		color: inherit;
+		transition: 0.2s ease-out;
 	}
 
 	.nav-link:hover {
-		background-color: rgba(232, 232, 237, 0.6);
+		color: #6b6b73;
+	}
+
+	.contact-btn,
+	.export-btn {
+		border-radius: 5rem;
+		padding: 0.25rem 1.25rem;
 	}
 
 	.contact-btn {
 		background-color: #00d959;
-		color: #000000;
-		padding: 0.1rem 1rem;
 	}
 
 	.contact-btn:hover {
-		background-color: #00b348;
+		background-color: #00bb4b;
+		color: inherit;
 	}
 
 	.export-btn {
 		background-color: #e8e8ed;
-		color: #000000;
-		padding: 0.1rem 1rem;
+		border: none;
+		outline: transparent;
 	}
 
 	.export-btn:hover {
 		background-color: #d0d0d5;
+		color: #000;
 	}
 
 	/* Hamburger Menu */
@@ -134,19 +123,7 @@ const { t } = Astro.props;
 		transform: rotate(-45deg) translate(0.35rem, -0.35rem);
 	}
 
-	/* Responsive design */
-	@media (max-width: 1280px) {
-		.nav-container {
-			width: 100%;
-			padding: 1rem 2rem;
-		}
-	}
-
-	@media (max-width: 768px) {
-		.nav-container {
-			padding: 1rem 1rem;
-		}
-
+	@media (max-width: 60rem) {
 		.hamburger {
 			display: flex;
 		}
@@ -156,73 +133,49 @@ const { t } = Astro.props;
 			top: 4rem;
 			left: 0;
 			right: 0;
+			flex-direction: column;
+			padding: 3rem 1rem 1rem;
+			gap: 2rem;
+			opacity: 0;
 			background: rgba(250, 250, 252, 0.95);
 			backdrop-filter: blur(10px);
 			-webkit-backdrop-filter: blur(10px);
-			flex-direction: column;
-			padding: 1rem;
-			gap: 0.5rem;
-			opacity: 0;
-			visibility: hidden;
-			transition:
-				opacity 0.3s ease,
-				visibility 0.3s ease;
 			border-top: 1px solid rgba(232, 232, 237, 0.6);
+			transition: opacity 0.3s ease;
 			height: calc(100vh - 4rem);
+			pointer-events: none;
 		}
 
 		.nav-menu.active {
 			opacity: 1;
-			visibility: visible;
+			pointer-events: auto;
 		}
 
 		.nav-link {
-			font-size: 1rem;
-			padding: 0.75rem 1rem;
-			width: 100%;
 			text-align: center;
-			border-radius: 0.5rem;
-		}
-
-		.nav-title {
-			font-size: 1rem;
-		}
-
-		.contact-btn,
-		.export-btn {
-			margin: 0.25rem 0;
 		}
 	}
 
-	@media (max-width: 480px) {
-		.nav-container {
-			padding: 1rem 1rem;
-		}
-
+	@media (max-width: 30rem) {
 		.nav-menu {
-			top: 4rem;
+			padding: 2rem 1rem 1rem;
 		}
-
-		.nav-link {
-			font-size: 0.9rem;
-			padding: 0.5rem 1rem;
+		.nav-title {
+			font-size: 1.1rem;
+		}
+		.hamburger{
+			scale: .95;
 		}
 	}
 </style>
 
 <script>
-	document.addEventListener("DOMContentLoaded", () => {
-		const hamburger = document.querySelector(".hamburger");
-		const navMenu = document.querySelector(".nav-menu");
-
-		if (hamburger && navMenu) {
-			hamburger.addEventListener("click", () => {
-				const isExpanded = hamburger.getAttribute("aria-expanded") === "true";
-
-				hamburger.setAttribute("aria-expanded", String(!isExpanded));
-				hamburger.classList.toggle("active");
-				navMenu.classList.toggle("active");
-			});
-		}
+	const hamburger = document.querySelector(".hamburger") as HTMLButtonElement;
+	const navMenu = document.querySelector(".nav-menu") as HTMLDivElement;
+	hamburger.addEventListener("click", () => {
+		const isExpanded = hamburger.getAttribute("aria-expanded") === "true";
+		hamburger.setAttribute("aria-expanded", String(!isExpanded));
+		hamburger.classList.toggle("active");
+		navMenu.classList.toggle("active");
 	});
 </script>
