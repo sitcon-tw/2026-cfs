@@ -23,8 +23,6 @@ if (markdownModule && markdownModule.Content) {
 	MarkdownContent = markdownModule.Content;
 	hasMarkdownContent = true;
 } else {
-	// Fallback to regular description if markdown file doesn't exist
-	console.log(`No markdown found for item ${item.id} in locale ${locale}`);
 	hasMarkdownContent = false;
 }
 
