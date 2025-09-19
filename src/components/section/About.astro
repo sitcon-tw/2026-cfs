@@ -1,9 +1,15 @@
 ---
 const { t } = Astro.props;
 import Popup from "@components/Popup.astro";
+import Volunteer from "@assets/img/sitcon-volunteer.jpg";
 ---
 
 <section id="about" class="about-section">
+	<div style="display: block;">
+		<p id="chart-attender-data">{JSON.stringify(t.popup.chart.attender_role)}</p>
+		<p id="chart-programming-level-data">{JSON.stringify(t.popup.chart.programming_level)}</p>
+		<p id="chart-unit">{t.popup.chart.unit}</p>
+	</div>
 	<div class="container">
 		<!-- 主標題 -->
 		<div class="title-section">
@@ -47,7 +53,6 @@ import Popup from "@components/Popup.astro";
 				))
 			}
 		</div>
-
 		<div class="review-section">
 			<h3 class="review-title">{t.review.title}</h3>
 			<div class="review-stats">
@@ -63,15 +68,68 @@ import Popup from "@components/Popup.astro";
 			</div>
 		</div>
 	</div>
-	<Popup btnText={t.detail} title={t.detail} background="/cfs/sinica-hall.jpeg" id="stat-popup" class="popup">
-		<div class="container">
-			<h2>{t.detail}</h2>
-			<!-- {t.about.content.map((p: string) => <p>{p}</p>)} -->
+	<Popup btnText={t.detail} title={t.detail} background={Volunteer.src} id="stat-popup" class="popup">
+		<div class="popup-body">
+			<h2>{t.popup.title}</h2>
+			<div class="chart-area">
+				<canvas id="role-chart"></canvas>
+				<canvas id="level-chart"></canvas>
+			</div>
+			<p id="test"></p>
 		</div>
 	</Popup>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/chart.js" client:load></script>
+<script lang="js">
+	const unit = document.getElementById("chart-unit").textContent;
+	const roleEle = document.getElementById("role-chart");
+	const attenderRoleData = JSON.parse(document.getElementById("chart-attender-data").textContent);
+	const roleData = {
+		labels: Object.keys(attenderRoleData),
+		datasets: [
+			{
+				label: unit,
+				data: Object.values(attenderRoleData),
+				borderWidth: 1
+			}
+		]
+	};
 
+	new Chart(roleEle, {
+		type: "doughnut",
+		data: roleData
+	});
+
+	const levelEle = document.getElementById("level-chart");
+	const programmingLevelData = JSON.parse(document.getElementById("chart-programming-level-data").textContent);
+	const levelData = {
+		labels: Object.keys(programmingLevelData),
+		datasets: [
+			{
+				label: unit,
+				data: Object.values(programmingLevelData),
+				borderWidth: 1
+			}
+		]
+	};
+
+	new Chart(levelEle, {
+		type: "doughnut",
+		data: levelData
+	});
+</script>
 <style>
+	.chart-area {
+		padding: 2rem 0;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 2rem;
+	}
+	canvas {
+		max-width: 30rem;
+		max-height: 30rem;
+		margin: auto;
+	}
 	.popup .container p {
 		margin-bottom: 3rem;
 		line-height: 150%;
@@ -79,12 +137,10 @@ import Popup from "@components/Popup.astro";
 	.about-section {
 		padding: 80px 0;
 	}
-
 	.container {
 		max-width: 1200px;
 		margin: 0 auto;
 		padding: 0 20px;
-		text-align: center;
 	}
 
 	.title-section {
