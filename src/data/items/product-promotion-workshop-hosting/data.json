@@ -1,0 +1,17 @@
+{
+	"id": "product-promotion-workshop-hosting",
+	"remaining": 4,
+	"category": "product_promotion",
+	"deadline": "2026-02-01T23:59:59+08:00",
+	"price": "NT$ 80,000",
+	"zh-Hant": {
+		"unit": "場",
+		"title": "企業技術工作坊主辦",
+		"description": {
+			"all": "在 SITCON 2026 舉辦 2 小時的企業技術工作坊，可展示企業產品、API、開發工具或技術解決方案。包含獨立會議室、投影設備、網路環境，以及活動前期宣傳與報名管理服務。",
+			"product_promotion": "透過實作教學深度展示產品功能與技術優勢，讓參與者親身體驗產品價值",
+			"brand_promotion": "建立企業技術專家形象，在開發者社群中提升品牌聲譽與影響力",
+			"recruitment": "在工作坊中展現企業技術文化，吸引對相關技術有興趣的優秀人才"
+		}
+	}
+}

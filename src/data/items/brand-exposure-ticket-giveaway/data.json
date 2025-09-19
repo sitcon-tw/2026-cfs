@@ -1,16 +1,16 @@
 {
 	"id": "brand-exposure-ticket-giveaway",
 	"remaining": 2,
-	"category": "brand_exposure",
+	"category": "brand_promotion",
 	"deadline": "2026-06-05T23:59:59+08:00",
-	"price": "NT$ 3,000",
+	"price": "NT$ 8,000",
 	"zh-Hant": {
 		"unit": "張",
-		"title": "贈票",
+		"title": "活動門票贊助",
 		"description": {
-			"all": "我們將在發放午餐時同時發送由 SITCON 精心設計的一次性紙餐墊，並在上面印製您的品牌圖文介紹，讓每一位與會者都能在餐墊上注意到您的品牌。",
-			"brand_exposure": "我們將在發放午餐時同時發送",
-			"recruitment_and_promotion": "我們將在發放午餐時同時發送"
+			"all": "提供免費門票讓更多學生參與 SITCON，同時在票券和相關宣傳材料上展示您的品牌標誌，增加品牌曝光度並展現企業對學生教育的支持。",
+			"brand_promotion": "透過門票贊助展現企業社會責任，在票券設計和入場流程中自然融入品牌元素",
+			"recruitment": "透過提供免費門票，建立企業與學生間的良好互動與信任，讓更多優秀學生參與活動，增加現場交流與人才招募的機會。"
 		}
 	}
 }

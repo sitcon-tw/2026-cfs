@@ -1,0 +1,17 @@
+{
+	"id": "recruitment-career-talk",
+	"remaining": 6,
+	"category": "recruitment",
+	"deadline": "2026-01-30T23:59:59+08:00",
+	"price": "NT$ 25,000",
+	"zh-Hant": {
+		"unit": "場",
+		"title": "企業職涯分享會",
+		"description": {
+			"all": "安排 45 分鐘的企業職涯分享時段，由企業代表分享職涯發展路徑、工作經驗與產業趨勢。包含 Q&A 互動環節、現場履歷收集，以及後續一對一職涯諮詢預約服務。",
+			"recruitment": "透過深度職涯分享建立與學生的信任關係，提升企業在求職者心中的吸引力",
+			"brand_promotion": "展現企業重視人才發展的企業文化，建立雇主品牌形象",
+			"product_promotion": "在職涯分享中提及企業產品與技術，讓學生了解實際工作內容與技術環境"
+		}
+	}
+}
