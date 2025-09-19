@@ -2,13 +2,16 @@
 const { t } = Astro.props;
 import Popup from "@components/Popup.astro";
 import Volunteer from "@assets/img/sitcon-volunteer.jpg";
+import SchoolsText from "@assets/img/schools-text.svg";
 ---
 
 <section id="about" class="about-section">
-	<div style="display: block;">
+	<div style="display: none;">
 		<p id="chart-attender-data">{JSON.stringify(t.popup.chart.attender_role)}</p>
 		<p id="chart-programming-level-data">{JSON.stringify(t.popup.chart.programming_level)}</p>
 		<p id="chart-unit">{t.popup.chart.unit}</p>
+		<p id="attender-role-title">{t.popup.chart.attender_role_title}</p>
+		<p id="chart-programming-level-titlea">{t.popup.chart.programming_level_title}</p>
 	</div>
 	<div class="container">
 		<!-- 主標題 -->
@@ -70,18 +73,31 @@ import Volunteer from "@assets/img/sitcon-volunteer.jpg";
 	</div>
 	<Popup btnText={t.detail} title={t.detail} background={Volunteer.src} id="stat-popup" class="popup">
 		<div class="popup-body">
-			<h2>{t.popup.title}</h2>
+			<p class="title">{t.popup.title}</p>
 			<div class="chart-area">
 				<canvas id="role-chart"></canvas>
 				<canvas id="level-chart"></canvas>
+				<div></div>
+				<div id="level-info">
+					{
+						Object.entries(t.popup.chart.level_info).map(([key, value]) => (
+							<p>
+								{key} : {value}
+							</p>
+						))
+					}
+				</div>
 			</div>
-			<p id="test"></p>
+			<div id="schools-text-container">
+				<img src={SchoolsText.src} alt="Schools" id="schools-text" />
+			</div>
 		</div>
 	</Popup>
 </section>
 <script src="https://cdn.jsdelivr.net/npm/chart.js" client:load></script>
 <script lang="js">
 	const unit = document.getElementById("chart-unit").textContent;
+	const roleTitle = document.getElementById("attender-role-title").textContent;
 	const roleEle = document.getElementById("role-chart");
 	const attenderRoleData = JSON.parse(document.getElementById("chart-attender-data").textContent);
 	const roleData = {
@@ -95,11 +111,7 @@ import Volunteer from "@assets/img/sitcon-volunteer.jpg";
 		]
 	};
 
-	new Chart(roleEle, {
-		type: "doughnut",
-		data: roleData
-	});
-
+	const levelTitle = document.getElementById("chart-programming-level-titlea").textContent;
 	const levelEle = document.getElementById("level-chart");
 	const programmingLevelData = JSON.parse(document.getElementById("chart-programming-level-data").textContent);
 	const levelData = {
@@ -113,26 +125,72 @@ import Volunteer from "@assets/img/sitcon-volunteer.jpg";
 		]
 	};
 
-	new Chart(levelEle, {
-		type: "doughnut",
-		data: levelData
-	});
+	for (let i = 0; i < 2; i++) {
+		new Chart(i == 0 ? roleEle : levelEle, {
+			type: "doughnut",
+			data: i == 0 ? roleData : levelData,
+			options: {
+				plugins: {
+					title: {
+						display: true,
+						text: i == 0 ? roleTitle : levelTitle,
+						font: {
+							size: 30,
+							weight: "bold"
+						},
+						padding: {
+							bottom: 20
+						},
+						color: "#48484A"
+					}
+				}
+			}
+		});
+	}
 </script>
 <style>
+	#schools-text {
+		max-width: 40rem;
+		width: 100%;
+	}
+	#schools-text-container {
+		display: flex;
+		justify-content: center;
+		margin-top: 5rem;
+	}
 	.chart-area {
-		padding: 2rem 0;
+		margin: 1rem 0;
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 2rem;
+		align-items: center;
+		justify-items: center;
+	}
+	@media screen and (max-width: 900px) {
+		.chart-area {
+			grid-template-columns: 1fr;
+		}
 	}
 	canvas {
-		max-width: 30rem;
-		max-height: 30rem;
+		max-width: 25rem;
+		max-height: 25rem;
 		margin: auto;
+		padding: 2rem 1.5rem 0 1.5rem;
+	}
+	#level-info {
+		padding: 1rem 2rem;
+		font-weight: 700;
+		line-height: 125%;
 	}
 	.popup .container p {
 		margin-bottom: 3rem;
 		line-height: 150%;
+	}
+	.popup-body {
+		padding: 2rem;
+	}
+	.title {
+		font-size: 3rem;
+		font-weight: 700;
 	}
 	.about-section {
 		padding: 80px 0;
