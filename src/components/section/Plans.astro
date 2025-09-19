@@ -125,7 +125,7 @@ const itemsData = await loadItemsData(lang);
 	}
 
 	function removeAllTierItems() {
-		const interestedItems = JSON.parse(localStorage.getItem("interestedItems") || "[]");
+		const interestedItems = JSON.parse(localStorage.getItem("interestItems") || "[]");
 		const tierItems = interestedItems.filter((item: InterestedItem) => item.id.startsWith("tier-"));
 
 		tierItems.forEach((tierItem: InterestedItem) => {
