@@ -1,7 +1,7 @@
 {
 	"id": "brand-exposure-lunch-flag",
 	"remaining": 1,
-	"category": "brand_exposure",
+	"category": "brand_promotion",
 	"deadline": "2025-10-05T23:59:59+08:00",
 	"price": "NT$ 5,000",
 	"zh-Hant": {
@@ -9,8 +9,8 @@
 		"title": "午餐旗・點心旗",
 		"description": {
 			"all": "我們將在發放午餐時同時發送由 SITCON 精心設計的一次性紙餐墊，並在上面印製您的品牌圖文介紹，讓每一位與會者都能在餐墊上注意到您的品牌。",
-			"brand_exposure": "在午餐時間透過餐旗展示品牌，提供最佳的品牌曝光效果",
-			"live_interaction": "與會眾近距離接觸，創造品牌互動機會"
+			"brand_promotion": "在午餐時間透過餐旗展示品牌，提供最佳的品牌曝光效果，讓參與者在用餐時自然接觸您的品牌資訊",
+			"product_promotion": "與會眾近距離接觸，創造品牌互動機會，可結合產品介紹或優惠活動"
 		}
 	}
 }

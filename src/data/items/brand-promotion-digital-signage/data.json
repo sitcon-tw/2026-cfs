@@ -1,0 +1,17 @@
+{
+	"id": "brand-promotion-digital-signage",
+	"remaining": 8,
+	"category": "brand_promotion",
+	"deadline": "2026-02-15T23:59:59+08:00",
+	"price": "NT$ 12,000",
+	"zh-Hant": {
+		"unit": "天",
+		"title": "會場數位看板廣告",
+		"description": {
+			"all": "在會場主要通道與休息區的數位看板上播放企業廣告內容，包含品牌 Logo、產品介紹影片或招募資訊。每則廣告 15 秒，每小時播放 4 次，全天候曝光確保最大覆蓋率。",
+			"brand_promotion": "透過策略性放置的數位看板持續強化品牌印象，在參與者移動過程中自然接觸品牌訊息",
+			"product_promotion": "播放產品展示影片或功能介紹，讓更多潛在用戶了解產品特色與應用場景",
+			"recruitment": "展示企業工作環境與福利制度，吸引求職者關注企業招募資訊"
+		}
+	}
+}
