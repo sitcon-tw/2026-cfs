@@ -61,7 +61,7 @@ const placeItems: placeItem[] = [
 
 <section id="time">
 	<div class="popup-btn">
-		<Popup btnText={t.popup_label} title={t.popup_label} id="place-staff-popup" background={r0.src}>
+		<Popup btnText={t.popup_label} title={t.popup_label} hero={false} id="place-staff-popup" background={r0.src}>
 			<section class="popup-section">
 				<p class="title">{t.activity_schedule}</p>
 				<div id="timeline">
@@ -103,7 +103,7 @@ const placeItems: placeItem[] = [
 			</section>
 			<section id="place-items">
 				{
-					placeItems.map((item) => (
+					placeItems.map(item => (
 						<div class="place-item-box">
 							<div class="place-item-content">
 								<div class="place-item-header">
@@ -261,6 +261,9 @@ const placeItems: placeItem[] = [
 	@media screen and (max-width: 700px) {
 		#timeline-items #item {
 			display: block;
+		}
+		#timeline-items {
+			padding-left: 1rem;
 		}
 	}
 
