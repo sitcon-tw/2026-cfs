@@ -61,7 +61,7 @@ const placeItems: placeItem[] = [
 
 <section id="time">
 	<div class="popup-btn">
-		<Popup btnText={t.popup_label} title={t.popup_label} id="place-staff-popup" background={r0.src}>
+		<Popup btnText={t.popup_label} title={t.popup_label} hero={true} id="place-staff-popup" background={r0.src}>
 			<section class="popup-section">
 				<p class="title">{t.activity_schedule}</p>
 				<div id="timeline">
@@ -103,7 +103,7 @@ const placeItems: placeItem[] = [
 			</section>
 			<section id="place-items">
 				{
-					placeItems.map((item) => (
+					placeItems.map(item => (
 						<div class="place-item-box">
 							<div class="place-item-content">
 								<div class="place-item-header">
@@ -151,6 +151,10 @@ const placeItems: placeItem[] = [
 </section>
 
 <style>
+	.header-img {
+		display: block;
+		width: 100%;
+	}
 	#time {
 		overflow: hidden;
 		max-width: 94.6rem;
@@ -258,20 +262,15 @@ const placeItems: placeItem[] = [
 		font-size: 2rem;
 		font-weight: 700;
 	}
-	@media screen and (max-width: 700px) {
-		#timeline-items #item {
-			display: block;
-		}
-	}
 
 	.popup-section {
 		padding: 2rem;
 	}
 	.title {
 		color: #000;
-		font-size: 3.7rem;
 		font-weight: 700;
 		line-height: 120%;
+		font-size: clamp(2.5rem, 2.5vw + 0.5rem, 3.7rem);
 	}
 
 	.place-info-wrapper {
@@ -280,11 +279,12 @@ const placeItems: placeItem[] = [
 		justify-content: center;
 		margin-top: 3rem;
 	}
+
 	#place-info {
 		align-items: center;
 		background: #e8e8ec;
 		border-radius: 1rem;
-		display: inline-flex;
+		display: flex;
 		gap: 2.8rem;
 		justify-content: center;
 		padding: 3.9rem 5.9rem;
@@ -293,9 +293,10 @@ const placeItems: placeItem[] = [
 		color: #000;
 		line-height: 120%;
 	}
-	#place-info #name {
+	#name {
 		font-size: 2.6rem;
 		font-weight: 700;
+		text-align: left;
 	}
 	.people-info {
 		text-align: center;
@@ -314,7 +315,7 @@ const placeItems: placeItem[] = [
 		align-items: center;
 		display: flex;
 		justify-content: space-between;
-		margin: 5rem 0;
+		margin: 2rem 0;
 	}
 	.place-item-box:nth-child(2n) {
 		flex-direction: row-reverse;
@@ -341,6 +342,36 @@ const placeItems: placeItem[] = [
 	}
 	.place-item-box:nth-child(2n) .place-item-img {
 		border-radius: 0 1.6rem 1.6rem 0;
+	}
+	@media screen and (max-width: 660px) {
+		#place-info {
+			flex-direction: column;
+			padding: 1rem;
+		}
+		.place-item-header {
+			font-size: 2rem;
+		}
+		.place-item-desc {
+			font-size: 1.5rem;
+		}
+		.place-item-content {
+			padding: 1rem;
+		}
+	}
+	@media screen and (max-width: 800px) {
+		.popup-section {
+			padding: 1rem;
+		}
+		#timeline-items #item {
+			display: block;
+		}
+		#timeline-items {
+			padding-left: 1rem;
+		}
+		#place-info #name {
+			font-size: 2rem;
+			text-align: center;
+		}
 	}
 	@media screen and (max-width: 1200px) {
 		.place-item-img {
