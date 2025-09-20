@@ -1,7 +1,293 @@
 ---
+import facebook from "@assets/img/social/facebook.svg";
+import flickr from "@assets/img/social/flickr.svg";
+import instagram from "@assets/img/social/instagram.svg";
+import telegram from "@assets/img/social/telegram.svg";
+import twitter from "@assets/img/social/twitter.svg";
+import youtube from "@assets/img/social/youtube.svg";
+import plurk from "@assets/img/social/plurk.svg";
 const { t } = Astro.props;
 ---
 
-<footer>
-	<p>Footer</p>
+<footer class="footer">
+	<div class="footer-container">
+		<!-- Collaboration Section -->
+		<div class="collaboration-section">
+			<h2 class="collaboration-title">{t.collaboration}</h2>
+			<p class="collaboration-description">
+				{t.description}
+			</p>
+		</div>
+
+		<!-- Main Content Grid -->
+		<div class="footer-content">
+			<!-- Left Column -->
+			<div class="footer-left">
+				<!-- Marketing Contacts -->
+				<div class="contact-section">
+					<h3 class="contact-title">{t.contact}</h3>
+					<a href="mailto:contact@sitcon.org" class="contact-email">contact@sitcon.org</a>
+					<div class="contact-list">
+						{t.contact_list.map((item: string) => (
+							<div class="contact-item">{item}</div>
+						))}
+					</div>
+				</div>
+
+				<!-- Conference Info -->
+				<div class="conference-info">
+					<div>學生計算機年會</div>
+					<div>Students' Information Technology Conference</div>
+					<div>{t.contact_us}</div>
+					<div class="contact-details">
+						<div>{t.contact_us_description} <a href="mailto:contact@sitcon.org" class="contact-email">contact@sitcon.org</a></div>
+						<div>{t.contact_us_description2} <a href="mailto:ask@sitcon.camp" class="contact-email">ask@sitcon.camp</a></div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Right Column -->
+			<div class="footer-right">
+				<!-- Social Media -->
+				<div class="social-section">
+					<h3 class="social-title">Social Media</h3>
+					<div class="social-icons">
+						<a href="#" class="social-icon" aria-label="Facebook">
+							<img src={facebook.src} alt="Facebook" />
+						</a>
+						<a href="#" class="social-icon" aria-label="Instagram">
+							<img src={instagram.src} alt="Instagram" />
+						</a>
+						<a href="#" class="social-icon" aria-label="Flickr">
+							<img src={flickr.src} alt="Flickr" />
+						</a>
+						<a href="#" class="social-icon" aria-label="Telegram">
+							<img src={telegram.src} alt="Telegram" />
+						</a>
+						<a href="#" class="social-icon" aria-label="Twitter">
+							<img src={twitter.src} alt="Twitter" />
+						</a>
+						<a href="#" class="social-icon" aria-label="YouTube">
+							<img src={youtube.src} alt="YouTube" />
+						</a>
+						<a href="#" class="social-icon" aria-label="Plurk">
+							<img src={plurk.src} alt="Plurk" />
+						</a>
+					</div>
+				</div>
+
+				<!-- Past Websites -->
+				<div class="past-websites">
+					<h3 class="past-websites-title">{t.past_websites}</h3>
+					<div class="years-grid">
+						{Array.from({ length: Math.floor(Number(Date.now()) / 31556952000) - 42 }, (_, index) => index + 2013).map(year => (
+							<a href={`https://sitcon.org/${year}`} target="_blank" class="year-link">{year}</a>
+						))}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </footer>
+
+<style>
+	.footer {
+		background-color: #f5f5f5;
+		padding: 60px 0 40px;
+	}
+
+	.footer-container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 20px;
+	}
+
+	.collaboration-section {
+		margin-bottom: 50px;
+	}
+
+	.collaboration-title {
+		font-size: 2.5rem;
+		font-weight: bold;
+		color: #000;
+		margin: 0 0 20px 0;
+		display: inline-block;
+	}
+
+	.collaboration-description {
+		font-size: 1.3rem;
+		color: #333;
+		line-height: 1.6;
+	}
+
+	.footer-content {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 60px;
+		align-items: start;
+	}
+
+	.footer-left {
+		display: flex;
+		flex-direction: column;
+		gap: 40px;
+	}
+
+	.contact-section {
+		margin-bottom: 20px;
+	}
+
+	.contact-title {
+		font-size: 1.3rem;
+		font-weight: bold;
+		color: #000;
+		margin: 0 0 15px 0;
+	}
+
+	.contact-email {
+		color: #333;
+		text-decoration: underline;
+	}
+
+	.contact-list {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.contact-item {
+		font-size: 1rem;
+		color: #333;
+	}
+
+	.conference-info {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		color: #424242;
+		font-family: "LINE Seed TW_OTF";
+		font-size: 21px;
+		font-style: normal;
+		font-weight: 700;
+		line-height: normal;
+		letter-spacing: 2.1px;
+	}
+
+	.contact-details {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+
+	.contact-detail {
+		font-size: 1rem;
+		color: #333;
+	}
+
+	.footer-right {
+		display: flex;
+		flex-direction: column;
+		gap: 40px;
+	}
+
+	.social-section {
+		margin-bottom: 20px;
+	}
+
+	.social-title {
+		font-size: 1.3rem;
+		letter-spacing: 2px;
+		font-weight: bold;
+		color: #000;
+		margin: 0 0 20px 0;
+	}
+
+	.social-icons {
+		display: flex;
+		gap: 15px;
+		flex-wrap: wrap;
+	}
+
+	.social-icon {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #424242;
+		text-decoration: none;
+		transition: background-color 0.3s ease;
+	}
+
+	.social-icon svg {
+		width: 20px;
+		height: 20px;
+	}
+
+	.past-websites {
+		display: flex;
+		flex-direction: column;
+		gap: 15px;
+	}
+
+	.past-websites-title {
+		font-size: 1.3rem;
+		font-weight: bold;
+		color: #000;
+		margin: 0;
+	}
+
+	.years-grid {
+		display: grid;
+		grid-template-columns: repeat(6, 1fr);
+		gap: 5px;
+	}
+
+	.year-link {
+		display: inline-block;
+		padding: 4px;
+		text-decoration: none;
+		color: #333;
+		font-size: 0.9rem;
+		transition: all 0.3s ease;
+	}
+
+	/* Responsive Design */
+	@media (max-width: 768px) {
+		.footer-content {
+			grid-template-columns: 1fr;
+			gap: 40px;
+		}
+
+		.collaboration-title {
+			font-size: 2rem;
+		}
+
+		.collaboration-description {
+			font-size: 1rem;
+		}
+
+		.years-grid {
+			grid-template-columns: repeat(4, 1fr);
+		}
+
+		.social-icons {
+			justify-content: center;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.footer {
+			padding: 40px 0 30px;
+		}
+
+		.collaboration-title {
+			font-size: 1.8rem;
+		}
+
+		.years-grid {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+</style>
