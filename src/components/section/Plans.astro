@@ -78,7 +78,7 @@ const itemsData = await loadItemsData(lang);
 }
 
 <script>
-	import { isItemInterested, addInterestedItem, removeInterestedItem } from "../../utils/local-storage.ts";
+	import { isItemInterested, addInterestedItem, removeInterestedItem, type InterestedItem } from "../../utils/local-storage.ts";
 
 	declare function popupCtrl(id: string, action: string): void;
 
@@ -124,6 +124,15 @@ const itemsData = await loadItemsData(lang);
 		});
 	}
 
+	function removeAllTierItems() {
+		const interestedItems = JSON.parse(localStorage.getItem("interestItems") || "[]");
+		const tierItems = interestedItems.filter((item: InterestedItem) => item.id.startsWith("tier-"));
+
+		tierItems.forEach((tierItem: InterestedItem) => {
+			removeInterestedItem(tierItem.id);
+		});
+	}
+
 	function addTierInterestHandlers() {
 		const tierButtons = document.querySelectorAll(".tier-interest-button");
 		tierButtons.forEach(button => {
@@ -144,6 +153,9 @@ const itemsData = await loadItemsData(lang);
 						removeInterestedItem(tierItem.id);
 						button.classList.remove("interested");
 					} else {
+						// Remove all other tier items first
+						removeAllTierItems();
+						// Then add the new tier
 						addInterestedItem(tierItem);
 						button.classList.add("interested");
 					}
