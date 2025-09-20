@@ -324,5 +324,20 @@
         }
       }
     }
+  },
+  "footer": {
+    "collaboration": "後續合作",
+    "description": "我們期待各種形式的活動或媒體合作，如共同舉辦工作坊、黑客松或 Podcast 等，有任何想法都歡迎與我們聯繫。",
+    "contact": "行銷與媒體聯絡人",
+    "email": "contact@sitcon.org",
+    "contact_list": [
+      "曾煥軒 +886-908-593-538",
+      "巫玟槿 +886-963-584-326",
+      "黃一晉 +886-922-686-223"
+    ],
+    "contact_us": "聯繫我們",
+    "contact_us_description": "合作聯繫:",
+    "contact_us_description2": "報名事宜:",
+    "past_websites": "歷年網站"
   }
 }
