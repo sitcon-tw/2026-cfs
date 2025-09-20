@@ -1,7 +1,147 @@
 ---
 const { t } = Astro.props;
+import { ChevronDown } from "@lucide/astro";
 ---
 
-<section id="faq">
-	<h2>FAQ</h2>
-</section>
+<div class="container">
+	<div class="faq-list">
+		{t.questions.map((question: { question: string, answer: string }, index: number) => (
+			<div class="faq-item">		
+				<button class="faq-question" data-faq={index + 1}>
+					<span class="question-text">{question.question}</span>
+					<ChevronDown class="chevron-icon" size={40} />
+				</button>
+				
+				<div class="faq-answer" data-answer={index + 1}>
+					<p>{question.answer}</p>
+				</div>
+			</div>
+		))}
+	</div>
+</div>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const faqQuestions = document.querySelectorAll('.faq-question');
+		
+		faqQuestions.forEach(question => {
+			question.addEventListener('click', function() {
+				const faqId = this.getAttribute('data-faq');
+				const answer = document.querySelector(`[data-answer="${faqId}"]`);
+				const chevron = this.querySelector('.chevron-icon');
+				
+				// Toggle the answer visibility
+				if (answer.classList.contains('open')) {
+					answer.classList.remove('open');
+					chevron.style.transform = 'rotate(0deg)';
+					this.classList.remove('active');
+				} else {
+					// Close all other answers
+					document.querySelectorAll('.faq-answer').forEach(ans => {
+						ans.classList.remove('open');
+					});
+					document.querySelectorAll('.chevron-icon').forEach(chev => {
+						chev.style.transform = 'rotate(0deg)';
+					});
+					document.querySelectorAll('.faq-question').forEach(q => {
+						q.classList.remove('active');
+					});
+					
+					// Open current answer
+					answer.classList.add('open');
+					chevron.style.transform = 'rotate(180deg)';
+					this.classList.add('active');
+				}
+			});
+		});
+	});
+</script>
+
+<style>
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 80px 20px;
+	}
+	
+	.faq-list {
+		max-width: 800px;
+		margin: 0 auto;
+	}
+	
+	.faq-item {
+		border-bottom: 1px solid var(--border-light);
+	}
+
+	.faq-item:last-child {
+		border-bottom: none;
+	}
+	
+	.faq-question {
+		width: 100%;
+		padding: 24px 0;
+		background: none;
+		border: none;
+		text-align: left;
+		cursor: pointer;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-size: 2rem;
+		font-weight: 600;
+		color: var(--black);
+		transition: color 0.2s ease;
+	}
+	
+	.question-text {
+		flex: 1;
+	}
+	
+	.chevron-icon {
+		transition: transform 0.3s ease;
+	}
+	
+	.faq-answer {
+		max-height: 0;
+		overflow: hidden;
+		padding: 0 0 0 0;
+		line-height: 1.6;
+		color: var(--gray);
+		font-size: 1.3rem;
+		transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+	}
+	
+	.faq-answer.open {
+		max-height: 200px;
+		padding: 0 0 24px 0;
+	}
+	
+	.faq-answer p {
+		margin: 0;
+	}
+	
+	@media (max-width: 768px) {		
+		.faq-question {
+			padding: 20px 0;
+			font-size: 1.75rem;
+		}
+		
+		.faq-answer {
+			font-size: 1.2rem;
+		}
+	}
+	
+	@media (max-width: 480px) {
+		.container {
+			padding: 0 16px;
+		}
+		
+		.faq-question {
+			padding: 16px 0;
+			font-size: 1.5rem;
+		}
+		
+		.faq-answer {
+		}
+	}
+</style>
