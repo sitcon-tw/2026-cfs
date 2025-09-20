@@ -99,7 +99,7 @@ const shouldShowPlanTiers = planRow !== undefined;
 						<>
 							{item.description.all && (
 								<>
-									<h1>{t.introduction}</h1>
+									<h2>{t.introduction}</h2>
 									<p>{item.description.all}</p>
 								</>
 							)}
@@ -108,14 +108,14 @@ const shouldShowPlanTiers = planRow !== undefined;
 								.filter(([key]) => key !== "all")
 								.map(([categoryKey, description]) => (
 									<>
-										<h1>{t.item_categories[categoryKey]}</h1>
+										<h2>{t.item_categories[categoryKey]}</h2>
 										<p>{description}</p>
 									</>
 								))}
 						</>
 					) : (
 						<>
-							<h1>{t.introduction}</h1>
+							<h2>{t.introduction}</h2>
 							<p class="item-description">{item.description}</p>
 						</>
 					)
