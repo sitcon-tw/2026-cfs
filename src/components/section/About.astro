@@ -1,9 +1,18 @@
 ---
 const { t } = Astro.props;
 import Popup from "@components/Popup.astro";
+import Volunteer from "@assets/img/sitcon-volunteer.jpg";
+import SchoolsText from "@assets/img/schools-text.svg";
 ---
 
 <section id="about" class="about-section">
+	<div style="display: none;">
+		<p id="chart-attender-data">{JSON.stringify(t.popup.chart.attender_role)}</p>
+		<p id="chart-programming-level-data">{JSON.stringify(t.popup.chart.programming_level)}</p>
+		<p id="chart-unit">{t.popup.chart.unit}</p>
+		<p id="attender-role-title">{t.popup.chart.attender_role_title}</p>
+		<p id="chart-programming-level-titlea">{t.popup.chart.programming_level_title}</p>
+	</div>
 	<div class="container">
 		<!-- 主標題 -->
 		<div class="title-section">
@@ -47,7 +56,6 @@ import Popup from "@components/Popup.astro";
 				))
 			}
 		</div>
-
 		<div class="review-section">
 			<h3 class="review-title">{t.review.title}</h3>
 			<div class="review-stats">
@@ -63,28 +71,164 @@ import Popup from "@components/Popup.astro";
 			</div>
 		</div>
 	</div>
-	<Popup btnText={t.detail} title={t.detail} background="/cfs/sinica-hall.jpeg" id="stat-popup" class="popup">
-		<div class="container">
-			<h2>{t.detail}</h2>
-			<!-- {t.about.content.map((p: string) => <p>{p}</p>)} -->
+	<Popup btnText={t.detail} title={t.detail} background={Volunteer.src} id="stat-popup" class="popup">
+		<div class="popup-body">
+			<p class="title">{t.popup.title}</p>
+			<div class="chart-area">
+				<canvas id="role-chart"></canvas>
+				<canvas id="level-chart"></canvas>
+				<div></div>
+				<div id="level-info">
+					{
+						Object.entries(t.popup.chart.level_info).map(([key, value]) => (
+							<p>
+								{key} : {value}
+							</p>
+						))
+					}
+				</div>
+			</div>
+			<div id="schools-text-container">
+				<img src={SchoolsText.src} alt="Schools" id="schools-text" />
+			</div>
 		</div>
 	</Popup>
 </section>
+<script lang="js">
+	const colors = ["#6CE5E8", "#40B8D5", "#2C8BBA", "#2F5F98", "#31356E", "#5E3967", "#895273", "#B97286", "#E28385"];
+	const unit = document.getElementById("chart-unit").textContent;
+	const roleTitle = document.getElementById("attender-role-title").textContent;
+	const roleEle = document.getElementById("role-chart");
+	const attenderRoleData = JSON.parse(document.getElementById("chart-attender-data").textContent);
+	const roleData = {
+		labels: Object.keys(attenderRoleData),
+		datasets: [
+			{
+				label: unit,
+				data: Object.values(attenderRoleData),
+				borderWidth: 1,
+				backgroundColor: colors,
+				hoverOffset: 5
+			}
+		]
+	};
 
+	const levelTitle = document.getElementById("chart-programming-level-titlea").textContent;
+	const levelEle = document.getElementById("level-chart");
+	const programmingLevelData = JSON.parse(document.getElementById("chart-programming-level-data").textContent);
+	const levelData = {
+		labels: Object.keys(programmingLevelData),
+		datasets: [
+			{
+				label: unit,
+				data: Object.values(programmingLevelData),
+				borderWidth: 1,
+				backgroundColor: colors,
+				hoverOffset: 5
+			}
+		]
+	};
+
+	for (let i = 0; i < 2; i++) {
+		new Chart(i == 0 ? roleEle : levelEle, {
+			type: "doughnut",
+			data: i == 0 ? roleData : levelData,
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				plugins: {
+					legend: {
+						display: true,
+						position: "top",
+						labels: {
+							boxWidth: 20,
+							boxHeight: 20,
+							padding: 20,
+							font: { size: 14 }
+						}
+					},
+					title: {
+						display: true,
+						text: i == 0 ? roleTitle : levelTitle,
+						font: {
+							size: 30,
+							weight: "bold"
+						},
+						padding: {
+							bottom: 20
+						},
+						color: "#48484A"
+					},
+					datalabels: {
+						clamp: true,
+						color: "#000000",
+						font: { weight: "bold", size: 14 },
+						formatter: (value, ctx) => {
+							const label = ctx.chart.data.labels[ctx.dataIndex];
+							const total = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+							const percentage = ((value / total) * 100).toFixed(0) + "%";
+							return value >= 100 ? `${label}: ${percentage}` : ``;
+						},
+						align: "end",
+						anchor: "end"
+					}
+				}
+			},
+			plugins: [ChartDataLabels]
+		});
+	}
+</script>
 <style>
+	#schools-text {
+		max-width: 40rem;
+		width: 100%;
+	}
+	#schools-text-container {
+		display: flex;
+		justify-content: center;
+		margin-top: 5rem;
+	}
+	.chart-area {
+		margin: 1rem 0;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: center;
+		justify-items: center;
+	}
+	@media screen and (max-width: 1200px) {
+		.chart-area {
+			grid-template-columns: 1fr;
+		}
+	}
+	canvas {
+		max-width: 35em;
+		max-height: 30rem;
+		margin: auto;
+		padding: 2rem 1.5rem 0 1.5rem;
+	}
+	#level-info {
+		padding: 1rem 2rem;
+		font-weight: 700;
+		line-height: 125%;
+	}
 	.popup .container p {
 		margin-bottom: 3rem;
 		line-height: 150%;
 	}
+	.popup-body {
+		padding: 2rem;
+	}
+	.title {
+		font-size: 3rem;
+		font-weight: 700;
+	}
 	.about-section {
 		padding: 80px 0;
 	}
-
 	.container {
 		max-width: 1200px;
 		margin: 0 auto;
 		padding: 0 20px;
-		text-align: center;
 	}
 
 	.title-section {

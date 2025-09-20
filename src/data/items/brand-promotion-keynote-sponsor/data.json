@@ -1,0 +1,17 @@
+{
+	"id": "brand-promotion-keynote-sponsor",
+	"remaining": 1,
+	"category": "brand_promotion",
+	"deadline": "2025-12-20T23:59:59+08:00",
+	"price": "NT$ 150,000",
+	"zh-Hant": {
+		"unit": "場",
+		"title": "主題演講冠名贊助",
+		"description": {
+			"all": "成為 SITCON 2026 主題演講的冠名贊助商，享有演講廳命名權、演講前品牌介紹時段、講者引薦機會，以及全程直播中的品牌露出。這是展現企業技術領導地位的絕佳機會。",
+			"brand_promotion": "透過主題演講的高度關注獲得最大品牌曝光效益，建立企業在技術社群中的領導形象",
+			"recruitment": "在演講中展示企業技術實力，吸引頂尖人才關注並投遞履歷",
+			"product_promotion": "在演講內容中適度展示企業產品與技術解決方案，提升產品知名度"
+		}
+	}
+}
