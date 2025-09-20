@@ -25,10 +25,10 @@ import { ChevronDown } from "@lucide/astro";
 		const faqQuestions = document.querySelectorAll('.faq-question');
 		
 		faqQuestions.forEach(question => {
-			question.addEventListener('click', function() {
+			question.addEventListener('click', function(this: HTMLButtonElement) {
 				const faqId = this.getAttribute('data-faq');
-				const answer = document.querySelector(`[data-answer="${faqId}"]`);
-				const chevron = this.querySelector('.chevron-icon');
+				const answer: HTMLElement = document.querySelector(`[data-answer="${faqId}"]`) as HTMLElement;
+				const chevron: HTMLElement = this.querySelector('.chevron-icon') as HTMLElement;
 				
 				// Toggle the answer visibility
 				if (answer.classList.contains('open')) {
@@ -41,7 +41,7 @@ import { ChevronDown } from "@lucide/astro";
 						ans.classList.remove('open');
 					});
 					document.querySelectorAll('.chevron-icon').forEach(chev => {
-						chev.style.transform = 'rotate(0deg)';
+						(chev as HTMLElement).style.transform = 'rotate(0deg)';
 					});
 					document.querySelectorAll('.faq-question').forEach(q => {
 						q.classList.remove('active');
