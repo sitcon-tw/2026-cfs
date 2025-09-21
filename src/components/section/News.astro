@@ -108,7 +108,7 @@ const newsImages = [
 		transform: scale(1.05);
 	}
 
-	@media screen and (max-width: 800px) {
+	@media (max-width: 800px) {
 		#news-content {
 			height: 65rem;
 			overflow: hidden;
@@ -138,7 +138,7 @@ const newsImages = [
 		}
 	}
 
-	@media screen and (min-width: 800px) {
+	@media (min-width: 800px) {
 		#news-content a:nth-child(1) {
 			transform: translate(-10rem, 0);
 			top: 2rem;
@@ -179,7 +179,7 @@ const newsImages = [
 	}
 
 	.things-item {
-		background: #ffffff;
+		background: var(--white);
 		flex: 0 0 auto;
 		border-radius: 1.5rem;
 		overflow: hidden;
@@ -218,7 +218,7 @@ const newsImages = [
 		font-weight: 400;
 		line-height: 134%;
 	}
-	@media screen and (max-width: 800px) {
+	@media (max-width: 800px) {
 		#things-area {
 			overflow: hidden;
 			display: flex;
