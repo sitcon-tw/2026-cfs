@@ -28,9 +28,7 @@ const { t } = Astro.props;
 					<h3 class="contact-title">{t.contact}</h3>
 					<a href="mailto:contact@sitcon.org" class="contact-email">contact@sitcon.org</a>
 					<div class="contact-list">
-						{t.contact_list.map((item: string) => (
-							<div class="contact-item">{item}</div>
-						))}
+						{t.contact_list.map((item: string) => <div class="contact-item">{item}</div>)}
 					</div>
 				</div>
 
@@ -80,9 +78,13 @@ const { t } = Astro.props;
 				<div class="past-websites">
 					<h3 class="past-websites-title">{t.past_websites}</h3>
 					<div class="years-grid">
-						{Array.from({ length: Math.floor(Number(Date.now()) / 31556952000) - 42 }, (_, index) => index + 2013).map(year => (
-							<a href={`https://sitcon.org/${year}`} target="_blank" class="year-link">{year}</a>
-						))}
+						{
+							Array.from({ length: Math.floor(Number(Date.now()) / 31556952000) - 42 }, (_, index) => index + 2013).map(year => (
+								<a href={`https://sitcon.org/${year}`} target="_blank" class="year-link">
+									{year}
+								</a>
+							))
+						}
 					</div>
 				</div>
 			</div>
