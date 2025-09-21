@@ -1,7 +1,115 @@
 ---
+import upper from "@assets/img/sponsor_upper.svg";
+import lower from "@assets/img/sponsor_lower.svg";
+
 const { t } = Astro.props;
 ---
 
 <section id="sponsors">
-	<h2>Sponsors</h2>
+	<div class="sponsors-container">
+		<div class="marquee-container">
+			<div class="marquee-track">
+				<img src={upper.src} alt="SITCON 2026 Sponsors - Upper Row" class="sponsor-image" />
+				<img src={upper.src} alt="SITCON 2026 Sponsors - Upper Row" class="sponsor-image" />
+				<img src={upper.src} alt="SITCON 2026 Sponsors - Upper Row" class="sponsor-image" />
+			</div>
+		</div>
+		<h2 class="sponsors-title">
+			{t.inline.map((line: string) => <p>{line}</p>)}
+		</h2>
+		<div class="marquee-container">
+			<div class="marquee-track lower-marquee">
+				<img src={lower.src} alt="SITCON 2026 Sponsors - Lower Row" class="sponsor-image" />
+				<img src={lower.src} alt="SITCON 2026 Sponsors - Lower Row" class="sponsor-image" />
+				<img src={lower.src} alt="SITCON 2026 Sponsors - Lower Row" class="sponsor-image" />
+			</div>
+		</div>
+	</div>
 </section>
+
+<style>
+	section {
+		padding: 4rem 0;
+		background-color: var(--white);
+		overflow: hidden;
+	}
+
+	.sponsors-container {
+		width: 100%;
+		text-align: center;
+	}
+
+	.sponsors-title {
+		font-size: 2.5rem;
+		font-weight: 700;
+		margin: 3rem auto;
+		color: var(--black);
+		max-width: 1200px;
+		padding: 0 2rem;
+	}
+
+	.marquee-container {
+		width: 100%;
+		overflow: hidden;
+		opacity: 0.3;
+		margin: 2rem 0;
+	}
+
+	.marquee-track {
+		display: flex;
+		animation: marquee 30s linear infinite;
+		width: max-content;
+		margin: 0 auto;
+	}
+
+	.lower-marquee {
+		animation-direction: reverse;
+	}
+
+	.sponsor-image {
+		height: 240px;
+		width: auto;
+		display: block;
+		flex-shrink: 0;
+	}
+
+	@keyframes marquee {
+		0% {
+			transform: translateX(0%);
+		}
+		100% {
+			transform: translateX(-33.33%);
+		}
+	}
+
+	@media (max-width: 768px) {
+		section {
+			padding: 2rem 0;
+		}
+
+		.sponsors-title {
+			font-size: 2rem;
+			margin: 2rem auto;
+			padding: 0 1rem;
+		}
+
+		.marquee-container {
+			margin: 1.5rem 0;
+		}
+
+		.sponsor-image {
+			height: 200px;
+			margin-right: 2rem;
+		}
+
+		.marquee-track {
+			animation-duration: 20s;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.marquee-track {
+			animation: none !important;
+		}
+	}
+</style>
