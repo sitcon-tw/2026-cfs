@@ -6,74 +6,56 @@ import SchoolsText from "@assets/img/schools-text.svg";
 ---
 
 <section id="about" class="about-section">
-	<div style="display: none;">
-		<p id="chart-attender-data">{JSON.stringify(t.popup.chart.attender_role)}</p>
-		<p id="chart-programming-level-data">{JSON.stringify(t.popup.chart.programming_level)}</p>
-		<p id="chart-unit">{t.popup.chart.unit}</p>
-		<p id="attender-role-title">{t.popup.chart.attender_role_title}</p>
-		<p id="chart-programming-level-titlea">{t.popup.chart.programming_level_title}</p>
-	</div>
-	<div class="container">
-		<!-- 主標題 -->
-		<div class="title-section">
-			<h2 class="subtitle">{t.subtitle}</h2>
-			<h2 class="main-title">{t.title}</h2>
-		</div>
-
-		<!-- 統計卡片 -->
-		<div class="stats-cards">
-			{
-				[
-					{
-						image: "/cfs/attendee-stat.jpg",
-						data: [t.stats[0]]
-					},
-					{
-						image: "/cfs/speaker-stat.jpg",
-						data: [t.stats[1]]
-					},
-					{
-						image: "/cfs/events-stat.jpg",
-						data: [t.stats[2], t.stats[3]]
-					},
-					{
-						image: "/cfs/volunteer-stat.jpg",
-						data: [t.stats[4]]
-					}
-				].map(card => (
-					<div class="stat-card" style={`background: url(${card.image}) lightgray 50% / cover no-repeat;`}>
-						<div class="card-overlay" />
-						<div class="card-content">
-							{card.data.map(stat => (
-								<div class="stat-item">
-									{stat.prefix && <div class="stat-prefix">{stat.prefix}</div>}
-									<div class="stat-number">{stat.number}</div>
-									<div class="stat-label">{stat.label}</div>
-								</div>
-							))}
-						</div>
-					</div>
-				))
-			}
-		</div>
-		<div class="review-section">
-			<h3 class="review-title">{t.review.title}</h3>
-			<div class="review-stats">
+	<h2><span>{t.subtitle}</span>{t.title}</h2>
+	<div class="stats-cards">
+		{
+			[
 				{
-					t.review.stats.map((stat: { label: string; number: string; note: string }) => (
-						<div class="review-item">
-							{stat.label && <span class="review-label">{stat.label}</span>}
-							<span class="review-number">{stat.number}</span>
-							{stat.note && <span class="review-note">{stat.note}</span>}
-						</div>
-					))
+					image: "/cfs/attendee-stat.jpg",
+					data: [t.stats[0]]
+				},
+				{
+					image: "/cfs/speaker-stat.jpg",
+					data: [t.stats[1]]
+				},
+				{
+					image: "/cfs/events-stat.jpg",
+					data: [t.stats[2], t.stats[3]]
+				},
+				{
+					image: "/cfs/volunteer-stat.jpg",
+					data: [t.stats[4]]
 				}
-			</div>
-		</div>
+			].map(card => (
+				<div class="stat-card" style={`background: url(${card.image}) lightgray 50% / cover no-repeat;`}>
+					<div class="card-content">
+						{card.data.map(stat => (
+							<div>
+								{stat.prefix && <div class="stat-prefix">{stat.prefix}</div>}
+								<div class="stat-number emfont-FiraMono-500">{stat.number}</div>
+								<div class="stat-label">{stat.label}</div>
+							</div>
+						))}
+					</div>
+				</div>
+			))
+		}
+	</div>
+	<div class="rewind aos">
+		<h3 class="review-title">{t.review.title}</h3>
+		{
+			t.review.stats.map((stat: { label: string; number: string; note: string }) => (
+				<div class="review-item">
+					{stat.label && <span>{stat.label}</span>}
+					<span class="review-number">{stat.number}</span>
+					{stat.note && <span>{stat.note}</span>}
+				</div>
+			))
+		}
 	</div>
 	<Popup btnText={t.detail} title={t.detail} background={Volunteer.src} id="stat-popup" class="popup">
-		<div class="popup-body">
-			<p class="title">{t.popup.title}</p>
+		<div class="container">
+			<h3>{t.popup.title}</h3>
 			<div class="chart-area">
 				<canvas id="role-chart"></canvas>
 				<canvas id="level-chart"></canvas>
@@ -94,6 +76,14 @@ import SchoolsText from "@assets/img/schools-text.svg";
 		</div>
 	</Popup>
 </section>
+<div style="display: none;">
+	<p id="chart-attender-data">{JSON.stringify(t.popup.chart.attender_role)}</p>
+	<p id="chart-programming-level-data">{JSON.stringify(t.popup.chart.programming_level)}</p>
+	<p id="chart-unit">{t.popup.chart.unit}</p>
+	<p id="attender-role-title">{t.popup.chart.attender_role_title}</p>
+	<p id="chart-programming-level-titlea">{t.popup.chart.programming_level_title}</p>
+</div>
+
 <script lang="js">
 	const colors = ["#6CE5E8", "#40B8D5", "#2C8BBA", "#2F5F98", "#31356E", "#5E3967", "#895273", "#B97286", "#E28385"];
 	const unit = document.getElementById("chart-unit").textContent;
@@ -179,6 +169,17 @@ import SchoolsText from "@assets/img/schools-text.svg";
 	}
 </script>
 <style>
+	#about {
+		padding: 8rem 2rem 4rem;
+	}
+
+	.rewind {
+		margin-bottom: 2rem;
+		font-weight: 700;
+		text-align: center;
+		font-size: 2.5rem;
+	}
+
 	#schools-text {
 		max-width: 40rem;
 		width: 100%;
@@ -195,11 +196,7 @@ import SchoolsText from "@assets/img/schools-text.svg";
 		align-items: center;
 		justify-items: center;
 	}
-	@media (max-width: 1200px) {
-		.chart-area {
-			grid-template-columns: 1fr;
-		}
-	}
+
 	canvas {
 		max-width: 35em;
 		max-height: 30rem;
@@ -211,212 +208,96 @@ import SchoolsText from "@assets/img/schools-text.svg";
 		font-weight: 700;
 		line-height: 125%;
 	}
-	.popup .container p {
-		margin-bottom: 3rem;
-		line-height: 150%;
-	}
-	.popup-body {
-		padding: 2rem;
-	}
-	.title {
-		font-size: 3rem;
-		font-weight: 700;
-	}
-	.about-section {
-		padding: 80px 0;
-	}
-	.container {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: 0 20px;
-	}
-
-	.title-section {
-		margin-bottom: 60px;
-	}
-
-	.subtitle {
-		text-align: center;
-		font-size: 2.4375rem;
-		font-style: normal;
-		font-weight: 700;
-		line-height: 120%; /* 2.925rem */
-	}
-
-	.main-title {
-		text-align: center;
-		font-size: 3.375rem;
-		font-style: normal;
-		font-weight: 700;
-		line-height: 120%; /* 4.05rem */
-	}
 
 	.stats-cards {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-		gap: 24px;
-		margin-bottom: 80px;
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 2rem;
+		color: var(--white);
 	}
 
 	.stat-card {
 		position: relative;
-		border-radius: 1.75rem;
-		padding: 24px;
-		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-		transition:
-			transform 0.2s ease,
-			box-shadow 0.2s ease;
-		overflow: hidden;
-		height: 25rem;
+		flex: 1;
+		max-width: 15rem;
 		display: flex;
-		align-items: flex-end;
-	}
-
-	.stat-card:hover {
-		transform: translateY(-4px);
-		box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
-	}
-
-	.card-overlay {
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
+		justify-content: end;
+		flex-direction: column;
 		border-radius: 1.75rem;
-		background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000 100%);
-		z-index: 1;
+		padding: 15rem 1rem 3rem;
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+	}
+
+	.stat-card::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: 1.75rem;
+		background: linear-gradient(180deg, rgba(0, 0, 0, 0) 50%, #000 100%);
 	}
 
 	.card-content {
 		position: relative;
-		z-index: 2;
-		width: 100%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		column-gap: 1rem; /* space-x equivalent */
-	}
-
-	.stat-item {
-		margin-bottom: 1rem;
+		gap: 1rem;
 	}
 
 	.stat-number {
-		color: var(--white);
-		font-size: 3.625rem;
-		font-weight: 700;
-		line-height: 122%; /* 4.4225rem */
-		letter-spacing: 0.0725rem;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		flex-shrink: 0;
-		margin-bottom: 4px;
+		font-size: 3.5rem;
+		text-align: center;
 	}
 
 	.stat-prefix,
 	.stat-label {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		flex-shrink: 0;
-		color: var(--white);
-		font-size: 1.1875rem;
-		font-style: normal;
-		font-weight: 700;
-		line-height: 122%; /* 1.44875rem */
-		letter-spacing: 0.02375rem;
-	}
-
-	.review-section {
-		margin-bottom: 60px;
+		white-space: nowrap;
 	}
 
 	.review-title {
-		text-align: center;
 		font-size: 1.625rem;
-		font-style: normal;
-		font-weight: 700;
-		line-height: 133%; /* 2.16125rem */
-		letter-spacing: 0.08125rem;
-		margin-bottom: 2.5rem;
-	}
-
-	.review-stats {
+		margin-block: 6rem 2.5rem;
 		text-align: center;
-	}
-
-	.review-item {
-		display: block;
-		text-align: center;
-		margin-bottom: 16px;
-	}
-
-	.review-label,
-	.review-note {
-		text-align: center;
-		font-size: 2.5625rem;
-		font-weight: 700;
-		line-height: 133%; /* 3.40813rem */
-		letter-spacing: 0.12813rem;
 	}
 
 	.review-number {
 		color: #708dfa;
-		font-size: 3.4375rem;
-		font-style: normal;
-		font-weight: 700;
-		line-height: 133%;
-		letter-spacing: 0.17188rem;
+		font-size: 1.5em;
 	}
 
-	/* 響應式設計 */
-	@media (max-width: 768px) {
-		.about-section {
-			padding: 60px 0;
+	@media (max-width: 70rem) {
+		.stat-card {
+			flex: 1 1 calc(50% - 2rem);
+			padding: 5rem 1rem 2rem;
+			max-width: 23rem;
 		}
 
-		.main-title {
+		.stat-card::before {
+			background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000 100%);
+		}
+
+		h2 span {
+			display: block;
+		}
+
+		#about {
+			padding-top: 4rem;
+		}
+		.review-item {
 			font-size: 2rem;
 		}
-
-		.stats-cards {
-			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-			gap: 16px;
-			margin-bottom: 60px;
-		}
-
-		.stat-card {
-			padding: 20px;
-			height: 180px;
-		}
-
+	}
+	@media (max-width: 40rem) {
 		.stat-number {
 			font-size: 2.5rem;
-			width: auto;
-			height: auto;
-		}
-
-		.stat-prefix,
-		.stat-label {
-			font-size: 1rem;
-			width: auto;
-			height: auto;
-		}
-
-		.review-stats {
-			text-align: center;
-		}
-
-		.review-number {
-			font-size: 1.5rem;
 		}
 	}
 
-	@media (max-width: 480px) {
-		.review-item {
-			margin-bottom: 20px;
+	@media (max-width: 33rem) {
+		.stat-card {
+			flex: 1 1 100%;
+			max-width: 100%;
 		}
 	}
 </style>
