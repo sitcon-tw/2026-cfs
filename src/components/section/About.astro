@@ -28,10 +28,9 @@ import SchoolsText from "@assets/img/schools-text.svg";
 				}
 			].map(card => (
 				<div class="stat-card" style={`background: url(${card.image}) lightgray 50% / cover no-repeat;`}>
-					<div class="card-content">
+					<div class="card-content aos aos-fadeIn">
 						{card.data.map(stat => (
 							<div>
-								{stat.prefix && <div class="stat-prefix">{stat.prefix}</div>}
 								<div class="stat-number emfont-FiraMono-500">{stat.number}</div>
 								<div class="stat-label">{stat.label}</div>
 							</div>
@@ -42,10 +41,10 @@ import SchoolsText from "@assets/img/schools-text.svg";
 		}
 	</div>
 	<div class="rewind aos">
-		<h3 class="review-title">{t.review.title}</h3>
+		<h3 class="review-title aos aos-fadeIn">{t.review.title}</h3>
 		{
 			t.review.stats.map((stat: { label: string; number: string; note: string }) => (
-				<div class="review-item">
+				<div class="review-item aos aos-fadeIn">
 					{stat.label && <span>{stat.label}</span>}
 					<span class="review-number">{stat.number}</span>
 					{stat.note && <span>{stat.note}</span>}
@@ -235,6 +234,11 @@ import SchoolsText from "@assets/img/schools-text.svg";
 		inset: 0;
 		border-radius: 1.75rem;
 		background: linear-gradient(180deg, rgba(0, 0, 0, 0) 50%, #000 100%);
+		opacity: 0;
+		transition: opacity 0.3s;
+	}
+	.stat-card:has(.appeared)::before {
+		opacity: 1;
 	}
 
 	.card-content {
@@ -243,6 +247,7 @@ import SchoolsText from "@assets/img/schools-text.svg";
 		align-items: center;
 		justify-content: center;
 		gap: 1rem;
+		animation-delay: 0.3s;
 	}
 
 	.stat-number {
@@ -250,9 +255,9 @@ import SchoolsText from "@assets/img/schools-text.svg";
 		text-align: center;
 	}
 
-	.stat-prefix,
 	.stat-label {
 		white-space: nowrap;
+		text-align: center;
 	}
 
 	.review-title {

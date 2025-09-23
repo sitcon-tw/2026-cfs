@@ -76,7 +76,7 @@ const config = shopConfig;
 {items.map(item => <ItemPopup item={item} t={t} popupId={`item-popup-${item.id}`} />)}
 
 <script>
-	import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInterested } from "../../utils/local-storage.ts";
+import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInterested } from "../../utils/local-storage.ts";
 
 	declare function popupCtrl(id: string, action: string): void;
 
@@ -346,6 +346,8 @@ const config = shopConfig;
 				itemDiv.appendChild(contentDiv);
 				listContainer.appendChild(itemDiv);
 			});
+			
+			emfont.init();
 
 			const removeButtons = listContainer.querySelectorAll(".remove-item");
 			removeButtons.forEach(button => {
@@ -378,8 +380,6 @@ const config = shopConfig;
 
 			if (currentCount > previousInterestCount) {
 				setTimeout(() => openPopover(), 0);
-			} else if (interestPopover?.classList.contains("active")) {
-				setTimeout(() => positionPopover(), 0);
 			}
 
 			previousInterestCount = currentCount;
@@ -388,39 +388,10 @@ const config = shopConfig;
 		const interestButton = document.getElementById("interestButton");
 		const interestPopover = document.getElementById("interestPopover");
 
-		function positionPopover() {
-			if (!interestButton || !interestPopover) return;
-
-			const buttonRect = interestButton.getBoundingClientRect();
-			const popoverRect = interestPopover.getBoundingClientRect();
-			const viewportHeight = window.innerHeight;
-
-			interestPopover.style.position = "fixed";
-
-			let left = buttonRect.right - 250;
-			let top = buttonRect.top - popoverRect.height - 12;
-
-			if (left < 16) {
-				left = 16;
-			}
-
-			if (top < 16) {
-				top = buttonRect.bottom + 12;
-			}
-
-			if (top + popoverRect.height > viewportHeight - 16) {
-				top = viewportHeight - popoverRect.height - 16;
-			}
-
-			interestPopover.style.left = `${left}px`;
-			interestPopover.style.top = `${top}px`;
-		}
-
 		function openPopover() {
 			if (interestPopover) {
 				renderInterestItemsList();
 				interestPopover.classList.add("active");
-				positionPopover();
 			}
 		}
 
@@ -450,12 +421,6 @@ const config = shopConfig;
 		document.addEventListener("keydown", function (e) {
 			if (e.key === "Escape") {
 				closePopover();
-			}
-		});
-
-		window.addEventListener("resize", function () {
-			if (interestPopover?.classList.contains("active")) {
-				positionPopover();
 			}
 		});
 
@@ -579,14 +544,6 @@ const config = shopConfig;
 		padding: 0 2rem;
 	}
 
-	h2 {
-		font-size: 3rem;
-		color: var(--black);
-		text-align: center;
-		margin-bottom: 1rem;
-		font-weight: bold;
-	}
-
 	.subtitle {
 		color: var(--black);
 		text-align: center;
@@ -691,8 +648,8 @@ const config = shopConfig;
 		position: fixed;
 		bottom: 2rem;
 		right: 2rem;
-		width: 56px;
-		height: 56px;
+		width: 3.5rem;
+		aspect-ratio: 1 / 1;
 		border-radius: 50%;
 		background-color: var(--white);
 		border: none;
@@ -751,14 +708,16 @@ const config = shopConfig;
 
 	.interest-popover {
 		position: fixed;
-		width: 250px;
-		max-height: 400px;
+		z-index: 1;
+		bottom: 6.5rem;
+		right: 2rem;
+		width: 16rem;
+		max-height: 25rem;
 		background-color: var(--white);
-		border-radius: 16px;
+		border-radius: 1rem;
 		box-shadow:
-			0 8px 32px rgba(0, 0, 0, 0.12),
-			0 4px 16px rgba(0, 0, 0, 0.08);
-		z-index: 2000;
+			0 0.5rem 2rem rgba(0, 0, 0, 0.12),
+			0 0.25rem 1rem rgba(0, 0, 0, 0.08);
 		visibility: hidden;
 		opacity: 0;
 		transform: scale(0.95) translateY(-4px);
@@ -897,10 +856,6 @@ const config = shopConfig;
 	@media (max-width: 768px) {
 		.cards-grid {
 			grid-template-columns: 1fr;
-		}
-
-		h2 {
-			font-size: 2rem;
 		}
 
 		.container {
