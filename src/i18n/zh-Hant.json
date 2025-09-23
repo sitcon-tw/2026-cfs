@@ -240,27 +240,22 @@
 		"title": "最大的學生社群",
 		"stats": [
 			{
-				"prefix": "",
 				"number": "10000",
 				"label": "名參與者"
 			},
 			{
-				"prefix": "",
 				"number": "450",
 				"label": "名學生講者"
 			},
 			{
-				"prefix": "",
 				"number": "450",
 				"label": "場聚會和講座"
 			},
 			{
-				"prefix": "",
 				"number": "9",
 				"label": "場夏令營"
 			},
 			{
-				"prefix": "扶持近",
 				"number": "1200",
 				"label": "名熱愛資訊的志工"
 			}
