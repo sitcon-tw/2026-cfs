@@ -5,6 +5,6 @@
 ## 啟動專案
 
 ```bash
-pnpm install
-pnpm run dev
+pnpm i
+pnpm dev
 ```
