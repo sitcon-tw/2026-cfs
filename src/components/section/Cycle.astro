@@ -4,9 +4,8 @@ const { t } = Astro.props;
 
 <section id="cycle">
 	<div class="title">
-		<h2>不只是一次合作</h2>
-		<h2>而是一場能持續十年、二十年的循環。</h2>
-		<img src="/cfs/Cycle/Cycle.svg" alt="" id="Cycle_img" />
+		<h2 class="aos aos-fadeIn"><span>不只是一次合作</span>而是一場能持續十年、二十年的循環。</h2>
+		<img src="/cfs/Cycle/Cycle.svg" alt="" id="cycle-img" />
 		<!-- mobile Text -->
 		<div class="mobileCycleText">
 			<div class="title-with-arrow">
@@ -49,162 +48,90 @@ const { t } = Astro.props;
 			<p>尋找使用者與徵才，搶佔年輕開發者的心</p>
 		</div>
 
-		<div class="slogan">
-			<p>參與 SITCON 不只是曝光，而是成為社群的一部分</p>從第一場 SITCON 到第一個專案團隊，企業與人才的故事由你啟動。
-		</div>
+		<p class="slogan">
+			參與 SITCON 不只是曝光，而是成為社群的一部分。<br />從第一場 SITCON 到第一個專案團隊，企業與人才的故事由你啟動。
+		</p>
 	</div>
-	<div class="eateateat">
-		<img src="/cfs/Cycle/Hungry.svg" alt="" class="Hungry_img" />
-		<img src="/cfs/Cycle/Hungry.svg" alt="" class="Hungry_img" />
-		<img src="/cfs/Cycle/Hungry.svg" alt="" class="Hungry_img" />
-		<img src="/cfs/Cycle/Hungry.svg" alt="" class="Hungry_img" />
+	<div class="sdgs">
+		<img src="/cfs/Cycle/Hungry.svg" alt="" />
+		<img src="/cfs/Cycle/Hungry.svg" alt="" />
+		<img src="/cfs/Cycle/Hungry.svg" alt="" />
+		<img src="/cfs/Cycle/Hungry.svg" alt="" />
 	</div>
-	<div class="container">
-		<div id="no_hungry">
-			<p>消除飢餓</p>
-			<p>開會前後或沒事會揪團去吃好吃的。</p>
-		</div>
+	<div class="sdgs-text">
+		<h4>消除飢餓</h4>
+		<p>開會前後或沒事會揪團去吃好吃的。</p>
 	</div>
 </section>
 
 <style>
-	.title {
-		text-align: center;
+	section {
+		padding: 2rem;
 	}
 
-	#Cycle_img {
-		padding-top: 3.06rem;
-		padding-bottom: 1.39rem;
+	#cycle-img {
+		display: block;
+		margin: auto;
 	}
-
 	.mobileCycleText {
 		display: none;
+		max-width: 35rem;
+		margin: auto;
+		padding: 2rem;
 	}
 
-	.eateateat {
-		display: inline-flex;
+	span {
+		display: block;
+	}
+
+	.mobileCycleText .title-with-arrow {
+		display: flex;
 		align-items: center;
-		gap: 1.4375rem;
-		padding-top: 5.44rem;
+		gap: 0.5rem;
+		margin-bottom: 0.5rem;
 	}
 
-	.Hungry_img {
-		opacity: 0.6;
-		transform: scale(1);
-		transition: all 0.3s ease-in-out;
-		animation: fadeIn 0.6s ease-in-out forwards;
+	.mobileCycleText svg {
+		flex-shrink: 0;
 	}
 
-	.Hungry_img:nth-child(1) {
-		animation-delay: 0.1s;
+	.mobileCycleText h3 {
+		font-size: 1.5rem;
+	}
+	.mobileCycleText p {
+		margin-bottom: 1rem;
 	}
 
-	.Hungry_img:nth-child(2) {
-		animation-delay: 0.2s;
+	.slogan {
+		text-align: center;
+		margin-bottom: 3rem;
 	}
 
-	.Hungry_img:nth-child(3) {
-		animation-delay: 0.3s;
-	}
-
-	.Hungry_img:nth-child(4) {
-		animation-delay: 0.4s;
-	}
-
-	.Hungry_img:hover {
-		transform: scale(1.1);
-		opacity: 1;
-	}
-
-	#no_hungry {
-		max-width: 600px;
-		margin: 2rem auto;
-		text-align: left;
-		padding: 0 2rem;
-	}
-
-	#no_hungry p:first-child {
-		font-size: 1.9375rem;
-	}
-
-	#no_hungry p:last-child {
-		font-size: 1.3125rem;
-	}
-
-	.container {
+	.sdgs {
 		display: flex;
 		justify-content: center;
+		align-items: center;
+		gap: 1rem;
 	}
 
-	.container > div {
-		border-radius: 8px;
+	.sdgs-text {
+		max-width: 20rem;
+		margin: 2rem auto;
 	}
 
-	@media (max-width: 768px) {
-		#Cycle_img {
+	.sdgs img {
+		width: 8rem;
+	}
+
+	@media (max-width: 50rem) {
+		#cycle-img {
 			content: url("/cfs/Cycle/mobileCycle.svg");
 			width: 70%;
 			height: auto;
 		}
 
 		.mobileCycleText {
-			display: flex;
-			flex-direction: column;
-			align-items: flex-start;
-			max-width: 600px;
-			margin: 2rem auto;
-			padding: 2rem;
-			text-align: left;
-		}
-
-		.mobileCycleText .title-with-arrow {
-			display: flex;
-			align-items: center;
-			gap: 0.5rem;
-			margin-bottom: 1rem;
-		}
-
-		.mobileCycleText svg {
-			flex-shrink: 0;
-		}
-
-		.mobileCycleText h3 {
-			font-size: 1.5rem;
-			margin: 0;
-			font-weight: bold;
-		}
-
-		.mobileCycleText p {
-			font-size: 1rem;
-			line-height: 1.6;
-			margin: 0;
-			color: #333;
-			padding-bottom: 1em;
-		}
-
-		.title h1 {
-			font-size: 1.2rem;
-		}
-		.slogan p {
-			font-size: 0.8rem;
-			padding: 2rem;
-		}
-		.Hungry_img {
-			width: 5rem;
-			height: auto;
-		}
-
-		.eateateat {
-			gap: 1rem;
-			padding: 0.8rem;
-		}
-
-		#no_hungry p:first-child {
-			font-size: 1.2rem;
-		}
-
-		#no_hungry p:last-child {
-			font-size: 1rem;
+			display: block;
 		}
 	}
 </style>
