@@ -1,182 +1,71 @@
 ---
 const { t } = Astro.props;
+import IntroImg from "@assets/img/intro.jpeg";
 ---
 
 <section id="intro">
-	<!-- 背景圖 -->
-	<img src="/cfs/sinica-hall.jpeg" alt="SITCON 背景" class="bg-image" />
-	<!-- 背景遮罩 -->
-	<div class="bg-overlay"></div>
-	<!-- 底部漸層遮罩 -->
-	<div class="overlay"></div>
-	<!-- 文字內容 -->
-	<div class="content">
-		<!-- 第一個定位點 -->
-		<div class="anchor first-anchor" id="first-trigger"></div>
-		<!-- 第二個定位點 -->
-		<div class="anchor second-anchor" id="second-trigger"></div>
-
-		<div class="text-container">
-			<span class="main-text first-text">{t.sentence1}</span><span class="sub-text second-text">{t.sentence2}</span>
-		</div>
-	</div>
+	<div class="anchor aos"></div>
+	<div class="anchor2 aos"></div>
+	<h2>{t.sentence1}<span class="line2">{t.sentence2}</span></h2>
 </section>
 
-<style>
+<style define:vars={{ backgroundUrl: `url(${IntroImg.src})` }}>
 	section {
-		position: relative;
 		min-height: 100vh;
-		height: 56.625rem;
-		align-self: stretch;
-		overflow: hidden;
 		display: flex;
-		justify-content: center;
 		align-items: center;
-	}
-
-	.bg-image {
-		position: absolute;
-		top: 0;
-		left: 50%;
-		transform: translateX(-50%);
-		width: 94.5rem;
-		height: 56.625rem;
-		flex-shrink: 0;
-		object-fit: cover;
-		z-index: 1;
-	}
-
-	.bg-overlay {
-		position: absolute;
-		top: 0;
-		left: 50%;
-		transform: translateX(-50%);
-		width: 94.5rem;
-		height: 56.625rem;
-		flex-shrink: 0;
-		background: linear-gradient(0deg, rgba(246, 246, 246, 0.88) 0%, rgba(246, 246, 246, 0.88) 100%);
-		z-index: 2;
-	}
-
-	.overlay {
-		position: absolute;
-		bottom: 0;
-		left: 50%;
-		transform: translateX(-50%);
-		width: 94.5rem;
-		height: 12.875rem;
-		flex-shrink: 0;
-		background: linear-gradient(0deg, #fff 0%, rgba(255, 255, 255, 0) 100%);
-		z-index: 3;
-	}
-
-	.content {
+		background: var(--backgroundUrl);
+		background-size: cover;
 		position: relative;
-		z-index: 4;
-		width: 100%;
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
 	}
 
-	.text-container {
-		width: 90%;
-		max-width: 60.75rem;
-		text-align: left;
-		padding: 0 1rem;
-		margin: 0 auto;
-		font-size: 3rem;
-		font-weight: 700;
-		line-height: 120%;
-	}
-
-	@media (max-width: 768px) {
-		.text-container {
-			width: 95%;
-			padding: 0 0.5rem;
-		}
-	}
-
-	@media (max-width: 480px) {
-		.main-text,
-		.sub-text {
-			font-size: 2rem;
-		}
-	}
-
-	.main-text {
-		color: var(--black);
-	}
-
-	.sub-text {
-		color: rgba(0, 0, 0, 0.29);
-	}
-
-	/* 定位點樣式 */
-	.anchor {
+	section::after {
+		content: "";
 		position: absolute;
-		height: 1px;
-		width: 1px;
+		inset: 0;
+		background: rgba(255, 255, 255, 0.75);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
 		opacity: 0;
-		pointer-events: none;
+		transition: opacity 0.5s ease-in-out;
 	}
 
-	.first-anchor {
-		top: 40%;
-	}
-
-	.second-anchor {
-		top: 60%;
-	}
-
-	/* 文字動畫樣式 */
-	.first-text {
-		opacity: 0;
-		transform: translateY(30px);
-		transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
-		display: inline;
-	}
-
-	.second-text {
-		opacity: 0;
-		transform: translateY(30px);
-		transition: all 1s cubic-bezier(0.4, 0, 0.2, 1) 0.5s;
-		display: inline;
-	}
-
-	/* 當定位點觸發時的樣式 */
-	.first-anchor.triggered ~ .text-container .first-text {
+	section:has(.anchor2.appeared)::after,
+	section:has(.anchor2.over)::after {
 		opacity: 1;
-		transform: translateY(0);
-		color: var(--black);
-		text-shadow: 0 2px 8px rgba(29, 29, 31, 0.15);
 	}
 
-	.second-anchor.triggered ~ .text-container .second-text {
-		opacity: 1;
-		transform: translateY(0);
-		color: rgba(0, 0, 0, 0.65);
-		text-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+	h2 {
+		max-width: 1200px;
+		padding: 2rem;
+		position: relative;
+		z-index: 1;
+		margin: auto;
+		transition-delay: 0.5s;
+	}
+
+	.anchor,
+	.anchor2 {
+		position: absolute;
+		top: 85%;
+	}
+
+	.anchor2 {
+		top: 70%;
+	}
+
+	.anchor2.appeared + h2 .line2 {
+		color: #1d1d1f1a;
+	}
+
+	.anchor.appeared ~ h2 .line2,
+	.anchor2.appeared + h2 {
+		color: #1d1d1f;
+	}
+
+	h2,
+	.line2 {
+		color: transparent;
+		transition: color 0.5s ease-in-out;
 	}
 </style>
-
-<script>
-	const firstAnchor = document.getElementById("first-trigger");
-	const secondAnchor = document.getElementById("second-trigger");
-
-	const observer = new IntersectionObserver(
-		entries => {
-			entries.forEach(entry => {
-				if (entry.isIntersecting) {
-					entry.target.classList.add("triggered");
-				}
-			});
-		},
-		{ threshold: 0.5 }
-	);
-
-	if (firstAnchor) observer.observe(firstAnchor);
-	if (secondAnchor) observer.observe(secondAnchor);
-</script>

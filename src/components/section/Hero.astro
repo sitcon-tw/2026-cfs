@@ -4,9 +4,9 @@ const { t } = Astro.props;
 
 <section id="hero">
 	<div class="aos aos-fadeIn">
-		<img src="/cfs/SITCON.svg" alt="" />
-		<h2>{t.title}<br />{t.title2}</h2>
-		<p>{t.subtitle}<br />{t.subtitle2}</p>
+		<img class="aos aos-fadeIn" src="/cfs/SITCON.svg" alt="" />
+		<h2 class="aos aos-fadeZoom">{t.title}<br />{t.title2}</h2>
+		<p class="aos aos-fadeIn">{t.subtitle}<br />{t.subtitle2}</p>
 	</div>
 </section>
 
@@ -36,12 +36,24 @@ const { t } = Astro.props;
 		line-height: 1.2;
 	}
 
-	p {
+	p.aos-fadeIn {
 		font-size: 1.5rem;
 		line-height: 1.33;
+		transition-delay: .5s;
 	}
 
 	.aos-fadeIn {
-		transition: 1s opacity ease-in-out;
+		transition: opacity 2s ease-in-out;
+	}
+
+	.aos-fadeZoom {
+		scale: 0.9;
+		opacity: 0;
+		transition: 2s ease;
+	}
+
+	.aos-fadeZoom.appeared {
+		scale: 1;
+		opacity: 1;
 	}
 </style>
