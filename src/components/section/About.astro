@@ -88,10 +88,10 @@ import SchoolsText from "@assets/img/schools-text.svg";
 	import ChartDataLabels from "chartjs-plugin-datalabels";
 
 	const colors = ["#6CE5E8", "#40B8D5", "#2C8BBA", "#2F5F98", "#31356E", "#5E3967", "#895273", "#B97286", "#E28385"];
-	const unit = document.getElementById("chart-unit").textContent;
-	const roleTitle = document.getElementById("attender-role-title").textContent;
+	const unit = document.getElementById("chart-unit")!.textContent;
+	const roleTitle = document.getElementById("attender-role-title")!.textContent;
 	const roleEle = document.getElementById("role-chart");
-	const attenderRoleData = JSON.parse(document.getElementById("chart-attender-data").textContent);
+	const attenderRoleData = JSON.parse(document.getElementById("chart-attender-data")!.textContent);
 	const roleData = {
 		labels: Object.keys(attenderRoleData),
 		datasets: [
@@ -105,9 +105,9 @@ import SchoolsText from "@assets/img/schools-text.svg";
 		]
 	};
 
-	const levelTitle = document.getElementById("chart-programming-level-titlea").textContent;
+	const levelTitle = document.getElementById("chart-programming-level-titlea")!.textContent;
 	const levelEle = document.getElementById("level-chart");
-	const programmingLevelData = JSON.parse(document.getElementById("chart-programming-level-data").textContent);
+	const programmingLevelData = JSON.parse(document.getElementById("chart-programming-level-data")!.textContent);
 	const levelData = {
 		labels: Object.keys(programmingLevelData),
 		datasets: [
@@ -121,7 +121,7 @@ import SchoolsText from "@assets/img/schools-text.svg";
 		]
 	};
 	for (let i = 0; i < 2; i++) {
-		new Chart(i == 0 ? roleEle : levelEle, {
+		new Chart(i == 0 ? (roleEle as HTMLCanvasElement) : (levelEle as HTMLCanvasElement), {
 			type: "doughnut",
 			data: i == 0 ? roleData : levelData,
 			options: {
@@ -155,8 +155,8 @@ import SchoolsText from "@assets/img/schools-text.svg";
 						color: "#000000",
 						font: { weight: "bold", size: 14 },
 						formatter: (value, ctx) => {
-							const label = ctx.chart.data.labels[ctx.dataIndex];
-							const total = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+							const label = ctx.chart.data.labels![ctx.dataIndex];
+							const total: number = ctx.chart.data.datasets[0].data.filter((v): v is number => typeof v === "number").reduce((a, b) => a + b, 0);
 							const percentage = ((value / total) * 100).toFixed(0) + "%";
 							return value >= 100 ? `${label}: ${percentage}` : ``;
 						}
