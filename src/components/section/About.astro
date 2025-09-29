@@ -83,7 +83,10 @@ import SchoolsText from "@assets/img/schools-text.svg";
 	<p id="chart-programming-level-titlea">{t.popup.chart.programming_level_title}</p>
 </div>
 
-<script lang="js">
+<script>
+	import Chart from "chart.js/auto";
+	import ChartDataLabels from "chartjs-plugin-datalabels";
+
 	const colors = ["#6CE5E8", "#40B8D5", "#2C8BBA", "#2F5F98", "#31356E", "#5E3967", "#895273", "#B97286", "#E28385"];
 	const unit = document.getElementById("chart-unit").textContent;
 	const roleTitle = document.getElementById("attender-role-title").textContent;
@@ -117,7 +120,6 @@ import SchoolsText from "@assets/img/schools-text.svg";
 			}
 		]
 	};
-
 	for (let i = 0; i < 2; i++) {
 		new Chart(i == 0 ? roleEle : levelEle, {
 			type: "doughnut",
@@ -157,9 +159,7 @@ import SchoolsText from "@assets/img/schools-text.svg";
 							const total = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
 							const percentage = ((value / total) * 100).toFixed(0) + "%";
 							return value >= 100 ? `${label}: ${percentage}` : ``;
-						},
-						align: "end",
-						anchor: "end"
+						}
 					}
 				}
 			},
@@ -303,6 +303,11 @@ import SchoolsText from "@assets/img/schools-text.svg";
 		.stat-card {
 			flex: 1 1 100%;
 			max-width: 100%;
+		}
+	}
+	@media (max-width: 75rem) {
+		.chart-area {
+			grid-template-columns: 1fr;
 		}
 	}
 </style>
