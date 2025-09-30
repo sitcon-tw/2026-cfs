@@ -232,7 +232,7 @@ async function main() {
     const mergedData = mergeSheetData(sheets);
 
     // Write to file
-    const outputPath = './scripts/item.json';
+    const outputPath = './src/data/item.json';
     const jsonData = JSON.stringify(mergedData, null, 2);
 
     try {
@@ -390,7 +390,7 @@ async function fetchAndSavePlans(sheets, itemsData) {
     const plansData = processPlanData(planSheet, itemsData);
 
     // Write plans to file
-    const outputPath = './scripts/plan.json';
+    const outputPath = './src/data/plan.json';
     const jsonData = JSON.stringify(plansData, null, 2);
 
     try {
