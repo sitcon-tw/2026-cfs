@@ -14,9 +14,7 @@ const { t } = Astro.props;
 		<!-- Collaboration Section -->
 		<div class="collaboration-section">
 			<h2 class="collaboration-title">{t.collaboration}</h2>
-			<p class="collaboration-description">
-				{t.description}
-			</p>
+			<p>{t.description}</p>
 		</div>
 
 		<!-- Main Content Grid -->
@@ -25,30 +23,29 @@ const { t } = Astro.props;
 			<div class="footer-left">
 				<!-- Marketing Contacts -->
 				<div class="contact-section">
-					<h3 class="contact-title">{t.contact}</h3>
-					<a href="mailto:contact@sitcon.org" class="contact-email">contact@sitcon.org</a>
-					<div class="contact-list">
-						{t.contact_list.map((item: string) => <div class="contact-item">{item}</div>)}
-					</div>
+					<h3>{t.contact}</h3>
+					<p>
+						<a href="mailto:contact@sitcon.org" class="contact-email">contact@sitcon.org</a><br />
+						<span set:html={t.contact_list.join("<br>")} />
+					</p>
 				</div>
-
 				<!-- Conference Info -->
-				<div class="conference-info">
-					<div>學生計算機年會</div>
-					<div>Students' Information Technology Conference</div>
-					<div>{t.contact_us}</div>
-					<div class="contact-details">
-						<div>{t.contact_us_description} <a href="mailto:contact@sitcon.org" class="contact-email">contact@sitcon.org</a></div>
-						<div>{t.contact_us_description2} <a href="mailto:ask@sitcon.camp" class="contact-email">ask@sitcon.camp</a></div>
-					</div>
+				<div>
+					<h3>{t.contact_us}</h3>
+					<p>
+						{t.contact_us_description}
+						<a href="mailto:contact@sitcon.org" class="contact-email">contact@sitcon.org</a><br />{t.contact_us_description2}
+						<a href="mailto:ask@sitcon.camp" class="contact-email">ask@sitcon.camp</a>
+					</p>
 				</div>
+				<div class="conference-title">學生計算機年會<br />Students' Information Technology Conference</div>
 			</div>
 
 			<!-- Right Column -->
 			<div class="footer-right">
 				<!-- Social Media -->
 				<div class="social-section">
-					<h3 class="social-title">Social Media</h3>
+					<h3>Social Media</h3>
 					<div class="social-icons">
 						<a href="https://www.facebook.com/sitcon.tw" class="social-icon" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
 							<img src={facebook.src} alt="Facebook" />
@@ -76,7 +73,7 @@ const { t } = Astro.props;
 
 				<!-- Past Websites -->
 				<div class="past-websites">
-					<h3 class="past-websites-title">{t.past_websites}</h3>
+					<h3>{t.past_websites}</h3>
 					<div class="years-grid">
 						{
 							Array.from({ length: Math.floor(Number(Date.now()) / 31556952000) - 42 }, (_, index) => index + 2013).map(year => (
@@ -95,17 +92,26 @@ const { t } = Astro.props;
 <style>
 	.footer {
 		background-color: #f5f5f5;
-		padding: 60px 0 40px;
+	}
+
+	p {
+		line-height: 2;
+	}
+
+	h3 {
+		font-size: 1.3rem;
+		color: #000;
+		margin-bottom: 0.5rem;
 	}
 
 	.footer-container {
 		max-width: 1200px;
-		margin: 0 auto;
-		padding: 0 20px;
+		margin: auto;
+		padding: 4rem 2rem 3rem;
 	}
 
 	.collaboration-section {
-		margin-bottom: 50px;
+		margin-bottom: 3rem;
 	}
 
 	.collaboration-title {
@@ -114,12 +120,6 @@ const { t } = Astro.props;
 		color: #000;
 		margin: 0 0 20px 0;
 		display: inline-block;
-	}
-
-	.collaboration-description {
-		font-size: 1.3rem;
-		color: #333;
-		line-height: 1.6;
 	}
 
 	.footer-content {
@@ -132,80 +132,40 @@ const { t } = Astro.props;
 	.footer-left {
 		display: flex;
 		flex-direction: column;
-		gap: 40px;
+		gap: 2rem;
 	}
 
 	.contact-section {
 		margin-bottom: 20px;
 	}
 
-	.contact-title {
-		font-size: 1.3rem;
+	.conference-title {
+		font-size: 1.2rem;
 		font-weight: bold;
-		color: #000;
-		margin: 0 0 15px 0;
-	}
-
-	.contact-email {
-		color: #333;
-		text-decoration: underline;
-	}
-
-	.contact-list {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-	}
-
-	.contact-item {
-		font-size: 1rem;
-		color: #333;
-	}
-
-	.conference-info {
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-		color: #424242;
-		font-family: "LINE Seed TW_OTF";
-		font-size: 21px;font-weight: 700;
-		line-height: normal;
 		letter-spacing: 2.1px;
-	}
-
-	.contact-details {
-		display: flex;
-		flex-direction: column;
-		gap: 5px;
+		margin-bottom: 1rem;
 	}
 
 	.footer-right {
 		display: flex;
 		flex-direction: column;
-		gap: 40px;
+		gap: 2rem;
 	}
 
 	.social-section {
 		margin-bottom: 20px;
 	}
 
-	.social-title {
-		font-size: 1.3rem;
-		letter-spacing: 2px;
-		font-weight: bold;
-		color: #000;
-		margin: 0 0 20px 0;
-	}
-
 	.social-icons {
+		margin-top: 0.5rem;
 		display: flex;
-		gap: 15px;
+		gap: 1rem;
 		flex-wrap: wrap;
 	}
 
 	.social-icon {
-		width: 40px;
-		height: 40px;
+		width: 2rem;
+		height: 2rem;
 		border-radius: 50%;
 		display: flex;
 		align-items: center;
@@ -216,51 +176,35 @@ const { t } = Astro.props;
 	}
 
 	.social-icon svg {
-		width: 20px;
-		height: 20px;
+		width: 1.25rem;
 	}
 
 	.past-websites {
 		display: flex;
 		flex-direction: column;
-		gap: 15px;
-	}
-
-	.past-websites-title {
-		font-size: 1.3rem;
-		font-weight: bold;
-		color: #000;
-		margin: 0;
+		gap: 1rem;
 	}
 
 	.years-grid {
 		display: grid;
 		grid-template-columns: repeat(6, 1fr);
-		gap: 5px;
+		gap: 0.5rem;
 	}
 
 	.year-link {
-		display: inline-block;
-		padding: 4px;
 		text-decoration: none;
 		color: #333;
 		font-size: 0.9rem;
-		transition: all 0.3s ease;
 	}
 
-	/* Responsive Design */
-	@media (max-width: 768px) {
+	@media (max-width: 48rem) {
 		.footer-content {
 			grid-template-columns: 1fr;
-			gap: 40px;
+			gap: 2rem;
 		}
 
 		.collaboration-title {
 			font-size: 2rem;
-		}
-
-		.collaboration-description {
-			font-size: 1rem;
 		}
 
 		.years-grid {
@@ -270,11 +214,15 @@ const { t } = Astro.props;
 		.social-icons {
 			justify-content: center;
 		}
+
+		.faq-question {
+			font-size: 1.3rem;
+		}
 	}
 
-	@media (max-width: 480px) {
+	@media (max-width: 30rem) {
 		.footer {
-			padding: 40px 0 30px;
+			padding: 2rem 0 30px;
 		}
 
 		.collaboration-title {
