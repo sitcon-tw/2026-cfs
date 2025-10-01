@@ -7,6 +7,14 @@ import planData from "@data/plan.json";
 
 import type { SubItem } from "../../utils/items-loader";
 
+interface SubItemData {
+	name: string;
+	price?: string;
+	remaining?: string;
+	image?: string;
+	image_description?: string;
+}
+
 const { item, t, popupId } = Astro.props;
 
 // Import images dynamically using import.meta.glob
@@ -257,6 +265,50 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 		font-family: "Fira Mono", monospace;
 		display: block;
 		margin: 1.5rem 0rem;
+	}
+
+	.quantity-controls {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.quantity-btn {
+		width: 2rem;
+		aspect-ratio: 1 / 1;
+		border-radius: 50%;
+		background-color: var(--black);
+		color: var(--white);
+		border: none;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.2rem;
+		font-weight: 400;
+		transition: transform 0.2s ease;
+		line-height: 1;
+	}
+
+	.quantity-btn:hover {
+		transform: scale(1.1);
+	}
+
+	.quantity-btn:disabled {
+		opacity: 0.3;
+		cursor: not-allowed;
+	}
+
+	.quantity-btn:disabled:hover {
+		transform: scale(1);
+	}
+
+	.quantity-display {
+		font-size: 1.2rem;
+		font-weight: 600;
+		color: var(--black);
+		min-width: 1.5rem;
+		text-align: center;
 	}
 
 	.quantity-controls {
