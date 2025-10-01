@@ -1,1 +1,14 @@
-{}
+{
+	"global": {
+		"unit": {
+			"ticket": "Ticket(s)",
+			"booth": "Booth(s)",
+			"agenda": "Session(s)",
+			"ad": "Ad(s)",
+			"other": "Item(s)",
+			"copy": "Copy/Copies",
+			"second": "Second(s)",
+			"time": "Time(s)"
+		}
+	}
+}

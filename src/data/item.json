@@ -1,9 +1,10 @@
 {
   "1": {
     "name": "午餐旗、點心旗",
+    "order": "1",
     "quantity": "max 2",
     "remaining": "",
-    "unit": "份",
+    "unit": "copy",
     "global_description_zh": "為了鼓勵技術人切磋交流，年會將提供免費的午餐、下午茶來增加彼此的互動機會。為了感謝貴單位補助餐點開銷，我們將於餐飲區擺放贊助單位旗幟，感謝您拉近了彼此的距離。並在 OPass App 中推播公告表達特別感謝。",
     "global_description_en": "",
     "talent_recruitment_zh": "在餐點中加入小巧宣傳，讓學生在用餐時也能注意到您的職缺資訊。",
@@ -43,9 +44,10 @@
   },
   "2": {
     "name": "一次性紙餐墊",
+    "order": "2",
     "quantity": "獨家",
     "remaining": "2",
-    "unit": "張",
+    "unit": "ticket",
     "global_description_zh": "我們將在發放午餐時同時發送由 SITCON 精心設計的一次性紙餐墊，並在上面印製您的品牌圖文介紹，讓每一位與會者都能在餐墊上注意到您的品牌。",
     "global_description_en": "",
     "talent_recruitment_zh": "於用餐時與人才互動，您能在最日常的場景中傳遞職缺資訊。",
@@ -66,9 +68,10 @@
   },
   "3": {
     "name": "樓梯欄杆垂掛布條展出",
+    "order": "3",
     "quantity": "max 2",
     "remaining": "3",
-    "unit": "份",
+    "unit": "copy",
     "global_description_zh": "在攤位、梯廳往返的必經走廊間，樓梯間所掛列的布條清晰可見。歡迎展出貴單位的布條，讓它成為本次年會的專屬地標！",
     "global_description_en": "",
     "talent_recruitment_zh": "高頻率的視覺接觸，無形中提升企業在人才心中的存在感。",
@@ -89,9 +92,10 @@
   },
   "4": {
     "name": "樓梯打卡牆",
+    "order": "4",
     "quantity": "獨家",
     "remaining": "4",
-    "unit": "個",
+    "unit": "booth",
     "global_description_zh": "大型打卡牆將設置於進入會場必經的階梯上。除良好的視覺效果外，貴單位也可以於攤位活動設計打卡任務，將曝光效益最大化。",
     "global_description_en": "",
     "talent_recruitment_zh": "結合社群打卡互動，讓學生主動分享並擴散企業的招募訊息。",
@@ -112,9 +116,10 @@
   },
   "5": {
     "name": "獨家帆布迎賓袋",
+    "order": "5",
     "quantity": "獨家",
     "remaining": "1",
-    "unit": "個",
+    "unit": "booth",
     "global_description_zh": "將紙質迎賓袋升級為印有貴單位獨家設計的帆布迎賓袋。除了能夠讓與會者在第一時間即感受到品牌方的用心，其永續的特性也能夠在活動後長期地使用與曝光。\n因送印時程限制，限於 XX 月 XX 日前加購。",
     "global_description_en": "",
     "talent_recruitment_zh": "以企業品牌設計迎賓袋，您能讓人才第一時間感受企業形象。",
@@ -135,9 +140,10 @@
   },
   "6": {
     "name": "Badge 繩廠商 Logo 曝光",
+    "order": "6",
     "quantity": "獨家",
     "remaining": "2",
-    "unit": "個",
+    "unit": "booth",
     "global_description_zh": "SITCON 會將您的品牌 Logo 印製在該年年會與系列活動的 Badge 繩上提供工作人員和與會者使用，預計將製作 2000 條吊繩，讓你的品牌在 SITCON 系列活動上「戴」著走。",
     "global_description_en": "",
     "talent_recruitment_zh": "將品牌融入掛繩，讓所有與會者隨身攜帶並反覆接觸。",
@@ -158,9 +164,10 @@
   },
   "7": {
     "name": "年會 T-shirt Logo 曝光",
+    "order": "7",
     "quantity": "獨家",
     "remaining": "3",
-    "unit": "個",
+    "unit": "booth",
     "global_description_zh": "年會販售的紀念 T-shirt 是年會紀念品中的熱門首選，在會後也享有極高的能見度。在上方印上您的 Logo 吧！",
     "global_description_en": "",
     "talent_recruitment_zh": "品牌出現在年會 T-shirt 上，學生在會後仍持續看到您的形象。",
@@ -181,9 +188,10 @@
   },
   "8": {
     "name": "工作人員徽章曝光",
+    "order": "8",
     "quantity": "獨家",
     "remaining": "",
-    "unit": "個",
+    "unit": "booth",
     "global_description_zh": "現場全體逾百名工作人員的 Badge 繩將別上印有貴品牌 Logo 的徽章，您的品牌將能與穿梭在會場各個角落的工作人員一同遨遊，工作人員辛苦努力的身影更能有您溫柔的陪伴。",
     "global_description_en": "",
     "talent_recruitment_zh": "在工作人員徽章展示品牌，隨著工作人員的走動曝光品牌與招募訊息。",
@@ -204,6 +212,7 @@
   },
   "9": {
     "name": "SITCON 貼紙置入",
+    "order": "9",
     "quantity": "獨家",
     "remaining": "",
     "unit": "",
@@ -227,6 +236,7 @@
   },
   "10": {
     "name": "面紙包",
+    "order": "10",
     "quantity": "max 2",
     "remaining": "",
     "unit": "",
@@ -250,6 +260,7 @@
   },
   "11": {
     "name": "明信片",
+    "order": "11",
     "quantity": "獨家",
     "remaining": "",
     "unit": "",
@@ -273,6 +284,7 @@
   },
   "12": {
     "name": "網路宣傳",
+    "order": "12",
     "quantity": "不限",
     "remaining": "",
     "unit": "",
@@ -333,6 +345,7 @@
   },
   "13": {
     "name": "OPass App 推播公告",
+    "order": "13",
     "quantity": "max 5",
     "remaining": "",
     "unit": "",
@@ -356,6 +369,7 @@
   },
   "14": {
     "name": "獨家議程",
+    "order": "14",
     "quantity": "獨家",
     "remaining": "",
     "unit": "",
@@ -407,6 +421,7 @@
   },
   "15": {
     "name": "遠距會議室議程",
+    "order": "15",
     "quantity": "max 2",
     "remaining": "",
     "unit": "",
@@ -449,6 +464,7 @@
   },
   "16": {
     "name": "會場攤位加大",
+    "order": "16",
     "quantity": "不限",
     "remaining": "",
     "unit": "",
@@ -472,6 +488,7 @@
   },
   "17": {
     "name": "R0 影片輪播加時",
+    "order": "17",
     "quantity": "不限",
     "remaining": "",
     "unit": "",
@@ -495,6 +512,7 @@
   },
   "18": {
     "name": "拍貼機贊助商方案",
+    "order": "18",
     "quantity": "max 3",
     "remaining": "",
     "unit": "",
@@ -518,6 +536,7 @@
   },
   "19": {
     "name": "SITCON 網站議程表置入",
+    "order": "19",
     "quantity": "不限",
     "remaining": "",
     "unit": "",
@@ -541,6 +560,7 @@
   },
   "20": {
     "name": "洗手間標語曝光",
+    "order": "20",
     "quantity": "獨家",
     "remaining": "",
     "unit": "",
@@ -564,6 +584,7 @@
   },
   "21": {
     "name": "聯名票種",
+    "order": "21",
     "quantity": "獨家",
     "remaining": "",
     "unit": "",
@@ -587,6 +608,7 @@
   },
   "22": {
     "name": "會議室椅套曝光",
+    "order": "22",
     "quantity": "max 3",
     "remaining": "",
     "unit": "",
@@ -638,6 +660,7 @@
   },
   "23": {
     "name": "獨家導遊團行程",
+    "order": "23",
     "quantity": "獨家",
     "remaining": "",
     "unit": "",
@@ -661,6 +684,7 @@
   },
   "24": {
     "name": "SITCON 會場指標置入",
+    "order": "24",
     "quantity": "獨家",
     "remaining": "",
     "unit": "",
@@ -684,6 +708,7 @@
   },
   "25": {
     "name": "SITCON 與會者 Email 推播置入",
+    "order": "25",
     "quantity": "max 5",
     "remaining": "",
     "unit": "",
@@ -707,6 +732,7 @@
   },
   "26": {
     "name": "年會開閉幕口播",
+    "order": "26",
     "quantity": "max 3",
     "remaining": "",
     "unit": "",
@@ -730,6 +756,7 @@
   },
   "27": {
     "name": "會場電視輪播",
+    "order": "27",
     "quantity": "不限",
     "remaining": "",
     "unit": "",
@@ -753,6 +780,7 @@
   },
   "28": {
     "name": "會場攤位",
+    "order": "28",
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -776,6 +804,7 @@
   },
   "29": {
     "name": "R0 影片輪播",
+    "order": "29",
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -799,6 +828,7 @@
   },
   "30": {
     "name": "迎賓袋文宣",
+    "order": "30",
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -822,6 +852,7 @@
   },
   "31": {
     "name": "贈票",
+    "order": "31",
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -845,6 +876,7 @@
   },
   "32": {
     "name": "接駁車車內廣播",
+    "order": "32",
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -868,6 +900,7 @@
   },
   "33": {
     "name": "R0 議程前夥伴宣讀",
+    "order": "33",
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -891,6 +924,7 @@
   },
   "34": {
     "name": "直播模板  Logo 曝光",
+    "order": "34",
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -914,6 +948,7 @@
   },
   "35": {
     "name": "門口議程表 Logo 曝光",
+    "order": "35",
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -937,6 +972,7 @@
   },
   "36": {
     "name": "議程廳講者背板",
+    "order": "36",
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -960,6 +996,7 @@
   },
   "37": {
     "name": "入口落地窗背板",
+    "order": "37",
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -983,6 +1020,7 @@
   },
   "38": {
     "name": "年會意象背板",
+    "order": "38",
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -1006,6 +1044,7 @@
   },
   "39": {
     "name": "年會共筆 Logo 曝光",
+    "order": "39",
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -1029,6 +1068,7 @@
   },
   "40": {
     "name": "網頁 Logo 曝光",
+    "order": "40",
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",

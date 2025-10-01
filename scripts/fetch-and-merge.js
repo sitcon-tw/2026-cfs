@@ -211,6 +211,21 @@ function findItemInSheet(sheets, sheetName, itemId) {
   return sheet.find(row => row['編號'] === itemId || row['編號'] === itemId.toString());
 }
 
+function normalizeUnit(chineseUnit) {
+  const unitMap = {
+    '份': 'copy',
+    '個': 'booth',
+    '張': 'ticket',
+    '場': 'agenda',
+    '則': 'ad',
+    '項': 'other',
+    '秒': 'second',
+    '次': 'time'
+  };
+
+  return unitMap[chineseUnit] || chineseUnit;
+}
+
 function extractSubItems(itemRow) {
   const subItems = [];
   const MAX_SUB_ITEMS = 50; // Safety limit to prevent infinite loops
@@ -284,9 +299,10 @@ function mergeSheetData(sheets) {
 
     items[itemId] = {
       name: itemRow['項目'] || itemRow['項目名稱'] || '',
+      order: itemId,
       quantity: itemRow['數量'] || '',
       remaining: itemRow['剩餘數量'] || '',
-      unit: itemRow['單位'] || '',
+      unit: normalizeUnit(itemRow['單位'] || ''),
 
       global_description_zh: globalDesc?.['文案'] || '',
       global_description_en: globalDesc?.['description'] || '',
@@ -326,14 +342,7 @@ async function downloadAllImages(itemsData) {
   // Create images directory if it doesn't exist
   const imagesDir = './src/assets/img/items';
 
-  // Clear old images
-  if (fs.existsSync(imagesDir)) {
-    const files = fs.readdirSync(imagesDir);
-    for (const file of files) {
-      fs.unlinkSync(path.join(imagesDir, file));
-    }
-    console.log(`✓ Cleared ${files.length} old images`);
-  } else {
+  if (!fs.existsSync(imagesDir)) {
     fs.mkdirSync(imagesDir, { recursive: true });
     console.log(`✓ Created directory: ${imagesDir}`);
   }
@@ -354,10 +363,29 @@ async function downloadAllImages(itemsData) {
     });
   });
 
-  console.log(`Found ${imageIds.size} unique images to download`);
+  console.log(`Found ${imageIds.size} unique images to process`);
 
-  // Download all images
+  // Check existing files and build mapping
+  const existingFiles = fs.existsSync(imagesDir) ? fs.readdirSync(imagesDir) : [];
+  const existingImageIds = new Set();
+
+  existingFiles.forEach(fileName => {
+    const imageId = fileName.replace(/\.[^.]+$/, ''); // Remove extension
+    if (imageIds.has(imageId)) {
+      existingImageIds.add(imageId);
+      imageIdToFileName[imageId] = fileName;
+    }
+  });
+
+  console.log(`✓ Found ${existingImageIds.size} existing images, need to download ${imageIds.size - existingImageIds.size} new images`);
+
+  // Download only missing images
   for (const imageId of imageIds) {
+    if (existingImageIds.has(imageId)) {
+      console.log(`⊘ Skipped ${imageIdToFileName[imageId]} (already exists)`);
+      continue;
+    }
+
     const outputPath = path.join(imagesDir, imageId);
 
     downloadTasks.push(
