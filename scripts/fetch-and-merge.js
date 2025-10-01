@@ -1,5 +1,6 @@
 import fs from 'fs';
 import https from 'https';
+import path from 'path';
 import { parse } from 'csv-parse';
 
 // Read configuration from sheet.json with error handling
@@ -76,6 +77,91 @@ function fetchCsv(url, redirectCount = 0) {
   });
 }
 
+function extractGoogleDriveId(url) {
+  if (!url) return null;
+
+  // Match patterns like:
+  // https://drive.google.com/file/d/FILE_ID/view?usp=...
+  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return match ? match[1] : null;
+}
+
+function getExtensionFromContentType(contentType) {
+  const mimeToExt = {
+    'image/jpeg': '.jpg',
+    'image/jpg': '.jpg',
+    'image/png': '.png',
+    'image/gif': '.gif',
+    'image/webp': '.webp',
+    'image/svg+xml': '.svg'
+  };
+  return mimeToExt[contentType] || '.jpg'; // default to .jpg
+}
+
+function downloadImage(fileId, outputPath) {
+  return new Promise((resolve, reject) => {
+    if (!fileId) {
+      resolve(null);
+      return;
+    }
+
+    const url = `https://drive.google.com/uc?export=download&id=${fileId}`;
+
+    const handleFinalResponse = (finalResponse) => {
+      if (finalResponse.statusCode !== 200) {
+        reject(new Error(`Failed to download image: ${finalResponse.statusCode}`));
+        return;
+      }
+
+      // Get extension from content-type header
+      const contentType = finalResponse.headers['content-type'];
+      const ext = getExtensionFromContentType(contentType);
+      const finalOutputPath = outputPath + ext;
+
+      const fileStream = fs.createWriteStream(finalOutputPath);
+      finalResponse.pipe(fileStream);
+
+      fileStream.on('finish', () => {
+        fileStream.close();
+        resolve(finalOutputPath);
+      });
+
+      fileStream.on('error', reject);
+    };
+
+    https.get(url, (response) => {
+      // Handle all redirect status codes
+      if (response.statusCode === 307 || response.statusCode === 301 || response.statusCode === 302 || response.statusCode === 303) {
+        const redirectUrl = response.headers.location;
+        if (!redirectUrl) {
+          reject(new Error('Redirect URL not found'));
+          return;
+        }
+
+        https.get(redirectUrl, (redirectResponse) => {
+          // Handle nested redirects
+          if (redirectResponse.statusCode === 307 || redirectResponse.statusCode === 301 ||
+              redirectResponse.statusCode === 302 || redirectResponse.statusCode === 303) {
+            const secondRedirectUrl = redirectResponse.headers.location;
+            if (!secondRedirectUrl) {
+              reject(new Error('Second redirect URL not found'));
+              return;
+            }
+
+            https.get(secondRedirectUrl, handleFinalResponse).on('error', reject);
+            return;
+          }
+
+          handleFinalResponse(redirectResponse);
+        }).on('error', reject);
+        return;
+      }
+
+      handleFinalResponse(response);
+    }).on('error', reject);
+  });
+}
+
 function parseCsv(csvData) {
   return new Promise((resolve, reject) => {
     const records = [];
@@ -145,11 +231,14 @@ function extractSubItems(itemRow) {
 
     // Only add if there's actual content
     if (itemRow[nameZhKey] || itemRow[nameEnKey]) {
+      const imageUrl = itemRow[imageKey] || '';
+      const imageId = extractGoogleDriveId(imageUrl);
+
       subItems.push({
         name_zh: itemRow[nameZhKey] || '',
         name_en: itemRow[nameEnKey] || '',
         price: itemRow[priceKey] || '',
-        image: itemRow[imageKey] || '',
+        image: imageId || '',
         image_description_zh: itemRow[imageDescZhKey] || '',
         image_description_en: itemRow[imageDescEnKey] || ''
       });
@@ -187,6 +276,10 @@ function mergeSheetData(sheets) {
     // Extract sub-items
     const subItems = extractSubItems(itemRow);
 
+    // Extract image ID from the main image URL
+    const mainImageUrl = itemRow['圖片連結'] || '';
+    const mainImageId = extractGoogleDriveId(mainImageUrl);
+
     items[itemId] = {
       name: itemRow['項目'] || itemRow['項目名稱'] || '',
       quantity: itemRow['數量'] || '',
@@ -203,11 +296,13 @@ function mergeSheetData(sheets) {
       product_promotion_zh: productProm?.['文案'] || '',
       product_promotion_en: productProm?.['description'] || '',
 
-      image: itemRow['圖片連結'] || '',
+      image: mainImageId || '',
       image_description_zh: itemRow['圖片 敘述'] || '',
       image_description_en: itemRow['圖片 description'] || '',
 
       price: itemRow['價錢（這欄與贊助分級和子項目是互斥關係）'] || '',
+
+      deadline: globalDesc?.['截止時間'] || '',
 
       talent_recruitment_order: parseInt(talentRec?.['排序'] || '0') || 0,
       brand_exposure_order: parseInt(brandExp?.['排序'] || '0') || 0,
@@ -221,6 +316,74 @@ function mergeSheetData(sheets) {
   return items;
 }
 
+async function downloadAllImages(itemsData) {
+  console.log('Downloading images...');
+
+  // Create images directory if it doesn't exist
+  const imagesDir = './src/assets/img/items';
+
+  // Clear old images
+  if (fs.existsSync(imagesDir)) {
+    const files = fs.readdirSync(imagesDir);
+    for (const file of files) {
+      fs.unlinkSync(path.join(imagesDir, file));
+    }
+    console.log(`✓ Cleared ${files.length} old images`);
+  } else {
+    fs.mkdirSync(imagesDir, { recursive: true });
+    console.log(`✓ Created directory: ${imagesDir}`);
+  }
+
+  const downloadTasks = [];
+  const imageIds = new Set();
+  const imageIdToFileName = {}; // Map to store ID -> filename with extension
+
+  // Collect all unique image IDs
+  Object.values(itemsData).forEach(item => {
+    if (item.image) {
+      imageIds.add(item.image);
+    }
+    item.sub.forEach(subItem => {
+      if (subItem.image) {
+        imageIds.add(subItem.image);
+      }
+    });
+  });
+
+  console.log(`Found ${imageIds.size} unique images to download`);
+
+  // Download all images
+  for (const imageId of imageIds) {
+    const outputPath = path.join(imagesDir, imageId);
+
+    downloadTasks.push(
+      downloadImage(imageId, outputPath)
+        .then((filePath) => {
+          const fileName = path.basename(filePath);
+          imageIdToFileName[imageId] = fileName;
+          console.log(`✓ Downloaded ${fileName}`);
+        })
+        .catch(err => console.error(`✗ Failed to download ${imageId}:`, err.message))
+    );
+  }
+
+  await Promise.all(downloadTasks);
+
+  // Update itemsData with filenames including extensions
+  Object.values(itemsData).forEach(item => {
+    if (item.image && imageIdToFileName[item.image]) {
+      item.image = imageIdToFileName[item.image];
+    }
+    item.sub.forEach(subItem => {
+      if (subItem.image && imageIdToFileName[subItem.image]) {
+        subItem.image = imageIdToFileName[subItem.image];
+      }
+    });
+  });
+
+  console.log(`✓ Image download complete`);
+}
+
 async function main() {
   try {
     console.log('Starting Google Sheets to JSON conversion...');
@@ -230,6 +393,9 @@ async function main() {
 
     // Merge data
     const mergedData = mergeSheetData(sheets);
+
+    // Download images
+    await downloadAllImages(mergedData);
 
     // Write to file
     const outputPath = './src/data/item.json';
