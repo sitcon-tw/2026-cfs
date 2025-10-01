@@ -60,143 +60,109 @@ const placeItems: placeItem[] = [
 ---
 
 <section id="time">
-	<div class="popup-btn">
-		<Popup btnText={t.popup_label} title={t.popup_label} hero={true} id="place-staff-popup" background={r0.src}>
-			<section class="popup-section">
-				<p class="title">{t.activity_schedule}</p>
-				<div id="timeline">
-					<div id="timeline-items">
-						{
-							timelineItems.map(item => (
-								<div id="item">
-									<p>{item.date}</p>
-									<p>{item.event}</p>
-								</div>
-							))
-						}
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="24"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							class="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6"></path></svg
-						>
-					</div>
-				</div>
-			</section>
-			<section class="popup-section">
-				<p class="title">{t.place_detail}</p>
-				<div class="place-info-wrapper">
-					<div id="place-info">
-						<p id="name" set:html={t.location_name} />
-						<div class="people-info">
-							<p class="people-info-title">{t.max_people}</p>
-							<p id="people">{t.people_count_unit}</p>
-						</div>
-					</div>
-				</div>
-			</section>
-			<section id="place-items">
-				{
-					placeItems.map(item => (
-						<div class="place-item-box">
-							<div class="place-item-content">
-								<div class="place-item-header">
-									<p>{item.code}</p>
-									<p>{item.name}</p>
-								</div>
-								<p class="place-item-desc">{item.description}</p>
-							</div>
-							<img src={item.img.src} alt={item.name} class="place-item-img" />
-						</div>
-					))
-				}
-			</section>
-			<section class="popup-section">
-				<p class="title">{t.team}</p>
-				<div id="team-info">
+	<div class="container">
+		<h2>{t.title1}<br />{t.title2}</h2>
+		<p>{t.date}</p>
+		<p>{t.location}</p>
+	</div>
+	<div class="aos spacer"></div>
+	<Popup btnText={t.popup_label} title={t.popup_label} hero={true} id="place-staff-popup" background={r0.src}>
+		<div class="popup-div">
+			<p class="title">{t.activity_schedule}</p>
+			<div id="timeline">
+				<div id="timeline-items">
 					{
-						teams.map(item => (
-							<div class="team-item">
-								<p class="team-item-title">{item.title}</p>
-								<p class="team-item-title">{item.name}</p>
-								<p>{item.school}</p>
-								<p>{item.major}</p>
+						timelineItems.map(item => (
+							<div id="item">
+								<p>{item.date}</p>
+								<p>{item.event}</p>
 							</div>
 						))
 					}
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6"></path></svg
+					>
 				</div>
-			</section>
-		</Popup>
-	</div>
-	<img src={volunteer.src} class="bg-image" alt="sitcon 2024" />
-	<div class="bg-overlay"></div>
-	<div class="content">
-		<div class="text-content">
-			<div class="title-box">
-				<p>{t.title1}</p>
-				<p>{t.title2}</p>
-			</div>
-			<div class="info-box">
-				<p>{t.date}</p>
-				<p>{t.location}</p>
 			</div>
 		</div>
-	</div>
+		<div class="popup-div">
+			<p class="title">{t.place_detail}</p>
+			<div class="place-info-wrapper">
+				<div id="place-info">
+					<p id="name" set:html={t.location_name} />
+					<div class="people-info">
+						<p class="people-info-title">{t.max_people}</p>
+						<p id="people">{t.people_count_unit}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="place-items">
+			{
+				placeItems.map(item => (
+					<div class="place-item-box">
+						<div class="place-item-content">
+							<div class="place-item-header">
+								<p>{item.code}</p>
+								<p>{item.name}</p>
+							</div>
+							<p class="place-item-desc">{item.description}</p>
+						</div>
+						<img src={item.img.src} alt={item.name} class="place-item-img" />
+					</div>
+				))
+			}
+		</div>
+		<div class="popup-div">
+			<p class="title">{t.team}</p>
+			<div id="team-info">
+				{
+					teams.map(item => (
+						<div class="team-item">
+							<p class="team-item-title">{item.title}</p>
+							<p class="team-item-title">{item.name}</p>
+							<p>{item.school}</p>
+							<p>{item.major}</p>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</Popup>
 </section>
 
-<style>
-	.header-img {
-		display: block;
-		width: 100%;
-	}
+<style define:vars={{ backgroundUrl: `url(${volunteer.src})` }}>
 	#time {
-		overflow: hidden;
-		max-width: 94.6rem;
-		margin: auto;
+		min-height: 100svh;
+		background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), var(--backgroundUrl);
+		background-size: cover;
+		padding: 20vh 2rem 2rem;
 		display: flex;
-		justify-content: center;
-	}
-	.content {
-		display: flex;
-		left: 0;
 		flex-direction: column;
-		height: 52.2rem;
-		overflow: hidden;
-		position: absolute;
-		padding-top: 10rem;
-		padding-left: 10rem;
-		z-index: 1;
 	}
-	@media (max-width: 74.6rem) {
-		.content {
-			padding-left: 2rem;
-		}
+
+	.container {
+		width: 100%;
+		max-width: 60rem;
+		margin: 0 auto;
+		color: #fff;
 	}
-	.popup-btn {
-		bottom: 2rem;
-		left: 50%;
-		position: absolute;
-		z-index: 4;
+
+	h2 {
+		text-align: left;
 	}
-	.bg-image {
-		flex-shrink: 0;
-		height: 52.2rem;
-		width: 94.6rem;
-	}
-	.bg-overlay {
-		background: #000;
-		flex-shrink: 0;
-		height: 52.2rem;
-		opacity: 0.8;
-		position: absolute;
-		width: 94.6rem;
-		z-index: 1;
+
+	.spacer{
+		flex: 1;
 	}
 
 	.title-box {
@@ -204,12 +170,14 @@ const placeItems: placeItem[] = [
 	}
 	.title-box p {
 		color: var(--white);
-		font-size: 3.6rem;font-weight: 700;
+		font-size: 3.6rem;
+		font-weight: 700;
 		line-height: 133%;
 	}
 	.info-box p {
 		color: var(--white);
-		font-size: 1.7rem;font-weight: 700;
+		font-size: 1.7rem;
+		font-weight: 700;
 		line-height: 133%;
 	}
 
@@ -259,7 +227,7 @@ const placeItems: placeItem[] = [
 		font-weight: 700;
 	}
 
-	.popup-section {
+	.popup-div {
 		padding: 2rem;
 	}
 	.title {
@@ -355,7 +323,7 @@ const placeItems: placeItem[] = [
 		}
 	}
 	@media (max-width: 800px) {
-		.popup-section {
+		.popup-div {
 			padding: 1rem;
 		}
 		#timeline-items #item {

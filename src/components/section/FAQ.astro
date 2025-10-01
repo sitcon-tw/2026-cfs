@@ -81,7 +81,7 @@ import { ChevronDown } from "@lucide/astro";
 
 	.faq-question {
 		width: 100%;
-		padding: 24px 0;
+		padding: 1rem 0;
 		background: none;
 		border: none;
 		text-align: left;
@@ -89,7 +89,7 @@ import { ChevronDown } from "@lucide/astro";
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		font-size: 2rem;
+		font-size: 1.5rem;
 		font-weight: 600;
 		color: var(--black);
 		transition: color 0.2s ease;
@@ -111,8 +111,8 @@ import { ChevronDown } from "@lucide/astro";
 		color: var(--gray);
 		font-size: 1.3rem;
 		transition:
-			max-height 0.3s ease-out,
-			padding 0.3s ease-out;
+			max-height 0.3s linear,
+			padding 0.3s linear;
 	}
 
 	.faq-answer.open {
