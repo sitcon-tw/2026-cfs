@@ -17,7 +17,7 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 }
 
 <div class="popup-bg">
-	<div class={hero ? "popup" : "popup no-hero"}>
+	<div class={"popup " + (hero ? "" : "no-hero")}>
 		{
 			hero && (
 				<div class="popup-hero">
@@ -57,7 +57,7 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 		bottom: 2rem;
 		left: 50%;
 		transform: translateX(-50%);
-		z-index: 20;
+		z-index: 5;
 	}
 
 	.detail-btn {
@@ -114,7 +114,6 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 		max-width: 1200px;
 		width: 100%;
 		margin: auto;
-		min-height: calc(100vh - 6.25rem);
 		transform: translateY(5rem);
 		transition: 0.3s ease-in-out;
 		position: relative;
@@ -139,7 +138,7 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 		width: 100%;
 		height: 100%;
 		position: absolute;
-		border-radius: 25px 25px 0 0;
+		border-radius: 1.6rem 1.6rem 0 0;
 		top: 0;
 		left: 0;
 		object-fit: cover;
@@ -152,6 +151,21 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 		position: relative;
 		z-index: 1;
 		text-align: left;
+	}
+
+	@media (max-width: 45rem) {
+		.popup-hero {
+			height: 20rem;
+			padding: 5rem 2rem 2rem;
+		}
+
+		.popup-hero h2 {
+			font-size: 1.5rem;
+		}
+
+		.popup-bg{
+			padding-inline: 1rem;
+		}
 	}
 </style>
 <script define:vars={{ id }}>
