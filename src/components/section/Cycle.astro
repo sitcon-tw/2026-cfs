@@ -1,5 +1,6 @@
 ---
 const { t } = Astro.props;
+import Arrow from "@assets/img/cycle/arrow.svg";
 ---
 
 <section id="cycle">
@@ -8,43 +9,11 @@ const { t } = Astro.props;
 		<img src="/cfs/Cycle/Cycle.svg" alt="" id="cycle-img" />
 		<!-- mobile Text -->
 		<div class="mobileCycleText">
-			<div class="title-with-arrow">
-				<svg xmlns="http://www.w3.org/2000/svg" width="23" height="19" viewBox="0 0 23 19" fill="none">
-					<path
-						d="M2 10.4998C6.33333 9.8331 16.1 8.69976 20.5 9.49976C21.1005 9.60895 21.3066 9.60164 21.5 9.5M13 2C16.7419 4.44657 21.5 9.5 21.5 9.5M21.5 9.5C20.6095 10.6667 18.6 13.8 17 17"
-						stroke="#00D959"
-						stroke-width="3"
-						stroke-linecap="round"
-						stroke-linejoin="round"></path>
-				</svg>
-				<h3 class="emfont-XiaoLai">發覺新秀</h3>
-			</div>
+			<h3 class="emfont-XiaoLai">發覺新秀</h3>
 			<p>舉辦年會、黑客松，提供各領域人才展現自我與交流所學的舞台。</p>
-
-			<div class="title-with-arrow">
-				<svg xmlns="http://www.w3.org/2000/svg" width="23" height="19" viewBox="0 0 23 19" fill="none">
-					<path
-						d="M2 10.4998C6.33333 9.8331 16.1 8.69976 20.5 9.49976C21.1005 9.60895 21.3066 9.60164 21.5 9.5M13 2C16.7419 4.44657 21.5 9.5 21.5 9.5M21.5 9.5C20.6095 10.6667 18.6 13.8 17 17"
-						stroke="#00D959"
-						stroke-width="3"
-						stroke-linecap="round"
-						stroke-linejoin="round"></path>
-				</svg>
-				<h3 class="emfont-XiaoLai">培育人才</h3>
-			</div>
+			<h3 class="emfont-XiaoLai">培育人才</h3>
 			<p>推動教育公平、促進產學交流，培養組織與領導能力</p>
-
-			<div class="title-with-arrow">
-				<svg xmlns="http://www.w3.org/2000/svg" width="23" height="19" viewBox="0 0 23 19" fill="none">
-					<path
-						d="M2 10.4998C6.33333 9.8331 16.1 8.69976 20.5 9.49976C21.1005 9.60895 21.3066 9.60164 21.5 9.5M13 2C16.7419 4.44657 21.5 9.5 21.5 9.5M21.5 9.5C20.6095 10.6667 18.6 13.8 17 17"
-						stroke="#00D959"
-						stroke-width="3"
-						stroke-linecap="round"
-						stroke-linejoin="round"></path>
-				</svg>
-				<h3 class="emfont-XiaoLai">創造影響</h3>
-			</div>
+			<h3 class="emfont-XiaoLai">創造影響</h3>
 			<p>尋找使用者與徵才，搶佔年輕開發者的心</p>
 		</div>
 
@@ -53,18 +22,33 @@ const { t } = Astro.props;
 		</p>
 	</div>
 	<div class="sdgs">
-		<img src="/cfs/Cycle/Hungry.svg" alt="" />
-		<img src="/cfs/Cycle/Hungry.svg" alt="" />
-		<img src="/cfs/Cycle/Hungry.svg" alt="" />
-		<img src="/cfs/Cycle/Hungry.svg" alt="" />
-	</div>
-	<div class="sdgs-text">
-		<h4>消除飢餓</h4>
-		<p>開會前後或沒事會揪團去吃好吃的。</p>
+		<div class="sdgs-item">
+			<img src="/cfs/Cycle/Hungry.svg" alt="" />
+			<div class="sdgs-text">
+				<h4>消除飢餓</h4>
+				<p>開會前後或沒事會揪團去吃好吃的。</p>
+			</div>
+		</div>
+
+		<div class="sdgs-item init">
+			<img src="/cfs/Cycle/Hungry.svg" alt="" />
+			<div class="sdgs-text">
+				<h4>健康生活</h4>
+				<p>大家一起運動，保持身心健康。</p>
+			</div>
+		</div>
+
+		<div class="sdgs-item">
+			<img src="/cfs/Cycle/Hungry.svg" alt="" />
+			<div class="sdgs-text">
+				<h4>優質教育</h4>
+				<p>推動學習分享，促進教育公平。</p>
+			</div>
+		</div>
 	</div>
 </section>
 
-<style>
+<style define:vars={{ arrowURL: `url(${Arrow.src})` }}>
 	section {
 		padding: 2rem;
 	}
@@ -83,22 +67,22 @@ const { t } = Astro.props;
 	span {
 		display: block;
 	}
+	h3::before {
+		content: "";
+		display: inline-block;
+		width: 0.9em;
+		height: 0.9em;
+		background: var(--arrowURL) no-repeat center;
+		background-size: contain;
+		margin-right: 0.5rem;
+	}
 
-	.mobileCycleText .title-with-arrow {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
+	h3 {
+		font-size: 1.5rem;
 		margin-bottom: 0.5rem;
 	}
 
-	.mobileCycleText svg {
-		flex-shrink: 0;
-	}
-
-	.mobileCycleText h3 {
-		font-size: 1.5rem;
-	}
-	.mobileCycleText p {
+	p {
 		margin-bottom: 1rem;
 	}
 
@@ -111,16 +95,64 @@ const { t } = Astro.props;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		gap: 1rem;
+		flex-wrap: wrap;
+		gap: 2rem;
+		margin-bottom: 9rem;
+		position: relative;
+	}
+
+	.sdgs-item {
+		cursor: pointer;
+	}
+
+	.sdgs-item img {
+		width: 8rem;
+		transition: transform 0.3s ease;
+	}
+
+	.sdgs:has(.sdgs-item:hover) .init img,
+	.sdgs:has(.sdgs-item:active) .init img {
+		transform: none;
+	}
+
+	.sdgs:has(.sdgs-item:hover) .sdgs-item:hover img,
+	.init img,
+	.sdgs:has(.sdgs-item:hover) .sdgs-item:active img {
+		transform: scale(1.1);
 	}
 
 	.sdgs-text {
-		max-width: 20rem;
-		margin: 2rem auto;
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		transform: translate(-50%, 0);
+		width: 28rem;
+		max-width: 100%;
+		opacity: 0;
+		visibility: hidden;
+		transition:
+			opacity 0.4s ease,
+			visibility 0.4s ease;
+		pointer-events: none;
+		margin-top: 1.5rem;
 	}
 
-	.sdgs img {
-		width: 8rem;
+	h4 {
+		font-size: 1.3rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.sdgs:has(.sdgs-item:hover) .init .sdgs-text,
+	.sdgs:has(.sdgs-item:active) .init .sdgs-text {
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	.init .sdgs-text,
+	.sdgs:has(.sdgs-item:hover) .sdgs-item:hover .sdgs-text,
+	.sdgs:has(.sdgs-item:hover) .sdgs-item:active .sdgs-text {
+		opacity: 1;
+		visibility: visible;
 	}
 
 	@media (max-width: 50rem) {
@@ -132,6 +164,12 @@ const { t } = Astro.props;
 
 		.mobileCycleText {
 			display: block;
+		}
+	}
+
+	@media (max-width: 40rem) {
+		.sdgs img {
+			width: 5rem;
 		}
 	}
 </style>
