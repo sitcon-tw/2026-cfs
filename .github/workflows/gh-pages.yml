@@ -1,51 +1,36 @@
-name: Deploy static content to Pages
+name: Deploy CFS site
 
 on:
     push:
-        branches: ["main"]
+        branches: [main]
     workflow_dispatch:
 
-permissions:
-    contents: read
-    pages: write
-    id-token: write
-
-concurrency:
-    group: "pages"
-    cancel-in-progress: false
-
 jobs:
-    deploy:
-        environment:
-            name: github-pages
-            url: ${{ steps.deployment.outputs.page_url }}
+    build-and-deploy:
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout
+            - name: Checkout repo
               uses: actions/checkout@v4
 
-            - uses: pnpm/action-setup@v4
-              name: Install pnpm
-              with:
-                  run_install: false
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
 
-            - name: Install Node.js
+            - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
                   node-version: 22
 
-            - name: Install frontend dependencies
+            - name: Install dependencies
               run: pnpm install --frozen-lockfile
 
-            - name: Build frontend
+            - name: Install & Build
               run: pnpm build
 
-            - name: Setup Pages
-              uses: actions/configure-pages@v5
-            - name: Upload artifact
-              uses: actions/upload-pages-artifact@v3
+            - name: Deploy to 2026 repo
+              uses: peaceiris/actions-gh-pages@v3
               with:
-                  path: "dist"
-            - name: Deploy to GitHub Pages
-              id: deployment
-              uses: actions/deploy-pages@v4
+                  deploy_key: ${{ secrets.DEPLOY_KEY_2026 }}
+                  external_repository: sitcon-tw/2026
+                  publish_branch: build
+                  publish_dir: ./dist
+                  destination_dir: cfs
