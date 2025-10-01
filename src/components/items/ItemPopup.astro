@@ -5,6 +5,14 @@ import type { ImageMetadata } from "astro";
 import { X } from "@lucide/astro";
 import plansData from "@data/plans_data.json";
 
+interface SubItemData {
+	name: string;
+	price?: string;
+	remaining?: string;
+	image?: string;
+	image_description?: string;
+}
+
 const { item, t, popupId } = Astro.props;
 
 const locale = Astro.currentLocale || "zh-Hant";
@@ -27,8 +35,8 @@ if (markdownModule && markdownModule.Content) {
 }
 
 // Import images dynamically using import.meta.glob
-const images = import.meta.glob<{ default: ImageMetadata }>("../../data/items/**/image.jpg");
-const imagePath = `../../data/items/${item.id}/image.jpg`;
+const images = import.meta.glob<{ default: ImageMetadata }>("../../assets/img/items/*");
+const imagePath = `../../assets/img/items/${item.image}`;
 
 // Find the matching plan row for this item
 const planRow = plansData.rows.find(row => row.id === item.id);
@@ -42,10 +50,47 @@ const shouldShowPlanTiers = planRow !== undefined;
 				<span class="remaining">{t.remaining} {item.remaining} {item.unit}</span>
 				<span class="category">{`${new Date(item.deadline).getMonth() + 1}/${new Date(item.deadline).getDate()}`} {t.deadline}</span>
 			</div>
-			<h3>{item.title}</h3>
+			<div class="title-row">
+				<h3>{item.name}</h3>
+				<div class="quantity-controls" data-item-id={item.id}>
+					<button type="button" class="quantity-btn minus">−</button>
+					<span class="quantity-display">0</span>
+					<button type="button" class="quantity-btn plus">+</button>
+				</div>
+			</div>
 			<div class="item-price">
 				<span class="price-value">{item.price}</span>
 			</div>
+
+			{
+				item.sub && item.sub.length > 0 && (
+					<div class="sub-items-section">
+						<div class="sub-items-list">
+							{item.sub.map((subItem: SubItemData, index: number) => {
+								const subItemName = locale === "zh-Hant" ? subItem.name_zh : subItem.name_en || subItem.name_zh;
+								const subItemId = `${item.id}-sub-${index}`;
+
+								return (
+									<div class="sub-item" data-sub-item-id={subItemId}>
+										<div class="sub-item-info">
+											<span class="sub-item-name">{subItemName}</span>
+											<div class="sub-item-meta">
+												{subItem.price && <span class="sub-item-price">{subItem.price}</span>}
+												{subItem.remaining && <span class="sub-item-remaining">{t.remaining} {subItem.remaining}</span>}
+											</div>
+										</div>
+										<div class="sub-item-controls" data-item-id={item.id} data-sub-item-id={subItemId} data-sub-item-name={subItemName} data-sub-item-remaining={subItem.remaining || ""}>
+											<button type="button" class="sub-quantity-btn minus">−</button>
+											<span class="sub-quantity-display">0</span>
+											<button type="button" class="sub-quantity-btn plus">+</button>
+										</div>
+									</div>
+								);
+							})}
+						</div>
+					</div>
+				)
+			}
 
 			{
 				shouldShowPlanTiers && planRow && (
@@ -94,32 +139,33 @@ const shouldShowPlanTiers = planRow !== undefined;
 			}
 
 			<div class="structured-descriptions">
-				{
-					typeof item.description === "object" && item.description ? (
-						<>
-							{item.description.all && (
-								<>
-									<h2>{t.introduction}</h2>
-									<p>{item.description.all}</p>
-								</>
-							)}
+				{item.global_description && (
+					<>
+						<h2>{t.introduction}</h2>
+						<p>{item.global_description}</p>
+					</>
+				)}
 
-							{Object.entries(item.description)
-								.filter(([key]) => key !== "all")
-								.map(([categoryKey, description]) => (
-									<>
-										<h2>{t.item_categories[categoryKey]}</h2>
-										<p>{description}</p>
-									</>
-								))}
-						</>
-					) : (
-						<>
-							<h2>{t.introduction}</h2>
-							<p class="item-description">{item.description}</p>
-						</>
-					)
-				}
+				{item.talent_recruitment && (
+					<>
+						<h2>{t.item_categories.talent_recruitment}</h2>
+						<p>{item.talent_recruitment}</p>
+					</>
+				)}
+
+				{item.brand_exposure && (
+					<>
+						<h2>{t.item_categories.brand_exposure}</h2>
+						<p>{item.brand_exposure}</p>
+					</>
+				)}
+
+				{item.product_promotion && (
+					<>
+						<h2>{t.item_categories.product_promotion}</h2>
+						<p>{item.product_promotion}</p>
+					</>
+				)}
 			</div>
 
 			{
@@ -131,7 +177,7 @@ const shouldShowPlanTiers = planRow !== undefined;
 			}
 		</div>
 		<div class="item-image">
-			{images[imagePath] ? <Image src={images[imagePath]()} alt={item.title} /> : <img src={item.image} alt={item.title} />}
+			{images[imagePath] ? <Image src={images[imagePath]()} alt={item.image_description || item.name} /> : <img src={item.image} alt={item.image_description || item.name} />}
 		</div>
 	</div>
 </Popup>
@@ -164,11 +210,19 @@ const shouldShowPlanTiers = planRow !== undefined;
 		height: 100%;
 	}
 
+	.title-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+	}
+
 	.item-details h3 {
 		font-size: 2.5rem;
 		color: var(--black);
-		margin-bottom: 1rem;
+		margin: 0;
 		font-weight: 700;
+		flex: 1;
 	}
 
 	.item-description {
@@ -183,6 +237,50 @@ const shouldShowPlanTiers = planRow !== undefined;
 		color: var(--black);
 		font-weight: 700;
 		display: block;
+	}
+
+	.quantity-controls {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.quantity-btn {
+		width: 2rem;
+		aspect-ratio: 1 / 1;
+		border-radius: 50%;
+		background-color: var(--black);
+		color: var(--white);
+		border: none;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.2rem;
+		font-weight: 400;
+		transition: transform 0.2s ease;
+		line-height: 1;
+	}
+
+	.quantity-btn:hover {
+		transform: scale(1.1);
+	}
+
+	.quantity-btn:disabled {
+		opacity: 0.3;
+		cursor: not-allowed;
+	}
+
+	.quantity-btn:disabled:hover {
+		transform: scale(1);
+	}
+
+	.quantity-display {
+		font-size: 1.2rem;
+		font-weight: 600;
+		color: var(--black);
+		min-width: 1.5rem;
+		text-align: center;
 	}
 
 	.item-meta {
@@ -289,6 +387,118 @@ const shouldShowPlanTiers = planRow !== undefined;
 		height: 24px;
 	}
 
+	.sub-items-section {
+		margin: 1.5rem 0;
+		border-top: 1px solid rgba(0, 0, 0, 0.1);
+		padding-top: 1.5rem;
+	}
+
+	.sub-items-section h4 {
+		font-size: 1.3rem;
+		margin-bottom: 1rem;
+		font-weight: 700;
+		color: var(--black);
+	}
+
+	.sub-items-list {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.sub-item {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 1rem;
+		background-color: rgba(0, 0, 0, 0.02);
+		border-radius: 8px;
+		gap: 1rem;
+	}
+
+	.sub-item-info {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.sub-item-name {
+		font-size: 1.1rem;
+		font-weight: 600;
+		color: var(--black);
+	}
+
+	.sub-item-meta {
+		display: flex;
+		gap: 1rem;
+		font-size: 0.9rem;
+	}
+
+	.sub-item-price {
+		color: var(--black);
+		font-weight: 600;
+	}
+
+	.sub-item-remaining {
+		color: rgba(0, 0, 0, 0.6);
+	}
+
+	.sub-item-controls {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.sub-quantity-btn {
+		width: 2rem;
+		aspect-ratio: 1 / 1;
+		border-radius: 50%;
+		background-color: var(--black);
+		color: var(--white);
+		border: none;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.2rem;
+		font-weight: 400;
+		transition: transform 0.2s ease;
+		line-height: 1;
+	}
+
+	.sub-quantity-btn:hover {
+		transform: scale(1.1);
+	}
+
+	.sub-quantity-btn:disabled {
+		opacity: 0.3;
+		cursor: not-allowed;
+	}
+
+	.sub-quantity-btn:disabled:hover {
+		transform: scale(1);
+	}
+
+	.sub-quantity-display {
+		font-size: 1rem;
+		font-weight: 600;
+		color: var(--black);
+		min-width: 1.5rem;
+		text-align: center;
+	}
+
+	.structured-descriptions h2 {
+		font-size: 1.5rem;
+		margin-bottom: 0.5rem;
+		margin-top: 1.5rem;
+		text-align: left;
+	}
+
+	.structured-descriptions h2:first-child {
+		margin-top: 0;
+	}
+
 	@media (max-width: 768px) {
 		.popup-content {
 			padding: 1.5rem 0;
@@ -336,5 +546,296 @@ const shouldShowPlanTiers = planRow !== undefined;
 			width: 20px;
 			height: 20px;
 		}
+
+		.sub-items-section {
+			margin: 1rem 0;
+		}
+
+		.sub-items-section h4 {
+			font-size: 1.1rem;
+		}
+
+		.sub-item {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.75rem;
+		}
+
+		.sub-item-info {
+			width: 100%;
+		}
+
+		.sub-item-name {
+			font-size: 1rem;
+		}
+
+		.sub-item-meta {
+			font-size: 0.85rem;
+		}
+
+		.sub-item-controls {
+			align-self: flex-end;
+		}
 	}
 </style>
+
+<script>
+import { addInterestedItem, removeInterestedItem, updateItemQuantity, getItemQuantity } from "../../utils/local-storage.ts";
+
+document.addEventListener("DOMContentLoaded", function () {
+	// Parse quantity from item.quantity field (e.g., "max 5", "不限", "獨家", "打包專屬")
+	function parseQuantityLimit(quantityStr: string): number | null {
+		if (!quantityStr) return null;
+		if (quantityStr === "不限") return null; // unlimited
+
+		const match = quantityStr.match(/max\s+(\d+)/i);
+		if (match) return parseInt(match[1], 10);
+
+		return null;
+	}
+
+	// Sync quantity controls with localStorage
+	function syncQuantityControls(itemId: string) {
+		const controls = document.querySelector(`.quantity-controls[data-item-id="${itemId}"]`) as HTMLElement;
+		if (!controls) return;
+
+		const display = controls.querySelector(".quantity-display") as HTMLElement;
+		const minusBtn = controls.querySelector(".quantity-btn.minus") as HTMLButtonElement;
+		const plusBtn = controls.querySelector(".quantity-btn.plus") as HTMLButtonElement;
+
+		const currentQty = getItemQuantity(itemId) || 0;
+		if (display) display.textContent = currentQty.toString();
+
+		// Get max quantity from data attribute
+		const quantityStr = controls.closest(".item-details")?.querySelector(".item-meta + .title-row .quantity-controls")?.getAttribute("data-item-id") === itemId
+			? (controls.closest(".popup-content")?.querySelector(".remaining")?.textContent?.match(/\d+/)?.[0] || "")
+			: "";
+
+		const maxQuantity = parseQuantityLimit(quantityStr);
+
+		// Disable plus button if at max quantity
+		if (maxQuantity !== null && plusBtn) {
+			plusBtn.disabled = currentQty >= maxQuantity;
+		} else if (plusBtn) {
+			plusBtn.disabled = false;
+		}
+
+		// Disable minus button if at 0
+		if (minusBtn) {
+			minusBtn.disabled = currentQty <= 0;
+		}
+	}
+
+	// Sync sub-item quantity controls with localStorage (treats sub-items as regular items)
+	function syncSubItemControls(subItemId: string) {
+		const controls = document.querySelector(`.sub-item-controls[data-sub-item-id="${subItemId}"]`) as HTMLElement;
+		if (!controls) return;
+
+		const display = controls.querySelector(".sub-quantity-display") as HTMLElement;
+		const minusBtn = controls.querySelector(".sub-quantity-btn.minus") as HTMLButtonElement;
+		const plusBtn = controls.querySelector(".sub-quantity-btn.plus") as HTMLButtonElement;
+
+		const currentQty = getItemQuantity(subItemId) || 0;
+		if (display) display.textContent = currentQty.toString();
+
+		// Get max quantity from data attribute
+		const remainingStr = controls.getAttribute("data-sub-item-remaining") || "";
+		const maxQuantity = parseQuantityLimit(remainingStr);
+
+		// Disable plus button if at max quantity
+		if (maxQuantity !== null && plusBtn) {
+			plusBtn.disabled = currentQty >= maxQuantity;
+		} else if (plusBtn) {
+			plusBtn.disabled = false;
+		}
+
+		// Disable minus button if at 0
+		if (minusBtn) {
+			minusBtn.disabled = currentQty <= 0;
+		}
+	}
+
+	// Handle quantity controls
+	document.addEventListener("click", function (e) {
+		const target = e.target as Element;
+
+		// Sub-item Plus button (treat sub-items as regular items)
+		if (target.closest(".sub-quantity-btn.plus")) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			const btn = target.closest(".sub-quantity-btn.plus") as HTMLButtonElement;
+			const controls = btn.closest(".sub-item-controls");
+			if (!controls) return;
+
+			const subItemId = controls.getAttribute("data-sub-item-id");
+			const subItemName = controls.getAttribute("data-sub-item-name");
+			const remainingStr = controls.getAttribute("data-sub-item-remaining") || "";
+			if (!subItemId || !subItemName) return;
+
+			const currentQty = getItemQuantity(subItemId) || 0;
+			const newQty = currentQty + 1;
+			const maxQuantity = parseQuantityLimit(remainingStr);
+
+			if (currentQty === 0) {
+				// Add sub-item as a regular item to cart
+				const popup = controls.closest(".popup-content");
+				const img = popup?.querySelector("img");
+				const itemImage = img?.getAttribute("src") || img?.getAttribute("alt") || "";
+				const deadlineEl = popup?.querySelector(".category");
+				const itemDeadline = deadlineEl?.textContent || "";
+
+				addInterestedItem({
+					id: subItemId,
+					title: subItemName,
+					category: "all",
+					image: itemImage,
+					deadline: itemDeadline,
+					quantity: 1,
+					maxQuantity: maxQuantity
+				});
+			} else {
+				// Update existing quantity
+				updateItemQuantity(subItemId, newQty);
+			}
+
+			syncSubItemControls(subItemId);
+		}
+
+		// Sub-item Minus button (treat sub-items as regular items)
+		if (target.closest(".sub-quantity-btn.minus")) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			const btn = target.closest(".sub-quantity-btn.minus") as HTMLButtonElement;
+			const controls = btn.closest(".sub-item-controls");
+			if (!controls) return;
+
+			const subItemId = controls.getAttribute("data-sub-item-id");
+			if (!subItemId) return;
+
+			const currentQty = getItemQuantity(subItemId) || 0;
+			if (currentQty <= 0) return;
+
+			const newQty = currentQty - 1;
+
+			if (newQty === 0) {
+				// Remove from cart when quantity reaches 0
+				removeInterestedItem(subItemId);
+			} else {
+				updateItemQuantity(subItemId, newQty);
+			}
+
+			syncSubItemControls(subItemId);
+		}
+
+		// Plus button
+		if (target.closest(".quantity-btn.plus")) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			const btn = target.closest(".quantity-btn.plus") as HTMLButtonElement;
+			const controls = btn.closest(".quantity-controls");
+			if (!controls) return;
+
+			const itemId = controls.getAttribute("data-item-id");
+			if (!itemId) return;
+
+			const currentQty = getItemQuantity(itemId) || 0;
+			const newQty = currentQty + 1;
+
+			if (currentQty === 0) {
+				// Get item data from popup
+				const popup = controls.closest(".popup-content");
+				const itemTitle = popup?.querySelector("h3")?.textContent || "";
+				const img = popup?.querySelector("img");
+				const itemImage = img?.getAttribute("src") || img?.getAttribute("alt") || "";
+				const deadlineEl = popup?.querySelector(".category");
+				const itemDeadline = deadlineEl?.textContent || "";
+
+				// Parse max quantity from "剩餘 X" text
+				const remainingEl = popup?.querySelector(".remaining");
+				const quantityStr = remainingEl?.textContent || "";
+				const maxQuantity = parseQuantityLimit(quantityStr);
+
+				// Add item to cart with quantity 1
+				addInterestedItem({
+					id: itemId,
+					title: itemTitle,
+					category: "all",
+					image: itemImage,
+					deadline: itemDeadline,
+					quantity: 1,
+					maxQuantity: maxQuantity
+				});
+			} else {
+				// Update existing quantity
+				updateItemQuantity(itemId, newQty);
+			}
+
+			syncQuantityControls(itemId);
+		}
+
+		// Minus button
+		if (target.closest(".quantity-btn.minus")) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			const btn = target.closest(".quantity-btn.minus") as HTMLButtonElement;
+			const controls = btn.closest(".quantity-controls");
+			if (!controls) return;
+
+			const itemId = controls.getAttribute("data-item-id");
+			if (!itemId) return;
+
+			const currentQty = getItemQuantity(itemId) || 0;
+			if (currentQty <= 0) return;
+
+			const newQty = currentQty - 1;
+
+			if (newQty === 0) {
+				// Remove from cart when quantity reaches 0
+				removeInterestedItem(itemId);
+			} else {
+				updateItemQuantity(itemId, newQty);
+			}
+
+			syncQuantityControls(itemId);
+		}
+	});
+
+	// Listen to itemsChange events from localStorage
+	window.addEventListener("itemsChange", function () {
+		document.querySelectorAll(".quantity-controls").forEach(controls => {
+			const itemId = controls.getAttribute("data-item-id");
+			if (itemId) {
+				syncQuantityControls(itemId);
+			}
+		});
+
+		// Sync all sub-item controls
+		document.querySelectorAll(".sub-item-controls").forEach(controls => {
+			const subItemId = controls.getAttribute("data-sub-item-id");
+			if (subItemId) {
+				syncSubItemControls(subItemId);
+			}
+		});
+	});
+
+	// Initial sync on page load
+	document.querySelectorAll(".quantity-controls").forEach(controls => {
+		const itemId = controls.getAttribute("data-item-id");
+		if (itemId) {
+			syncQuantityControls(itemId);
+		}
+	});
+
+	// Initial sync for sub-items on page load
+	document.querySelectorAll(".sub-item-controls").forEach(controls => {
+		const subItemId = controls.getAttribute("data-sub-item-id");
+		if (subItemId) {
+			syncSubItemControls(subItemId);
+		}
+	});
+});
+</script>

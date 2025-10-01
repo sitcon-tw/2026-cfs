@@ -4,6 +4,8 @@ export interface InterestedItem {
 	category: string;
 	image: string;
 	deadline: string;
+	quantity?: number;
+	maxQuantity?: number | null; // null = unlimited (不限), number = max X
 }
 
 const INTEREST_ITEMS_KEY = "interestItems";
@@ -82,4 +84,41 @@ export function clearInterestedItems(): boolean {
 		console.error("Error clearing interested items from localStorage:", error);
 		return false;
 	}
+}
+
+export function updateItemQuantity(itemId: string, quantity: number): boolean {
+	if (typeof window === "undefined") return false;
+
+	try {
+		const items = getInterestedItems();
+		const item = items.find(i => i.id === itemId);
+
+		if (item) {
+			// Validate quantity (allow 0 for removal)
+			if (quantity < 0) return false;
+			if (item.maxQuantity !== null && item.maxQuantity !== undefined && quantity > item.maxQuantity) return false;
+
+			// If quantity is 0, remove the item instead
+			if (quantity === 0) {
+				return removeInterestedItem(itemId);
+			}
+
+			item.quantity = quantity;
+			localStorage.setItem(INTEREST_ITEMS_KEY, JSON.stringify(items));
+			dispatchItemsChangeEvent();
+			return true;
+		}
+		return false;
+	} catch (error) {
+		console.error("Error updating item quantity:", error);
+		return false;
+	}
+}
+
+export function getItemQuantity(itemId: string): number {
+	if (typeof window === "undefined") return 0;
+
+	const items = getInterestedItems();
+	const item = items.find(i => i.id === itemId);
+	return item?.quantity || 0;
 }

@@ -7,19 +7,24 @@ import { getItemDescription } from "../../utils/items-loader";
 const { t, card, selectedCategory = "all" } = Astro.props;
 
 // Import images dynamically using import.meta.glob
-const images = import.meta.glob<{ default: ImageMetadata }>("../../data/items/**/image.jpg");
-const imagePath = `../../data/items/${card.id}/image.jpg`;
+const images = import.meta.glob<{ default: ImageMetadata }>("../../assets/img/items/*");
+const imagePath = `../../assets/img/items/${card.image}`;
 
 // Get current description based on selected category
 const currentDescription = getItemDescription(card, selectedCategory);
 
-// Prepare description data for client-side updates
-const descriptionData = typeof card.description === "object" ? JSON.stringify(card.description) : JSON.stringify({ all: card.description });
+// Prepare description data for client-side updates with all variants
+const descriptionData = JSON.stringify({
+	all: card.global_description,
+	talent_recruitment: card.talent_recruitment,
+	brand_exposure: card.brand_exposure,
+	product_promotion: card.product_promotion
+});
 ---
 
-<div class="card" data-category={card.category} data-card-id={card.id} data-descriptions={descriptionData}>
+<div class="card" data-card-id={card.id} data-descriptions={descriptionData} data-order={card.order} data-talent-recruitment-order={card.talent_recruitment_order} data-brand-exposure-order={card.brand_exposure_order} data-product-promotion-order={card.product_promotion_order}>
 	<div class="card-image">
-		{images[imagePath] ? <Image src={images[imagePath]()} alt={card.title} /> : <div class="placeholder-image">No Image</div>}
+		{images[imagePath] ? <Image src={images[imagePath]()} alt={card.image_description || card.name} /> : <div class="placeholder-image">No Image</div>}
 		<div class="tag">
 			<div class="remaining-tag">{t.remaining} {card.remaining} {card.unit}</div>
 			<div class="deadline-tag">{`${new Date(card.deadline).getMonth() + 1}/${new Date(card.deadline).getDate()}`} {t.deadline}</div>
@@ -27,13 +32,12 @@ const descriptionData = typeof card.description === "object" ? JSON.stringify(ca
 	</div>
 	<div class="card-content">
 		<div class="title-row">
-			<h3>{card.title}</h3>
+			<h3>{card.name}</h3>
 			<button
 				type="button"
 				class="add-button"
 				data-item-id={card.id}
-				data-item-title={card.title}
-				data-item-category={t.item_categories[card.category]}
+				data-item-title={card.name}
 				data-item-image={images[imagePath] ? imagePath : ""}
 			>
 				<span class="add-icon">

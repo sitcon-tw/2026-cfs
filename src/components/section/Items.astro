@@ -123,28 +123,27 @@ import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInte
 			let visibleCount = cards.length;
 
 			if (selectedCategory === "all") {
-				// For "all", maintain original order (sort by data-card-id)
+				// For "all", sort by order field
 				cards.sort((a, b) => {
-					const idA = a.getAttribute("data-card-id") || "";
-					const idB = b.getAttribute("data-card-id") || "";
-					return idA.localeCompare(idB);
+					const orderA = parseInt(a.getAttribute("data-order") || "0");
+					const orderB = parseInt(b.getAttribute("data-order") || "0");
+					return orderA - orderB;
 				});
 			} else {
-				// Sort by category - selected category first, others maintain original order
-				cards.sort((a, b) => {
-					const categoryA = a.getAttribute("data-category");
-					const categoryB = b.getAttribute("data-category");
-					const idA = a.getAttribute("data-card-id") || "";
-					const idB = b.getAttribute("data-card-id") || "";
+				// Sort by category-specific order field
+				let orderAttr = "data-order";
+				if (selectedCategory === "talent_recruitment") {
+					orderAttr = "data-talent-recruitment-order";
+				} else if (selectedCategory === "brand_exposure") {
+					orderAttr = "data-brand-exposure-order";
+				} else if (selectedCategory === "product_promotion") {
+					orderAttr = "data-product-promotion-order";
+				}
 
-					if (categoryA === selectedCategory && categoryB !== selectedCategory) {
-						return -1; // A (selected category) comes first
-					}
-					if (categoryA !== selectedCategory && categoryB === selectedCategory) {
-						return 1; // B (selected category) comes first
-					}
-					// Both same priority, maintain original order by ID
-					return idA.localeCompare(idB);
+				cards.sort((a, b) => {
+					const orderA = parseInt(a.getAttribute(orderAttr) || "999999");
+					const orderB = parseInt(b.getAttribute(orderAttr) || "999999");
+					return orderA - orderB;
 				});
 			}
 
@@ -279,16 +278,9 @@ import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInte
 			e.preventDefault();
 			e.stopPropagation();
 			const id = button.getAttribute("data-item-id") || "";
-			const title = button.getAttribute("data-item-title") || "";
-			const category = button.getAttribute("data-item-category") || "";
-			const image = button.getAttribute("data-item-image") || "";
-			if (isItemInterested(id)) {
-				removeInterestedItem(id);
-				button.classList.remove("added");
-			} else {
-				addInterestedItem({ id, title, category, image, deadline: "" });
-				button.classList.add("added");
-			}
+			// Open the popup instead of adding to cart
+			const popupId = `item-popup-${id}`;
+			popupCtrl(popupId, "open");
 		});
 		function updateInterestButton() {
 			const items = getInterestedItems();
