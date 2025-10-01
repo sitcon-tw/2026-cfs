@@ -2,6 +2,8 @@
   "1": {
     "name": "午餐旗、點心旗",
     "quantity": "max 2",
+    "remaining": "",
+    "unit": "份",
     "global_description_zh": "為了鼓勵技術人切磋交流，年會將提供免費的午餐、下午茶來增加彼此的互動機會。為了感謝貴單位補助餐點開銷，我們將於餐飲區擺放贊助單位旗幟，感謝您拉近了彼此的距離。並在 OPass App 中推播公告表達特別感謝。",
     "global_description_en": "",
     "talent_recruitment_zh": "在餐點中加入小巧宣傳，讓學生在用餐時也能注意到您的職缺資訊。",
@@ -23,6 +25,7 @@
         "name_zh": "午餐旗",
         "name_en": "Lunch Flag",
         "price": "NT$0.00",
+        "remaining": "1",
         "image": "1BMDgojDDgcNXgpZHuZynR5u4bFHl3j7Z.jpg",
         "image_description_zh": "午餐旗",
         "image_description_en": "Lunch Flag"
@@ -31,6 +34,7 @@
         "name_zh": "點心旗",
         "name_en": "Snack Flag",
         "price": "NT$0.00",
+        "remaining": "1",
         "image": "148PDz3MqsCAIPC-crxYNQ5djK-0yCGUi.jpg",
         "image_description_zh": "點心旗",
         "image_description_en": "Snack Flag"
@@ -40,6 +44,8 @@
   "2": {
     "name": "一次性紙餐墊",
     "quantity": "獨家",
+    "remaining": "2",
+    "unit": "張",
     "global_description_zh": "我們將在發放午餐時同時發送由 SITCON 精心設計的一次性紙餐墊，並在上面印製您的品牌圖文介紹，讓每一位與會者都能在餐墊上注意到您的品牌。",
     "global_description_en": "",
     "talent_recruitment_zh": "於用餐時與人才互動，您能在最日常的場景中傳遞職缺資訊。",
@@ -61,6 +67,8 @@
   "3": {
     "name": "樓梯欄杆垂掛布條展出",
     "quantity": "max 2",
+    "remaining": "3",
+    "unit": "份",
     "global_description_zh": "在攤位、梯廳往返的必經走廊間，樓梯間所掛列的布條清晰可見。歡迎展出貴單位的布條，讓它成為本次年會的專屬地標！",
     "global_description_en": "",
     "talent_recruitment_zh": "高頻率的視覺接觸，無形中提升企業在人才心中的存在感。",
@@ -82,6 +90,8 @@
   "4": {
     "name": "樓梯打卡牆",
     "quantity": "獨家",
+    "remaining": "4",
+    "unit": "個",
     "global_description_zh": "大型打卡牆將設置於進入會場必經的階梯上。除良好的視覺效果外，貴單位也可以於攤位活動設計打卡任務，將曝光效益最大化。",
     "global_description_en": "",
     "talent_recruitment_zh": "結合社群打卡互動，讓學生主動分享並擴散企業的招募訊息。",
@@ -103,6 +113,8 @@
   "5": {
     "name": "獨家帆布迎賓袋",
     "quantity": "獨家",
+    "remaining": "1",
+    "unit": "個",
     "global_description_zh": "將紙質迎賓袋升級為印有貴單位獨家設計的帆布迎賓袋。除了能夠讓與會者在第一時間即感受到品牌方的用心，其永續的特性也能夠在活動後長期地使用與曝光。\n因送印時程限制，限於 XX 月 XX 日前加購。",
     "global_description_en": "",
     "talent_recruitment_zh": "以企業品牌設計迎賓袋，您能讓人才第一時間感受企業形象。",
@@ -124,6 +136,8 @@
   "6": {
     "name": "Badge 繩廠商 Logo 曝光",
     "quantity": "獨家",
+    "remaining": "2",
+    "unit": "個",
     "global_description_zh": "SITCON 會將您的品牌 Logo 印製在該年年會與系列活動的 Badge 繩上提供工作人員和與會者使用，預計將製作 2000 條吊繩，讓你的品牌在 SITCON 系列活動上「戴」著走。",
     "global_description_en": "",
     "talent_recruitment_zh": "將品牌融入掛繩，讓所有與會者隨身攜帶並反覆接觸。",
@@ -145,6 +159,8 @@
   "7": {
     "name": "年會 T-shirt Logo 曝光",
     "quantity": "獨家",
+    "remaining": "3",
+    "unit": "個",
     "global_description_zh": "年會販售的紀念 T-shirt 是年會紀念品中的熱門首選，在會後也享有極高的能見度。在上方印上您的 Logo 吧！",
     "global_description_en": "",
     "talent_recruitment_zh": "品牌出現在年會 T-shirt 上，學生在會後仍持續看到您的形象。",
@@ -166,6 +182,8 @@
   "8": {
     "name": "工作人員徽章曝光",
     "quantity": "獨家",
+    "remaining": "",
+    "unit": "個",
     "global_description_zh": "現場全體逾百名工作人員的 Badge 繩將別上印有貴品牌 Logo 的徽章，您的品牌將能與穿梭在會場各個角落的工作人員一同遨遊，工作人員辛苦努力的身影更能有您溫柔的陪伴。",
     "global_description_en": "",
     "talent_recruitment_zh": "在工作人員徽章展示品牌，隨著工作人員的走動曝光品牌與招募訊息。",
@@ -187,6 +205,8 @@
   "9": {
     "name": "SITCON 貼紙置入",
     "quantity": "獨家",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "SITCON 將設計該年年會專屬的貼紙，並將貴單位的 Logo、吉祥物與 SITCON 吉祥物們結合，且在 SITCON 2025 所有系列活動中免費發放，隨著參與者的名牌、筆記型電腦和個人手帳上旅行到世界各地。",
     "global_description_en": "",
     "talent_recruitment_zh": "將企業訊息設計成貼紙，讓學生自發貼在物品上擴散品牌。",
@@ -208,6 +228,8 @@
   "10": {
     "name": "面紙包",
     "quantity": "max 2",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "我們將在迎賓袋中提供每位與會者面紙包，面紙的外包裝上將展示貴品牌的創意廣告，讓與會者在活動中時時刻刻都記得您的品牌。",
     "global_description_en": "",
     "talent_recruitment_zh": "將招募訊息印製在面紙包上，讓學生隨身攜帶並反覆看到您的品牌。",
@@ -229,6 +251,8 @@
   "11": {
     "name": "明信片",
     "quantity": "獨家",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "我們將在每位與會者入場時拿到的迎賓袋中，放入一張由 SITCON 專屬設計的明信片，並將貴公司的 Logo 融入其中，讓您的品牌隨著明信片傳遞到世界每個角落。",
     "global_description_en": "",
     "talent_recruitment_zh": "將品牌與招募訊息製成明信片，成為學生收藏或傳遞的獨特記憶。",
@@ -250,6 +274,8 @@
   "12": {
     "name": "網路宣傳",
     "quantity": "不限",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "SITCON 主要的聊天群組在 Telegram 平台上，群組有超過 2,300 人以及大量活躍使用者，置頂訊息能夠醒目地出現在成員眼前，成為討論話題。\nFacebook 粉絲專頁與 Instagram 也共有超過 15,000 名追蹤者，是個在學生資訊圈大大提升知名度的絕佳機會。",
     "global_description_en": "",
     "talent_recruitment_zh": "透過 SITCON 社群管道宣傳，您能將職缺資訊擴散至更多學生與技術人才。",
@@ -271,6 +297,7 @@
         "name_zh": "Facebook 粉絲專頁貼文",
         "name_en": "Facebook Fan Page Post",
         "price": "NT$0.00",
+        "remaining": "",
         "image": "",
         "image_description_zh": "",
         "image_description_en": ""
@@ -279,6 +306,7 @@
         "name_zh": "Instagram 精選動態",
         "name_en": "Instagram Story Highlight",
         "price": "NT$0.00",
+        "remaining": "",
         "image": "",
         "image_description_zh": "",
         "image_description_en": ""
@@ -287,6 +315,7 @@
         "name_zh": "Instagram 貼文",
         "name_en": "Instagram Post",
         "price": "NT$0.00",
+        "remaining": "",
         "image": "",
         "image_description_zh": "",
         "image_description_en": ""
@@ -295,6 +324,7 @@
         "name_zh": "Telegram 群組置頂訊息",
         "name_en": "Telegram Group Pinned Message",
         "price": "NT$0.00",
+        "remaining": "",
         "image": "",
         "image_description_zh": "",
         "image_description_en": ""
@@ -304,6 +334,8 @@
   "13": {
     "name": "OPass App 推播公告",
     "quantity": "max 5",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "OPass 為與會者報到、議程查看、攤位互動等功能的重要媒介。透過 app 的推播公告，貴單位的資訊將會即時通知給所有與會者。",
     "global_description_en": "",
     "talent_recruitment_zh": "利用推播精準傳遞企業職缺訊息，讓與會者即時掌握招募機會。",
@@ -325,6 +357,8 @@
   "14": {
     "name": "獨家議程",
     "quantity": "獨家",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "除了以行動支持 SITCON ，我們也樂見合作單位安排講者近距離與與會學生交流，分享產業心得、技術架構與專業視野。",
     "global_description_en": "",
     "talent_recruitment_zh": "以專屬議程分享技術與文化，邀請學生深入了解並建立信任與好感。",
@@ -346,6 +380,7 @@
         "name_zh": "R0 中午議程 40 Mins",
         "name_en": "",
         "price": "NT$0.00",
+        "remaining": "",
         "image": "",
         "image_description_zh": "",
         "image_description_en": ""
@@ -354,6 +389,7 @@
         "name_zh": "R1 中午議程 40 Mins",
         "name_en": "",
         "price": "NT$0.00",
+        "remaining": "",
         "image": "",
         "image_description_zh": "",
         "image_description_en": ""
@@ -362,6 +398,7 @@
         "name_zh": "R2 中午議程 40 Mins",
         "name_en": "",
         "price": "NT$0.00",
+        "remaining": "",
         "image": "",
         "image_description_zh": "",
         "image_description_en": ""
@@ -371,6 +408,8 @@
   "15": {
     "name": "遠距會議室議程",
     "quantity": "max 2",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "丹尼我老大",
     "global_description_en": "",
     "talent_recruitment_zh": "同步接觸線上參與者，您能拓展招募觸角至更廣泛的人才來源。",
@@ -392,6 +431,7 @@
         "name_zh": "R3 議程中午 30 Mins",
         "name_en": "",
         "price": "NT$0.00",
+        "remaining": "",
         "image": "",
         "image_description_zh": "",
         "image_description_en": ""
@@ -400,6 +440,7 @@
         "name_zh": "R3 議程下午 40 Mins",
         "name_en": "",
         "price": "NT$0.00",
+        "remaining": "",
         "image": "",
         "image_description_zh": "",
         "image_description_en": ""
@@ -409,6 +450,8 @@
   "16": {
     "name": "會場攤位加大",
     "quantity": "不限",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "對於任一級別的合作夥伴，我們提供了擴大會場攤位為兩倍大的選項。",
     "global_description_en": "",
     "talent_recruitment_zh": "加大攤位空間，有更多自由運用的機會，讓學生更自在地交流並深入了解您的職涯機會。",
@@ -430,6 +473,8 @@
   "17": {
     "name": "R0 影片輪播加時",
     "quantity": "不限",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "對於任一級別的合作夥伴，我們提供了 R0 會議廳影片輪播加時的選項。",
     "global_description_en": "",
     "talent_recruitment_zh": "延長企業影片播放時段，增加人才對您招募訊息的熟悉度。",
@@ -451,6 +496,8 @@
   "18": {
     "name": "拍貼機贊助商方案",
     "quantity": "max 3",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "快樂的時光，有貴單位的幫助，有如在天空上畫上一道彩虹，成為彼此最好的記憶。在這個紀錄的時刻，邀請夥伴一同參與，我們會在拍貼機外包裝跟外框顯示貴單位名稱，讓夥伴的足跡，變成學生們成長旅途中最美的風景。\n時間，也不能就這樣被浪費，我們將會把貴單位名稱放置在等待時間的動畫中，讓使用者有貴單位的陪伴，度過這一個最令人印象深刻的年會。",
     "global_description_en": "",
     "talent_recruitment_zh": "學生拍照留念時，自然帶入您的品牌與招募訊息。",
@@ -472,6 +519,8 @@
   "19": {
     "name": "SITCON 網站議程表置入",
     "quantity": "不限",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "丹尼我老大",
     "global_description_en": "",
     "talent_recruitment_zh": "議程表中加入企業宣傳圖片，讓人才在瀏覽活動時即時接觸到您的招募資訊。",
@@ -493,6 +542,8 @@
   "20": {
     "name": "洗手間標語曝光",
     "quantity": "獨家",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "您可以再靠近一點點！簡潔的標語讓與會者如廁時與您十（公）分的靠近！",
     "global_description_en": "",
     "talent_recruitment_zh": "透過創意標語傳遞招募訊息，吸引更多人才的目光。",
@@ -514,6 +565,8 @@
   "21": {
     "name": "聯名票種",
     "quantity": "獨家",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "偏鄉、離島，甚至海外，有無數對資訊充滿熱情的學子，他們渴望學習與表現自己的才華與努力，但往往因地理與資源受限，難以實現。SITCON 「遠道而來票」將補助交通費用，為學子鋪平道路，實現學習與交流的願望。為表達對貢獻者的感謝，我們將於報名頁面內的電子票券將冠上貴單位名稱，並與貴單位一同攜手成為推動夢想的力量。",
     "global_description_en": "",
     "talent_recruitment_zh": "透過補助遠道而來學子的交通費，您能展現對人才培育的支持，讓更多優秀學生認識並靠近您的企業。",
@@ -535,6 +588,8 @@
   "22": {
     "name": "會議室椅套曝光",
     "quantity": "max 3",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "丹尼我老大",
     "global_description_en": "",
     "talent_recruitment_zh": "您的品牌印在椅套上，學生在專注聽講時自然接觸招募資訊。",
@@ -556,6 +611,7 @@
         "name_zh": "R0 會議室椅套曝光",
         "name_en": "",
         "price": "NT$0.00",
+        "remaining": "",
         "image": "",
         "image_description_zh": "",
         "image_description_en": ""
@@ -564,6 +620,7 @@
         "name_zh": "R1 會議室椅套曝光",
         "name_en": "",
         "price": "NT$0.00",
+        "remaining": "",
         "image": "",
         "image_description_zh": "",
         "image_description_en": ""
@@ -572,6 +629,7 @@
         "name_zh": "R2 會議室椅套曝光",
         "name_en": "",
         "price": "NT$0.00",
+        "remaining": "",
         "image": "",
         "image_description_zh": "",
         "image_description_en": ""
@@ -581,6 +639,8 @@
   "23": {
     "name": "獨家導遊團行程",
     "quantity": "獨家",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "導遊團，是由歷屆總召帶領莘莘學子一同探索年會的活動。在探索的一路上，我們將會安排導遊帶領大家認識貴單位，認識品牌特色、價值、以及讓眾人知道您對我們的付出，讓參與者對貴單位產生良好印象。",
     "global_description_en": "",
     "talent_recruitment_zh": "由專屬導覽帶領導遊團近距離交流，您能夠直接展現企業文化並吸引潛在人才。",
@@ -602,6 +662,8 @@
   "24": {
     "name": "SITCON 會場指標置入",
     "quantity": "獨家",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "我們會將合作夥伴的 Logo 放置於年會現場的各處指標上，不僅在年會現場隨處可見，也讓會眾在尋找方向時，默默將您的品牌映入心中。",
     "global_description_en": "",
     "talent_recruitment_zh": "在會場指標加入品牌，您能伴隨學生的每一步留下印象。",
@@ -623,6 +685,8 @@
   "25": {
     "name": "SITCON 與會者 Email 推播置入",
     "quantity": "max 5",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "丹尼我老大",
     "global_description_en": "",
     "talent_recruitment_zh": "透過官方郵件直接觸達與會者，您能精準傳遞招募資訊給潛在人才。",
@@ -644,6 +708,8 @@
   "26": {
     "name": "年會開閉幕口播",
     "quantity": "max 3",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "在萬眾矚目的開幕與閉幕上，由年會總召親自宣讀合作夥伴的名稱與品牌口播稿 ，將品牌理念直接傳遞給所有與會者，有始有終。",
     "global_description_en": "",
     "talent_recruitment_zh": "於全場注目時刻直接傳達，您能把招募資訊推送給最多的與會者。",
@@ -665,6 +731,8 @@
   "27": {
     "name": "會場電視輪播",
     "quantity": "不限",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "特別回饋給想支持 SITCON 的小公司，可以不用購買級別方案的合作機會。",
     "global_description_en": "",
     "talent_recruitment_zh": "企業職缺資訊於場內螢幕不斷輪播曝光，強化學生對您的品牌記憶。",
@@ -686,6 +754,8 @@
   "28": {
     "name": "會場攤位",
     "quantity": "打包專屬",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "丹尼我老大",
     "global_description_en": "",
     "talent_recruitment_zh": "透過互動攤位接觸潛在求職者，讓人才親身感受企業特色與職涯機會。",
@@ -707,6 +777,8 @@
   "29": {
     "name": "R0 影片輪播",
     "quantity": "打包專屬",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "丹尼我老大",
     "global_description_en": "",
     "talent_recruitment_zh": "合作夥伴的品牌與招募資訊於大螢幕重複曝光，強化學生對企業的印象。",
@@ -728,6 +800,8 @@
   "30": {
     "name": "迎賓袋文宣",
     "quantity": "打包專屬",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "丹尼我老大",
     "global_description_en": "",
     "talent_recruitment_zh": "年會的第一份實體資料，您可以在參與者初到現場時就抓住第一眼注意力。",
@@ -749,6 +823,8 @@
   "31": {
     "name": "贈票",
     "quantity": "打包專屬",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "丹尼我老大",
     "global_description_en": "",
     "talent_recruitment_zh": "提供贈票邀請學生參與，您能直接接觸並吸引更多潛在人才。",
@@ -770,6 +846,8 @@
   "32": {
     "name": "接駁車車內廣播",
     "quantity": "打包專屬",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "丹尼我老大",
     "global_description_en": "",
     "talent_recruitment_zh": "在移動途中播放訊息，讓學生放鬆時也能認識您的招募機會。",
@@ -791,6 +869,8 @@
   "33": {
     "name": "R0 議程前夥伴宣讀",
     "quantity": "打包專屬",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "丹尼我老大",
     "global_description_en": "",
     "talent_recruitment_zh": "於議程開始前由主持人宣讀，強化人才對您的品牌關注。",
@@ -812,6 +892,8 @@
   "34": {
     "name": "直播模板  Logo 曝光",
     "quantity": "打包專屬",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "丹尼我老大",
     "global_description_en": "",
     "talent_recruitment_zh": "於線上直播畫面嵌入 Logo，拓展到遠端觀眾的人才觸及。",
@@ -833,6 +915,8 @@
   "35": {
     "name": "門口議程表 Logo 曝光",
     "quantity": "打包專屬",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "丹尼我老大",
     "global_description_en": "",
     "talent_recruitment_zh": "在入口議程表展示 Logo，確保所有進場學生第一眼就看見您。",
@@ -854,6 +938,8 @@
   "36": {
     "name": "議程廳講者背板",
     "quantity": "打包專屬",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "丹尼我老大",
     "global_description_en": "",
     "talent_recruitment_zh": "於講者背板展示品牌，您能在最受注目的時刻接觸人才。",
@@ -875,6 +961,8 @@
   "37": {
     "name": "入口落地窗背板",
     "quantity": "打包專屬",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "丹尼我老大",
     "global_description_en": "",
     "talent_recruitment_zh": "大型背板設置於入口，讓學生報到時即接觸您的招募資訊。",
@@ -896,6 +984,8 @@
   "38": {
     "name": "年會意象背板",
     "quantity": "打包專屬",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "丹尼我老大",
     "global_description_en": "",
     "talent_recruitment_zh": "與大會主題結合的背板設計，讓您的品牌自然融入學生記憶。",
@@ -917,6 +1007,8 @@
   "39": {
     "name": "年會共筆 Logo 曝光",
     "quantity": "打包專屬",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "丹尼我老大",
     "global_description_en": "",
     "talent_recruitment_zh": "在共筆文件放上品牌，您能在學生筆記與回顧時持續曝光。",
@@ -938,6 +1030,8 @@
   "40": {
     "name": "網頁 Logo 曝光",
     "quantity": "打包專屬",
+    "remaining": "",
+    "unit": "",
     "global_description_zh": "丹尼我老大",
     "global_description_en": "",
     "talent_recruitment_zh": "於 SITCON 網站展示 Logo，持續在學生查詢資訊時觸及。",

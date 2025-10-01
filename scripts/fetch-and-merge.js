@@ -220,6 +220,7 @@ function extractSubItems(itemRow) {
     const nameZhKey = `子項目${index}`;
     const nameEnKey = `sub projects ${index}`;
     const priceKey = `子項目${index}價錢`;
+    const remainingKey = `子項目${index}剩餘數量`;
     const imageKey = `子項目${index}圖片連結`;
     const imageDescZhKey = `子項目${index}圖片 敘述`;
     const imageDescEnKey = `子項目${index}圖片 description`;
@@ -238,6 +239,7 @@ function extractSubItems(itemRow) {
         name_zh: itemRow[nameZhKey] || '',
         name_en: itemRow[nameEnKey] || '',
         price: itemRow[priceKey] || '',
+        remaining: itemRow[remainingKey] || '',
         image: imageId || '',
         image_description_zh: itemRow[imageDescZhKey] || '',
         image_description_en: itemRow[imageDescEnKey] || ''
@@ -283,6 +285,8 @@ function mergeSheetData(sheets) {
     items[itemId] = {
       name: itemRow['項目'] || itemRow['項目名稱'] || '',
       quantity: itemRow['數量'] || '',
+      remaining: itemRow['剩餘數量'] || '',
+      unit: itemRow['單位'] || '',
 
       global_description_zh: globalDesc?.['文案'] || '',
       global_description_en: globalDesc?.['description'] || '',
@@ -302,7 +306,7 @@ function mergeSheetData(sheets) {
 
       price: itemRow['價錢（這欄與贊助分級和子項目是互斥關係）'] || '',
 
-      deadline: globalDesc?.['截止時間'] || '',
+      deadline: itemRow['截止時間'] || '',
 
       talent_recruitment_order: parseInt(talentRec?.['排序'] || '0') || 0,
       brand_exposure_order: parseInt(brandExp?.['排序'] || '0') || 0,
