@@ -3,6 +3,10 @@ const { t } = Astro.props;
 import Popup from "@components/Popup.astro";
 import Volunteer from "@assets/img/sitcon-volunteer.jpg";
 import SchoolsText from "@assets/img/schools-text.svg";
+import AttendeeImg from "@assets/img/stat/attendee-stat.jpg";
+import SpeakerImg from "@assets/img/stat/speaker-stat.jpg";
+import EventsImg from "@assets/img/stat/events-stat.jpg";
+import VolunteerImg from "@assets/img/stat/volunteer-stat.jpg";
 ---
 
 <section id="about" class="about-section">
@@ -11,19 +15,19 @@ import SchoolsText from "@assets/img/schools-text.svg";
 		{
 			[
 				{
-					image: "/cfs/attendee-stat.jpg",
+					image: AttendeeImg.src,
 					data: [t.stats[0]]
 				},
 				{
-					image: "/cfs/speaker-stat.jpg",
+					image: SpeakerImg.src,
 					data: [t.stats[1]]
 				},
 				{
-					image: "/cfs/events-stat.jpg",
+					image: EventsImg.src,
 					data: [t.stats[2], t.stats[3]]
 				},
 				{
-					image: "/cfs/volunteer-stat.jpg",
+					image: VolunteerImg.src,
 					data: [t.stats[4]]
 				}
 			].map(card => (
