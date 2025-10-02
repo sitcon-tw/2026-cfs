@@ -232,7 +232,21 @@ import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInte
 			const ids = new Set(items.map(i => i.id));
 			document.querySelectorAll(".add-button").forEach(btn => {
 				const id = btn.getAttribute("data-item-id") || "";
-				if (ids.has(id)) btn.classList.add("added");
+
+				// Check if this item or any of its sub-items are in cart
+				let hasItemInCart = ids.has(id);
+
+				// Also check if any sub-items are in cart (sub-items have IDs like "parent-id-sub-0")
+				if (!hasItemInCart) {
+					for (const itemId of ids) {
+						if (itemId.startsWith(id + "-sub-")) {
+							hasItemInCart = true;
+							break;
+						}
+					}
+				}
+
+				if (hasItemInCart) btn.classList.add("added");
 				else btn.classList.remove("added");
 			});
 		}
@@ -338,8 +352,6 @@ import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInte
 				itemDiv.appendChild(contentDiv);
 				listContainer.appendChild(itemDiv);
 			});
-			
-			emfont.init();
 
 			const removeButtons = listContainer.querySelectorAll(".remove-item");
 			removeButtons.forEach(button => {

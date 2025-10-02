@@ -106,7 +106,7 @@
     "product_promotion_en": "Design a branded photo wall near stairways to encourage attendees to take and share photos, amplifying product content on social media.",
     "image": "1Bt6DCwkuI0N2a9M3ZEPkdzYfeY-ajZ-p.png",
     "image_description_zh": "樓梯打卡牆",
-    "image_description_en": "",
+    "image_description_en": "Staircase Check-in Wall",
     "price": "NT$0.00",
     "deadline": "2026/01/02",
     "talent_recruitment_order": 20,
@@ -115,7 +115,7 @@
     "sub": []
   },
   "5": {
-    "name": "獨家帆布迎賓袋",
+    "name": "獨家帆布袋",
     "order": "5",
     "quantity": "獨家",
     "remaining": "1",
@@ -129,8 +129,8 @@
     "product_promotion_zh": "於與會者專屬知識袋中置入產品型錄或試用品，讓參與者會後可持續接觸與使用。",
     "product_promotion_en": "Include product samples or coupons in attendee welcome bags, ensuring direct product trial and long-term usage.",
     "image": "1wHsSJ5IMcvS4NJ_qorK4D-ETw3Bud3gk.png",
-    "image_description_zh": "獨家帆布迎賓袋",
-    "image_description_en": "",
+    "image_description_zh": "獨家帆布袋",
+    "image_description_en": "Exclusive Canvas Bag",
     "price": "NT$0.00",
     "deadline": "2026/02/28",
     "talent_recruitment_order": 21,
@@ -296,9 +296,9 @@
     "brand_exposure_en": "Your brand will be featured on SITCON’s official social accounts, reaching tens of thousands of students and developers.",
     "product_promotion_zh": "結合 SITCON 社群平台，於貼文與限動中附上專屬優惠碼或產品試用連結，引導線上受眾直接轉換。",
     "product_promotion_en": "Promote your product on SITCON’s social media platforms with dedicated posts and hashtags, guiding attendees to interact and redeem offers.",
-    "image": "",
-    "image_description_zh": "",
-    "image_description_en": "",
+    "image": "1TJVEmGa0A8Ht1YZt-uNFAKcnGF-9TYkw.png",
+    "image_description_zh": "網路宣傳平台",
+    "image_description_en": "Online promotion platforms",
     "price": "",
     "deadline": "2026/01/10",
     "talent_recruitment_order": 6,
@@ -310,45 +310,45 @@
         "name_en": "Facebook Fan Page Post",
         "price": "NT$0.00",
         "remaining": "",
-        "image": "",
-        "image_description_zh": "",
-        "image_description_en": ""
+        "image": "1ibEJfTlQyfQ-Sf9GlT02h_FKtWuvojlh.png",
+        "image_description_zh": "Facebook 粉絲專頁貼文",
+        "image_description_en": "Facebook Fan Page Post"
       },
       {
         "name_zh": "Instagram 精選動態",
         "name_en": "Instagram Story Highlight",
         "price": "NT$0.00",
         "remaining": "",
-        "image": "",
-        "image_description_zh": "",
-        "image_description_en": ""
+        "image": "1TafObsBnymv397g0DiXkVCN1r9YL7kt9.png",
+        "image_description_zh": "Instagram 精選動態",
+        "image_description_en": "Instagram Story Highlight"
       },
       {
         "name_zh": "Instagram 貼文",
         "name_en": "Instagram Post",
         "price": "NT$0.00",
         "remaining": "",
-        "image": "",
-        "image_description_zh": "",
-        "image_description_en": ""
+        "image": "1mNU9HGPm1vjx1kwDv04Vcehj1eS_r0yY.png",
+        "image_description_zh": "Instagram 貼文",
+        "image_description_en": "Instagram Post"
       },
       {
-        "name_zh": "Telegram 群組置頂訊息",
+        "name_zh": "Telegram 群組置頂訊息放置一週",
         "name_en": "Telegram Group Pinned Message",
         "price": "NT$0.00",
         "remaining": "",
-        "image": "",
-        "image_description_zh": "",
-        "image_description_en": ""
+        "image": "1x9sS0O82YHSLqZD_VfAgDv4DtFlTqDut.png",
+        "image_description_zh": "Telegram 群組置頂訊息放置一週",
+        "image_description_en": "Telegram Group Pinned Message"
       },
       {
         "name_zh": "FB/IG 貼文動態廣告加購",
         "name_en": "Ad Boost for FB/IG Posts & Stories",
         "price": "NT$0.00",
         "remaining": "",
-        "image": "",
-        "image_description_zh": "",
-        "image_description_en": ""
+        "image": "1njfXrDAK5uQfhdGsAHq3ldf5SRLq9k2y.png",
+        "image_description_zh": "FB/IG 貼文動態廣告加購",
+        "image_description_en": "Ad Boost for FB/IG Posts & Stories"
       }
     ]
   },
@@ -401,7 +401,7 @@
     "sub": [
       {
         "name_zh": "R0 中午議程 40 Mins",
-        "name_en": "",
+        "name_en": "R0 Noon Agenda (40 minutes)",
         "price": "NT$0.00",
         "remaining": "",
         "image": "",
@@ -410,7 +410,7 @@
       },
       {
         "name_zh": "R1 中午議程 40 Mins",
-        "name_en": "",
+        "name_en": "R1 Noon Agenda (40 minutes)",
         "price": "NT$0.00",
         "remaining": "",
         "image": "",
@@ -419,7 +419,7 @@
       },
       {
         "name_zh": "R2 中午議程 40 Mins",
-        "name_en": "",
+        "name_en": "R2 Noon Agenda (40 minutes)",
         "price": "NT$0.00",
         "remaining": "",
         "image": "",
@@ -453,7 +453,7 @@
     "sub": [
       {
         "name_zh": "R3 議程中午 30 Mins",
-        "name_en": "",
+        "name_en": "R3 Noon Agenda (30 minutes)",
         "price": "NT$0.00",
         "remaining": "",
         "image": "",
@@ -462,7 +462,7 @@
       },
       {
         "name_zh": "R3 議程下午 40 Mins",
-        "name_en": "",
+        "name_en": "R3 Afternoon Agenda (40 minutes)",
         "price": "NT$0.00",
         "remaining": "",
         "image": "",
@@ -640,7 +640,7 @@
     "sub": [
       {
         "name_zh": "R0 會議室椅套曝光",
-        "name_en": "",
+        "name_en": "R0 Conference Room Chair Cover Branding",
         "price": "NT$0.00",
         "remaining": "",
         "image": "",
@@ -649,7 +649,7 @@
       },
       {
         "name_zh": "R1 會議室椅套曝光",
-        "name_en": "",
+        "name_en": "R1 Conference Room Chair Cover Branding",
         "price": "NT$0.00",
         "remaining": "",
         "image": "",
@@ -658,7 +658,7 @@
       },
       {
         "name_zh": "R2 會議室椅套曝光",
-        "name_en": "",
+        "name_en": "R2 Conference Room Chair Cover Branding",
         "price": "NT$0.00",
         "remaining": "",
         "image": "",
@@ -707,7 +707,7 @@
     "product_promotion_en": "Integrate product name or logo into venue signage and directional boards, ensuring consistent attendee exposure to the brand.",
     "image": "15tZrDDfvaWpa_AzB4VOHxFC2U5Dla1W1.jpg",
     "image_description_zh": "SITCON 會場指標置入",
-    "image_description_en": "",
+    "image_description_en": "SITCON Venue Signage Placement",
     "price": "NT$0.00",
     "deadline": "2026/01/22",
     "talent_recruitment_order": 25,
@@ -731,7 +731,7 @@
     "product_promotion_en": "Feature your product brand message in official emails, driving traffic to product pages or special offers.",
     "image": "1rDMp9sSJNCeveqIk_C2ApDwpyT3-gDRy.png",
     "image_description_zh": "SITCON 與會者 Email 推播置入",
-    "image_description_en": "",
+    "image_description_en": "SITCON Attendee Email Promotion Placement",
     "price": "NT$0.00",
     "deadline": "2026/01/23",
     "talent_recruitment_order": 5,
@@ -779,7 +779,7 @@
     "product_promotion_en": "Display product ads or promotional videos on venue screens, ensuring visibility across all attendees and reinforcing product exposure.",
     "image": "1DgUQk13r0Uy81scw-o9pXDjUE-iSXx4a.png",
     "image_description_zh": "會場電視輪播",
-    "image_description_en": "",
+    "image_description_en": "TV Screen Loop Exposure",
     "price": "NT$0.00",
     "deadline": "2026/01/25",
     "talent_recruitment_order": 10,
@@ -1090,8 +1090,8 @@
     "product_promotion_zh": "在 SITCON 官方網站相關頁面置入產品圖片與導購連結，延伸產品曝光至線上。",
     "product_promotion_en": "Display sponsor logos on designated pages of the official SITCON website, extending product visibility before, during, and after the event.",
     "image": "1x8WGdY2A2Ko6V0wNIWm2hOtVo2jIt5Td.png",
-    "image_description_zh": "",
-    "image_description_en": "網頁 Logo 曝光",
+    "image_description_zh": "網頁 Logo 曝光",
+    "image_description_en": "Website Logo Exposure",
     "price": "",
     "deadline": "2026/02/07",
     "talent_recruitment_order": 33,

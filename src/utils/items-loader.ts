@@ -2,7 +2,7 @@
  * Utility functions for loading items data from individual markdown folders
  */
 
-export interface SubItem {
+export interface SubItemRaw {
 	name_zh: string;
 	name_en: string;
 	price: string;
@@ -10,6 +10,14 @@ export interface SubItem {
 	image: string;
 	image_description_zh: string;
 	image_description_en: string;
+}
+
+export interface SubItem {
+	name: string;
+	price: string;
+	remaining: string;
+	image: string;
+	image_description: string;
 }
 
 export interface ItemDataRaw {
@@ -34,15 +42,7 @@ export interface ItemDataRaw {
 	talent_recruitment_order: number;
 	brand_exposure_order: number;
 	product_promotion_order: number;
-	sub: SubItem[];
-}
-
-export interface LocalizedSubItem {
-	name: string;
-	price: string;
-	remaining: string;
-	image: string;
-	image_description: string;
+	sub: SubItemRaw[];
 }
 
 export interface ItemData {
@@ -63,7 +63,7 @@ export interface ItemData {
 	talent_recruitment_order: number;
 	brand_exposure_order: number;
 	product_promotion_order: number;
-	sub: LocalizedSubItem[];
+	sub: SubItem[];
 }
 
 function extractLocalizedData(rawData: ItemDataRaw, locale: string, id: string): ItemData {
@@ -71,7 +71,7 @@ function extractLocalizedData(rawData: ItemDataRaw, locale: string, id: string):
 	const suffix = locale === "zh-Hant" || locale === "zh" ? "_zh" : "_en";
 
 	// Extract localized sub-items
-	const localizedSub: LocalizedSubItem[] = rawData.sub.map(subItem => ({
+	const localizedSub: SubItem[] = rawData.sub.map(subItem => ({
 		name: suffix === "_zh" ? subItem.name_zh : subItem.name_en,
 		price: subItem.price,
 		remaining: subItem.remaining,

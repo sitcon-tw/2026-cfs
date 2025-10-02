@@ -482,42 +482,44 @@ function processPlanData(planSheet, itemsData) {
 
   console.log(`✓ Built mapping for ${Object.keys(itemNameToId).length} items`);
 
-  // Extract headers (plan tier names) from first row
-  const headerRow = planSheet[0];
+  // Extract tier names from column headers (first row becomes headers with columns:true)
+  const firstRow = planSheet[0];
+  const columnKeys = Object.keys(firstRow);
   const planTiers = [];
 
-  // Skip first two columns (empty and '價格'), get plan names
-  for (let i = 2; i < Object.keys(headerRow).length; i++) {
-    const tierName = headerRow[Object.keys(headerRow)[i]];
-    if (tierName && tierName.trim()) {
-      planTiers.push({
-        index: i,
-        name_zh: tierName.trim(),
-        name_en: '', // Will be set later
-        id: tierName.trim().toLowerCase()
-      });
+  // Get tier names from column keys, skipping first two columns ('' and '編號')
+  columnKeys.forEach((key, index) => {
+    // Skip empty keys and non-tier columns
+    if (!key || key === '編號' || key === '項目') {
+      return;
     }
-  }
 
-  // Extract prices from second row
-  const priceRow = planSheet[1];
-  planTiers.forEach((tier, index) => {
-    const priceKey = Object.keys(priceRow)[tier.index];
-    tier.price = priceRow[priceKey] || '';
+    planTiers.push({
+      columnKey: key,
+      name_zh: key,
+      name_en: '', // Will be set later
+      id: key.toLowerCase()
+    });
+  });
+
+  // Extract prices from first row (which contains '價格' in first column)
+  const priceRow = planSheet[0]; // First parsed row has prices
+  planTiers.forEach((tier) => {
+    tier.price = priceRow[tier.columnKey] || '';
   });
 
   // Process plan data
   const plans = {};
 
-  planTiers.forEach((tier, tierIndex) => {
-    // Generate English names and IDs
-    const nameMap = {
-      '領航級': { en: 'Navigator Tier', id: 'navigator' },
-      '深耕級': { en: 'Deep Cultivation Tier', id: 'deep_cultivation' },
-      '前瞻級': { en: 'Visionary Tier', id: 'visionary' },
-      '新芽級': { en: 'New Sprout Tier', id: 'new_sprout' }
-    };
+  // Generate English names and IDs mapping
+  const nameMap = {
+    '領航級': { en: 'Navigator Tier', id: 'navigator' },
+    '深耕級': { en: 'Deep Cultivation Tier', id: 'deep_cultivation' },
+    '前瞻級': { en: 'Visionary Tier', id: 'visionary' },
+    '新芽級': { en: 'New Sprout Tier', id: 'new_sprout' }
+  };
 
+  planTiers.forEach((tier, tierIndex) => {
     const mapped = nameMap[tier.name_zh] || { en: tier.name_zh, id: tier.id };
 
     plans[mapped.id] = {
@@ -530,19 +532,23 @@ function processPlanData(planSheet, itemsData) {
     };
   });
 
-  // Extract benefits from remaining rows
-  for (let rowIndex = 2; rowIndex < planSheet.length; rowIndex++) {
+  // Extract benefits from remaining rows (starting from index 1, skipping price row at 0)
+  for (let rowIndex = 1; rowIndex < planSheet.length; rowIndex++) {
     const row = planSheet[rowIndex];
-    const keys = Object.keys(row);
 
     // Extract item name from the first column (which has empty key '')
-    const itemName = row[keys[0]] ? row[keys[0]].toString().trim() : '';
+    const itemName = row[''] ? row[''].toString().trim() : '';
 
     // Get the ID from the dynamic mapping built from items data
     const itemId = itemNameToId[itemName] || '';
 
     // Only skip if there's no itemName, or if itemName exists but looks like a category header
     if (!itemName) {
+      continue;
+    }
+
+    // Skip row header items (編號 column contains '項目' or similar headers)
+    if (itemName === '項目' || row['編號'] === '項目') {
       continue;
     }
 
@@ -554,7 +560,7 @@ function processPlanData(planSheet, itemsData) {
 
     // Process benefits for each tier (including blank quantities)
     planTiers.forEach((tier) => {
-      const benefitValue = row[keys[tier.index]];
+      const benefitValue = row[tier.columnKey];
       const quantity = benefitValue ? benefitValue.toString().trim() : '';
 
       const benefit = {
@@ -563,7 +569,8 @@ function processPlanData(planSheet, itemsData) {
         quantity: quantity
       };
 
-      const planId = Object.keys(plans)[planTiers.indexOf(tier)];
+      const mapped = nameMap[tier.name_zh] || { en: tier.name_zh, id: tier.id };
+      const planId = mapped.id;
       if (plans[planId]) {
         plans[planId].benefits.push(benefit);
       }
