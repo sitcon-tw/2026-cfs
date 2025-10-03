@@ -7,8 +7,8 @@ import { getItemDescription } from "../../utils/items-loader";
 const { t, card, selectedCategory = "all" } = Astro.props;
 
 // Import images dynamically using import.meta.glob
-const images = import.meta.glob<{ default: ImageMetadata }>("../../data/items/**/image.jpg");
-const imagePath = `../../data/items/${card.id}/image.jpg`;
+const images = import.meta.glob<{ default: ImageMetadata }>("../../data/items/**/image.webp");
+const imagePath = `../../data/items/${card.id}/image.webp`;
 
 // Get current description based on selected category
 const currentDescription = getItemDescription(card, selectedCategory);

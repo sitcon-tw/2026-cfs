@@ -27,8 +27,8 @@ if (markdownModule && markdownModule.Content) {
 }
 
 // Import images dynamically using import.meta.glob
-const images = import.meta.glob<{ default: ImageMetadata }>("../../data/items/**/image.jpg");
-const imagePath = `../../data/items/${item.id}/image.jpg`;
+const images = import.meta.glob<{ default: ImageMetadata }>("../../data/items/**/image.webp");
+const imagePath = `../../data/items/${item.id}/image.webp`;
 
 // Find the matching plan row for this item
 const planRow = plansData.rows.find(row => row.id === item.id);
