@@ -1,7 +1,6 @@
 ---
 const { t } = Astro.props;
 import { Container } from "@lucide/astro";
-import ItemPopup from "../items/ItemPopup.astro";
 import planData from "@data/plan.json";
 import { loadItemsData } from "../../utils/items-loader";
 
@@ -37,9 +36,21 @@ for (let i = 0; i < maxBenefits; i++) {
 	// Use the first available item_id as the row id
 	const rowId = navBenefit?.item_id || deepBenefit?.item_id || visBenefit?.item_id || sproutBenefit?.item_id || `row-${i}`;
 
+	// Check if the item exists in the items data
+	const itemExists = rowId && rowId !== `row-${i}` && itemsMap.has(rowId);
+
+	// Check if any tier has a non-empty quantity AND the item exists in items data
+	const hasAnyAvailableItem = itemExists && !!(
+		(navBenefit?.quantity && navBenefit.quantity !== "") ||
+		(deepBenefit?.quantity && deepBenefit.quantity !== "") ||
+		(visBenefit?.quantity && visBenefit.quantity !== "") ||
+		(sproutBenefit?.quantity && sproutBenefit.quantity !== "")
+	);
+
 	rows.push({
 		id: rowId,
 		name: navBenefit?.item_name || deepBenefit?.item_name || visBenefit?.item_name || sproutBenefit?.item_name || "",
+		isAvailable: hasAnyAvailableItem,
 		values: [
 			{ itemId: navBenefit?.item_id || "", quantity: navBenefit?.quantity || "", name: navBenefit?.item_name || "" },
 			{ itemId: deepBenefit?.item_id || "", quantity: deepBenefit?.quantity || "", name: deepBenefit?.item_name || "" },
@@ -83,7 +94,7 @@ const uniqueItemIds = new Set<string>();
 				</div>
 				{
 					rows.map((row: any) => (
-						<div class="plan-row" data-row-id={row.id}>
+						<div class={`plan-row ${!row.isAvailable ? 'disabled' : ''}`} data-row-id={row.id} data-is-available={row.isAvailable}>
 							{row.values.map((value: any, index: number) => {
 								const isAvailable = value.quantity && value.quantity !== "";
 								const isCheckmark = value.quantity === "O" || value.quantity === "o";
@@ -175,7 +186,10 @@ const uniqueItemIds = new Set<string>();
 		const planRows = document.querySelectorAll(".plan-row") as NodeListOf<HTMLElement>;
 		planRows.forEach(row => {
 			const rowIdStr = row.getAttribute("data-row-id");
-			if (rowIdStr) {
+			const isAvailable = row.getAttribute("data-is-available") === "true";
+
+			// Only add click handlers and cursor to available rows
+			if (rowIdStr && isAvailable) {
 				row.style.cursor = "pointer";
 				row.addEventListener("click", function (e) {
 					e.stopPropagation();
@@ -364,7 +378,9 @@ const uniqueItemIds = new Set<string>();
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		justify-content: center;
 		gap: 0.5rem;
+		min-height: 4rem;
 	}
 
 	.plan-cell.highlighted .cell-main,
@@ -490,10 +506,19 @@ const uniqueItemIds = new Set<string>();
 	}
 
 	/* Plan row hover effect */
-	.plan-row:hover {
+	.plan-row:not(.disabled):hover {
 		background-color: var(--items-bg);
 		border-radius: 0.5rem;
 		transition: background-color 0.2s ease;
+	}
+
+	/* Disabled row styles */
+	.plan-row.disabled {
+		cursor: default !important;
+	}
+
+	.plan-row.disabled .plan-cell {
+		pointer-events: none;
 	}
 </style>
 

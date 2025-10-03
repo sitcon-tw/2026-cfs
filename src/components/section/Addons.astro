@@ -1,21 +1,23 @@
 ---
 const { t } = Astro.props;
 import { Flag } from "@lucide/astro";
-import ItemPopup from "../items/ItemPopup.astro";
 import { loadItemsData, type ItemData } from "../../utils/items-loader";
 
 const lang = Astro.currentLocale || "zh-Hant";
 const itemsData = await loadItemsData(lang);
+
+// Create a lookup map for quick item access by ID
+const itemsMap = new Map(itemsData.map(item => [item.id, item]));
 
 // Define types
 interface GroupedItems {
 	[key: string]: ItemData[];
 }
 
-// Group items by category
+// Group items by type field
 const groupedItems: GroupedItems = {};
 itemsData.forEach((item: ItemData) => {
-	const displayCategory = t.item_categories[item.category] || item.category;
+	const displayCategory = item.type || "其他";
 	if (!groupedItems[displayCategory]) {
 		groupedItems[displayCategory] = [];
 	}
@@ -41,7 +43,7 @@ const categories = Object.keys(groupedItems);
 										<Flag />
 									</div>
 									<div class="card-content">
-										<div class="card-title">{item.title}</div>
+										<div class="card-title">{item.name}</div>
 									</div>
 								</div>
 							))}
@@ -52,8 +54,6 @@ const categories = Object.keys(groupedItems);
 		</div>
 	</div>
 </section>
-
-{itemsData.map((item: ItemData) => <ItemPopup item={item} t={t} popupId={`addon-popup-${item.id}`} />)}
 
 <script>
 	import { isItemInterested } from "../../utils/local-storage.ts";
@@ -82,7 +82,7 @@ const categories = Object.keys(groupedItems);
 				card.style.cursor = "pointer";
 				card.addEventListener("click", function (e) {
 					e.stopPropagation();
-					const popupId = `addon-popup-${itemIdStr}`;
+					const popupId = `item-popup-${itemIdStr}`;
 					popupCtrl(popupId, "open");
 				});
 			}
