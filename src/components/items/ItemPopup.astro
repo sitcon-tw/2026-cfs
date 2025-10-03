@@ -3,7 +3,7 @@ import Popup from "../Popup.astro";
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import { X, Plus, Minus } from "@lucide/astro";
-import plansData from "@data/plans_data.json";
+import planData from "@data/plan.json";
 
 import type { SubItem } from "../../utils/items-loader";
 
@@ -32,9 +32,25 @@ if (markdownModule && markdownModule.Content) {
 const images = import.meta.glob<{ default: ImageMetadata }>("../../assets/img/items/*");
 const imagePath = `../../assets/img/items/${item.image}`;
 
-// Find the matching plan row for this item
-const planRow = plansData.rows.find(row => row.id === item.id);
-const shouldShowPlanTiers = planRow !== undefined;
+// Find this item in plan.json benefits and collect tier info
+const tiers = [
+	{ id: "navigator", name: planData.navigator.name_zh, nameEn: planData.navigator.name_en, textColor: "#FF928A", data: planData.navigator },
+	{ id: "deep_cultivation", name: planData.deep_cultivation.name_zh, nameEn: planData.deep_cultivation.name_en, textColor: "#537FF1", data: planData.deep_cultivation },
+	{ id: "visionary", name: planData.visionary.name_zh, nameEn: planData.visionary.name_en, textColor: "#6FD195", data: planData.visionary },
+	{ id: "new_sprout", name: planData.new_sprout.name_zh, nameEn: planData.new_sprout.name_en, textColor: "#77B55A", data: planData.new_sprout }
+];
+
+// Check if this item appears in any plan tier
+const tierBenefits = tiers.map(tier => {
+	const benefit = tier.data.benefits.find(b => b.item_id === item.id);
+	return {
+		tier: tier,
+		benefit: benefit,
+		quantity: benefit?.quantity || ""
+	};
+});
+
+const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 ---
 
 <Popup id={popupId || `plan-popup-${item.id}`} button={false} hero={false}>
@@ -100,42 +116,26 @@ const shouldShowPlanTiers = planRow !== undefined;
 			}
 
 			{
-				shouldShowPlanTiers && planRow && (
+				shouldShowPlanTiers && (
 					<div class="plan-tiers">
-						{plansData.tiers.map((tier, index) => {
-							const value = planRow.values[index];
-							let displayText = "0";
-							let unit = "";
-
-							if (value.textKey === "not_available") {
-								displayText = "0";
-							} else if ("number" in value && value.number !== undefined) {
-								displayText = value.number.toString();
-								if ("unitKey" in value && value.unitKey) {
-									// Follow the same pattern as Plans.astro - use only the last part of unitKey
-									const unitKey = value.unitKey.split(".").pop();
-									unit = unitKey ? t.unit[unitKey] || "" : "";
-								}
-							} else if ("icon" in value && value.icon !== undefined) {
-								displayText = value.icon.toString();
-								// For icon values, we can use a default unit if needed
-								unit = "個"; // or whatever unit makes sense for icons
-							} else {
-								// For other types (main, textKey that aren't not_available), don't show anything
-								displayText = "0";
-							}
+						{tierBenefits.map((tb) => {
+							const quantity = tb.quantity;
+							const isCheckmark = quantity === "O" || quantity === "o";
+							const isAvailable = quantity && quantity !== "";
 
 							return (
-								<div class="tier-item" style={`color: ${tier.textColor}`}>
-									<span class="tier-name">{t.tier_names[tier.name]}</span>
+								<div class="tier-item" style={`color: ${tb.tier.textColor}`}>
+									<span class="tier-name">{tb.tier.name}</span>
 									<span class="tier-arrow">→</span>
-									{displayText === "0" ? (
+									{!isAvailable ? (
 										<span class="tier-value tier-unavailable">
 											<X size={20} />
 										</span>
+									) : isCheckmark ? (
+										<span class="tier-value">✓</span>
 									) : (
 										<span class="tier-value">
-											{displayText} {unit}
+											{quantity}
 										</span>
 									)}
 								</div>

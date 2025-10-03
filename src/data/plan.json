@@ -14,7 +14,7 @@
       {
         "item_id": "29",
         "item_name": "R0 影片輪播",
-        "quantity": "60sec"
+        "quantity": "60"
       },
       {
         "item_id": "30",
@@ -74,7 +74,7 @@
       {
         "item_id": "27",
         "item_name": "會場電視輪播",
-        "quantity": "Logo 露出"
+        "quantity": "O"
       },
       {
         "item_id": "",
@@ -108,7 +108,7 @@
       {
         "item_id": "29",
         "item_name": "R0 影片輪播",
-        "quantity": "30sec"
+        "quantity": "30"
       },
       {
         "item_id": "30",
@@ -168,7 +168,7 @@
       {
         "item_id": "27",
         "item_name": "會場電視輪播",
-        "quantity": "Logo 露出"
+        "quantity": "O"
       },
       {
         "item_id": "",
@@ -262,7 +262,7 @@
       {
         "item_id": "27",
         "item_name": "會場電視輪播",
-        "quantity": "Logo 露出"
+        "quantity": "O"
       },
       {
         "item_id": "",
@@ -356,7 +356,7 @@
       {
         "item_id": "27",
         "item_name": "會場電視輪播",
-        "quantity": "Logo 露出"
+        "quantity": "O"
       },
       {
         "item_id": "",

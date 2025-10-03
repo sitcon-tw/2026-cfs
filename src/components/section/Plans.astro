@@ -2,61 +2,139 @@
 const { t } = Astro.props;
 import { Container } from "@lucide/astro";
 import ItemPopup from "../items/ItemPopup.astro";
-import plansData from "@data/plans_data.json";
+import planData from "@data/plan.json";
 import { loadItemsData } from "../../utils/items-loader";
 
 const lang = Astro.currentLocale || "zh-Hant";
 const itemsData = await loadItemsData(lang);
+
+// Create a lookup map for quick item access by ID
+const itemsMap = new Map(itemsData.map(item => [item.id, item]));
+
+// Transform plan.json data to match the table structure
+const tiers = [
+	{ id: "navigator", name: planData.navigator.name_zh, nameEn: planData.navigator.name_en, price: planData.navigator.price, textColor: "#FF928A" },
+	{ id: "deep_cultivation", name: planData.deep_cultivation.name_zh, nameEn: planData.deep_cultivation.name_en, price: planData.deep_cultivation.price, textColor: "#537FF1" },
+	{ id: "visionary", name: planData.visionary.name_zh, nameEn: planData.visionary.name_en, price: planData.visionary.price, textColor: "#6FD195" },
+	{ id: "new_sprout", name: planData.new_sprout.name_zh, nameEn: planData.new_sprout.name_en, price: planData.new_sprout.price, textColor: "#77B55A" }
+];
+
+// Create rows from benefits (assuming all tiers have the same items in same order)
+const maxBenefits = Math.max(
+	planData.navigator.benefits.length,
+	planData.deep_cultivation.benefits.length,
+	planData.visionary.benefits.length,
+	planData.new_sprout.benefits.length
+);
+
+const rows = [];
+for (let i = 0; i < maxBenefits; i++) {
+	const navBenefit = planData.navigator.benefits[i];
+	const deepBenefit = planData.deep_cultivation.benefits[i];
+	const visBenefit = planData.visionary.benefits[i];
+	const sproutBenefit = planData.new_sprout.benefits[i];
+
+	// Use the first available item_id as the row id
+	const rowId = navBenefit?.item_id || deepBenefit?.item_id || visBenefit?.item_id || sproutBenefit?.item_id || `row-${i}`;
+
+	rows.push({
+		id: rowId,
+		name: navBenefit?.item_name || deepBenefit?.item_name || visBenefit?.item_name || sproutBenefit?.item_name || "",
+		values: [
+			{ itemId: navBenefit?.item_id || "", quantity: navBenefit?.quantity || "", name: navBenefit?.item_name || "" },
+			{ itemId: deepBenefit?.item_id || "", quantity: deepBenefit?.quantity || "", name: deepBenefit?.item_name || "" },
+			{ itemId: visBenefit?.item_id || "", quantity: visBenefit?.quantity || "", name: visBenefit?.item_name || "" },
+			{ itemId: sproutBenefit?.item_id || "", quantity: sproutBenefit?.quantity || "", name: sproutBenefit?.item_name || "" }
+		]
+	});
+}
+
+// Collect all unique item IDs from plan.json benefits
+const uniqueItemIds = new Set<string>();
+
+[planData.navigator, planData.deep_cultivation, planData.visionary, planData.new_sprout].forEach(tier => {
+	tier.benefits.forEach(benefit => {
+		if (benefit.item_id && benefit.item_id !== "") {
+			uniqueItemIds.add(benefit.item_id);
+		}
+	});
+});
 ---
 
 <section id="plans">
 	<h2>{t.title}</h2>
 	<div class="container">
 		<div class="plans-table">
-			<div class="plans-header">
-				{
-					plansData.tiers.map((tier: any) => (
-						<div class="tier-column">
-							<div class="tier-name" style={`color: ${tier.textColor}`}>
-								{t.tier_names[tier.name]}
-							</div>
-							<div class="tier-price">{tier.price}</div>
-							<button class="tier-interest-button" data-tier-name={tier.name} data-tier-title={t.tier_names[tier.name]}>
-								{t.interested}
-							</button>
-						</div>
-					))
-				}
-			</div>
-
 			<div class="plans-content">
+				<div class="plan-row plans-header">
+					{
+						tiers.map((tier: any) => (
+							<div class="tier-column">
+								<div class="tier-name" style={`color: ${tier.textColor}`}>
+									{tier.name}
+								</div>
+								<div class="tier-price">{tier.price}</div>
+								<button class="tier-interest-button" data-tier-name={tier.id} data-tier-title={tier.name}>
+									{t.interested}
+								</button>
+							</div>
+						))
+					}
+				</div>
 				{
-					plansData.rows.map((row: any) => (
+					rows.map((row: any) => (
 						<div class="plan-row" data-row-id={row.id}>
-							{row.values.map((value: any) => {
-								// Handle number + unit structure
-								const hasNumber = value.number !== undefined;
-								const mainText = value.textKey ? t.features[value.textKey] : value.main || "";
-								const subText = value.subKey ? t.features[value.subKey] : value.sub || "";
-								const unitText = value.unitKey ? t.unit[value.unitKey.split(".").pop()] : "";
+							{row.values.map((value: any, index: number) => {
+								const isAvailable = value.quantity && value.quantity !== "";
+								const isCheckmark = value.quantity === "O" || value.quantity === "o";
+
+								// Check if quantity is a pure number
+								const isNumeric = isAvailable && !isNaN(Number(value.quantity));
+
+								// Get item data for unit and name
+								const itemData = value.itemId ? itemsMap.get(value.itemId) : null;
+								const itemUnit = itemData?.unit ? (t.unit[itemData.unit] || itemData.unit) : "";
+
+								// Special handling for item ID 28 (booth)
+								const isBoothItem = value.itemId === "28";
+								const shouldShowIcons = isBoothItem && isNumeric;
+								const iconCount = shouldShowIcons ? parseInt(value.quantity, 10) : 0;
+
+								// Build display text with unit
+								let displayText = value.quantity;
+								if (isNumeric && itemUnit) {
+									displayText = `${value.quantity} ${itemUnit}`;
+								} else if (!isAvailable) {
+									displayText = "—";
+								}
 
 								return (
-									<div class="plan-cell">
-										{value.icon && (
-											<div class="cell-icon">
-												{Array.from({ length: value.icon }, (_, i) => (
-													<Container key={i} />
-												))}
-											</div>
-										)}
-										{hasNumber ? (
-											<div class="cell-main cell-number">
-												{value.number} {unitText}
-											</div>
+									<div class="plan-cell" data-item-id={value.itemId}>
+										{isCheckmark ? (
+											<>
+												{value.name && <div class="cell-sub">{value.name}</div>}
+											</>
+										) : shouldShowIcons ? (
+											<>
+												<div class="cell-icon cell-main">
+													{Array.from({ length: iconCount }).map((_, i) => (
+														<Container key={i} />
+													))}
+												</div>
+												{value.name && <div class="cell-sub">{value.name}</div>}
+											</>
 										) : (
-											<div class="cell-main cell-text">{mainText}</div>
+											<>
+												{isAvailable ? (
+													<>
+														<div class="cell-main cell-text">{displayText}</div>
+														{value.name && <div class="cell-sub">{value.name}</div>}
+													</>
+												) : (
+													<div class="cell-text">{displayText}</div>
+												)}
+											</>
 										)}
-										{subText && <div class="cell-sub">{subText}</div>}
 									</div>
 								);
 							})}
@@ -68,43 +146,27 @@ const itemsData = await loadItemsData(lang);
 	</div>
 </section>
 
-{
-	plansData.rows.map((row: any) => {
-		const matchingItem = itemsData.find((item: any) => item.id === row.id);
-		if (matchingItem) {
-			return <ItemPopup item={matchingItem} t={t} />;
-		}
-	})
-}
-
 <script>
 	import { isItemInterested, addInterestedItem, removeInterestedItem, type InterestedItem } from "../../utils/local-storage.ts";
 
 	declare function popupCtrl(id: string, action: string): void;
 
 	function updateHighlighting() {
-		const planRows = document.querySelectorAll(".plan-row");
-		planRows.forEach(row => {
-			const rowId = row.getAttribute("data-row-id");
-			if (rowId) {
-				const isHighlighted = isItemInterested(rowId);
+		const planCells = document.querySelectorAll(".plan-cell");
+		planCells.forEach(cell => {
+			const itemId = (cell as HTMLElement).getAttribute("data-item-id");
+			if (itemId && itemId !== "") {
+				const isHighlighted = isItemInterested(itemId);
 
-				const clickableCells = row.querySelectorAll(".plan-cell");
-				clickableCells.forEach(cell => {
-					if (isHighlighted) {
-						// Check if cell contains unavailable content
-						const cellText = cell.textContent?.trim();
-						const isUnavailable = cellText === "" || cellText === "—" || cellText === "-" || cellText?.includes("不適用") || cellText?.includes("N/A");
+				// Check if cell contains unavailable content
+				const cellText = cell.textContent?.trim();
+				const isUnavailable = cellText === "" || cellText === "—" || cellText === "-";
 
-						if (!isUnavailable) {
-							cell.classList.add("highlighted");
-						} else {
-							cell.classList.remove("highlighted");
-						}
-					} else {
-						cell.classList.remove("highlighted");
-					}
-				});
+				if (isHighlighted && !isUnavailable) {
+					cell.classList.add("highlighted");
+				} else {
+					cell.classList.remove("highlighted");
+				}
 			}
 		});
 	}
@@ -117,7 +179,7 @@ const itemsData = await loadItemsData(lang);
 				row.style.cursor = "pointer";
 				row.addEventListener("click", function (e) {
 					e.stopPropagation();
-					const popupId = `plan-popup-${rowIdStr}`;
+					const popupId = `item-popup-${rowIdStr}`;
 					popupCtrl(popupId, "open");
 				});
 			}
@@ -222,26 +284,21 @@ const itemsData = await loadItemsData(lang);
 	}
 
 	.plans-header {
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		gap: 2rem;
-		margin-bottom: 2rem;
-		padding-bottom: 2rem;
+		padding-bottom: 1rem;
+	}
+
+	.plans-header:hover {
+		background-color: transparent !important;
 	}
 
 	.tier-column {
 		text-align: center;
-		position: relative;
-	}
-
-	.tier-column::after {
-		content: "";
-		position: absolute;
-		bottom: -2rem;
-		left: 10%;
-		right: 10%;
-		height: 1px;
-		background-color: var(--border-light);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+    padding-bottom: 1.5rem;
+		border-bottom: 1px solid var(--border-light);
+		gap: 0.5rem;
 	}
 
 	.tier-name {
@@ -299,7 +356,7 @@ const itemsData = await loadItemsData(lang);
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
 		gap: 2rem;
-		padding: 1rem 0;
+		padding: 1rem 2rem;
 	}
 
 	.plan-cell {
@@ -340,8 +397,8 @@ const itemsData = await loadItemsData(lang);
 	}
 
 	.cell-text {
-		font-size: 1rem;
-		font-weight: normal;
+		font-size: 1.75rem;
+		font-weight: 600;
 		color: var(--black);
 	}
 
