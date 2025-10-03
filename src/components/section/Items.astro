@@ -76,7 +76,7 @@ const config = shopConfig;
 {items.map(item => <ItemPopup item={item} t={t} popupId={`item-popup-${item.id}`} />)}
 
 <script>
-import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInterested } from "../../utils/local-storage.ts";
+import { getInterestedItems, removeInterestedItem, isItemInterested } from "../../utils/local-storage.ts";
 
 	declare function popupCtrl(id: string, action: string): void;
 

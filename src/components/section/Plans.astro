@@ -95,7 +95,7 @@ const uniqueItemIds = new Set<string>();
 				{
 					rows.map((row: any) => (
 						<div class={`plan-row ${!row.isAvailable ? 'disabled' : ''}`} data-row-id={row.id} data-is-available={row.isAvailable}>
-							{row.values.map((value: any, index: number) => {
+							{row.values.map((value: any) => {
 								const isAvailable = value.quantity && value.quantity !== "";
 								const isCheckmark = value.quantity === "O" || value.quantity === "o";
 

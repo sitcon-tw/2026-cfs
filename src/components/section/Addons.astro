@@ -6,9 +6,6 @@ import { loadItemsData, type ItemData } from "../../utils/items-loader";
 const lang = Astro.currentLocale || "zh-Hant";
 const itemsData = await loadItemsData(lang);
 
-// Create a lookup map for quick item access by ID
-const itemsMap = new Map(itemsData.map(item => [item.id, item]));
-
 // Define types
 interface GroupedItems {
 	[key: string]: ItemData[];

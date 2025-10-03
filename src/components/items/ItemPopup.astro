@@ -2,14 +2,12 @@
 import Popup from "../Popup.astro";
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
-import { X, Plus, Minus, ChevronLeft, ChevronRight } from "@lucide/astro";
+import { X, Plus, Minus, ChevronLeft, ChevronRight, Check } from "@lucide/astro";
 import planData from "@data/plan.json";
 
 import type { SubItem } from "../../utils/items-loader";
 
 const { item, t, popupId } = Astro.props;
-
-const locale = Astro.currentLocale || "zh-Hant";
 
 // Import images dynamically using import.meta.glob
 const images = import.meta.glob<{ default: ImageMetadata }>("../../assets/img/items/*");
@@ -115,7 +113,9 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 											<X size={20} />
 										</span>
 									) : isCheckmark ? (
-										<span class="tier-value">✓</span>
+										<span class="tier-value">
+											<Check size={20} />
+										</span>
 									) : (
 										<span class="tier-value">
 											{quantity}
@@ -175,7 +175,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 								const subImageDescription = subItem.image_description;
 
 								return (
-									<div class={`carousel-slide ${index === 0 ? 'active' : ''}`} data-slide-index={index}>
+									<div class={`carousel-slide ${index === 0 ? 'active' : ''}`} data-slide-index={index} data-description={subImageDescription || ""}>
 										{images[subImagePath] ?
 											<Image src={images[subImagePath]()} alt={subImageDescription || subItem.name} /> :
 											<img src={subItem.image} alt={subImageDescription || subItem.name} />
@@ -190,6 +190,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 						<button class="carousel-btn carousel-next" aria-label="Next image">
 							<ChevronRight />
 						</button>
+						<div class="carousel-description"></div>
 					</div>
 				) : (
 					images[imagePath] ? <Image src={images[imagePath]()} alt={item.image_description || item.name} /> : <img src={item.image} alt={item.image_description || item.name} />
@@ -459,6 +460,40 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 
 		.carousel-slide img {
 			border-radius: 15px;
+		}
+	}
+
+	/* Carousel description styles */
+	.carousel-description {
+		position: absolute;
+		bottom: 2.5rem;
+		right: 3rem;
+		background: #E0E0E0B2;
+		color: #1a1a1a;
+		padding: 0.75rem 1.25rem;
+		border-radius: 16px;
+		font-size: 1rem;
+		font-weight: 500;
+		max-width: 80%;
+		z-index: 10;
+		backdrop-filter: blur(40px) saturate(180%);
+		-webkit-backdrop-filter: blur(40px) saturate(180%);
+		line-height: 1.4;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+
+	.carousel-description:not(:empty) {
+		opacity: 1;
+	}
+
+	@media (max-width: 768px) {
+		.carousel-description {
+			bottom: 1rem;
+			right: 1rem;
+			padding: 0.5rem 1rem;
+			font-size: 0.85rem;
+			max-width: 70%;
 		}
 	}
 
@@ -1069,11 +1104,19 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 				if (slides.length === 0) return;
 
 				let currentIndex = 0;
+				const descriptionEl = carousel.querySelector(".carousel-description") as HTMLElement;
 
 				function updateCarousel() {
 					slides.forEach((slide, index) => {
 						slide.classList.toggle("active", index === currentIndex);
 					});
+
+					// Update description text
+					if (descriptionEl) {
+						const currentSlide = slides[currentIndex];
+						const description = currentSlide.getAttribute("data-description") || "";
+						descriptionEl.textContent = description;
+					}
 				}
 
 				// Event listeners
