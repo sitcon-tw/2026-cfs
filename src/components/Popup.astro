@@ -55,8 +55,7 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 		cursor: pointer;
 		position: sticky;
 		bottom: 2rem;
-		left: 50%;
-		transform: translateX(-50%);
+		margin: auto;
 		z-index: 5;
 	}
 
@@ -84,6 +83,7 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 		width: 2.25rem;
 		height: 2.25rem;
 		border-radius: 50%;
+		flex-shrink: 0;
 	}
 
 	.popup-bg {
@@ -163,7 +163,7 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 			font-size: 1.5rem;
 		}
 
-		.popup-bg{
+		.popup-bg {
 			padding-inline: 1rem;
 		}
 	}
