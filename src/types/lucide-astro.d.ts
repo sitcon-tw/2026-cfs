@@ -7,4 +7,6 @@ declare module "@lucide/astro" {
   export const Minus: any;
 	export const Container: any;
 	export const ChevronDown: any;
+  export const ChevronLeft: any;
+  export const ChevronRight: any;
 }

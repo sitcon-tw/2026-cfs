@@ -2,7 +2,7 @@
 import Popup from "../Popup.astro";
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
-import { X, Plus, Minus } from "@lucide/astro";
+import { X, Plus, Minus, ChevronLeft, ChevronRight } from "@lucide/astro";
 import planData from "@data/plan.json";
 
 import type { SubItem } from "../../utils/items-loader";
@@ -10,23 +10,6 @@ import type { SubItem } from "../../utils/items-loader";
 const { item, t, popupId } = Astro.props;
 
 const locale = Astro.currentLocale || "zh-Hant";
-
-const markdownFiles = import.meta.glob<{ Content: any }>("../../data/items/**/*.md", { eager: true });
-
-// Try to load markdown content for this item
-let MarkdownContent = null;
-let hasMarkdownContent = false;
-
-const markdownPath = `../../data/items/${item.id}/${locale}.md`;
-
-const markdownModule = markdownFiles[markdownPath];
-
-if (markdownModule && markdownModule.Content) {
-	MarkdownContent = markdownModule.Content;
-	hasMarkdownContent = true;
-} else {
-	hasMarkdownContent = false;
-}
 
 // Import images dynamically using import.meta.glob
 const images = import.meta.glob<{ default: ImageMetadata }>("../../assets/img/items/*");
@@ -181,17 +164,38 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 					)
 				}
 			</div>
-
-			{
-				hasMarkdownContent && (
-					<div class="markdown-content">
-						<MarkdownContent />
-					</div>
-				)
-			}
 		</div>
 		<div class="item-image">
-			{images[imagePath] ? <Image src={images[imagePath]()} alt={item.image_description || item.name} /> : <img src={item.image} alt={item.image_description || item.name} />}
+			{
+				item.sub && item.sub.length > 0 ? (
+					<div class="image-carousel" data-item-id={item.id}>
+						<div class="carousel-images">
+							{item.sub.map((subItem: SubItem, index: number) => {
+								const subImagePath = `../../assets/img/items/${subItem.image}`;
+								const subImageDescription = subItem.image_description;
+
+								return (
+									<div class={`carousel-slide ${index === 0 ? 'active' : ''}`} data-slide-index={index}>
+										{images[subImagePath] ?
+											<Image src={images[subImagePath]()} alt={subImageDescription || subItem.name} /> :
+											<img src={subItem.image} alt={subImageDescription || subItem.name} />
+										}
+									</div>
+								);
+							})}
+						</div>
+						<button class="carousel-btn carousel-prev" aria-label="Previous image">
+							<ChevronLeft />
+						</button>
+						<button class="carousel-btn carousel-next" aria-label="Next image">
+							<ChevronRight />
+						</button>
+						<div class="carousel-description"></div>
+					</div>
+				) : (
+					images[imagePath] ? <Image src={images[imagePath]()} alt={item.image_description || item.name} /> : <img src={item.image} alt={item.image_description || item.name} />
+				)
+			}
 		</div>
 	</div>
 </Popup>
@@ -354,6 +358,133 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 
 		.item-image img {
 			border-radius: 0 25px 25px 0;
+		}
+	}
+
+	/* Carousel styles */
+	.image-carousel {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.carousel-images {
+		position: relative;
+		flex: 1;
+		overflow: hidden;
+	}
+
+	.carousel-slide {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+		pointer-events: none;
+	}
+
+	.carousel-slide.active {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	.carousel-slide img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: 0;
+	}
+
+	.carousel-btn {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		background-color: #FFFFFF4A;
+		color: white;
+		border: none;
+		width: 3rem;
+		height: 3rem;
+		border-radius: 50%;
+		cursor: pointer;
+		font-size: 2rem;
+		line-height: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: background-color 0.2s ease, transform 0.2s ease;
+		z-index: 10;
+	}
+
+	.carousel-btn:hover:not(:disabled) {
+		background-color: rgba(0, 0, 0, 0.7);
+		transform: translateY(-50%) scale(1.1);
+	}
+
+	.carousel-btn:disabled {
+		opacity: 0.3;
+		cursor: not-allowed;
+	}
+
+	.carousel-prev {
+		left: 1rem;
+	}
+
+	.carousel-next {
+		right: 1rem;
+	}
+
+	.carousel-description {
+		padding: 1rem 1.5rem;
+		background-color: rgba(0, 0, 0, 0.8);
+		color: white;
+		text-align: center;
+		font-size: 1rem;
+		font-weight: 500;
+		min-height: 3rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	@media (min-width: 769px) {
+		.carousel-slide img {
+			border-radius: 0 25px 0 0;
+		}
+
+		.carousel-description {
+			border-radius: 0 0 25px 0;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.carousel-btn {
+			width: 2.5rem;
+			height: 2.5rem;
+			font-size: 1.5rem;
+		}
+
+		.carousel-prev {
+			left: 0.5rem;
+		}
+
+		.carousel-next {
+			right: 0.5rem;
+		}
+
+		.carousel-description {
+			font-size: 0.9rem;
+			padding: 0.8rem 1rem;
+      background-color: transparent;
+      color: black;
+			min-height: 2.5rem;
+		}
+
+		.carousel-slide img {
+			border-radius: 15px 15px 0 0;
 		}
 	}
 
@@ -953,5 +1084,68 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 				syncSubItemControls(subItemId);
 			}
 		});
+
+		// Carousel functionality
+		function initCarousels() {
+			document.querySelectorAll(".image-carousel").forEach(carousel => {
+				const slides = carousel.querySelectorAll(".carousel-slide");
+				const prevBtn = carousel.querySelector(".carousel-prev") as HTMLButtonElement;
+				const nextBtn = carousel.querySelector(".carousel-next") as HTMLButtonElement;
+				const descriptionEl = carousel.querySelector(".carousel-description") as HTMLElement;
+
+				if (slides.length === 0) return;
+
+				let currentIndex = 0;
+
+				function updateCarousel() {
+					slides.forEach((slide, index) => {
+						slide.classList.toggle("active", index === currentIndex);
+					});
+
+					// Update description
+					const activeSlide = slides[currentIndex];
+					const img = activeSlide.querySelector("img");
+					const description = img?.getAttribute("alt") || "";
+					if (descriptionEl) {
+						descriptionEl.textContent = description;
+					}
+				}
+
+				// Event listeners
+				if (prevBtn) {
+					prevBtn.addEventListener("click", (e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						if (currentIndex > 0) {
+							currentIndex--;
+						} else {
+							// Loop to last slide
+							currentIndex = slides.length - 1;
+						}
+						updateCarousel();
+					});
+				}
+
+				if (nextBtn) {
+					nextBtn.addEventListener("click", (e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						if (currentIndex < slides.length - 1) {
+							currentIndex++;
+						} else {
+							// Loop to first slide
+							currentIndex = 0;
+						}
+						updateCarousel();
+					});
+				}
+
+				// Initialize
+				updateCarousel();
+			});
+		}
+
+		// Initialize carousels on page load
+		initCarousels();
 	});
 </script>
