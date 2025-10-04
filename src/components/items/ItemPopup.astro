@@ -46,11 +46,11 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 				{
 					!(item.sub && item.sub.length > 0) && (
 						<div class="quantity-controls" data-item-id={item.id} data-quantity={item.quantity} data-remaining={item.remaining}>
-							<button type="button" class="quantity-btn minus">
+							<button type="button" class="quantity-btn minus" aria-label="Decrease quantity">
 								<Minus />
 							</button>
-							<span class="quantity-display">0</span>
-							<button type="button" class="quantity-btn plus">
+							<span class="quantity-display" role="status" aria-live="polite">0</span>
+							<button type="button" class="quantity-btn plus" aria-label="Increase quantity">
 								<Plus />
 							</button>
 						</div>
@@ -80,11 +80,11 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 											data-sub-item-remaining={subItem.remaining || ""}
 											data-initial-sub-item-remaining={subItem.remaining || ""}
 										>
-											<button type="button" class="sub-quantity-btn minus">
+											<button type="button" class="sub-quantity-btn minus" aria-label={`Decrease ${subItem.name} quantity`}>
 												<Minus size={12} />
 											</button>
-											<span class="sub-quantity-display">0</span>
-											<button type="button" class="sub-quantity-btn plus">
+											<span class="sub-quantity-display" role="status" aria-live="polite">0</span>
+											<button type="button" class="sub-quantity-btn plus" aria-label={`Increase ${subItem.name} quantity`}>
 												<Plus size={12} />
 											</button>
 										</div>
@@ -257,50 +257,6 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 		font-family: "Fira Mono", monospace;
 		display: block;
 		margin: 1.5rem 0rem;
-	}
-
-	.quantity-controls {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-	}
-
-	.quantity-btn {
-		width: 2rem;
-		aspect-ratio: 1 / 1;
-		border-radius: 50%;
-		background-color: var(--black);
-		color: var(--white);
-		border: none;
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 1.2rem;
-		font-weight: 400;
-		transition: transform 0.2s ease;
-		line-height: 1;
-	}
-
-	.quantity-btn:hover {
-		transform: scale(1.1);
-	}
-
-	.quantity-btn:disabled {
-		opacity: 0.3;
-		cursor: not-allowed;
-	}
-
-	.quantity-btn:disabled:hover {
-		transform: scale(1);
-	}
-
-	.quantity-display {
-		font-size: 1.2rem;
-		font-weight: 600;
-		color: var(--black);
-		min-width: 1.5rem;
-		text-align: center;
 	}
 
 	.quantity-controls {
@@ -765,156 +721,181 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 	import { addInterestedItem, removeInterestedItem, updateItemQuantity, getItemQuantity } from "../../utils/local-storage.ts";
 
 	document.addEventListener("DOMContentLoaded", function () {
+		// Constants
+		const UNLIMITED_TEXT = "不限";
+		const CHECKMARK_VALUES = ["O", "o"];
+		const QUANTITY_PATTERN = /max\s+(\d+)/i;
+
 		// Parse quantity from item.quantity field (e.g., "max 5", "不限", "獨家", "打包專屬")
 		function parseQuantityLimit(quantityStr: string): number | null {
 			if (!quantityStr) return null;
-			if (quantityStr === "不限") return null; // unlimited
+			if (quantityStr === UNLIMITED_TEXT) return null; // unlimited
 
-			const match = quantityStr.match(/max\s+(\d+)/i);
+			const match = quantityStr.match(QUANTITY_PATTERN);
 			if (match) return parseInt(match[1], 10);
 
 			return null;
 		}
 
-		// Update remaining badge for items WITHOUT sub-items
-		function updateRemainingBadge(itemId: string) {
-			const popup = document.querySelector(`.popup-content[data-item-id="${itemId}"]`);
-			if (!popup) return;
-
-			const remainingBadge = popup.querySelector(".remaining") as HTMLElement;
-			if (!remainingBadge) return;
-
-			const initialRemaining = parseInt(remainingBadge.getAttribute("data-initial-remaining") || "0", 10);
-			const unit = remainingBadge.getAttribute("data-unit") || "";
-			const currentQty = getItemQuantity(itemId) || 0;
-
-			const newRemaining = Math.max(0, initialRemaining - currentQty);
-
-			// Extract the translation text (e.g., "剩餘" or "Remaining")
-			const remainingText = remainingBadge.textContent?.split(" ")[0] || "";
-			remainingBadge.textContent = `${remainingText} ${newRemaining} ${unit}`;
-		}
-
-		// Update remaining badge for items WITH sub-items
-		function updateRemainingBadgeForParentWithSubs(itemId: string) {
-			const popup = document.querySelector(`.popup-content[data-item-id="${itemId}"]`);
-			if (!popup) return;
-
-			const remainingBadge = popup.querySelector(".remaining") as HTMLElement;
-			if (!remainingBadge) return;
-
-			const unit = remainingBadge.getAttribute("data-unit") || "";
-
-			// Get all sub-item controls for this parent item
-			const subItemControls = popup.querySelectorAll(`.sub-item-controls[data-item-id="${itemId}"]`);
-
-			let totalInitialRemaining = 0;
-			let totalSelectedQuantity = 0;
-
-			subItemControls.forEach(controls => {
-				const initialRemaining = parseInt(controls.getAttribute("data-initial-sub-item-remaining") || "0", 10);
-				totalInitialRemaining += initialRemaining;
-
-				const subItemId = controls.getAttribute("data-sub-item-id") || "";
-				const selectedQty = getItemQuantity(subItemId) || 0;
-				totalSelectedQuantity += selectedQty;
-			});
-
-			const newRemaining = Math.max(0, totalInitialRemaining - totalSelectedQuantity);
-
-			// Extract the translation text (e.g., "剩餘" or "Remaining")
-			const remainingText = remainingBadge.textContent?.split(" ")[0] || "";
-			remainingBadge.textContent = `${remainingText} ${newRemaining} ${unit}`;
-		}
-
-		// Sync quantity controls with localStorage
-		function syncQuantityControls(itemId: string) {
-			const controls = document.querySelector(`.quantity-controls[data-item-id="${itemId}"]`) as HTMLElement;
-			if (!controls) return;
-
-			const display = controls.querySelector(".quantity-display") as HTMLElement;
-			const minusBtn = controls.querySelector(".quantity-btn.minus") as HTMLButtonElement;
-			const plusBtn = controls.querySelector(".quantity-btn.plus") as HTMLButtonElement;
-
-			const currentQty = getItemQuantity(itemId) || 0;
-			if (display) display.textContent = currentQty.toString();
-
-			// Get max quantity from data attributes
-			const quantityStr = controls.getAttribute("data-quantity") || "";
-			const remainingStr = controls.getAttribute("data-remaining") || "";
-
-			// Parse both limits
-			const maxPerOrder = parseQuantityLimit(quantityStr);
-			const remaining = parseInt(remainingStr, 10);
-
-			// Calculate effective max: min of remaining and max per order
-			let maxQuantity: number | null = null;
-			if (!isNaN(remaining)) {
-				maxQuantity = remaining;
-				if (maxPerOrder !== null && maxPerOrder < remaining) {
-					maxQuantity = maxPerOrder;
-				}
-			} else if (maxPerOrder !== null) {
-				maxQuantity = maxPerOrder;
-			}
-
-			// Disable plus button if at max quantity
-			if (maxQuantity !== null && plusBtn) {
-				plusBtn.disabled = currentQty >= maxQuantity;
-			} else if (plusBtn) {
-				plusBtn.disabled = false;
-			}
-
-			// Disable minus button if at 0
-			if (minusBtn) {
-				minusBtn.disabled = currentQty <= 0;
-			}
-
-			// Update remaining badge for regular items
-			updateRemainingBadge(itemId);
-		}
-
-		// Sync sub-item quantity controls with localStorage (treats sub-items as regular items)
-		function syncSubItemControls(subItemId: string) {
-			const controls = document.querySelector(`.sub-item-controls[data-sub-item-id="${subItemId}"]`) as HTMLElement;
-			if (!controls) return;
-
-			const display = controls.querySelector(".sub-quantity-display") as HTMLElement;
-			const minusBtn = controls.querySelector(".sub-quantity-btn.minus") as HTMLButtonElement;
-			const plusBtn = controls.querySelector(".sub-quantity-btn.plus") as HTMLButtonElement;
-
-			const currentQty = getItemQuantity(subItemId) || 0;
-			if (display) display.textContent = currentQty.toString();
-
-			// Get max quantity from data attribute (sub-item remaining is just a number or "max X" format)
-			const remainingStr = controls.getAttribute("data-sub-item-remaining") || "";
-			let maxQuantity: number | null = null;
+		// Parse max quantity from remaining string (handles direct numbers or "max X" format)
+		function parseMaxQuantity(remainingStr: string): number | null {
+			if (!remainingStr) return null;
 
 			// Try parsing as a direct number first
 			const directNum = parseInt(remainingStr, 10);
 			if (!isNaN(directNum)) {
-				maxQuantity = directNum;
-			} else {
-				// Try parsing "max X" format
-				maxQuantity = parseQuantityLimit(remainingStr);
+				return directNum;
 			}
 
-			// Disable plus button if at max quantity
-			if (maxQuantity !== null && plusBtn) {
-				plusBtn.disabled = currentQty >= maxQuantity;
-			} else if (plusBtn) {
-				plusBtn.disabled = false;
-			}
+			// Try parsing "max X" format
+			return parseQuantityLimit(remainingStr);
+		}
 
-			// Disable minus button if at 0
-			if (minusBtn) {
-				minusBtn.disabled = currentQty <= 0;
-			}
+		// Calculate effective max quantity (minimum of remaining and max per order)
+		function calculateMaxQuantity(quantityStr: string, remainingStr: string): number | null {
+			const maxPerOrder = parseQuantityLimit(quantityStr);
+			const remaining = parseInt(remainingStr, 10);
 
-			// Update remaining badge for parent item with sub-items
-			const parentItemId = controls.getAttribute("data-item-id");
-			if (parentItemId) {
-				updateRemainingBadgeForParentWithSubs(parentItemId);
+			if (!isNaN(remaining)) {
+				return maxPerOrder !== null && maxPerOrder < remaining ? maxPerOrder : remaining;
+			}
+			return maxPerOrder;
+		}
+
+		// Update remaining badge for items WITHOUT sub-items
+		function updateRemainingBadge(itemId: string) {
+			try {
+				const popup = document.querySelector(`.popup-content[data-item-id="${itemId}"]`);
+				if (!popup) return;
+
+				const remainingBadge = popup.querySelector(".remaining") as HTMLElement;
+				if (!remainingBadge) return;
+
+				const initialRemaining = parseInt(remainingBadge.getAttribute("data-initial-remaining") || "0", 10);
+				const unit = remainingBadge.getAttribute("data-unit") || "";
+				const currentQty = getItemQuantity(itemId) || 0;
+
+				const newRemaining = Math.max(0, initialRemaining - currentQty);
+
+				// Extract the translation text (e.g., "剩餘" or "Remaining")
+				const remainingText = remainingBadge.textContent?.split(" ")[0] || "";
+				remainingBadge.textContent = `${remainingText} ${newRemaining} ${unit}`;
+			} catch (error) {
+				if (import.meta.env.DEV) console.error("Error updating remaining badge:", error);
+			}
+		}
+
+		// Update remaining badge for items WITH sub-items
+		function updateRemainingBadgeForParentWithSubs(itemId: string) {
+			try {
+				const popup = document.querySelector(`.popup-content[data-item-id="${itemId}"]`);
+				if (!popup) return;
+
+				const remainingBadge = popup.querySelector(".remaining") as HTMLElement;
+				if (!remainingBadge) return;
+
+				const unit = remainingBadge.getAttribute("data-unit") || "";
+
+				// Get all sub-item controls for this parent item
+				const subItemControls = popup.querySelectorAll(`.sub-item-controls[data-item-id="${itemId}"]`);
+
+				let totalInitialRemaining = 0;
+				let totalSelectedQuantity = 0;
+
+				subItemControls.forEach(controls => {
+					const initialRemaining = parseInt(controls.getAttribute("data-initial-sub-item-remaining") || "0", 10);
+					totalInitialRemaining += initialRemaining;
+
+					const subItemId = controls.getAttribute("data-sub-item-id") || "";
+					const selectedQty = getItemQuantity(subItemId) || 0;
+					totalSelectedQuantity += selectedQty;
+				});
+
+				const newRemaining = Math.max(0, totalInitialRemaining - totalSelectedQuantity);
+
+				// Extract the translation text (e.g., "剩餘" or "Remaining")
+				const remainingText = remainingBadge.textContent?.split(" ")[0] || "";
+				remainingBadge.textContent = `${remainingText} ${newRemaining} ${unit}`;
+			} catch (error) {
+				if (import.meta.env.DEV) console.error("Error updating remaining badge for parent:", error);
+			}
+		}
+
+		// Sync quantity controls with localStorage
+		function syncQuantityControls(itemId: string) {
+			try {
+				const controls = document.querySelector(`.quantity-controls[data-item-id="${itemId}"]`) as HTMLElement;
+				if (!controls) return;
+
+				const display = controls.querySelector(".quantity-display") as HTMLElement;
+				const minusBtn = controls.querySelector(".quantity-btn.minus") as HTMLButtonElement;
+				const plusBtn = controls.querySelector(".quantity-btn.plus") as HTMLButtonElement;
+
+				const currentQty = getItemQuantity(itemId) || 0;
+				if (display) display.textContent = currentQty.toString();
+
+				// Get max quantity from data attributes
+				const quantityStr = controls.getAttribute("data-quantity") || "";
+				const remainingStr = controls.getAttribute("data-remaining") || "";
+
+				// Calculate effective max quantity
+				const maxQuantity = calculateMaxQuantity(quantityStr, remainingStr);
+
+				// Disable plus button if at max quantity
+				if (maxQuantity !== null && plusBtn) {
+					plusBtn.disabled = currentQty >= maxQuantity;
+				} else if (plusBtn) {
+					plusBtn.disabled = false;
+				}
+
+				// Disable minus button if at 0
+				if (minusBtn) {
+					minusBtn.disabled = currentQty <= 0;
+				}
+
+				// Update remaining badge for regular items
+				updateRemainingBadge(itemId);
+			} catch (error) {
+				if (import.meta.env.DEV) console.error("Error syncing quantity controls:", error);
+			}
+		}
+
+		// Sync sub-item quantity controls with localStorage (treats sub-items as regular items)
+		function syncSubItemControls(subItemId: string) {
+			try {
+				const controls = document.querySelector(`.sub-item-controls[data-sub-item-id="${subItemId}"]`) as HTMLElement;
+				if (!controls) return;
+
+				const display = controls.querySelector(".sub-quantity-display") as HTMLElement;
+				const minusBtn = controls.querySelector(".sub-quantity-btn.minus") as HTMLButtonElement;
+				const plusBtn = controls.querySelector(".sub-quantity-btn.plus") as HTMLButtonElement;
+
+				const currentQty = getItemQuantity(subItemId) || 0;
+				if (display) display.textContent = currentQty.toString();
+
+				// Get max quantity from data attribute
+				const remainingStr = controls.getAttribute("data-sub-item-remaining") || "";
+				const maxQuantity = parseMaxQuantity(remainingStr);
+
+				// Disable plus button if at max quantity
+				if (maxQuantity !== null && plusBtn) {
+					plusBtn.disabled = currentQty >= maxQuantity;
+				} else if (plusBtn) {
+					plusBtn.disabled = false;
+				}
+
+				// Disable minus button if at 0
+				if (minusBtn) {
+					minusBtn.disabled = currentQty <= 0;
+				}
+
+				// Update remaining badge for parent item with sub-items
+				const parentItemId = controls.getAttribute("data-item-id");
+				if (parentItemId) {
+					updateRemainingBadgeForParentWithSubs(parentItemId);
+				}
+			} catch (error) {
+				if (import.meta.env.DEV) console.error("Error syncing sub-item controls:", error);
 			}
 		}
 
@@ -924,22 +905,18 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 
 			// Sub-item Plus button (treat sub-items as regular items)
 			if (target.closest(".sub-quantity-btn.plus")) {
-				console.log("Sub-item plus button clicked!");
 				e.preventDefault();
 				e.stopPropagation();
 
 				const btn = target.closest(".sub-quantity-btn.plus") as HTMLButtonElement;
 				const controls = btn.closest(".sub-item-controls");
-				console.log("controls:", controls);
 				if (!controls) return;
 
 				const subItemId = controls.getAttribute("data-sub-item-id");
-				console.log("subItemId:", subItemId);
 				if (!subItemId) return;
 
 				const currentQty = getItemQuantity(subItemId) || 0;
 				const newQty = currentQty + 1;
-				console.log("currentQty:", currentQty, "newQty:", newQty);
 
 				if (currentQty === 0) {
 					// Get item data from popup (same as regular item)
@@ -950,26 +927,9 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 					const deadlineEl = popup?.querySelector(".category");
 					const itemDeadline = deadlineEl?.textContent || "";
 
-					// Parse max quantity from data attribute (sub-item remaining is just a number or "max X" format)
+					// Parse max quantity from data attribute
 					const remainingStr = controls.getAttribute("data-sub-item-remaining") || "";
-					let maxQuantity: number | null = null;
-
-					// Try parsing as a direct number first
-					const directNum = parseInt(remainingStr, 10);
-					if (!isNaN(directNum)) {
-						maxQuantity = directNum;
-					} else {
-						// Try parsing "max X" format
-						maxQuantity = parseQuantityLimit(remainingStr);
-					}
-
-					console.log("Adding sub-item to cart:", {
-						id: subItemId,
-						title: subItemName,
-						image: itemImage,
-						deadline: itemDeadline,
-						maxQuantity: maxQuantity
-					});
+					const maxQuantity = parseMaxQuantity(remainingStr);
 
 					// Add item to cart with quantity 1
 					addInterestedItem({
@@ -983,7 +943,6 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 					});
 				} else {
 					// Update existing quantity
-					console.log("Updating sub-item quantity:", subItemId, newQty);
 					updateItemQuantity(subItemId, newQty);
 				}
 
@@ -1044,21 +1003,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 					// Get max quantity from data attributes
 					const quantityStr = controls.getAttribute("data-quantity") || "";
 					const remainingStr = controls.getAttribute("data-remaining") || "";
-
-					// Parse both limits
-					const maxPerOrder = parseQuantityLimit(quantityStr);
-					const remaining = parseInt(remainingStr, 10);
-
-					// Calculate effective max: min of remaining and max per order
-					let maxQuantity: number | null = null;
-					if (!isNaN(remaining)) {
-						maxQuantity = remaining;
-						if (maxPerOrder !== null && maxPerOrder < remaining) {
-							maxQuantity = maxPerOrder;
-						}
-					} else if (maxPerOrder !== null) {
-						maxQuantity = maxPerOrder;
-					}
+					const maxQuantity = calculateMaxQuantity(quantityStr, remainingStr);
 
 					// Add item to cart with quantity 1
 					addInterestedItem({
@@ -1143,26 +1088,57 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 		// Carousel functionality
 		function initCarousels() {
 			document.querySelectorAll(".image-carousel").forEach(carousel => {
-				const slides = carousel.querySelectorAll(".carousel-slide");
-				const prevBtn = carousel.querySelector(".carousel-prev") as HTMLButtonElement;
-				const nextBtn = carousel.querySelector(".carousel-next") as HTMLButtonElement;
+				try {
+					const slides = carousel.querySelectorAll(".carousel-slide");
+					const prevBtn = carousel.querySelector(".carousel-prev") as HTMLButtonElement;
+					const nextBtn = carousel.querySelector(".carousel-next") as HTMLButtonElement;
 
-				if (slides.length === 0) return;
+					if (slides.length === 0) return;
 
-				let currentIndex = 0;
-				const descriptionEl = carousel.querySelector(".carousel-description") as HTMLElement;
+					let currentIndex = 0;
+					const descriptionEl = carousel.querySelector(".carousel-description") as HTMLElement;
 
-				function updateCarousel() {
-					slides.forEach((slide, index) => {
-						slide.classList.toggle("active", index === currentIndex);
+					// Add error handling for images
+					slides.forEach(slide => {
+						const img = slide.querySelector("img");
+						if (img) {
+							img.addEventListener("error", () => {
+								if (import.meta.env.DEV) console.error("Failed to load image:", img.src);
+							});
+						}
 					});
 
-					// Update description text
-					if (descriptionEl) {
-						const currentSlide = slides[currentIndex];
-						const description = currentSlide.getAttribute("data-description") || "";
-						descriptionEl.textContent = description;
+					function updateCarousel() {
+						slides.forEach((slide, index) => {
+							slide.classList.toggle("active", index === currentIndex);
+						});
+
+						// Update description text
+						if (descriptionEl) {
+							const currentSlide = slides[currentIndex];
+							const description = currentSlide.getAttribute("data-description") || "";
+							descriptionEl.textContent = description;
+						}
 					}
+
+				function goToPrev() {
+					if (currentIndex > 0) {
+						currentIndex--;
+					} else {
+						// Loop to last slide
+						currentIndex = slides.length - 1;
+					}
+					updateCarousel();
+				}
+
+				function goToNext() {
+					if (currentIndex < slides.length - 1) {
+						currentIndex++;
+					} else {
+						// Loop to first slide
+						currentIndex = 0;
+					}
+					updateCarousel();
 				}
 
 				// Event listeners
@@ -1170,13 +1146,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 					prevBtn.addEventListener("click", (e) => {
 						e.preventDefault();
 						e.stopPropagation();
-						if (currentIndex > 0) {
-							currentIndex--;
-						} else {
-							// Loop to last slide
-							currentIndex = slides.length - 1;
-						}
-						updateCarousel();
+						goToPrev();
 					});
 				}
 
@@ -1184,18 +1154,30 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 					nextBtn.addEventListener("click", (e) => {
 						e.preventDefault();
 						e.stopPropagation();
-						if (currentIndex < slides.length - 1) {
-							currentIndex++;
-						} else {
-							// Loop to first slide
-							currentIndex = 0;
-						}
-						updateCarousel();
+						goToNext();
 					});
 				}
 
-				// Initialize
-				updateCarousel();
+				// Keyboard navigation
+				carousel.addEventListener("keydown", (e) => {
+					const keyEvent = e as KeyboardEvent;
+					if (keyEvent.key === "ArrowLeft") {
+						keyEvent.preventDefault();
+						goToPrev();
+					} else if (keyEvent.key === "ArrowRight") {
+						keyEvent.preventDefault();
+						goToNext();
+					}
+				});
+
+				// Make carousel focusable for keyboard navigation
+				(carousel as HTMLElement).setAttribute("tabindex", "0");
+
+					// Initialize
+					updateCarousel();
+				} catch (error) {
+					if (import.meta.env.DEV) console.error("Error initializing carousel:", error);
+				}
 			});
 		}
 
