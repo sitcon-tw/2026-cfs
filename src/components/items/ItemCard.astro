@@ -23,13 +23,27 @@ const descriptionData = JSON.stringify({
 
 // Prepare sub-items data for remaining calculation
 const hasSubItems = card.sub && card.sub.length > 0;
-const subItemsData = hasSubItems ? JSON.stringify(card.sub.map((sub: any, index: number) => ({
-	id: `${card.id}-sub-${index}`,
-	remaining: sub.remaining || "0"
-}))) : "[]";
+const subItemsData = hasSubItems
+	? JSON.stringify(
+			card.sub.map((sub: any, index: number) => ({
+				id: `${card.id}-sub-${index}`,
+				remaining: sub.remaining || "0"
+			}))
+		)
+	: "[]";
 ---
 
-<div class="card" data-card-id={card.id} data-descriptions={descriptionData} data-order={card.order} data-talent-recruitment-order={card.talent_recruitment_order} data-brand-exposure-order={card.brand_exposure_order} data-product-promotion-order={card.product_promotion_order} data-has-sub-items={hasSubItems ? "true" : "false"} data-sub-items={subItemsData}>
+<div
+	class="card"
+	data-card-id={card.id}
+	data-descriptions={descriptionData}
+	data-order={card.order}
+	data-talent-recruitment-order={card.talent_recruitment_order}
+	data-brand-exposure-order={card.brand_exposure_order}
+	data-product-promotion-order={card.product_promotion_order}
+	data-has-sub-items={hasSubItems ? "true" : "false"}
+	data-sub-items={subItemsData}
+>
 	<div class="card-image">
 		{images[imagePath] ? <Image src={images[imagePath]()} alt={card.image_description || card.name} /> : <div class="placeholder-image">No Image</div>}
 		<div class="tag">
@@ -40,13 +54,7 @@ const subItemsData = hasSubItems ? JSON.stringify(card.sub.map((sub: any, index:
 	<div class="card-content">
 		<div class="title-row">
 			<h3>{card.name}</h3>
-			<button
-				type="button"
-				class="add-button"
-				data-item-id={card.id}
-				data-item-title={card.name}
-				data-item-image={images[imagePath] ? imagePath : ""}
-			>
+			<button type="button" class="add-button" data-item-id={card.id} data-item-title={card.name} data-item-image={images[imagePath] ? imagePath : ""}>
 				<span class="add-icon">
 					<Plus />
 				</span>
