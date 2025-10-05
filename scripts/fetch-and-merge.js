@@ -22,9 +22,7 @@ function validateConfig(config) {
   if (!config.sheets || typeof config.sheets !== 'object') {
     throw new Error('Invalid or missing sheets configuration');
   }
-  return config;
 }
-
 try {
   validateConfig(sheetConfig);
 } catch (error) {
