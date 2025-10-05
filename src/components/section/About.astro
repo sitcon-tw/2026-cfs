@@ -35,7 +35,7 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 					<div class="card-content aos aos-fadeIn">
 						{card.data.map(stat => (
 							<div>
-								<div class="stat-number emfont-FiraMono-500">{stat.number}</div>
+								<div class="stat-number">{stat.number}</div>
 								<div class="stat-label">{stat.label}</div>
 							</div>
 						))}
@@ -256,6 +256,8 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 	.stat-number {
 		font-size: 3.5rem;
 		text-align: center;
+		font-family: "firacode", monospace;
+		font-weight: 500;
 	}
 
 	.stat-label {
