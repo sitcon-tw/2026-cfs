@@ -96,7 +96,7 @@ export function updateItemQuantity(itemId: string, quantity: number): boolean {
 		if (item) {
 			// Validate quantity (allow 0 for removal)
 			if (quantity < 0) return false;
-			if (item.maxQuantity !== null && item.maxQuantity !== undefined && quantity > item.maxQuantity) return false;
+			if (item.maxQuantity != null && quantity > item.maxQuantity) return false;
 
 			// If quantity is 0, remove the item instead
 			if (quantity === 0) {
