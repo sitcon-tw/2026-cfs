@@ -68,9 +68,13 @@ export interface ItemData {
 	sub: SubItem[];
 }
 
+function getLocaleSuffix(locale: string): string {
+	return locale === "zh-Hant" || locale === "zh" ? "_zh" : "_en";
+}
+
 function extractLocalizedData(rawData: ItemDataRaw, locale: string, id: string): ItemData {
 	// Determine suffix based on locale
-	const suffix = locale === "zh-Hant" || locale === "zh" ? "_zh" : "_en";
+	const suffix = getLocaleSuffix(locale);
 
 	// Extract localized sub-items
 	const localizedSub: SubItem[] = rawData.sub.map(subItem => ({
