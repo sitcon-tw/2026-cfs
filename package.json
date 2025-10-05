@@ -8,13 +8,14 @@
 		"preview": "astro preview",
 		"astro": "astro",
 		"format": "prettier --write .",
-		"test": "astro check"
+		"test": "astro check",
+		"fetch-data": "node ./scripts/fetch-and-merge.js"
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.9.4",
 		"@lucide/astro": "^0.543.0",
 		"astro": "^5.13.7",
-		"chart.js": "^4.5.0",
+		"csv-parse": "^6.1.0",
 		"chartjs-plugin-datalabels": "^2.2.0",
 		"sharp": "^0.34.3"
 	},

@@ -76,7 +76,7 @@ const config = shopConfig;
 {items.map(item => <ItemPopup item={item} t={t} popupId={`item-popup-${item.id}`} />)}
 
 <script>
-import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInterested } from "../../utils/local-storage.ts";
+	import { getInterestedItems, removeInterestedItem, isItemInterested } from "../../utils/local-storage.ts";
 
 	declare function popupCtrl(id: string, action: string): void;
 
@@ -123,28 +123,27 @@ import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInte
 			let visibleCount = cards.length;
 
 			if (selectedCategory === "all") {
-				// For "all", maintain original order (sort by data-card-id)
+				// For "all", sort by order field
 				cards.sort((a, b) => {
-					const idA = a.getAttribute("data-card-id") || "";
-					const idB = b.getAttribute("data-card-id") || "";
-					return idA.localeCompare(idB);
+					const orderA = parseInt(a.getAttribute("data-order") || "0");
+					const orderB = parseInt(b.getAttribute("data-order") || "0");
+					return orderA - orderB;
 				});
 			} else {
-				// Sort by category - selected category first, others maintain original order
-				cards.sort((a, b) => {
-					const categoryA = a.getAttribute("data-category");
-					const categoryB = b.getAttribute("data-category");
-					const idA = a.getAttribute("data-card-id") || "";
-					const idB = b.getAttribute("data-card-id") || "";
+				// Sort by category-specific order field
+				let orderAttr = "data-order";
+				if (selectedCategory === "talent_recruitment") {
+					orderAttr = "data-talent-recruitment-order";
+				} else if (selectedCategory === "brand_exposure") {
+					orderAttr = "data-brand-exposure-order";
+				} else if (selectedCategory === "product_promotion") {
+					orderAttr = "data-product-promotion-order";
+				}
 
-					if (categoryA === selectedCategory && categoryB !== selectedCategory) {
-						return -1; // A (selected category) comes first
-					}
-					if (categoryA !== selectedCategory && categoryB === selectedCategory) {
-						return 1; // B (selected category) comes first
-					}
-					// Both same priority, maintain original order by ID
-					return idA.localeCompare(idB);
+				cards.sort((a, b) => {
+					const orderA = parseInt(a.getAttribute(orderAttr) || "999999");
+					const orderB = parseInt(b.getAttribute(orderAttr) || "999999");
+					return orderA - orderB;
 				});
 			}
 
@@ -233,7 +232,21 @@ import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInte
 			const ids = new Set(items.map(i => i.id));
 			document.querySelectorAll(".add-button").forEach(btn => {
 				const id = btn.getAttribute("data-item-id") || "";
-				if (ids.has(id)) btn.classList.add("added");
+
+				// Check if this item or any of its sub-items are in cart
+				let hasItemInCart = ids.has(id);
+
+				// Also check if any sub-items are in cart (sub-items have IDs like "parent-id-sub-0")
+				if (!hasItemInCart) {
+					for (const itemId of ids) {
+						if (itemId.startsWith(id + "-sub-")) {
+							hasItemInCart = true;
+							break;
+						}
+					}
+				}
+
+				if (hasItemInCart) btn.classList.add("added");
 				else btn.classList.remove("added");
 			});
 		}
@@ -279,16 +292,9 @@ import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInte
 			e.preventDefault();
 			e.stopPropagation();
 			const id = button.getAttribute("data-item-id") || "";
-			const title = button.getAttribute("data-item-title") || "";
-			const category = button.getAttribute("data-item-category") || "";
-			const image = button.getAttribute("data-item-image") || "";
-			if (isItemInterested(id)) {
-				removeInterestedItem(id);
-				button.classList.remove("added");
-			} else {
-				addInterestedItem({ id, title, category, image, deadline: "" });
-				button.classList.add("added");
-			}
+			// Open the popup instead of adding to cart
+			const popupId = `item-popup-${id}`;
+			popupCtrl(popupId, "open");
 		});
 		function updateInterestButton() {
 			const items = getInterestedItems();
@@ -612,6 +618,7 @@ import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInte
 	.cards-grid {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
+		justify-content: center;
 		gap: 2rem;
 	}
 
@@ -710,7 +717,7 @@ import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInte
 		bottom: 6.5rem;
 		right: 2rem;
 		width: 16rem;
-		max-height: 25rem;
+		max-height: 60rem;
 		background-color: var(--white);
 		border-radius: 1rem;
 		box-shadow:
@@ -851,9 +858,15 @@ import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInte
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 	}
 
+	@media (max-width: 1024px) {
+		.cards-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
 	@media (max-width: 768px) {
 		.cards-grid {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 25rem);
 		}
 
 		.container {
@@ -892,17 +905,11 @@ import { getInterestedItems, addInterestedItem, removeInterestedItem, isItemInte
 		.interest-popover {
 			width: calc(100vw - 32px);
 			max-width: 300px;
-			max-height: 60vh;
+			max-height: 60rem;
 		}
 
 		.popover-content {
 			max-height: calc(60vh - 80px);
-		}
-	}
-
-	@media (max-width: 1024px) and (min-width: 769px) {
-		.cards-grid {
-			grid-template-columns: repeat(2, 1fr);
 		}
 	}
 </style>

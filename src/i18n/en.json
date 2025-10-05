@@ -1,4 +1,16 @@
 {
+	"global": {
+		"unit": {
+			"ticket": "Ticket(s)",
+			"booth": "Booth(s)",
+			"agenda": "Session(s)",
+			"ad": "Ad(s)",
+			"other": "Item(s)",
+			"copy": "Copy/Copies",
+			"second": "Second(s)",
+			"time": "Time(s)"
+		}
+	},
 	"meta": {
 		"title": "SITCON 2026 Sponsorship Prospectus - Support Open Source, Empower the Next Generation",
 		"description": "SITCON is a student-led community devoted to computing education and the promotion of open-source values. It is also a student-organized tech conference that gives students a stage to present and exchange ideas."
@@ -59,24 +71,32 @@
 		"people_count_unit": "1,300 people",
 		"team": "Organizing Team",
 		"timeline_items": {
-			"09/28": "Conference preparation kicks off",
-			"10/19": "Theme finalized",
-			"11/22": "Public announcement & Call for Papers",
-			"01/12": "Ticket sales open",
-			"01/21": "Call for Papers deadline",
-			"01/29": "Program published",
-			"03/08": "Conference day"
+			"0928": "Conference preparation kicks off",
+			"1019": "Theme finalized",
+			"1122": "Public announcement & Call for Papers",
+			"0112": "Ticket sales open",
+			"0121": "Call for Papers deadline",
+			"0129": "Program published",
+			"0308": "Conference day"
 		},
-		"place_items": [
-			{ "code": "R0", "name": "International Conference Hall", "description": "Total 426 seats\nOpening and Keynote will take place here." },
-			{ "code": "R1R2", "name": "First / Second Conference Room", "description": "Each room has 112 seats; aisles and the back area can accommodate additional attendees." },
-			{ "code": "R3", "name": "Teleconference Room", "description": "Total 36 seats; additional standing space at both sides of the stage, in front of the first row, and at the back." },
-			{
-				"code": "lounge",
+		"place_items": {
+			"R0": {
+				"name": "International Conference Hall",
+				"description": "Total 426 seats\nOpening and Keynote will take place here."
+			},
+			"R1R2": {
+				"name": "First / Second Conference Room",
+				"description": "Each room has 112 seats; aisles and the back area can accommodate additional attendees."
+			},
+			"R3": {
+				"name": "Teleconference Room",
+				"description": "Total 36 seats; additional standing space at both sides of the stage, in front of the first row, and at the back."
+			},
+			"lounge": {
 				"name": "Lounge",
 				"description": "A spacious, unobstructed open area with a wall of sunlit floor-to-ceiling windows. Unlike the lecture format in other rooms, this space supports flexible furniture layouts for various activities."
 			}
-		],
+		},
 		"teams": [
 			{
 				"title": "General Chair",
@@ -356,28 +376,20 @@
 	"faq": {
 		"questions": [
 			{
-				"question": "How is SITCON different from other tech conferences?",
-				"answer": "SITCON focuses on student communities and educational outreach. It is Taiwan’s most representative student computer conference — a key platform for companies to connect with young developers and future tech talent, as well as a concrete action to support open source and education."
+				"question": "Can we negotiate the price?",
+				"answer": "Our plan pricing is carefully calculated and already offers the best value. If you have specific needs or budget considerations, we’re happy to discuss."
 			},
 			{
-				"question": "Can sponsorship plans be customized beyond those listed in the proposal?",
-				"answer": "Yes, customization is welcome! Please fill out the form or contact us directly to discuss your ideas."
+				"question": "Can it be cheaper?",
+				"answer": "We understand your concern. While pricing is already quite reasonable, we can explore adjusting deliverables or other collaboration formats to fit your budget."
 			},
 			{
-				"question": "Can we receive an invoice or receipt?",
-				"answer": "By default, we provide a donation receipt issued by the Open Culture Foundation (OCF). If you need a formal business invoice instead, an additional 5% VAT will be required."
+				"question": "Why is it so expensive?",
+				"answer": "The pricing reflects the event’s scale and impact. If it exceeds your budget, consider a lower tier or talk with us about a customized package."
 			},
 			{
-				"question": "Will a formal sponsorship contract be signed?",
-				"answer": "We usually use a Memorandum of Understanding (MoU), but signing a formal contract is also possible if required."
-			},
-			{
-				"question": "What kind of report will we receive after the event?",
-				"answer": "We will provide a post-event report including attendee demographics (count, age, background), media and online exposure statistics, event photos, and media coverage summaries."
-			},
-			{
-				"question": "What is the typical collaboration process between SITCON and sponsors?",
-				"answer": "The usual process is: Initial contact → Needs discussion → Plan confirmation → MoU confirmation → Provide materials (logo, ad copy, etc.) → Pre-event promotion → On-site execution → Post-event report."
+				"question": "Do you offer discounts?",
+				"answer": "We offer early-bird and multi-year partnership discounts. First-time sponsors or those willing to sign multi-year agreements may receive corresponding offers. Please contact our sponsorship team for details."
 			}
 		]
 	},
@@ -386,7 +398,7 @@
 		"description": "We welcome various forms of event or media collaboration—co-hosting workshops, hackathons, podcasts, and more. Reach out with your ideas.",
 		"contact": "Marketing & Media Contacts",
 		"email": "contact@sitcon.org",
-		"contact_list": ["巫玟槿 +886-963-584-326", "呂承紘 +886-965-508-785", "黃一晉 +886-922-686-223"],
+		"contact_list": ["曾煥軒 +886-908-593-538", "巫玟槿 +886-963-584-326", "黃一晉 +886-922-686-223"],
 		"contact_us": "Contact Us",
 		"contact_us_description": "For collaboration:",
 		"contact_us_description2": "For registration:",

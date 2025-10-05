@@ -2,70 +2,126 @@
  * Utility functions for loading items data from individual markdown folders
  */
 
-export interface ItemDataRaw {
-	id: string;
-	remaining: number;
-	category: string;
-	deadline: string;
+export interface SubItemRaw {
+	name_zh: string;
+	name_en: string;
 	price: string;
-	[locale: string]: any; // Allow for locale-specific nested objects
+	remaining: string;
+	image: string;
+	image_description_zh: string;
+	image_description_en: string;
+}
+
+export interface SubItem {
+	name: string;
+	price: string;
+	remaining: string;
+	image: string;
+	image_description: string;
+}
+
+export interface ItemDataRaw {
+	name: string;
+	order: string;
+	quantity: string;
+	remaining: string;
+	unit: string;
+	type: string;
+	global_description_zh: string;
+	global_description_en: string;
+	talent_recruitment_zh: string;
+	talent_recruitment_en: string;
+	brand_exposure_zh: string;
+	brand_exposure_en: string;
+	product_promotion_zh: string;
+	product_promotion_en: string;
+	image: string;
+	image_description_zh: string;
+	image_description_en: string;
+	price: string;
+	deadline: string;
+	talent_recruitment_order: number;
+	brand_exposure_order: number;
+	product_promotion_order: number;
+	sub: SubItemRaw[];
 }
 
 export interface ItemData {
 	id: string;
-	remaining: number;
+	name: string;
+	order: string;
+	quantity: string;
+	remaining: string;
 	unit: string;
-	category: string;
-	title: string;
-	description: string | { [key: string]: string };
-	deadline: string;
+	type: string;
+	global_description: string;
+	talent_recruitment: string;
+	brand_exposure: string;
+	product_promotion: string;
+	image: string;
+	image_description: string;
 	price: string;
+	deadline: string;
+	talent_recruitment_order: number;
+	brand_exposure_order: number;
+	product_promotion_order: number;
+	sub: SubItem[];
 }
 
-function extractLocalizedData(rawData: ItemDataRaw, locale: string): ItemData {
-	// Check if data has the new format with locale-specific nested objects
-	if (rawData[locale] && typeof rawData[locale] === "object") {
-		// New format: extract from locale object
-		const localeData = rawData[locale];
-		return {
-			id: rawData.id,
-			remaining: rawData.remaining,
-			category: rawData.category,
-			deadline: rawData.deadline,
-			price: rawData.price,
-			unit: localeData.unit || "",
-			title: localeData.title || "",
-			description: localeData.description || ""
-		};
-	} else {
-		// Old format: assume the fields are already in the root object as keys
-		return {
-			id: rawData.id,
-			remaining: rawData.remaining,
-			category: rawData.category,
-			deadline: rawData.deadline,
-			price: rawData.price,
-			unit: (rawData as any).unit || "",
-			title: (rawData as any).title || "",
-			description: (rawData as any).description || ""
-		};
-	}
+function getLocaleSuffix(locale: string): string {
+	return locale === "zh-Hant" || locale === "zh" ? "_zh" : "_en";
+}
+
+function extractLocalizedData(rawData: ItemDataRaw, locale: string, id: string): ItemData {
+	// Determine suffix based on locale
+	const suffix = getLocaleSuffix(locale);
+
+	// Extract localized sub-items
+	const localizedSub: SubItem[] = rawData.sub.map(subItem => ({
+		name: suffix === "_zh" ? subItem.name_zh : subItem.name_en,
+		price: subItem.price,
+		remaining: subItem.remaining,
+		image: subItem.image,
+		image_description: suffix === "_zh" ? subItem.image_description_zh : subItem.image_description_en
+	}));
+
+	return {
+		id,
+		name: rawData.name,
+		order: rawData.order,
+		quantity: rawData.quantity,
+		remaining: rawData.remaining,
+		unit: rawData.unit,
+		type: rawData.type,
+		global_description: suffix === "_zh" ? rawData.global_description_zh : rawData.global_description_en,
+		talent_recruitment: suffix === "_zh" ? rawData.talent_recruitment_zh : rawData.talent_recruitment_en,
+		brand_exposure: suffix === "_zh" ? rawData.brand_exposure_zh : rawData.brand_exposure_en,
+		product_promotion: suffix === "_zh" ? rawData.product_promotion_zh : rawData.product_promotion_en,
+		image: rawData.image,
+		image_description: suffix === "_zh" ? rawData.image_description_zh : rawData.image_description_en,
+		price: rawData.price,
+		deadline: rawData.deadline,
+		talent_recruitment_order: rawData.talent_recruitment_order,
+		brand_exposure_order: rawData.brand_exposure_order,
+		product_promotion_order: rawData.product_promotion_order,
+		sub: localizedSub
+	};
 }
 
 export async function loadItemsData(locale: string = "zh-Hant"): Promise<ItemData[]> {
-	// Import all data.json files from markdown folders
-	const dataFiles = import.meta.glob<{ default: ItemDataRaw }>("../data/items/**/data.json");
+	// Load the main item.json file
+	const itemsModule = await import("../data/item.json");
+	const rawItems: Record<string, ItemDataRaw> = itemsModule.default;
 
 	const items: ItemData[] = [];
 
-	// Load each data.json file
-	for (const path in dataFiles) {
+	// Process each item
+	for (const [id, rawData] of Object.entries(rawItems)) {
 		try {
-			const module = await dataFiles[path]();
-			const localizedItem = extractLocalizedData(module.default, locale);
+			const localizedItem = extractLocalizedData(rawData, locale, id);
 			items.push(localizedItem);
 		} catch (error) {
-			console.error(`Failed to load item data from ${path}:`, error);
+			console.error(`Failed to load item data for ID ${id}:`, error);
 		}
 	}
 
@@ -83,33 +139,22 @@ export async function loadItemData(id: string, locale: string = "zh-Hant"): Prom
 	}
 }
 
-export async function loadItemsByCategory(category: string, locale: string = "zh-Hant"): Promise<ItemData[]> {
-	const allItems = await loadItemsData(locale);
-	return allItems.filter(item => item.category === category);
-}
-
 export async function getAvailableItemIds(): Promise<string[]> {
-	const dataFiles = import.meta.glob("@data/items/**/data.json");
-	const ids: string[] = [];
-
-	for (const path in dataFiles) {
-		const match = path.match(/\/items\/([^\/]+)\/data\.json$/);
-		if (match) {
-			ids.push(match[1]);
-		}
-	}
-
-	return ids.sort();
+	const itemsModule = await import("../data/item.json");
+	const rawItems: Record<string, ItemDataRaw> = itemsModule.default;
+	return Object.keys(rawItems).sort();
 }
 
-export function getItemDescription(item: ItemData, category: string = "all"): string {
-	if (typeof item.description === "string") {
-		return item.description;
+export function getItemDescription(item: ItemData, type: "global" | "talent_recruitment" | "brand_exposure" | "product_promotion" = "global"): string {
+	switch (type) {
+		case "talent_recruitment":
+			return item.talent_recruitment;
+		case "brand_exposure":
+			return item.brand_exposure;
+		case "product_promotion":
+			return item.product_promotion;
+		case "global":
+		default:
+			return item.global_description;
 	}
-
-	if (typeof item.description === "object" && item.description) {
-		return item.description[category] || item.description["all"] || "";
-	}
-
-	return "";
 }

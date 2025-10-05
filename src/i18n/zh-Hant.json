@@ -247,11 +247,9 @@
 		},
 		"item_categories": {
 			"all": "全部",
+			"talent_recruitment": "人才招募",
 			"brand_exposure": "品牌曝光",
-			"live_interaction": "現場互動",
-			"recruitment_and_promotion": "招募推廣",
-			"exclusive_agenda": "獨家議程",
-			"others": "其他"
+			"product_promotion": "產品推廣"
 		},
 		"tier_names": {
 			"flagship": "領航級",

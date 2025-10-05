@@ -2,89 +2,159 @@
 import Popup from "../Popup.astro";
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
-import { X } from "@lucide/astro";
-import plansData from "@data/plans_data.json";
+import { X, Plus, Minus, ChevronLeft, ChevronRight, Check } from "@lucide/astro";
+import planData from "@data/plan.json";
+
+import type { SubItem } from "../../utils/items-loader";
 
 const { item, t, popupId } = Astro.props;
 
-const locale = Astro.currentLocale || "zh-Hant";
-
-const markdownFiles = import.meta.glob<{ Content: any }>("../../data/items/**/*.md", { eager: true });
-
-// Try to load markdown content for this item
-let MarkdownContent = null;
-let hasMarkdownContent = false;
-
-const markdownPath = `../../data/items/${item.id}/${locale}.md`;
-
-const markdownModule = markdownFiles[markdownPath];
-
-if (markdownModule && markdownModule.Content) {
-	MarkdownContent = markdownModule.Content;
-	hasMarkdownContent = true;
-} else {
-	hasMarkdownContent = false;
-}
-
 // Import images dynamically using import.meta.glob
-const images = import.meta.glob<{ default: ImageMetadata }>("../../data/items/**/image.webp");
-const imagePath = `../../data/items/${item.id}/image.webp`;
+const images = import.meta.glob<{ default: ImageMetadata }>("../../assets/img/items/*");
+const imagePath = `../../assets/img/items/${item.image}`;
 
-// Find the matching plan row for this item
-const planRow = plansData.rows.find(row => row.id === item.id);
-const shouldShowPlanTiers = planRow !== undefined;
+// Find this item in plan.json benefits and collect tier info
+const tiers = [
+	{ id: "navigator", name: planData.navigator.name_zh, nameEn: planData.navigator.name_en, textColor: "#FF928A", data: planData.navigator },
+	{ id: "deep_cultivation", name: planData.deep_cultivation.name_zh, nameEn: planData.deep_cultivation.name_en, textColor: "#537FF1", data: planData.deep_cultivation },
+	{ id: "visionary", name: planData.visionary.name_zh, nameEn: planData.visionary.name_en, textColor: "#6FD195", data: planData.visionary },
+	{ id: "new_sprout", name: planData.new_sprout.name_zh, nameEn: planData.new_sprout.name_en, textColor: "#77B55A", data: planData.new_sprout }
+];
+
+// Check if this item appears in any plan tier
+const tierBenefits = tiers.map(tier => {
+	const benefit = tier.data.benefits.find(b => b.item_id === item.id);
+	return {
+		tier: tier,
+		benefit: benefit,
+		quantity: benefit?.quantity || ""
+	};
+});
+
+const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 ---
 
 <Popup id={popupId || `plan-popup-${item.id}`} button={false} hero={false}>
-	<div class="popup-content">
+	<div class="popup-content" data-item-id={item.id}>
+		<div class="item-image">
+			{
+				item.sub && item.sub.length > 0 ? (
+					<div class="image-carousel" data-item-id={item.id}>
+						<div class="carousel-images">
+							{item.sub.map((subItem: SubItem, index: number) => {
+								const subImagePath = `../../assets/img/items/${subItem.image}`;
+								const subImageDescription = subItem.image_description;
+
+								return (
+									<div class={`carousel-slide ${index === 0 ? "active" : ""}`} data-slide-index={index} data-description={subImageDescription || ""}>
+										{images[subImagePath] ? (
+											<Image src={images[subImagePath]()} alt={subImageDescription || subItem.name} />
+										) : (
+											<img src={subItem.image} alt={subImageDescription || subItem.name} />
+										)}
+									</div>
+								);
+							})}
+						</div>
+						<button class="carousel-btn carousel-prev" aria-label="Previous image">
+							<ChevronLeft />
+						</button>
+						<button class="carousel-btn carousel-next" aria-label="Next image">
+							<ChevronRight />
+						</button>
+						<div class="carousel-description" />
+					</div>
+				) : images[imagePath] ? (
+					<Image src={images[imagePath]()} alt={item.image_description || item.name} />
+				) : (
+					<img src={item.image} alt={item.image_description || item.name} />
+				)
+			}
+		</div>
 		<div class="item-details">
 			<div class="item-meta">
-				<span class="remaining">{t.remaining} {item.remaining} {item.unit}</span>
+				<span class="remaining" data-initial-remaining={item.remaining} data-unit={t.unit[item.unit] || item.unit}>{t.remaining} {item.remaining} {t.unit[item.unit] || item.unit}</span>
 				<span class="category">{`${new Date(item.deadline).getMonth() + 1}/${new Date(item.deadline).getDate()}`} {t.deadline}</span>
 			</div>
-			<h3>{item.title}</h3>
+			<div class="title-row">
+				<h3>{item.name}</h3>
+				{
+					!(item.sub && item.sub.length > 0) && (
+						<div class="quantity-controls" data-item-id={item.id} data-quantity={item.quantity} data-remaining={item.remaining}>
+							<button type="button" class="quantity-btn minus" aria-label="Decrease quantity">
+								<Minus size={16} />
+							</button>
+							<span class="quantity-display" role="status" aria-live="polite">
+								0
+							</span>
+							<button type="button" class="quantity-btn plus" aria-label="Increase quantity">
+								<Plus size={16} />
+							</button>
+						</div>
+					)
+				}
+			</div>
 			<div class="item-price">
 				<span class="price-value">{item.price}</span>
 			</div>
 
 			{
-				shouldShowPlanTiers && planRow && (
-					<div class="plan-tiers">
-						{plansData.tiers.map((tier, index) => {
-							const value = planRow.values[index];
-							let displayText = "0";
-							let unit = "";
-
-							if (value.textKey === "not_available") {
-								displayText = "0";
-							} else if ("number" in value && value.number !== undefined) {
-								displayText = value.number.toString();
-								if ("unitKey" in value && value.unitKey) {
-									// Follow the same pattern as Plans.astro - use only the last part of unitKey
-									const unitKey = value.unitKey.split(".").pop();
-									unit = unitKey ? t.unit[unitKey] || "" : "";
-								}
-							} else if ("icon" in value && value.icon !== undefined) {
-								displayText = value.icon.toString();
-								// For icon values, we can use a default unit if needed
-								unit = "個"; // or whatever unit makes sense for icons
-							} else {
-								// For other types (main, textKey that aren't not_available), don't show anything
-								displayText = "0";
-							}
+				item.sub && item.sub.length > 0 && (
+					<div class="sub-items-section">
+						{item.sub.map((subItem: SubItem, index: number) => {
+							const subItemId = `${item.id}-sub-${index}`;
 
 							return (
-								<div class="tier-item" style={`color: ${tier.textColor}`}>
-									<span class="tier-name">{t.tier_names[tier.name]}</span>
+								<div class="sub-item" data-sub-item-id={subItemId}>
+									<span class={"sub-item-name" + (subItem.name.length > 8 && " long")}>{subItem.name}</span>
+									<span class="sub-item-price">{subItem.price}</span>
+									<div
+										class="sub-item-controls"
+										data-item-id={item.id}
+										data-sub-item-id={subItemId}
+										data-sub-item-name={subItem.name}
+										data-sub-item-remaining={subItem.remaining || ""}
+										data-initial-sub-item-remaining={subItem.remaining || ""}
+									>
+										<button type="button" class="sub-quantity-btn minus" aria-label={`Decrease ${subItem.name} quantity`}>
+											<Minus size={12} />
+										</button>
+										<span class="sub-quantity-display" role="status" aria-live="polite">
+											0
+										</span>
+										<button type="button" class="sub-quantity-btn plus" aria-label={`Increase ${subItem.name} quantity`}>
+											<Plus size={12} />
+										</button>
+									</div>
+								</div>
+							);
+						})}
+					</div>
+				)
+			}
+
+			{
+				shouldShowPlanTiers && (
+					<div class="plan-tiers">
+						{tierBenefits.map(tb => {
+							const quantity = tb.quantity;
+							const isCheckmark = quantity === "O" || quantity === "o";
+							const isAvailable = quantity && quantity !== "";
+
+							return (
+								<div class="tier-item" style={`color: ${tb.tier.textColor}`}>
+									<span class="tier-name">{tb.tier.name}</span>
 									<span class="tier-arrow">→</span>
-									{displayText === "0" ? (
+									{!isAvailable ? (
 										<span class="tier-value tier-unavailable">
 											<X size={20} />
 										</span>
-									) : (
+									) : isCheckmark ? (
 										<span class="tier-value">
-											{displayText} {unit}
+											<Check size={20} />
 										</span>
+									) : (
+										<span class="tier-value">{quantity}</span>
 									)}
 								</div>
 							);
@@ -95,68 +165,54 @@ const shouldShowPlanTiers = planRow !== undefined;
 
 			<div class="structured-descriptions">
 				{
-					typeof item.description === "object" && item.description ? (
+					item.global_description && (
 						<>
-							{item.description.all && (
-								<>
-									<h2>{t.introduction}</h2>
-									<p>{item.description.all}</p>
-								</>
-							)}
-
-							{Object.entries(item.description)
-								.filter(([key]) => key !== "all")
-								.map(([categoryKey, description]) => (
-									<>
-										<h2>{t.item_categories[categoryKey]}</h2>
-										<p>{description}</p>
-									</>
-								))}
+							<p>{item.global_description}</p>
 						</>
-					) : (
+					)
+				}
+
+				{
+					item.talent_recruitment && (
 						<>
-							<h2>{t.introduction}</h2>
-							<p class="item-description">{item.description}</p>
+							<h2>{t.item_categories.talent_recruitment}</h2>
+							<p>{item.talent_recruitment}</p>
+						</>
+					)
+				}
+
+				{
+					item.brand_exposure && (
+						<>
+							<h2>{t.item_categories.brand_exposure}</h2>
+							<p>{item.brand_exposure}</p>
+						</>
+					)
+				}
+
+				{
+					item.product_promotion && (
+						<>
+							<h2>{t.item_categories.product_promotion}</h2>
+							<p>{item.product_promotion}</p>
 						</>
 					)
 				}
 			</div>
-
-			{
-				hasMarkdownContent && (
-					<div class="markdown-content">
-						<MarkdownContent />
-					</div>
-				)
-			}
-		</div>
-		<div class="item-image">
-			{images[imagePath] ? <Image src={images[imagePath]()} alt={item.title} /> : <img src={item.image} alt={item.title} />}
 		</div>
 	</div>
 </Popup>
 
 <style is:global>
 	.popup-content {
-		padding: 2rem 0;
 		display: grid;
-		grid-template-columns: 1fr;
-		gap: 2rem;
-		height: calc(100vh - 6.2rem);
+		grid-template-columns: 2fr 3fr;
+		height: calc(100vh - 9rem);
 		min-height: 600px;
 	}
 
-	/* Desktop and tablet layout */
-	@media (min-width: 769px) {
-		.popup-content {
-			grid-template-columns: 2fr 3fr;
-			gap: 0;
-			padding: 0;
-		}
-	}
-
 	.item-details {
-		padding: 2rem 3rem;
+		padding: 3rem 3rem 7rem;
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
@@ -164,11 +220,17 @@ const shouldShowPlanTiers = planRow !== undefined;
 		height: 100%;
 	}
 
+	.title-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+	}
+
 	.item-details h3 {
 		font-size: 2.5rem;
 		color: var(--black);
-		margin-bottom: 1rem;
-		font-weight: 700;
+		flex: 1;
 	}
 
 	.item-description {
@@ -182,14 +244,60 @@ const shouldShowPlanTiers = planRow !== undefined;
 		font-size: 1.4rem;
 		color: var(--black);
 		font-weight: 700;
+		font-family: "Fira Mono", monospace;
 		display: block;
+		margin: 1.2rem 0rem;
+	}
+
+	.quantity-controls {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.quantity-btn {
+		width: 1.8rem;
+		aspect-ratio: 1 / 1;
+		border-radius: 50%;
+		background-color: var(--black);
+		color: var(--white);
+		border: none;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.2rem;
+		font-weight: 400;
+		transition: transform 0.2s ease;
+		line-height: 1;
+	}
+
+	.quantity-btn:hover {
+		transform: scale(1.1);
+	}
+
+	.quantity-btn:disabled {
+		opacity: 0.3;
+		cursor: not-allowed;
+	}
+
+	.quantity-btn:disabled:hover {
+		transform: scale(1);
+	}
+
+	.quantity-display {
+		font-size: 1.2rem;
+		font-weight: 600;
+		color: var(--black);
+		min-width: 1.5rem;
+		text-align: center;
 	}
 
 	.item-meta {
 		display: flex;
-		gap: 1rem;
+		gap: 0.8rem;
 		align-items: center;
-		margin-bottom: 1rem;
+		margin-bottom: 0.8rem;
 	}
 
 	.remaining {
@@ -213,39 +321,113 @@ const shouldShowPlanTiers = planRow !== undefined;
 		align-items: center;
 		justify-content: center;
 		overflow: hidden;
-		order: 1;
+		background-color: var(--gray-container);
+		border-radius: 25px 0 0 25px;
 	}
-
-	.item-details {
-		order: 2;
-	}
-
 	.item-image img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		border-radius: 0;
+		color: transparent;
 	}
 
-	/* Desktop and tablet image styles */
-	@media (min-width: 769px) {
-		.item-image {
-			height: 100%;
-			order: 0;
-		}
+	/* Carousel styles */
+	.image-carousel {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
 
-		.item-details {
-			order: 0;
-		}
+	.carousel-images {
+		position: relative;
+		flex: 1;
+		overflow: hidden;
+	}
 
-		.item-image img {
-			border-radius: 0 25px 25px 0;
-		}
+	.carousel-slide {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+		pointer-events: none;
+	}
+
+	.carousel-slide.active {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	.carousel-btn {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		background-color: #ffffff4a;
+		color: white;
+		border: none;
+		width: 3rem;
+		height: 3rem;
+		border-radius: 50%;
+		cursor: pointer;
+		font-size: 2rem;
+		line-height: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition:
+			background-color 0.2s ease,
+			transform 0.2s ease;
+		z-index: 10;
+	}
+
+	.carousel-btn:hover:not(:disabled) {
+		background-color: rgba(0, 0, 0, 0.7);
+		transform: translateY(-50%) scale(1.1);
+	}
+
+	.carousel-btn:disabled {
+		opacity: 0.3;
+		cursor: not-allowed;
+	}
+
+	.carousel-prev {
+		left: 1rem;
+	}
+
+	.carousel-next {
+		right: 1rem;
+	}
+
+	/* Carousel description styles */
+	.carousel-description {
+		position: absolute;
+		bottom: 1.5rem;
+		right: 1.5rem;
+		background: #e0e0e0b2;
+		color: #1a1a1a;
+		padding: 0.75rem 1.25rem;
+		border-radius: 16px;
+		font-size: 1rem;
+		font-weight: 500;
+		max-width: 80%;
+		z-index: 10;
+		backdrop-filter: blur(40px) saturate(180%);
+		-webkit-backdrop-filter: blur(40px) saturate(180%);
+		line-height: 1.4;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+
+	.carousel-description:not(:empty) {
+		opacity: 1;
 	}
 
 	.plan-tiers {
 		margin: 1rem 0;
-		padding: 0;
 	}
 
 	.tier-item {
@@ -289,52 +471,590 @@ const shouldShowPlanTiers = planRow !== undefined;
 		height: 24px;
 	}
 
-	@media (max-width: 768px) {
+	.sub-items-section {
+		margin: 1.5rem 0;
+		padding-top: 0;
+	}
+
+	.sub-items-section h4 {
+		font-size: 2rem;
+		margin-bottom: 1rem;
+		font-weight: 700;
+		color: var(--black);
+	}
+
+	.sub-item {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		font-family: "Fira Mono", monospace;
+		margin-bottom: 0.5rem;
+	}
+
+	.sub-item-name {
+		font-size: 1.3rem;
+		font-weight: 700;
+		color: var(--black);
+		flex: 1;
+	}
+
+	.sub-item-price {
+		color: rgba(0, 0, 0, 0.6);
+		font-size: 1.1rem;
+		margin-right: 1rem;
+	}
+
+	.sub-item-controls {
+		display: flex;
+		align-items: center;
+		gap: 0.65rem;
+	}
+
+	.sub-quantity-btn {
+		width: 1.5rem;
+		aspect-ratio: 1 / 1;
+		border-radius: 50%;
+		background-color: #45454c;
+		color: var(--white);
+		border: none;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1rem;
+		font-weight: 400;
+		transition: transform 0.2s ease;
+		line-height: 1;
+	}
+
+	.sub-quantity-btn svg {
+		display: block;
+	}
+
+	.sub-quantity-btn:hover {
+		transform: scale(1.1);
+	}
+
+	.sub-quantity-btn:disabled {
+		opacity: 0.3;
+		cursor: not-allowed;
+	}
+
+	.sub-quantity-btn:disabled:hover {
+		transform: scale(1);
+	}
+
+	.sub-quantity-display {
+		font-size: 1rem;
+		font-weight: 600;
+		color: var(--black);
+		text-align: center;
+	}
+
+	.structured-descriptions h2 {
+		font-size: 1.5rem;
+		margin-bottom: 0.3rem;
+		margin-top: 1.2rem;
+		text-align: left;
+	}
+
+	.structured-descriptions h2:first-child {
+		margin-top: 0;
+	}
+
+	@media (max-width: 900px) {
 		.popup-content {
-			padding: 1.5rem 0;
-			gap: 2rem;
-			height: auto;
-		}
-
-		.item-details {
-			padding: 0 2rem;
-		}
-
-		.item-details h3 {
-			font-size: 2rem;
+			grid-template-columns: 1fr;
+			height: unset;
 		}
 
 		.item-image {
-			height: 250px;
-			margin: 0 2rem;
+			border-radius: 25px 25px 0 0;
+			height: 15rem;
 		}
 
-		.item-image img {
-			border-radius: 15px;
+		.carousel-description {
+			font-size: 0.9rem;
+			max-width: 90%;
 		}
 
-		.plan-tiers {
-			margin: 0.8rem 0;
-			padding: 0;
+		.item-details {
+			padding: 2rem 2rem 7rem;
 		}
-
-		.tier-item {
-			font-size: 1.1rem;
-			margin-bottom: 0.6rem;
-		}
-
-		.tier-arrow {
-			font-size: 1.1rem;
-			margin: 0 1rem;
-		}
-
-		.tier-value {
-			font-size: 1.3rem;
-		}
-
-		.tier-unavailable svg {
-			width: 20px;
-			height: 20px;
+	}
+	@media (max-width: 40rem) {
+		.sub-item-name.long {
+			flex: 1 1 100%;
+			margin-bottom: 0.5rem;
 		}
 	}
 </style>
+
+<script>
+	import { addInterestedItem, removeInterestedItem, updateItemQuantity, getItemQuantity } from "../../utils/local-storage.ts";
+
+	// Constants
+	const UNLIMITED_TEXT = "不限";
+	const CHECKMARK_VALUES = ["O", "o"];
+	const QUANTITY_PATTERN = /max\s+(\d+)/i;
+
+	document.addEventListener("DOMContentLoaded", function () {
+		// Parse quantity from item.quantity field (e.g., "max 5", "不限", "獨家", "打包專屬")
+		function parseQuantityLimit(quantityStr: string): number | null {
+			if (!quantityStr) return null;
+			if (quantityStr === UNLIMITED_TEXT) return null; // unlimited
+
+			const match = quantityStr.match(QUANTITY_PATTERN);
+			if (match) return parseInt(match[1], 10);
+
+			return null;
+		}
+
+		// Parse max quantity from remaining string (handles direct numbers or "max X" format)
+		function parseMaxQuantity(remainingStr: string): number | null {
+			if (!remainingStr) return null;
+
+			// Try parsing as a direct number first
+			const directNum = parseInt(remainingStr, 10);
+			if (!isNaN(directNum)) {
+				return directNum;
+			}
+
+			// Try parsing "max X" format
+			return parseQuantityLimit(remainingStr);
+		}
+
+		// Calculate effective max quantity (minimum of remaining and max per order)
+		function calculateMaxQuantity(quantityStr: string, remainingStr: string): number | null {
+			const maxPerOrder = parseQuantityLimit(quantityStr);
+			const remaining = parseInt(remainingStr, 10);
+
+			if (!isNaN(remaining)) {
+				return maxPerOrder !== null && maxPerOrder < remaining ? maxPerOrder : remaining;
+			}
+			return maxPerOrder;
+		}
+
+		// Update remaining badge for items WITHOUT sub-items
+		function updateRemainingBadge(itemId: string) {
+			try {
+				const popup = document.querySelector(`.popup-content[data-item-id="${itemId}"]`);
+				if (!popup) return;
+
+				const remainingBadge = popup.querySelector(".remaining") as HTMLElement;
+				if (!remainingBadge) return;
+
+				const initialRemaining = parseInt(remainingBadge.getAttribute("data-initial-remaining") || "0", 10);
+				const unit = remainingBadge.getAttribute("data-unit") || "";
+				const currentQty = getItemQuantity(itemId) || 0;
+
+				const newRemaining = Math.max(0, initialRemaining - currentQty);
+
+				// Extract the translation text (e.g., "剩餘" or "Remaining")
+				const remainingText = remainingBadge.textContent?.split(" ")[0] || "";
+				remainingBadge.textContent = `${remainingText} ${newRemaining} ${unit}`;
+			} catch (error) {
+				if (import.meta.env.DEV) console.error("Error updating remaining badge:", error);
+			}
+		}
+
+		// Update remaining badge for items WITH sub-items
+		function updateRemainingBadgeForParentWithSubs(itemId: string) {
+			try {
+				const popup = document.querySelector(`.popup-content[data-item-id="${itemId}"]`);
+				if (!popup) return;
+
+				const remainingBadge = popup.querySelector(".remaining") as HTMLElement;
+				if (!remainingBadge) return;
+
+				const unit = remainingBadge.getAttribute("data-unit") || "";
+
+				// Get all sub-item controls for this parent item
+				const subItemControls = popup.querySelectorAll(`.sub-item-controls[data-item-id="${itemId}"]`);
+
+				let totalInitialRemaining = 0;
+				let totalSelectedQuantity = 0;
+
+				subItemControls.forEach(controls => {
+					const initialRemaining = parseInt(controls.getAttribute("data-initial-sub-item-remaining") || "0", 10);
+					totalInitialRemaining += initialRemaining;
+
+					const subItemId = controls.getAttribute("data-sub-item-id") || "";
+					const selectedQty = getItemQuantity(subItemId) || 0;
+					totalSelectedQuantity += selectedQty;
+				});
+
+				const newRemaining = Math.max(0, totalInitialRemaining - totalSelectedQuantity);
+
+				// Extract the translation text (e.g., "剩餘" or "Remaining")
+				const remainingText = remainingBadge.textContent?.split(" ")[0] || "";
+				remainingBadge.textContent = `${remainingText} ${newRemaining} ${unit}`;
+			} catch (error) {
+				if (import.meta.env.DEV) console.error("Error updating remaining badge for parent:", error);
+			}
+		}
+
+		// Sync quantity controls with localStorage
+		function syncQuantityControls(itemId: string) {
+			try {
+				const controls = document.querySelector(`.quantity-controls[data-item-id="${itemId}"]`) as HTMLElement;
+				if (!controls) return;
+
+				const display = controls.querySelector(".quantity-display") as HTMLElement;
+				const minusBtn = controls.querySelector(".quantity-btn.minus") as HTMLButtonElement;
+				const plusBtn = controls.querySelector(".quantity-btn.plus") as HTMLButtonElement;
+
+				const currentQty = getItemQuantity(itemId) || 0;
+				if (display) display.textContent = currentQty.toString();
+
+				// Get max quantity from data attributes
+				const quantityStr = controls.getAttribute("data-quantity") || "";
+				const remainingStr = controls.getAttribute("data-remaining") || "";
+
+				// Calculate effective max quantity
+				const maxQuantity = calculateMaxQuantity(quantityStr, remainingStr);
+
+				// Disable plus button if at max quantity
+				if (maxQuantity !== null && plusBtn) {
+					plusBtn.disabled = currentQty >= maxQuantity;
+				} else if (plusBtn) {
+					plusBtn.disabled = false;
+				}
+
+				// Disable minus button if at 0
+				if (minusBtn) {
+					minusBtn.disabled = currentQty <= 0;
+				}
+
+				// Update remaining badge for regular items
+				updateRemainingBadge(itemId);
+			} catch (error) {
+				if (import.meta.env.DEV) console.error("Error syncing quantity controls:", error);
+			}
+		}
+
+		// Sync sub-item quantity controls with localStorage (treats sub-items as regular items)
+		function syncSubItemControls(subItemId: string) {
+			try {
+				const controls = document.querySelector(`.sub-item-controls[data-sub-item-id="${subItemId}"]`) as HTMLElement;
+				if (!controls) return;
+
+				const display = controls.querySelector(".sub-quantity-display") as HTMLElement;
+				const minusBtn = controls.querySelector(".sub-quantity-btn.minus") as HTMLButtonElement;
+				const plusBtn = controls.querySelector(".sub-quantity-btn.plus") as HTMLButtonElement;
+
+				const currentQty = getItemQuantity(subItemId) || 0;
+				if (display) display.textContent = currentQty.toString();
+
+				// Get max quantity from data attribute
+				const remainingStr = controls.getAttribute("data-sub-item-remaining") || "";
+				const maxQuantity = parseMaxQuantity(remainingStr);
+
+				// Disable plus button if at max quantity
+				if (maxQuantity !== null && plusBtn) {
+					plusBtn.disabled = currentQty >= maxQuantity;
+				} else if (plusBtn) {
+					plusBtn.disabled = false;
+				}
+
+				// Disable minus button if at 0
+				if (minusBtn) {
+					minusBtn.disabled = currentQty <= 0;
+				}
+
+				// Update remaining badge for parent item with sub-items
+				const parentItemId = controls.getAttribute("data-item-id");
+				if (parentItemId) {
+					updateRemainingBadgeForParentWithSubs(parentItemId);
+				}
+			} catch (error) {
+				if (import.meta.env.DEV) console.error("Error syncing sub-item controls:", error);
+			}
+		}
+
+		// Handle quantity controls
+		document.addEventListener("click", function (e) {
+			const target = e.target as Element;
+
+			// Sub-item Plus button (treat sub-items as regular items)
+			if (target.closest(".sub-quantity-btn.plus")) {
+				e.preventDefault();
+				e.stopPropagation();
+
+				const btn = target.closest(".sub-quantity-btn.plus") as HTMLButtonElement;
+				const controls = btn.closest(".sub-item-controls");
+				if (!controls) return;
+
+				const subItemId = controls.getAttribute("data-sub-item-id");
+				if (!subItemId) return;
+
+				const currentQty = getItemQuantity(subItemId) || 0;
+				const newQty = currentQty + 1;
+
+				if (currentQty === 0) {
+					// Get item data from popup (same as regular item)
+					const popup = controls.closest(".popup-content");
+					const subItemName = controls.getAttribute("data-sub-item-name") || "";
+					const img = popup?.querySelector(".item-image img");
+					const itemImage = img?.getAttribute("src") || "";
+					const deadlineEl = popup?.querySelector(".category");
+					const itemDeadline = deadlineEl?.textContent || "";
+
+					// Parse max quantity from data attribute
+					const remainingStr = controls.getAttribute("data-sub-item-remaining") || "";
+					const maxQuantity = parseMaxQuantity(remainingStr);
+
+					// Add item to cart with quantity 1
+					addInterestedItem({
+						id: subItemId,
+						title: subItemName,
+						category: "all",
+						image: itemImage,
+						deadline: itemDeadline,
+						quantity: 1,
+						maxQuantity: maxQuantity
+					});
+				} else {
+					// Update existing quantity
+					updateItemQuantity(subItemId, newQty);
+				}
+
+				syncSubItemControls(subItemId);
+			}
+
+			// Sub-item Minus button (treat sub-items as regular items)
+			if (target.closest(".sub-quantity-btn.minus")) {
+				e.preventDefault();
+				e.stopPropagation();
+
+				const btn = target.closest(".sub-quantity-btn.minus") as HTMLButtonElement;
+				const controls = btn.closest(".sub-item-controls");
+				if (!controls) return;
+
+				const subItemId = controls.getAttribute("data-sub-item-id");
+				if (!subItemId) return;
+
+				const currentQty = getItemQuantity(subItemId) || 0;
+				if (currentQty <= 0) return;
+
+				const newQty = currentQty - 1;
+
+				if (newQty === 0) {
+					// Remove from cart when quantity reaches 0
+					removeInterestedItem(subItemId);
+				} else {
+					updateItemQuantity(subItemId, newQty);
+				}
+
+				syncSubItemControls(subItemId);
+			}
+
+			// Plus button
+			if (target.closest(".quantity-btn.plus")) {
+				e.preventDefault();
+				e.stopPropagation();
+
+				const btn = target.closest(".quantity-btn.plus") as HTMLButtonElement;
+				const controls = btn.closest(".quantity-controls");
+				if (!controls) return;
+
+				const itemId = controls.getAttribute("data-item-id");
+				if (!itemId) return;
+
+				const currentQty = getItemQuantity(itemId) || 0;
+				const newQty = currentQty + 1;
+
+				if (currentQty === 0) {
+					// Get item data from popup
+					const popup = controls.closest(".popup-content");
+					const itemTitle = popup?.querySelector("h3")?.textContent || "";
+					const img = popup?.querySelector("img");
+					const itemImage = img?.getAttribute("src") || img?.getAttribute("alt") || "";
+					const deadlineEl = popup?.querySelector(".category");
+					const itemDeadline = deadlineEl?.textContent || "";
+
+					// Get max quantity from data attributes
+					const quantityStr = controls.getAttribute("data-quantity") || "";
+					const remainingStr = controls.getAttribute("data-remaining") || "";
+					const maxQuantity = calculateMaxQuantity(quantityStr, remainingStr);
+
+					// Add item to cart with quantity 1
+					addInterestedItem({
+						id: itemId,
+						title: itemTitle,
+						category: "all",
+						image: itemImage,
+						deadline: itemDeadline,
+						quantity: 1,
+						maxQuantity: maxQuantity
+					});
+				} else {
+					// Update existing quantity
+					updateItemQuantity(itemId, newQty);
+				}
+
+				syncQuantityControls(itemId);
+			}
+
+			// Minus button
+			if (target.closest(".quantity-btn.minus")) {
+				e.preventDefault();
+				e.stopPropagation();
+
+				const btn = target.closest(".quantity-btn.minus") as HTMLButtonElement;
+				const controls = btn.closest(".quantity-controls");
+				if (!controls) return;
+
+				const itemId = controls.getAttribute("data-item-id");
+				if (!itemId) return;
+
+				const currentQty = getItemQuantity(itemId) || 0;
+				if (currentQty <= 0) return;
+
+				const newQty = currentQty - 1;
+
+				if (newQty === 0) {
+					// Remove from cart when quantity reaches 0
+					removeInterestedItem(itemId);
+				} else {
+					updateItemQuantity(itemId, newQty);
+				}
+
+				syncQuantityControls(itemId);
+			}
+		});
+
+		// Listen to itemsChange events from localStorage
+		window.addEventListener("itemsChange", function () {
+			document.querySelectorAll(".quantity-controls").forEach(controls => {
+				const itemId = controls.getAttribute("data-item-id");
+				if (itemId) {
+					syncQuantityControls(itemId);
+				}
+			});
+
+			// Sync all sub-item controls
+			document.querySelectorAll(".sub-item-controls").forEach(controls => {
+				const subItemId = controls.getAttribute("data-sub-item-id");
+				if (subItemId) {
+					syncSubItemControls(subItemId);
+				}
+			});
+		});
+
+		// Initial sync on page load
+		document.querySelectorAll(".quantity-controls").forEach(controls => {
+			const itemId = controls.getAttribute("data-item-id");
+			if (itemId) {
+				syncQuantityControls(itemId);
+			}
+		});
+
+		// Initial sync for sub-items on page load
+		document.querySelectorAll(".sub-item-controls").forEach(controls => {
+			const subItemId = controls.getAttribute("data-sub-item-id");
+			if (subItemId) {
+				syncSubItemControls(subItemId);
+			}
+		});
+
+		// Carousel functionality
+		function initCarousels() {
+			document.querySelectorAll(".image-carousel").forEach(carousel => {
+				try {
+					const slides = carousel.querySelectorAll(".carousel-slide");
+					const prevBtn = carousel.querySelector(".carousel-prev") as HTMLButtonElement;
+					const nextBtn = carousel.querySelector(".carousel-next") as HTMLButtonElement;
+
+					if (slides.length === 0) return;
+
+					let currentIndex = 0;
+					const descriptionEl = carousel.querySelector(".carousel-description") as HTMLElement;
+
+					// Add error handling for images
+					slides.forEach(slide => {
+						const img = slide.querySelector("img");
+						if (img) {
+							img.addEventListener("error", () => {
+								if (import.meta.env.DEV) console.error("Failed to load image:", img.src);
+							});
+						}
+					});
+
+					function updateCarousel() {
+						slides.forEach((slide, index) => {
+							slide.classList.toggle("active", index === currentIndex);
+						});
+
+						// Update description text
+						if (descriptionEl) {
+							const currentSlide = slides[currentIndex];
+							const description = currentSlide.getAttribute("data-description") || "";
+							descriptionEl.textContent = description;
+						}
+					}
+
+					function goToPrev() {
+						if (currentIndex > 0) {
+							currentIndex--;
+						} else {
+							// Loop to last slide
+							currentIndex = slides.length - 1;
+						}
+						updateCarousel();
+					}
+
+					function goToNext() {
+						if (currentIndex < slides.length - 1) {
+							currentIndex++;
+						} else {
+							// Loop to first slide
+							currentIndex = 0;
+						}
+						updateCarousel();
+					}
+
+					// Event listeners
+					if (prevBtn) {
+						prevBtn.addEventListener("click", e => {
+							e.preventDefault();
+							e.stopPropagation();
+							goToPrev();
+						});
+					}
+
+					if (nextBtn) {
+						nextBtn.addEventListener("click", e => {
+							e.preventDefault();
+							e.stopPropagation();
+							goToNext();
+						});
+					}
+
+					// Keyboard navigation
+					carousel.addEventListener("keydown", e => {
+						const keyEvent = e as KeyboardEvent;
+						if (keyEvent.key === "ArrowLeft") {
+							keyEvent.preventDefault();
+							goToPrev();
+						} else if (keyEvent.key === "ArrowRight") {
+							keyEvent.preventDefault();
+							goToNext();
+						}
+					});
+
+					// Make carousel focusable for keyboard navigation
+					(carousel as HTMLElement).setAttribute("tabindex", "0");
+
+					// Initialize
+					updateCarousel();
+				} catch (error) {
+					if (import.meta.env.DEV) console.error("Error initializing carousel:", error);
+				}
+			});
+		}
+
+		// Initialize carousels on page load
+		initCarousels();
+	});
+</script>
