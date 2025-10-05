@@ -76,7 +76,7 @@ const config = shopConfig;
 {items.map(item => <ItemPopup item={item} t={t} popupId={`item-popup-${item.id}`} />)}
 
 <script>
-import { getInterestedItems, removeInterestedItem, isItemInterested } from "../../utils/local-storage.ts";
+	import { getInterestedItems, removeInterestedItem, isItemInterested } from "../../utils/local-storage.ts";
 
 	declare function popupCtrl(id: string, action: string): void;
 
@@ -352,7 +352,7 @@ import { getInterestedItems, removeInterestedItem, isItemInterested } from "../.
 				itemDiv.appendChild(contentDiv);
 				listContainer.appendChild(itemDiv);
 			});
-			
+
 			// emfont.init();
 
 			const removeButtons = listContainer.querySelectorAll(".remove-item");
@@ -620,6 +620,7 @@ import { getInterestedItems, removeInterestedItem, isItemInterested } from "../.
 	.cards-grid {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
+		justify-content: center;
 		gap: 2rem;
 	}
 
@@ -859,9 +860,15 @@ import { getInterestedItems, removeInterestedItem, isItemInterested } from "../.
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 	}
 
+	@media (max-width: 1024px) {
+		.cards-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
 	@media (max-width: 768px) {
 		.cards-grid {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 25rem);
 		}
 
 		.container {
@@ -900,17 +907,11 @@ import { getInterestedItems, removeInterestedItem, isItemInterested } from "../.
 		.interest-popover {
 			width: calc(100vw - 32px);
 			max-width: 300px;
-		  max-height: 60rem;
+			max-height: 60rem;
 		}
 
 		.popover-content {
 			max-height: calc(60vh - 80px);
-		}
-	}
-
-	@media (max-width: 1024px) and (min-width: 769px) {
-		.cards-grid {
-			grid-template-columns: repeat(2, 1fr);
 		}
 	}
 </style>

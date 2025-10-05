@@ -72,6 +72,8 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 	.no-hero .close-btn {
 		position: fixed;
 		bottom: 2rem;
+		left: 50%;
+		transform: translateX(-50%);
 	}
 
 	.detail-btn .plus {
@@ -95,7 +97,7 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 		backdrop-filter: blur(10px);
 		z-index: 100;
 		overflow: scroll;
-		padding: 4rem 2.25rem 2.25rem;
+		padding: 4rem 2.25rem;
 		opacity: 0;
 		pointer-events: none;
 		display: none;
