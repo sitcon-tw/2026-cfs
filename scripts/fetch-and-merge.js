@@ -432,7 +432,7 @@ async function downloadAllImages(itemsData) {
           console.log(`✓ Downloaded ${path.basename(filePath)}`);
 
           // Process image to WebP
-          const webpPath = await processImageToWebP(filePath, 1920, 80);
+          const webpPath = await processImageToWebP(filePath, 1080, 80);
           const webpFileName = path.basename(webpPath);
           imageIdToFileName[imageId] = webpFileName;
           console.log(`✓ Converted to WebP: ${webpFileName}`);
