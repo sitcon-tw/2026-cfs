@@ -9,6 +9,7 @@ import hk from "@assets/img/sitcon_hk.webp";
 import groups from "@assets/img/groups.webp";
 import edu from "@assets/img/edu.webp";
 import hackathon from "@assets/img/hackathon.webp";
+import camp from "@assets/img/camp.webp";
 import type { ImageMetadata } from "astro";
 
 const { t } = Astro.props;
@@ -37,6 +38,11 @@ const news: News[] = [
 		img: hackathon,
 		title: t.things[3].title,
 		description: t.things[3].description
+    },
+	{
+		img: camp,
+		title: t.things[4].title,
+		description: t.things[4].description
 	}
 ];
 ---

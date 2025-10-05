@@ -11,4 +11,401 @@
 			"time": "Time(s)"
 		}
 	}
+  "meta": {
+    "title": "SITCON 2026 Sponsorship Prospectus - Support Open Source, Empower the Next Generation",
+    "description": "SITCON is a student-led community devoted to computing education and the promotion of open-source values. It is also a student-organized tech conference that gives students a stage to present and exchange ideas."
+  },
+  "nav": {
+    "title": "SITCON 2026 Sponsorship Prospectus",
+    "data": "Audience Data",
+    "info": "Event Info",
+    "plan": "Sponsorship Plans",
+    "langChange": "English Version",
+    "contact": "Contact Us",
+    "export": "Export PDF"
+  },
+  "hero": {
+    "title": "Students need a stage, the industry needs talent",
+    "title2": "SITCON is the bridge where both meet",
+    "subtitle": "SITCON 2026 Students’ Information Technology Conference",
+    "subtitle2": "Sponsorship Prospectus"
+  },
+  "intro": {
+    "sentence1": "SITCON is a student community dedicated to computing education and championing open-source culture.",
+    "sentence2": "It’s also a student-run conference that offers a stage for students to share and discuss technology."
+  },
+  "cycle": {
+    "title": "More than a one-off collaboration",
+    "title2": "It’s a cycle that can last ten or twenty years.",
+    "mobileCycleText": {
+      "title1": "Spotting Rising Talent",
+      "desc1": "We host conferences and hackathons that give people from different fields a stage to showcase themselves and exchange knowledge.",
+      "title2": "Nurturing Talent",
+      "desc2": "We promote educational equity and industry–academia collaboration, cultivating organizational and leadership skills.",
+      "title3": "Creating Impact",
+      "desc3": "Find users and hire candidates—win the hearts of young developers."
+    },
+    "slogan1": "Joining SITCON isn’t just about exposure—it’s about becoming part of the community.",
+    "slogan2": "From the first SITCON to your first project team, let your company start a new story with talent.",
+    "sdgs": {
+      "title1": "Goal 4: Quality Education",
+      "desc1": "SITCON offers tech talks, workshops, Hour of Code, and summer camps to help students explore computer science, improve digital literacy and innovation, and address rural education gaps—lowering barriers so everyone can learn.",
+      "title2": "Goal 9: Industry, Innovation, and Infrastructure",
+      "desc2": "SITCON encourages exploration of emerging technologies, practical application of CS skills, and open-source sharing that contributes to infrastructure and innovation across industries.",
+      "title3": "Goal 10: Reduced Inequalities",
+      "desc3": "Our activities reach rural and resource-limited areas, encouraging participation and sharing. We provide equal opportunities for students from all backgrounds—through the community expo and café—so everyone enjoys fair chances to connect.",
+      "title4": "Goal 17: Partnerships for the Goals",
+      "desc4": "Partnerships with the Ministry of Education, schools, and other communities are the foundation of our success. SITCON serves as a bridge connecting diverse resources to advance the SDGs."
+    }
+  },
+  "time": {
+    "title1": "Our once-a-year moment,",
+    "title2": "we’re ready.",
+    "date": "Saturday, March 28, 2026",
+    "location": "Academia Sinica, Humanities and Social Sciences Building",
+    "popup_label": "View event details and the organizing team",
+    "activity_schedule": "Event Schedule",
+    "place_detail": "Venue Details",
+    "location_name": "Academia Sinica<br />Humanities and Social Sciences Building",
+    "max_people": "Estimated maximum venue capacity",
+    "people_count_unit": "1,300 people",
+    "team": "Organizing Team",
+    "timeline_items": {
+      "0928": "Conference preparation kicks off",
+      "1019": "Theme finalized",
+      "1122": "Public announcement & Call for Papers",
+      "0112": "Ticket sales open",
+      "0121": "Call for Papers deadline",
+      "0129": "Program published",
+      "0308": "Conference day"
+    },
+    "place_items": {
+      "R0": {
+        "name": "International Conference Hall",
+        "description": "Total 426 seats\nOpening and Keynote will take place here."
+      },
+      "R1R2": {
+        "name": "First / Second Conference Room",
+        "description": "Each room has 112 seats; aisles and the back area can accommodate additional attendees."
+      },
+      "R3": {
+        "name": "Teleconference Room",
+        "description": "Total 36 seats; additional standing space at both sides of the stage, in front of the first row, and at the back."
+      },
+      "lounge": {
+        "name": "Lounge",
+        "description": "A spacious, unobstructed open area with a wall of sunlit floor-to-ceiling windows. Unlike the lecture format in other rooms, this space supports flexible furniture layouts for various activities."
+      }
+    },
+    "teams": [
+      {
+        "title": "General Chair",
+        "name": "徐嘉謙",
+        "school": "國立宜蘭大學",
+        "major": "資訊工程系"
+      },
+      {
+        "title": "Vice Chair",
+        "name": "邱翊盛",
+        "school": "臺北市立內湖高級職業工業學校",
+        "major": ""
+      },
+      {
+        "title": "Vice Chair",
+        "name": "康智惟",
+        "school": "國立臺灣科技大學",
+        "major": "電機工程系"
+      },
+      {
+        "title": "Marketing Lead",
+        "name": "巫玟槿",
+        "school": "國立成功大學",
+        "major": "資訊工程系"
+      },
+      {
+        "title": "Program Lead",
+        "name": "吳政葶",
+        "school": "國立清華大學",
+        "major": "資訊工程研究所"
+      },
+      {
+        "title": "Operations Lead",
+        "name": "黃映綺",
+        "school": "國立中山大學",
+        "major": "人文暨科技跨領域學士學位學程"
+      },
+      {
+        "title": "Production Lead",
+        "name": "詹博翔",
+        "school": "大同大學",
+        "major": "資訊經營學系"
+      },
+      {
+        "title": "Design Lead",
+        "name": "楊沁璇",
+        "school": "國立東華大學",
+        "major": "資訊管理學系"
+      },
+      {
+        "title": "Finance Lead",
+        "name": "吳芷伶",
+        "school": "國立屏東大學",
+        "major": "電腦科學與人工智慧學系"
+      },
+      {
+        "title": "Development Lead",
+        "name": "毛宥鈞",
+        "school": "國立陽明交通大學",
+        "major": "資訊工程學系"
+      },
+      {
+        "title": "Venue Lead",
+        "name": "盧明澤",
+        "school": "國立鳳山高級中學",
+        "major": ""
+      },
+      {
+        "title": "Documentation Lead",
+        "name": "吳睿琦",
+        "school": "國立中央大學",
+        "major": "通訊工程系"
+      },
+      {
+        "title": "Editorial Lead",
+        "name": "賴亭瑜",
+        "school": "國立彰化師範大學",
+        "major": "特殊教育學系"
+      }
+    ]
+  },
+  "news": {
+    "title": "What We’ve Done",
+    "things": [
+      {
+        "title": "The largest student CS conference in East Asia",
+        "description": "We inspired SITCON x HK and the Chongqing Student Open Source Conference, and we support student clubs and tech groups across regions. Each year, over half of our attendees are first-timers; alumni work across the tech industry in Taiwan, the U.S., Japan, and the Netherlands—and regularly return to give back."
+      },
+      {
+        "title": "Meetups across North, Central, and South Taiwan",
+        "description": "We co-host meetups with local communities, offering students channels to exchange knowledge. We often collaborate with schools like National Taiwan University and Tamkang University, bringing together outstanding talents from everywhere."
+      },
+      {
+        "title": "SITCON Hour of Code",
+        "description": "Since 2014, in partnership with the Ministry of Education, we’ve regularly hosted Hour of Code events across Taiwan, sparking curiosity for computing among hundreds of children aged 4–16."
+      },
+      {
+        "title": "SITCON Hackathon",
+        "description": "We held HackGen in 2014 and 2015, and in 2024 we scaled up to the SITCON Hackathon. Participants learn to ideate, plan, and ultimately build—so society and industry discover high-potential student teams."
+      },
+      {
+        "title": "SITCON Summer Camp",
+        "description": "Since 2014, every July we run a summer camp to help students get started with CS and ignite passion for open source. Students serve as both campers and volunteers. Beyond the core curriculum, we host open-source talks, a community expo, and the Vision Café—so learning is paired with rich opportunities to connect and exchange ideas."
+      }
+    ]
+  },
+  "plans": {
+    "title": "Choose the Plan That Fits You",
+    "plan_comparison": "Plan Comparison",
+    "interested": "Interested",
+    "features": {
+      "booth_double": "Double-size booth at venue",
+      "booth_regular": "Booth at venue",
+      "video_r0": "R0 video loop",
+      "video_logo_display": "Logo display",
+      "welcome_bag": "Welcome bag insert",
+      "tickets": "Complimentary tickets",
+      "shuttle_broadcast": "Shuttle bus onboard announcement",
+      "partner_announcement": "Partner acknowledgment",
+      "partner_announcement_timing": "Before sessions in R0",
+      "live_template": "Live stream template",
+      "entrance_schedule": "Entrance schedule board",
+      "entrance_backdrop": "Entrance window backdrop",
+      "conference_backdrop": "Conference motif backdrop",
+      "shared_notes": "Conference shared notes",
+      "website_logo": "Website logo placement",
+      "ig_story": "Instagram Stories",
+      "ig_highlight": "Instagram Highlights exposure",
+      "appointment_exposure": "Appointment exposure",
+      "logo_exposure": "Logo exposure",
+      "not_available": "—"
+    }
+  },
+  "items": {
+    "title": "Save Items of Interest",
+    "subtitle": "Four tiers, some add-ons available. Mind the deadlines.",
+    "days": "days",
+    "hours": "hours",
+    "minutes": "minutes",
+    "seconds": "seconds",
+    "deadline": "Deadline",
+    "price": "Price",
+    "expandAll": "Expand All",
+    "showLess": "Show Less",
+    "interestedItems": "Interested Items",
+    "noInterestedItems": "No items saved yet",
+    "shareInterestedItemsText": "You can share your items of interest with us via the form below",
+    "introduction": "Introduction",
+    "downloadQuote": "Download Quote",
+    "viewPlanDetails": "View Plan Details",
+    "contactUs": "Contact Us"
+  },
+  "global": {
+    "remaining": "Remaining",
+    "unit": {
+      "ticket": "tickets",
+      "booth": "booths",
+      "agenda": "sessions",
+      "ad": "ads",
+      "other": "items",
+      "copy": "copies",
+      "second": "seconds",
+      "time": "times"
+    },
+    "item_categories": {
+      "all": "All",
+      "brand_exposure": "Brand Exposure",
+      "live_interaction": "On-site Engagement",
+      "recruitment_and_promotion": "Recruitment & Promotion",
+      "exclusive_agenda": "Exclusive Sessions",
+      "others": "Others"
+    },
+    "tier_names": {
+      "flagship": "Flagship",
+      "deep": "Deep Tier",
+      "forward": "Forward Tier",
+      "sprout": "Sprout Tier"
+    }
+  },
+  "addons": {
+    "title": "Add-ons",
+    "subtitle": "Click to view details"
+  },
+  "about": {
+    "detail": "View Audience & Statistics",
+    "subtitle": "The largest student community",
+    "title": "in Southeast Asia for 13 years",
+    "stats": [
+      {
+        "number": "14000",
+        "label": "participants"
+      },
+      {
+        "number": "500",
+        "label": "student speakers"
+      },
+      {
+        "number": "500",
+        "label": "meetups and talks"
+      },
+      {
+        "number": "10",
+        "label": "summer camps"
+      },
+      {
+        "number": "1400",
+        "label": "passionate volunteers"
+      }
+    ],
+    "review": {
+      "title": "A Look Back at 2025",
+      "stats": [
+        {
+          "label": "Venue attendance",
+          "number": "1,300",
+          "note": ""
+        },
+        {
+          "label": "From",
+          "number": "200",
+          "note": "schools worldwide"
+        },
+        {
+          "label": "",
+          "number": "70%",
+          "note": "from universities or graduate schools"
+        },
+        {
+          "label": "",
+          "number": "1/3",
+          "note": "active in tech communities"
+        }
+      ]
+    },
+    "popup": {
+      "title": "Related Statistics",
+      "chart": {
+        "unit": "People",
+        "attender_role_title": "Attendee Roles",
+        "programming_level_title": "Programming Proficiency Distribution",
+        "attender_role": {
+          "Undergraduates": 679,
+          "High school / vocational": 291,
+          "Graduate students": 117,
+          "Working professionals": 87,
+          "Junior high students": 25,
+          "Junior college (5-year program)": 15,
+          "Others": 6,
+          "Teachers / Professors": 3,
+          "Elementary school students": 1
+        },
+        "programming_level": {
+          "No experience": 54,
+          "Beginner": 182,
+          "Novice": 276,
+          "Intermediate": 476,
+          "Proficient": 185,
+          "Advanced": 51
+        },
+        "level_info": {
+          "Beginner": "Can follow book examples step by step to complete functions.",
+          "Novice": "Understands examples and can modify them to solve problems.",
+          "Intermediate": "Can devise solutions to problems.",
+          "Proficient": "Can evaluate trade-offs among multiple solutions.",
+          "Advanced": "Has rich experience and can advise others effectively."
+        }
+      }
+    }
+  },
+  "sponsors": {
+    "inline": [
+      "We want to give passionate students the resources, stage, and inspiration they deserve.",
+      "Yet for students, this is not easy.",
+      "SITCON stands where it is today thanks to supporters like you."
+    ]
+  },
+  "faq": {
+    "questions": [
+      {
+        "question": "Can we negotiate the price?",
+        "answer": "Our plan pricing is carefully calculated and already offers the best value. If you have specific needs or budget considerations, we’re happy to discuss."
+      },
+      {
+        "question": "Can it be cheaper?",
+        "answer": "We understand your concern. While pricing is already quite reasonable, we can explore adjusting deliverables or other collaboration formats to fit your budget."
+      },
+      {
+        "question": "Why is it so expensive?",
+        "answer": "The pricing reflects the event’s scale and impact. If it exceeds your budget, consider a lower tier or talk with us about a customized package."
+      },
+      {
+        "question": "Do you offer discounts?",
+        "answer": "We offer early-bird and multi-year partnership discounts. First-time sponsors or those willing to sign multi-year agreements may receive corresponding offers. Please contact our sponsorship team for details."
+      }
+    ]
+  },
+  "footer": {
+    "collaboration": "Future Collaboration",
+    "description": "We welcome various forms of event or media collaboration—co-hosting workshops, hackathons, podcasts, and more. Reach out with your ideas.",
+    "contact": "Marketing & Media Contacts",
+    "email": "contact@sitcon.org",
+    "contact_list": [
+      "曾煥軒 +886-908-593-538",
+      "巫玟槿 +886-963-584-326",
+      "黃一晉 +886-922-686-223"
+    ],
+    "contact_us": "Contact Us",
+    "contact_us_description": "For collaboration:",
+    "contact_us_description2": "For registration:",
+    "past_websites": "Past Websites"
+  }
 }
