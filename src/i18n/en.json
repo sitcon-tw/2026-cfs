@@ -364,20 +364,28 @@
   "faq": {
     "questions": [
       {
-        "question": "Can we negotiate the price?",
-        "answer": "Our plan pricing is carefully calculated and already offers the best value. If you have specific needs or budget considerations, we’re happy to discuss."
+        "question": "How is SITCON different from other tech conferences?",
+        "answer": "SITCON focuses on student communities and educational outreach. It is Taiwan’s most representative student computer conference — a key platform for companies to connect with young developers and future tech talent, as well as a concrete action to support open source and education."
       },
       {
-        "question": "Can it be cheaper?",
-        "answer": "We understand your concern. While pricing is already quite reasonable, we can explore adjusting deliverables or other collaboration formats to fit your budget."
+        "question": "Can sponsorship plans be customized beyond those listed in the proposal?",
+        "answer": "Yes, customization is welcome! Please fill out the form or contact us directly to discuss your ideas."
       },
       {
-        "question": "Why is it so expensive?",
-        "answer": "The pricing reflects the event’s scale and impact. If it exceeds your budget, consider a lower tier or talk with us about a customized package."
+        "question": "Can we receive an invoice or receipt?",
+        "answer": "By default, we provide a donation receipt issued by the Open Culture Foundation (OCF). If you need a formal business invoice instead, an additional 5% VAT will be required."
       },
       {
-        "question": "Do you offer discounts?",
-        "answer": "We offer early-bird and multi-year partnership discounts. First-time sponsors or those willing to sign multi-year agreements may receive corresponding offers. Please contact our sponsorship team for details."
+        "question": "Will a formal sponsorship contract be signed?",
+        "answer": "We usually use a Memorandum of Understanding (MoU), but signing a formal contract is also possible if required."
+      },
+      {
+        "question": "What kind of report will we receive after the event?",
+        "answer": "We will provide a post-event report including attendee demographics (count, age, background), media and online exposure statistics, event photos, and media coverage summaries."
+      },
+      {
+        "question": "What is the typical collaboration process between SITCON and sponsors?",
+        "answer": "The usual process is: Initial contact → Needs discussion → Plan confirmation → MoU confirmation → Provide materials (logo, ad copy, etc.) → Pre-event promotion → On-site execution → Post-event report."
       }
     ]
   },
@@ -387,8 +395,8 @@
     "contact": "Marketing & Media Contacts",
     "email": "contact@sitcon.org",
     "contact_list": [
-      "曾煥軒 +886-908-593-538",
       "巫玟槿 +886-963-584-326",
+      "呂承紘 +886-965-508-785",
       "黃一晉 +886-922-686-223"
     ],
     "contact_us": "Contact Us",
