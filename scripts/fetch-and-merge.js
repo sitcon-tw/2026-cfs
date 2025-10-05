@@ -2,6 +2,7 @@ import fs from 'fs';
 import https from 'https';
 import path from 'path';
 import { parse } from 'csv-parse';
+import sharp from 'sharp';
 
 // Read configuration from sheet.json with error handling
 let sheetConfig;
@@ -179,6 +180,42 @@ function parseCsv(csvData) {
     .on('error', reject)
     .on('end', () => resolve(records));
   });
+}
+
+async function processImageToWebP(inputPath, maxWidth = 1920, quality = 80) {
+  try {
+    const image = sharp(inputPath);
+    const metadata = await image.metadata();
+
+    // Calculate new dimensions if width exceeds maxWidth
+    let resizeOptions = {};
+    if (metadata.width > maxWidth) {
+      resizeOptions = {
+        width: maxWidth,
+        fit: 'inside',
+        withoutEnlargement: true
+      };
+    }
+
+    // Output path with .webp extension
+    const outputPath = inputPath.replace(/\.[^.]+$/, '.webp');
+
+    // Process and save as WebP
+    await image
+      .resize(resizeOptions)
+      .webp({ quality })
+      .toFile(outputPath);
+
+    // Delete original file if conversion successful and paths are different
+    if (outputPath !== inputPath && fs.existsSync(outputPath)) {
+      fs.unlinkSync(inputPath);
+    }
+
+    return outputPath;
+  } catch (error) {
+    console.error(`Failed to process image ${inputPath}:`, error.message);
+    throw error;
+  }
 }
 
 async function fetchAllSheets() {
@@ -391,10 +428,14 @@ async function downloadAllImages(itemsData) {
 
     downloadTasks.push(
       downloadImage(imageId, outputPath)
-        .then((filePath) => {
-          const fileName = path.basename(filePath);
-          imageIdToFileName[imageId] = fileName;
-          console.log(`✓ Downloaded ${fileName}`);
+        .then(async (filePath) => {
+          console.log(`✓ Downloaded ${path.basename(filePath)}`);
+
+          // Process image to WebP
+          const webpPath = await processImageToWebP(filePath, 1920, 80);
+          const webpFileName = path.basename(webpPath);
+          imageIdToFileName[imageId] = webpFileName;
+          console.log(`✓ Converted to WebP: ${webpFileName}`);
         })
         .catch(err => console.error(`✗ Failed to download ${imageId}:`, err.message))
     );
