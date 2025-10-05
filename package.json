@@ -16,7 +16,6 @@
 		"@lucide/astro": "^0.543.0",
 		"astro": "^5.13.7",
 		"csv-parse": "^6.1.0",
-		"chart.js": "^4.5.0",
 		"chartjs-plugin-datalabels": "^2.2.0",
 		"sharp": "^0.34.3"
 	},

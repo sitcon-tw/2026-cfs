@@ -1,12 +1,18 @@
 ---
 const { t } = Astro.props;
 import Arrow from "@assets/img/cycle/arrow.svg";
+import Hungry from "@assets/img/cycle/Hungry.svg";
+import CycleImg from "@assets/img/cycle/Cycle.svg";
+import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 ---
 
 <section id="cycle">
 	<div class="title">
 		<h2 class="aos aos-fadeIn"><span>不只是一次合作</span>而是一場能持續十年、二十年的循環。</h2>
-		<img src="/2026/cfs/Cycle/Cycle.svg" alt="" id="cycle-img" />
+    <picture>
+      <source srcset={mobileCycle.src} media="(max-width: 50rem)" />
+      <img src={CycleImg.src} alt="Cycle" id="cycle-img" />
+    </picture>
 		<!-- mobile Text -->
 		<div class="mobileCycleText">
 			<h3 class="emfont-XiaoLai">發覺新秀</h3>
@@ -23,7 +29,7 @@ import Arrow from "@assets/img/cycle/arrow.svg";
 	</div>
 	<div class="sdgs">
 		<div class="sdgs-item">
-			<img src="/2026/cfs/Cycle/Hungry.svg" alt="" />
+      <img src={Hungry.src} alt="Hungry">
 			<div class="sdgs-text">
 				<h4>消除飢餓</h4>
 				<p>開會前後或沒事會揪團去吃好吃的。</p>
@@ -31,7 +37,7 @@ import Arrow from "@assets/img/cycle/arrow.svg";
 		</div>
 
 		<div class="sdgs-item init">
-			<img src="/2026/cfs/Cycle/Hungry.svg" alt="" />
+      <img src={Hungry.src} alt="Hungry">
 			<div class="sdgs-text">
 				<h4>健康生活</h4>
 				<p>大家一起運動，保持身心健康。</p>
@@ -39,7 +45,7 @@ import Arrow from "@assets/img/cycle/arrow.svg";
 		</div>
 
 		<div class="sdgs-item">
-			<img src="/2026/cfs/Cycle/Hungry.svg" alt="" />
+      <img src={Hungry.src} alt="Hungry">
 			<div class="sdgs-text">
 				<h4>優質教育</h4>
 				<p>推動學習分享，促進教育公平。</p>
@@ -157,7 +163,6 @@ import Arrow from "@assets/img/cycle/arrow.svg";
 
 	@media (max-width: 50rem) {
 		#cycle-img {
-			content: url("/2026/cfs/Cycle/mobileCycle.svg");
 			width: 70%;
 			height: auto;
 		}
