@@ -1,656 +1,659 @@
-import fs from 'fs';
-import https from 'https';
-import path from 'path';
-import { parse } from 'csv-parse';
-import sharp from 'sharp';
+import fs from "fs";
+import https from "https";
+import path from "path";
+import { parse } from "csv-parse";
+import sharp from "sharp";
 
 // Read configuration from sheet.json with error handling
 let sheetConfig;
 try {
-  sheetConfig = JSON.parse(fs.readFileSync('./scripts/sheet.json', 'utf8'));
+	sheetConfig = JSON.parse(fs.readFileSync("./scripts/sheet.json", "utf8"));
 } catch (error) {
-  console.error('Failed to read or parse sheet.json:', error.message);
-  console.error('Make sure the file exists and contains valid JSON.');
-  process.exit(1);
+	console.error("Failed to read or parse sheet.json:", error.message);
+	console.error("Make sure the file exists and contains valid JSON.");
+	process.exit(1);
 }
 
 // Validate configuration data
 function validateConfig(config) {
-  if (!config.spreadsheet_id || typeof config.spreadsheet_id !== 'string') {
-    throw new Error('Invalid or missing spreadsheet_id in configuration');
-  }
-  if (!config.sheets || typeof config.sheets !== 'object') {
-    throw new Error('Invalid or missing sheets configuration');
-  }
+	if (!config.spreadsheet_id || typeof config.spreadsheet_id !== "string") {
+		throw new Error("Invalid or missing spreadsheet_id in configuration");
+	}
+	if (!config.sheets || typeof config.sheets !== "object") {
+		throw new Error("Invalid or missing sheets configuration");
+	}
 }
 try {
-  validateConfig(sheetConfig);
+	validateConfig(sheetConfig);
 } catch (error) {
-  console.error('Configuration validation failed:', error.message);
-  process.exit(1);
+	console.error("Configuration validation failed:", error.message);
+	process.exit(1);
 }
 
 const SPREADSHEET_ID = sheetConfig.spreadsheet_id;
 const SHEET_GIDS = sheetConfig.sheets;
 
 function buildCsvUrl(gid) {
-  return `https://docs.google.com/spreadsheets/d/e/${SPREADSHEET_ID}/pub?gid=${gid}&single=true&output=csv`;
+	return `https://docs.google.com/spreadsheets/d/e/${SPREADSHEET_ID}/pub?gid=${gid}&single=true&output=csv`;
 }
 
 function fetchCsv(url, redirectCount = 0) {
-  const MAX_REDIRECTS = 5;
+	const MAX_REDIRECTS = 5;
 
-  return new Promise((resolve, reject) => {
-    if (redirectCount > MAX_REDIRECTS) {
-      reject(new Error(`Too many redirects (${redirectCount}). Possible redirect loop.`));
-      return;
-    }
+	return new Promise((resolve, reject) => {
+		if (redirectCount > MAX_REDIRECTS) {
+			reject(new Error(`Too many redirects (${redirectCount}). Possible redirect loop.`));
+			return;
+		}
 
-    https.get(url, (response) => {
-      if (response.statusCode === 307 || response.statusCode === 301) {
-        // Handle redirect with validation
-        const redirectUrl = response.headers.location;
-        if (!redirectUrl || !redirectUrl.startsWith('https://')) {
-          reject(new Error('Invalid or insecure redirect URL'));
-          return;
-        }
-        fetchCsv(redirectUrl, redirectCount + 1).then(resolve).catch(reject);
-        return;
-      }
+		https
+			.get(url, response => {
+				if (response.statusCode === 307 || response.statusCode === 301) {
+					// Handle redirect with validation
+					const redirectUrl = response.headers.location;
+					if (!redirectUrl || !redirectUrl.startsWith("https://")) {
+						reject(new Error("Invalid or insecure redirect URL"));
+						return;
+					}
+					fetchCsv(redirectUrl, redirectCount + 1)
+						.then(resolve)
+						.catch(reject);
+					return;
+				}
 
-      if (response.statusCode !== 200) {
-        reject(new Error(`HTTP ${response.statusCode}: ${response.statusMessage}`));
-        return;
-      }
+				if (response.statusCode !== 200) {
+					reject(new Error(`HTTP ${response.statusCode}: ${response.statusMessage}`));
+					return;
+				}
 
-      const chunks = [];
-      response.on('data', (chunk) => {
-        chunks.push(chunk);
-      });
+				const chunks = [];
+				response.on("data", chunk => {
+					chunks.push(chunk);
+				});
 
-      response.on('end', () => {
-        const csvData = Buffer.concat(chunks).toString('utf8');
-        resolve(csvData);
-      });
-    }).on('error', reject);
-  });
+				response.on("end", () => {
+					const csvData = Buffer.concat(chunks).toString("utf8");
+					resolve(csvData);
+				});
+			})
+			.on("error", reject);
+	});
 }
 
 function extractGoogleDriveId(url) {
-  if (!url) return null;
+	if (!url) return null;
 
-  // Match patterns like:
-  // https://drive.google.com/file/d/FILE_ID/view?usp=...
-  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  return match ? match[1] : null;
+	// Match patterns like:
+	// https://drive.google.com/file/d/FILE_ID/view?usp=...
+	const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+	return match ? match[1] : null;
 }
 
 function getExtensionFromContentType(contentType) {
-  const mimeToExt = {
-    'image/jpeg': '.jpg',
-    'image/jpg': '.jpg',
-    'image/png': '.png',
-    'image/gif': '.gif',
-    'image/webp': '.webp',
-    'image/svg+xml': '.svg'
-  };
-  return mimeToExt[contentType] || '.jpg'; // default to .jpg
+	const mimeToExt = {
+		"image/jpeg": ".jpg",
+		"image/jpg": ".jpg",
+		"image/png": ".png",
+		"image/gif": ".gif",
+		"image/webp": ".webp",
+		"image/svg+xml": ".svg"
+	};
+	return mimeToExt[contentType] || ".jpg"; // default to .jpg
 }
 
 function downloadImage(fileId, outputPath) {
-  return new Promise((resolve, reject) => {
-    if (!fileId) {
-      resolve(null);
-      return;
-    }
+	return new Promise((resolve, reject) => {
+		if (!fileId) {
+			resolve(null);
+			return;
+		}
 
-    const url = `https://drive.google.com/uc?export=download&id=${fileId}`;
+		const url = `https://drive.google.com/uc?export=download&id=${fileId}`;
 
-    const handleFinalResponse = (finalResponse) => {
-      if (finalResponse.statusCode !== 200) {
-        reject(new Error(`Failed to download image: ${finalResponse.statusCode}`));
-        return;
-      }
+		const handleFinalResponse = finalResponse => {
+			if (finalResponse.statusCode !== 200) {
+				reject(new Error(`Failed to download image: ${finalResponse.statusCode}`));
+				return;
+			}
 
-      // Get extension from content-type header
-      const contentType = finalResponse.headers['content-type'];
-      const ext = getExtensionFromContentType(contentType);
-      const finalOutputPath = outputPath + ext;
+			// Get extension from content-type header
+			const contentType = finalResponse.headers["content-type"];
+			const ext = getExtensionFromContentType(contentType);
+			const finalOutputPath = outputPath + ext;
 
-      const fileStream = fs.createWriteStream(finalOutputPath);
-      finalResponse.pipe(fileStream);
+			const fileStream = fs.createWriteStream(finalOutputPath);
+			finalResponse.pipe(fileStream);
 
-      fileStream.on('finish', () => {
-        fileStream.close();
-        resolve(finalOutputPath);
-      });
+			fileStream.on("finish", () => {
+				fileStream.close();
+				resolve(finalOutputPath);
+			});
 
-      fileStream.on('error', reject);
-    };
+			fileStream.on("error", reject);
+		};
 
-    https.get(url, (response) => {
-      // Handle all redirect status codes
-      if (response.statusCode === 307 || response.statusCode === 301 || response.statusCode === 302 || response.statusCode === 303) {
-        const redirectUrl = response.headers.location;
-        if (!redirectUrl) {
-          reject(new Error('Redirect URL not found'));
-          return;
-        }
+		https
+			.get(url, response => {
+				// Handle all redirect status codes
+				if (response.statusCode === 307 || response.statusCode === 301 || response.statusCode === 302 || response.statusCode === 303) {
+					const redirectUrl = response.headers.location;
+					if (!redirectUrl) {
+						reject(new Error("Redirect URL not found"));
+						return;
+					}
 
-        https.get(redirectUrl, (redirectResponse) => {
-          // Handle nested redirects
-          if (redirectResponse.statusCode === 307 || redirectResponse.statusCode === 301 ||
-              redirectResponse.statusCode === 302 || redirectResponse.statusCode === 303) {
-            const secondRedirectUrl = redirectResponse.headers.location;
-            if (!secondRedirectUrl) {
-              reject(new Error('Second redirect URL not found'));
-              return;
-            }
+					https
+						.get(redirectUrl, redirectResponse => {
+							// Handle nested redirects
+							if (redirectResponse.statusCode === 307 || redirectResponse.statusCode === 301 || redirectResponse.statusCode === 302 || redirectResponse.statusCode === 303) {
+								const secondRedirectUrl = redirectResponse.headers.location;
+								if (!secondRedirectUrl) {
+									reject(new Error("Second redirect URL not found"));
+									return;
+								}
 
-            https.get(secondRedirectUrl, handleFinalResponse).on('error', reject);
-            return;
-          }
+								https.get(secondRedirectUrl, handleFinalResponse).on("error", reject);
+								return;
+							}
 
-          handleFinalResponse(redirectResponse);
-        }).on('error', reject);
-        return;
-      }
+							handleFinalResponse(redirectResponse);
+						})
+						.on("error", reject);
+					return;
+				}
 
-      handleFinalResponse(response);
-    }).on('error', reject);
-  });
+				handleFinalResponse(response);
+			})
+			.on("error", reject);
+	});
 }
 
 function parseCsv(csvData) {
-  return new Promise((resolve, reject) => {
-    const records = [];
-    parse(csvData, {
-      columns: true,
-      skip_empty_lines: true,
-      trim: true
-    })
-    .on('readable', function() {
-      let record;
-      while (record = this.read()) {
-        records.push(record);
-      }
-    })
-    .on('error', reject)
-    .on('end', () => resolve(records));
-  });
+	return new Promise((resolve, reject) => {
+		const records = [];
+		parse(csvData, {
+			columns: true,
+			skip_empty_lines: true,
+			trim: true
+		})
+			.on("readable", function () {
+				let record;
+				while ((record = this.read())) {
+					records.push(record);
+				}
+			})
+			.on("error", reject)
+			.on("end", () => resolve(records));
+	});
 }
 
 async function processImageToWebP(inputPath, maxWidth = 1920, quality = 80) {
-  try {
-    const image = sharp(inputPath);
-    const metadata = await image.metadata();
+	try {
+		const image = sharp(inputPath);
+		const metadata = await image.metadata();
 
-    // Calculate new dimensions if width exceeds maxWidth
-    let resizeOptions = {};
-    if (metadata.width > maxWidth) {
-      resizeOptions = {
-        width: maxWidth,
-        fit: 'inside',
-        withoutEnlargement: true
-      };
-    }
+		// Calculate new dimensions if width exceeds maxWidth
+		let resizeOptions = {};
+		if (metadata.width > maxWidth) {
+			resizeOptions = {
+				width: maxWidth,
+				fit: "inside",
+				withoutEnlargement: true
+			};
+		}
 
-    // Output path with .webp extension
-    const outputPath = inputPath.replace(/\.[^.]+$/, '.webp');
+		// Output path with .webp extension
+		const outputPath = inputPath.replace(/\.[^.]+$/, ".webp");
 
-    // Process and save as WebP
-    await image
-      .resize(resizeOptions)
-      .webp({ quality })
-      .toFile(outputPath);
+		// Process and save as WebP
+		await image.resize(resizeOptions).webp({ quality }).toFile(outputPath);
 
-    // Delete original file if conversion successful and paths are different
-    if (outputPath !== inputPath && fs.existsSync(outputPath)) {
-      fs.unlinkSync(inputPath);
-    }
+		// Delete original file if conversion successful and paths are different
+		if (outputPath !== inputPath && fs.existsSync(outputPath)) {
+			fs.unlinkSync(inputPath);
+		}
 
-    return outputPath;
-  } catch (error) {
-    console.error(`Failed to process image ${inputPath}:`, error.message);
-    throw error;
-  }
+		return outputPath;
+	} catch (error) {
+		console.error(`Failed to process image ${inputPath}:`, error.message);
+		throw error;
+	}
 }
 
 async function fetchAllSheets() {
-  console.log('Fetching all sheets...');
+	console.log("Fetching all sheets...");
 
-  const fetchPromises = Object.entries(SHEET_GIDS).map(async ([sheetName, gid]) => {
-    console.log(`Fetching ${sheetName} sheet...`);
-    try {
-      const url = buildCsvUrl(gid);
-      const csvData = await fetchCsv(url);
-      const records = await parseCsv(csvData);
-      console.log(`✓ ${sheetName}: ${records.length} records`);
-      return [sheetName, records];
-    } catch (error) {
-      console.error(`✗ Failed to fetch ${sheetName}:`, error.message);
-      throw error;
-    }
-  });
+	const fetchPromises = Object.entries(SHEET_GIDS).map(async ([sheetName, gid]) => {
+		console.log(`Fetching ${sheetName} sheet...`);
+		try {
+			const url = buildCsvUrl(gid);
+			const csvData = await fetchCsv(url);
+			const records = await parseCsv(csvData);
+			console.log(`✓ ${sheetName}: ${records.length} records`);
+			return [sheetName, records];
+		} catch (error) {
+			console.error(`✗ Failed to fetch ${sheetName}:`, error.message);
+			throw error;
+		}
+	});
 
-  const results = await Promise.all(fetchPromises);
-  const sheets = Object.fromEntries(results);
+	const results = await Promise.all(fetchPromises);
+	const sheets = Object.fromEntries(results);
 
-  return sheets;
+	return sheets;
 }
 
 function findItemInSheet(sheets, sheetName, itemId) {
-  const sheet = sheets[sheetName];
-  if (!sheet) return null;
+	const sheet = sheets[sheetName];
+	if (!sheet) return null;
 
-  return sheet.find(row => row['編號'] === itemId || row['編號'] === itemId.toString());
+	return sheet.find(row => row["編號"] === itemId || row["編號"] === itemId.toString());
 }
 
 function normalizeUnit(chineseUnit) {
-  const unitMap = {
-    '份': 'copy',
-    '個': 'booth',
-    '張': 'ticket',
-    '場': 'agenda',
-    '則': 'ad',
-    '項': 'other',
-    '秒': 'second',
-    '次': 'time'
-  };
+	const unitMap = {
+		份: "copy",
+		個: "booth",
+		張: "ticket",
+		場: "agenda",
+		則: "ad",
+		項: "other",
+		秒: "second",
+		次: "time"
+	};
 
-  return unitMap[chineseUnit] || chineseUnit;
+	return unitMap[chineseUnit] || chineseUnit;
 }
 
 function extractSubItems(itemRow) {
-  const subItems = [];
-  const MAX_SUB_ITEMS = 50; // Safety limit to prevent infinite loops
-  let index = 1;
+	const subItems = [];
+	const MAX_SUB_ITEMS = 50; // Safety limit to prevent infinite loops
+	let index = 1;
 
-  while (index <= MAX_SUB_ITEMS) {
-    const nameZhKey = `子項目${index}`;
-    const nameEnKey = `sub projects ${index}`;
-    const priceKey = `子項目${index}價錢`;
-    const remainingKey = `子項目${index}剩餘數量`;
-    const imageKey = `子項目${index}圖片連結`;
-    const imageDescZhKey = `子項目${index}圖片 敘述`;
-    const imageDescEnKey = `子項目${index}圖片 description`;
+	while (index <= MAX_SUB_ITEMS) {
+		const nameZhKey = `子項目${index}`;
+		const nameEnKey = `sub projects ${index}`;
+		const priceKey = `子項目${index}價錢`;
+		const remainingKey = `子項目${index}剩餘數量`;
+		const imageKey = `子項目${index}圖片連結`;
+		const imageDescZhKey = `子項目${index}圖片 敘述`;
+		const imageDescEnKey = `子項目${index}圖片 description`;
 
-    // Check if this sub-item exists
-    if (!itemRow[nameZhKey] && !itemRow[nameEnKey]) {
-      break;
-    }
+		// Check if this sub-item exists
+		if (!itemRow[nameZhKey] && !itemRow[nameEnKey]) {
+			break;
+		}
 
-    // Only add if there's actual content
-    if (itemRow[nameZhKey] || itemRow[nameEnKey]) {
-      const imageUrl = itemRow[imageKey] || '';
-      const imageId = extractGoogleDriveId(imageUrl);
+		// Only add if there's actual content
+		if (itemRow[nameZhKey] || itemRow[nameEnKey]) {
+			const imageUrl = itemRow[imageKey] || "";
+			const imageId = extractGoogleDriveId(imageUrl);
 
-      subItems.push({
-        name_zh: itemRow[nameZhKey] || '',
-        name_en: itemRow[nameEnKey] || '',
-        price: itemRow[priceKey] || '',
-        remaining: itemRow[remainingKey] || '',
-        image: imageId || '',
-        image_description_zh: itemRow[imageDescZhKey] || '',
-        image_description_en: itemRow[imageDescEnKey] || ''
-      });
-    }
+			subItems.push({
+				name_zh: itemRow[nameZhKey] || "",
+				name_en: itemRow[nameEnKey] || "",
+				price: itemRow[priceKey] || "",
+				remaining: itemRow[remainingKey] || "",
+				image: imageId || "",
+				image_description_zh: itemRow[imageDescZhKey] || "",
+				image_description_en: itemRow[imageDescEnKey] || ""
+			});
+		}
 
-    index++;
-  }
+		index++;
+	}
 
-  if (index > MAX_SUB_ITEMS) {
-    console.warn(`Warning: Reached maximum sub-items limit (${MAX_SUB_ITEMS}) for an item. Some sub-items may have been skipped.`);
-  }
+	if (index > MAX_SUB_ITEMS) {
+		console.warn(`Warning: Reached maximum sub-items limit (${MAX_SUB_ITEMS}) for an item. Some sub-items may have been skipped.`);
+	}
 
-  return subItems;
+	return subItems;
 }
 
 function mergeSheetData(sheets) {
-  console.log('Merging sheet data...');
-  const items = {};
-  const itemsSheet = sheets.items;
+	console.log("Merging sheet data...");
+	const items = {};
+	const itemsSheet = sheets.items;
 
-  if (!itemsSheet || itemsSheet.length === 0) {
-    throw new Error('Items sheet is empty or not found');
-  }
+	if (!itemsSheet || itemsSheet.length === 0) {
+		throw new Error("Items sheet is empty or not found");
+	}
 
-  itemsSheet.forEach(itemRow => {
-    const itemId = itemRow['編號'];
-    if (!itemId) return;
+	itemsSheet.forEach(itemRow => {
+		const itemId = itemRow["編號"];
+		if (!itemId) return;
 
-    // Find corresponding rows in category sheets
-    const globalDesc = findItemInSheet(sheets, 'global_description', itemId);
-    const talentRec = findItemInSheet(sheets, 'talent_recruitment', itemId);
-    const brandExp = findItemInSheet(sheets, 'brand_exposure', itemId);
-    const productProm = findItemInSheet(sheets, 'product_promotion', itemId);
+		// Find corresponding rows in category sheets
+		const globalDesc = findItemInSheet(sheets, "global_description", itemId);
+		const talentRec = findItemInSheet(sheets, "talent_recruitment", itemId);
+		const brandExp = findItemInSheet(sheets, "brand_exposure", itemId);
+		const productProm = findItemInSheet(sheets, "product_promotion", itemId);
 
-    // Extract sub-items
-    const subItems = extractSubItems(itemRow);
+		// Extract sub-items
+		const subItems = extractSubItems(itemRow);
 
-    // Extract image ID from the main image URL
-    const mainImageUrl = itemRow['圖片連結'] || '';
-    const mainImageId = extractGoogleDriveId(mainImageUrl);
+		// Extract image ID from the main image URL
+		const mainImageUrl = itemRow["圖片連結"] || "";
+		const mainImageId = extractGoogleDriveId(mainImageUrl);
 
-    items[itemId] = {
-      name: itemRow['項目'] || itemRow['項目名稱'] || '',
-      order: itemId,
-      quantity: itemRow['數量'] || '',
-      remaining: itemRow['剩餘數量'] || '',
-      unit: normalizeUnit(itemRow['單位'] || ''),
-      type: itemRow['類型'] || '',
+		items[itemId] = {
+			name: itemRow["項目"] || itemRow["項目名稱"] || "",
+			order: itemId,
+			quantity: itemRow["數量"] || "",
+			remaining: itemRow["剩餘數量"] || "",
+			unit: normalizeUnit(itemRow["單位"] || ""),
+			type: itemRow["類型"] || "",
 
-      global_description_zh: globalDesc?.['文案'] || '',
-      global_description_en: globalDesc?.['description'] || '',
+			global_description_zh: globalDesc?.["文案"] || "",
+			global_description_en: globalDesc?.["description"] || "",
 
-      talent_recruitment_zh: talentRec?.['文案'] || '',
-      talent_recruitment_en: talentRec?.['description'] || '',
+			talent_recruitment_zh: talentRec?.["文案"] || "",
+			talent_recruitment_en: talentRec?.["description"] || "",
 
-      brand_exposure_zh: brandExp?.['文案'] || '',
-      brand_exposure_en: brandExp?.['description'] || '',
+			brand_exposure_zh: brandExp?.["文案"] || "",
+			brand_exposure_en: brandExp?.["description"] || "",
 
-      product_promotion_zh: productProm?.['文案'] || '',
-      product_promotion_en: productProm?.['description'] || '',
+			product_promotion_zh: productProm?.["文案"] || "",
+			product_promotion_en: productProm?.["description"] || "",
 
-      image: mainImageId || '',
-      image_description_zh: itemRow['圖片 敘述'] || '',
-      image_description_en: itemRow['圖片 description'] || '',
+			image: mainImageId || "",
+			image_description_zh: itemRow["圖片 敘述"] || "",
+			image_description_en: itemRow["圖片 description"] || "",
 
-      price: itemRow['價錢（這欄與贊助分級和子項目是互斥關係）'] || '',
+			price: itemRow["價錢（這欄與贊助分級和子項目是互斥關係）"] || "",
 
-      deadline: itemRow['截止時間'] || '',
+			deadline: itemRow["截止時間"] || "",
 
-      talent_recruitment_order: parseInt(talentRec?.['排序'] || '0') || 0,
-      brand_exposure_order: parseInt(brandExp?.['排序'] || '0') || 0,
-      product_promotion_order: parseInt(productProm?.['排序'] || '0') || 0,
+			talent_recruitment_order: parseInt(talentRec?.["排序"] || "0") || 0,
+			brand_exposure_order: parseInt(brandExp?.["排序"] || "0") || 0,
+			product_promotion_order: parseInt(productProm?.["排序"] || "0") || 0,
 
-      sub: subItems
-    };
-  });
+			sub: subItems
+		};
+	});
 
-  console.log(`✓ Merged ${Object.keys(items).length} items`);
-  return items;
+	console.log(`✓ Merged ${Object.keys(items).length} items`);
+	return items;
 }
 
 async function downloadAllImages(itemsData) {
-  console.log('Downloading images...');
+	console.log("Downloading images...");
 
-  // Create images directory if it doesn't exist
-  const imagesDir = './src/assets/img/items';
+	// Create images directory if it doesn't exist
+	const imagesDir = "./src/assets/img/items";
 
-  if (!fs.existsSync(imagesDir)) {
-    fs.mkdirSync(imagesDir, { recursive: true });
-    console.log(`✓ Created directory: ${imagesDir}`);
-  }
+	if (!fs.existsSync(imagesDir)) {
+		fs.mkdirSync(imagesDir, { recursive: true });
+		console.log(`✓ Created directory: ${imagesDir}`);
+	}
 
-  const downloadTasks = [];
-  const imageIds = new Set();
-  const imageIdToFileName = {}; // Map to store ID -> filename with extension
+	const downloadTasks = [];
+	const imageIds = new Set();
+	const imageIdToFileName = {}; // Map to store ID -> filename with extension
 
-  // Collect all unique image IDs
-  Object.values(itemsData).forEach(item => {
-    if (item.image) {
-      imageIds.add(item.image);
-    }
-    item.sub.forEach(subItem => {
-      if (subItem.image) {
-        imageIds.add(subItem.image);
-      }
-    });
-  });
+	// Collect all unique image IDs
+	Object.values(itemsData).forEach(item => {
+		if (item.image) {
+			imageIds.add(item.image);
+		}
+		item.sub.forEach(subItem => {
+			if (subItem.image) {
+				imageIds.add(subItem.image);
+			}
+		});
+	});
 
-  console.log(`Found ${imageIds.size} unique images to process`);
+	console.log(`Found ${imageIds.size} unique images to process`);
 
-  // Check existing files and build mapping
-  const existingFiles = fs.existsSync(imagesDir) ? fs.readdirSync(imagesDir) : [];
-  const existingImageIds = new Set();
+	// Check existing files and build mapping
+	const existingFiles = fs.existsSync(imagesDir) ? fs.readdirSync(imagesDir) : [];
+	const existingImageIds = new Set();
 
-  existingFiles.forEach(fileName => {
-    const imageId = fileName.replace(/\.[^.]+$/, ''); // Remove extension
-    if (imageIds.has(imageId)) {
-      existingImageIds.add(imageId);
-      imageIdToFileName[imageId] = fileName;
-    }
-  });
+	existingFiles.forEach(fileName => {
+		const imageId = fileName.replace(/\.[^.]+$/, ""); // Remove extension
+		if (imageIds.has(imageId)) {
+			existingImageIds.add(imageId);
+			imageIdToFileName[imageId] = fileName;
+		}
+	});
 
-  console.log(`✓ Found ${existingImageIds.size} existing images, need to download ${imageIds.size - existingImageIds.size} new images`);
+	console.log(`✓ Found ${existingImageIds.size} existing images, need to download ${imageIds.size - existingImageIds.size} new images`);
 
-  // Download only missing images
-  for (const imageId of imageIds) {
-    if (existingImageIds.has(imageId)) {
-      console.log(`⊘ Skipped ${imageIdToFileName[imageId]} (already exists)`);
-      continue;
-    }
+	// Download only missing images
+	for (const imageId of imageIds) {
+		if (existingImageIds.has(imageId)) {
+			console.log(`⊘ Skipped ${imageIdToFileName[imageId]} (already exists)`);
+			continue;
+		}
 
-    const outputPath = path.join(imagesDir, imageId);
+		const outputPath = path.join(imagesDir, imageId);
 
-    downloadTasks.push(
-      downloadImage(imageId, outputPath)
-        .then(async (filePath) => {
-          console.log(`✓ Downloaded ${path.basename(filePath)}`);
+		downloadTasks.push(
+			downloadImage(imageId, outputPath)
+				.then(async filePath => {
+					console.log(`✓ Downloaded ${path.basename(filePath)}`);
 
-          // Process image to WebP
-          const webpPath = await processImageToWebP(filePath, 1080, 80);
-          const webpFileName = path.basename(webpPath);
-          imageIdToFileName[imageId] = webpFileName;
-          console.log(`✓ Converted to WebP: ${webpFileName}`);
-        })
-        .catch(err => console.error(`✗ Failed to download ${imageId}:`, err.message))
-    );
-  }
+					// Process image to WebP
+					const webpPath = await processImageToWebP(filePath, 1080, 80);
+					const webpFileName = path.basename(webpPath);
+					imageIdToFileName[imageId] = webpFileName;
+					console.log(`✓ Converted to WebP: ${webpFileName}`);
+				})
+				.catch(err => console.error(`✗ Failed to download ${imageId}:`, err.message))
+		);
+	}
 
-  await Promise.all(downloadTasks);
+	await Promise.all(downloadTasks);
 
-  // Update itemsData with filenames including extensions
-  Object.values(itemsData).forEach(item => {
-    if (item.image && imageIdToFileName[item.image]) {
-      item.image = imageIdToFileName[item.image];
-    }
-    item.sub.forEach(subItem => {
-      if (subItem.image && imageIdToFileName[subItem.image]) {
-        subItem.image = imageIdToFileName[subItem.image];
-      }
-    });
-  });
+	// Update itemsData with filenames including extensions
+	Object.values(itemsData).forEach(item => {
+		if (item.image && imageIdToFileName[item.image]) {
+			item.image = imageIdToFileName[item.image];
+		}
+		item.sub.forEach(subItem => {
+			if (subItem.image && imageIdToFileName[subItem.image]) {
+				subItem.image = imageIdToFileName[subItem.image];
+			}
+		});
+	});
 
-  console.log(`✓ Image download complete`);
+	console.log(`✓ Image download complete`);
 }
 
 async function main() {
-  try {
-    console.log('Starting Google Sheets to JSON conversion...');
+	try {
+		console.log("Starting Google Sheets to JSON conversion...");
 
-    // Fetch all sheets
-    const sheets = await fetchAllSheets();
+		// Fetch all sheets
+		const sheets = await fetchAllSheets();
 
-    // Merge data
-    const mergedData = mergeSheetData(sheets);
+		// Merge data
+		const mergedData = mergeSheetData(sheets);
 
-    // Download images
-    await downloadAllImages(mergedData);
+		// Download images
+		await downloadAllImages(mergedData);
 
-    // Write to file
-    const outputPath = './src/data/item.json';
-    const jsonData = JSON.stringify(mergedData, null, 2);
+		// Write to file
+		const outputPath = "./src/data/item.json";
+		const jsonData = JSON.stringify(mergedData, null, 2);
 
-    try {
-      fs.writeFileSync(outputPath, jsonData, 'utf8');
-      console.log(`✓ Successfully wrote merged data to ${outputPath}`);
-    } catch (error) {
-      console.error(`Failed to write ${outputPath}:`, error.message);
-      throw error;
-    }
+		try {
+			fs.writeFileSync(outputPath, jsonData, "utf8");
+			console.log(`✓ Successfully wrote merged data to ${outputPath}`);
+		} catch (error) {
+			console.error(`Failed to write ${outputPath}:`, error.message);
+			throw error;
+		}
 
-    // Generate and save plans using the same sheets data and items data
-    const plansData = await fetchAndSavePlans(sheets, mergedData);
+		// Generate and save plans using the same sheets data and items data
+		const plansData = await fetchAndSavePlans(sheets, mergedData);
 
-    // Display summary
-    console.log('\nSummary:');
-    console.log(`- Total items: ${Object.keys(mergedData).length}`);
-    console.log(`- Items with sub-items: ${Object.values(mergedData).filter(item => item.sub.length > 0).length}`);
-    console.log(`- Sponsorship plans: ${Object.keys(plansData).length}`);
+		// Display summary
+		console.log("\nSummary:");
+		console.log(`- Total items: ${Object.keys(mergedData).length}`);
+		console.log(`- Items with sub-items: ${Object.values(mergedData).filter(item => item.sub.length > 0).length}`);
+		console.log(`- Sponsorship plans: ${Object.keys(plansData).length}`);
 
-    console.log('\n✓ Fetch and merge completed successfully!');
-    process.exit(0);
-
-  } catch (error) {
-    console.error('Error:', error.message);
-    process.exit(1);
-  }
+		console.log("\n✓ Fetch and merge completed successfully!");
+		process.exit(0);
+	} catch (error) {
+		console.error("Error:", error.message);
+		process.exit(1);
+	}
 }
 
 // Run if this file is executed directly
 if (process.argv[1] === new URL(import.meta.url).pathname) {
-  main();
+	main();
 }
 
 function processPlanData(planSheet, itemsData) {
-  console.log('Processing sponsorship plans data...');
+	console.log("Processing sponsorship plans data...");
 
-  if (!planSheet || planSheet.length === 0) {
-    throw new Error('Plan sheet is empty or not found');
-  }
+	if (!planSheet || planSheet.length === 0) {
+		throw new Error("Plan sheet is empty or not found");
+	}
 
-  // Build dynamic name→ID mapping from items data
-  const itemNameToId = {};
-  Object.keys(itemsData).forEach(id => {
-    const itemName = itemsData[id].name;
-    if (itemName) {
-      itemNameToId[itemName] = id;
-    }
-  });
+	// Build dynamic name→ID mapping from items data
+	const itemNameToId = {};
+	Object.keys(itemsData).forEach(id => {
+		const itemName = itemsData[id].name;
+		if (itemName) {
+			itemNameToId[itemName] = id;
+		}
+	});
 
-  console.log(`✓ Built mapping for ${Object.keys(itemNameToId).length} items`);
+	console.log(`✓ Built mapping for ${Object.keys(itemNameToId).length} items`);
 
-  // Extract tier names from column headers (first row becomes headers with columns:true)
-  const firstRow = planSheet[0];
-  const columnKeys = Object.keys(firstRow);
-  const planTiers = [];
+	// Extract tier names from column headers (first row becomes headers with columns:true)
+	const firstRow = planSheet[0];
+	const columnKeys = Object.keys(firstRow);
+	const planTiers = [];
 
-  // Get tier names from column keys, skipping first two columns ('' and '編號')
-  columnKeys.forEach((key, index) => {
-    // Skip empty keys and non-tier columns
-    if (!key || key === '編號' || key === '項目') {
-      return;
-    }
+	// Get tier names from column keys, skipping first two columns ('' and '編號')
+	columnKeys.forEach((key, index) => {
+		// Skip empty keys and non-tier columns
+		if (!key || key === "編號" || key === "項目") {
+			return;
+		}
 
-    planTiers.push({
-      columnKey: key,
-      name_zh: key,
-      name_en: '', // Will be set later
-      id: key.toLowerCase()
-    });
-  });
+		planTiers.push({
+			columnKey: key,
+			name_zh: key,
+			name_en: "", // Will be set later
+			id: key.toLowerCase()
+		});
+	});
 
-  // Extract prices from first row (which contains '價格' in first column)
-  const priceRow = planSheet[0]; // First parsed row has prices
-  planTiers.forEach((tier) => {
-    tier.price = priceRow[tier.columnKey] || '';
-  });
+	// Extract prices from first row (which contains '價格' in first column)
+	const priceRow = planSheet[0]; // First parsed row has prices
+	planTiers.forEach(tier => {
+		tier.price = priceRow[tier.columnKey] || "";
+	});
 
-  // Process plan data
-  const plans = {};
+	// Process plan data
+	const plans = {};
 
-  // Generate English names and IDs mapping
-  const nameMap = {
-    '領航級': { en: 'Navigator Tier', id: 'navigator' },
-    '深耕級': { en: 'Deep Cultivation Tier', id: 'deep_cultivation' },
-    '前瞻級': { en: 'Visionary Tier', id: 'visionary' },
-    '新芽級': { en: 'New Sprout Tier', id: 'new_sprout' }
-  };
+	// Generate English names and IDs mapping
+	const nameMap = {
+		領航級: { en: "Navigator Tier", id: "navigator" },
+		深耕級: { en: "Deep Cultivation Tier", id: "deep_cultivation" },
+		前瞻級: { en: "Visionary Tier", id: "visionary" },
+		新芽級: { en: "New Sprout Tier", id: "new_sprout" }
+	};
 
-  planTiers.forEach((tier, tierIndex) => {
-    const mapped = nameMap[tier.name_zh] || { en: tier.name_zh, id: tier.id };
+	planTiers.forEach((tier, tierIndex) => {
+		const mapped = nameMap[tier.name_zh] || { en: tier.name_zh, id: tier.id };
 
-    plans[mapped.id] = {
-      id: mapped.id,
-      name_zh: tier.name_zh,
-      name_en: mapped.en,
-      price: tier.price,
-      order: tierIndex + 1,
-      benefits: []
-    };
-  });
+		plans[mapped.id] = {
+			id: mapped.id,
+			name_zh: tier.name_zh,
+			name_en: mapped.en,
+			price: tier.price,
+			order: tierIndex + 1,
+			benefits: []
+		};
+	});
 
-  // Extract benefits from remaining rows (starting from index 1, skipping price row at 0)
-  for (let rowIndex = 1; rowIndex < planSheet.length; rowIndex++) {
-    const row = planSheet[rowIndex];
+	// Extract benefits from remaining rows (starting from index 1, skipping price row at 0)
+	for (let rowIndex = 1; rowIndex < planSheet.length; rowIndex++) {
+		const row = planSheet[rowIndex];
 
-    // Extract item name from the first column (which has empty key '')
-    const itemName = row[''] ? row[''].toString().trim() : '';
+		// Extract item name from the first column (which has empty key '')
+		const itemName = row[""] ? row[""].toString().trim() : "";
 
-    // Get the ID from the dynamic mapping built from items data
-    const itemId = itemNameToId[itemName] || '';
+		// Get the ID from the dynamic mapping built from items data
+		const itemId = itemNameToId[itemName] || "";
 
-    // Only skip if there's no itemName, or if itemName exists but looks like a category header
-    if (!itemName) {
-      continue;
-    }
+		// Only skip if there's no itemName, or if itemName exists but looks like a category header
+		if (!itemName) {
+			continue;
+		}
 
-    // Skip row header items (編號 column contains '項目' or similar headers)
-    if (itemName === '項目' || row['編號'] === '項目') {
-      continue;
-    }
+		// Skip row header items (編號 column contains '項目' or similar headers)
+		if (itemName === "項目" || row["編號"] === "項目") {
+			continue;
+		}
 
-    // Skip obvious category headers (items that don't exist in our mapping AND look like categories)
-    const categoryPattern = /^(年會現場|Logo曝光|網路宣傳|.*曝光)$/;
-    if (!itemNameToId.hasOwnProperty(itemName) && categoryPattern.test(itemName)) {
-      continue;
-    }
+		// Skip obvious category headers (items that don't exist in our mapping AND look like categories)
+		const categoryPattern = /^(年會現場|Logo曝光|網路宣傳|.*曝光)$/;
+		if (!itemNameToId.hasOwnProperty(itemName) && categoryPattern.test(itemName)) {
+			continue;
+		}
 
-    // Process benefits for each tier (including blank quantities)
-    planTiers.forEach((tier) => {
-      const benefitValue = row[tier.columnKey];
-      const quantity = benefitValue ? benefitValue.toString().trim() : '';
+		// Process benefits for each tier (including blank quantities)
+		planTiers.forEach(tier => {
+			const benefitValue = row[tier.columnKey];
+			const quantity = benefitValue ? benefitValue.toString().trim() : "";
 
-      const benefit = {
-        item_id: itemId,
-        item_name: itemName,
-        quantity: quantity
-      };
+			const benefit = {
+				item_id: itemId,
+				item_name: itemName,
+				quantity: quantity
+			};
 
-      const mapped = nameMap[tier.name_zh] || { en: tier.name_zh, id: tier.id };
-      const planId = mapped.id;
-      if (plans[planId]) {
-        plans[planId].benefits.push(benefit);
-      }
-    });
-  }
+			const mapped = nameMap[tier.name_zh] || { en: tier.name_zh, id: tier.id };
+			const planId = mapped.id;
+			if (plans[planId]) {
+				plans[planId].benefits.push(benefit);
+			}
+		});
+	}
 
-  console.log(`✓ Processed ${Object.keys(plans).length} sponsorship plans`);
-  return plans;
+	console.log(`✓ Processed ${Object.keys(plans).length} sponsorship plans`);
+	return plans;
 }
 
 async function fetchAndSavePlans(sheets, itemsData) {
-  try {
-    console.log('Processing sponsorship plans...');
+	try {
+		console.log("Processing sponsorship plans...");
 
-    const planSheet = sheets.sponsorship_plans;
+		const planSheet = sheets.sponsorship_plans;
 
-    if (!planSheet) {
-      throw new Error('Sponsorship plans sheet not found');
-    }
+		if (!planSheet) {
+			throw new Error("Sponsorship plans sheet not found");
+		}
 
-    // Process plans data with items data for dynamic mapping
-    const plansData = processPlanData(planSheet, itemsData);
+		// Process plans data with items data for dynamic mapping
+		const plansData = processPlanData(planSheet, itemsData);
 
-    // Write plans to file
-    const outputPath = './src/data/plan.json';
-    const jsonData = JSON.stringify(plansData, null, 2);
+		// Write plans to file
+		const outputPath = "./src/data/plan.json";
+		const jsonData = JSON.stringify(plansData, null, 2);
 
-    try {
-      fs.writeFileSync(outputPath, jsonData, 'utf8');
-      console.log(`✓ Successfully wrote plans data to ${outputPath}`);
-    } catch (error) {
-      console.error(`Failed to write ${outputPath}:`, error.message);
-      throw error;
-    }
+		try {
+			fs.writeFileSync(outputPath, jsonData, "utf8");
+			console.log(`✓ Successfully wrote plans data to ${outputPath}`);
+		} catch (error) {
+			console.error(`Failed to write ${outputPath}:`, error.message);
+			throw error;
+		}
 
-    return plansData;
-  } catch (error) {
-    console.error('Error processing plans:', error.message);
-    throw error;
-  }
+		return plansData;
+	} catch (error) {
+		console.error("Error processing plans:", error.message);
+		throw error;
+	}
 }
 
 export { fetchAllSheets, mergeSheetData, processPlanData, fetchAndSavePlans };

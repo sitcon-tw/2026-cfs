@@ -1,284 +1,284 @@
 {
-  "nt$109,000": {
-    "id": "nt$109,000",
-    "name_zh": "NT$109,000",
-    "name_en": "NT$109,000",
-    "price": "",
-    "order": 1,
-    "benefits": [
-      {
-        "item_id": "28",
-        "item_name": "會場攤位",
-        "quantity": "1"
-      },
-      {
-        "item_id": "29",
-        "item_name": "R0 影片輪播",
-        "quantity": "30sec"
-      },
-      {
-        "item_id": "30",
-        "item_name": "迎賓袋文宣",
-        "quantity": "2"
-      },
-      {
-        "item_id": "31",
-        "item_name": "贈票",
-        "quantity": "6"
-      },
-      {
-        "item_id": "32",
-        "item_name": "接駁車車內廣播",
-        "quantity": ""
-      },
-      {
-        "item_id": "33",
-        "item_name": "R0 議程前夥伴宣讀",
-        "quantity": ""
-      },
-      {
-        "item_id": "34",
-        "item_name": "直播模板  Logo 曝光",
-        "quantity": "O"
-      },
-      {
-        "item_id": "35",
-        "item_name": "門口議程表 Logo 曝光",
-        "quantity": "O"
-      },
-      {
-        "item_id": "36",
-        "item_name": "議程廳講者背板",
-        "quantity": "O"
-      },
-      {
-        "item_id": "37",
-        "item_name": "入口落地窗背板",
-        "quantity": "O"
-      },
-      {
-        "item_id": "38",
-        "item_name": "年會意象背板",
-        "quantity": "O"
-      },
-      {
-        "item_id": "39",
-        "item_name": "年會共筆 Logo 曝光",
-        "quantity": "O"
-      },
-      {
-        "item_id": "40",
-        "item_name": "網頁 Logo 曝光",
-        "quantity": "O"
-      },
-      {
-        "item_id": "27",
-        "item_name": "會場電視輪播",
-        "quantity": "Logo 露出"
-      },
-      {
-        "item_id": "",
-        "item_name": "Instagram 精選動態",
-        "quantity": "1"
-      },
-      {
-        "item_id": "",
-        "item_name": "Facebook 粉絲專頁貼文",
-        "quantity": "2"
-      },
-      {
-        "item_id": "19",
-        "item_name": "SITCON 網站議程表置入",
-        "quantity": "O"
-      }
-    ]
-  },
-  "nt$79,000": {
-    "id": "nt$79,000",
-    "name_zh": "NT$79,000",
-    "name_en": "NT$79,000",
-    "price": "",
-    "order": 2,
-    "benefits": [
-      {
-        "item_id": "28",
-        "item_name": "會場攤位",
-        "quantity": "1"
-      },
-      {
-        "item_id": "29",
-        "item_name": "R0 影片輪播",
-        "quantity": "logo"
-      },
-      {
-        "item_id": "30",
-        "item_name": "迎賓袋文宣",
-        "quantity": "1"
-      },
-      {
-        "item_id": "31",
-        "item_name": "贈票",
-        "quantity": "4"
-      },
-      {
-        "item_id": "32",
-        "item_name": "接駁車車內廣播",
-        "quantity": ""
-      },
-      {
-        "item_id": "33",
-        "item_name": "R0 議程前夥伴宣讀",
-        "quantity": ""
-      },
-      {
-        "item_id": "34",
-        "item_name": "直播模板  Logo 曝光",
-        "quantity": ""
-      },
-      {
-        "item_id": "35",
-        "item_name": "門口議程表 Logo 曝光",
-        "quantity": ""
-      },
-      {
-        "item_id": "36",
-        "item_name": "議程廳講者背板",
-        "quantity": ""
-      },
-      {
-        "item_id": "37",
-        "item_name": "入口落地窗背板",
-        "quantity": "O"
-      },
-      {
-        "item_id": "38",
-        "item_name": "年會意象背板",
-        "quantity": "O"
-      },
-      {
-        "item_id": "39",
-        "item_name": "年會共筆 Logo 曝光",
-        "quantity": "O"
-      },
-      {
-        "item_id": "40",
-        "item_name": "網頁 Logo 曝光",
-        "quantity": "O"
-      },
-      {
-        "item_id": "27",
-        "item_name": "會場電視輪播",
-        "quantity": "Logo 露出"
-      },
-      {
-        "item_id": "",
-        "item_name": "Instagram 精選動態",
-        "quantity": "1"
-      },
-      {
-        "item_id": "",
-        "item_name": "Facebook 粉絲專頁貼文",
-        "quantity": "1"
-      },
-      {
-        "item_id": "19",
-        "item_name": "SITCON 網站議程表置入",
-        "quantity": "O"
-      }
-    ]
-  },
-  "nt$35,000": {
-    "id": "nt$35,000",
-    "name_zh": "NT$35,000",
-    "name_en": "NT$35,000",
-    "price": "",
-    "order": 3,
-    "benefits": [
-      {
-        "item_id": "28",
-        "item_name": "會場攤位",
-        "quantity": ""
-      },
-      {
-        "item_id": "29",
-        "item_name": "R0 影片輪播",
-        "quantity": ""
-      },
-      {
-        "item_id": "30",
-        "item_name": "迎賓袋文宣",
-        "quantity": ""
-      },
-      {
-        "item_id": "31",
-        "item_name": "贈票",
-        "quantity": "2"
-      },
-      {
-        "item_id": "32",
-        "item_name": "接駁車車內廣播",
-        "quantity": ""
-      },
-      {
-        "item_id": "33",
-        "item_name": "R0 議程前夥伴宣讀",
-        "quantity": ""
-      },
-      {
-        "item_id": "34",
-        "item_name": "直播模板  Logo 曝光",
-        "quantity": ""
-      },
-      {
-        "item_id": "35",
-        "item_name": "門口議程表 Logo 曝光",
-        "quantity": ""
-      },
-      {
-        "item_id": "36",
-        "item_name": "議程廳講者背板",
-        "quantity": ""
-      },
-      {
-        "item_id": "37",
-        "item_name": "入口落地窗背板",
-        "quantity": ""
-      },
-      {
-        "item_id": "38",
-        "item_name": "年會意象背板",
-        "quantity": ""
-      },
-      {
-        "item_id": "39",
-        "item_name": "年會共筆 Logo 曝光",
-        "quantity": "O"
-      },
-      {
-        "item_id": "40",
-        "item_name": "網頁 Logo 曝光",
-        "quantity": "O"
-      },
-      {
-        "item_id": "27",
-        "item_name": "會場電視輪播",
-        "quantity": "Logo 露出"
-      },
-      {
-        "item_id": "",
-        "item_name": "Instagram 精選動態",
-        "quantity": "1"
-      },
-      {
-        "item_id": "",
-        "item_name": "Facebook 粉絲專頁貼文",
-        "quantity": "1"
-      },
-      {
-        "item_id": "19",
-        "item_name": "SITCON 網站議程表置入",
-        "quantity": ""
-      }
-    ]
-  }
+	"nt$109,000": {
+		"id": "nt$109,000",
+		"name_zh": "NT$109,000",
+		"name_en": "NT$109,000",
+		"price": "",
+		"order": 1,
+		"benefits": [
+			{
+				"item_id": "28",
+				"item_name": "會場攤位",
+				"quantity": "1"
+			},
+			{
+				"item_id": "29",
+				"item_name": "R0 影片輪播",
+				"quantity": "30sec"
+			},
+			{
+				"item_id": "30",
+				"item_name": "迎賓袋文宣",
+				"quantity": "2"
+			},
+			{
+				"item_id": "31",
+				"item_name": "贈票",
+				"quantity": "6"
+			},
+			{
+				"item_id": "32",
+				"item_name": "接駁車車內廣播",
+				"quantity": ""
+			},
+			{
+				"item_id": "33",
+				"item_name": "R0 議程前夥伴宣讀",
+				"quantity": ""
+			},
+			{
+				"item_id": "34",
+				"item_name": "直播模板  Logo 曝光",
+				"quantity": "O"
+			},
+			{
+				"item_id": "35",
+				"item_name": "門口議程表 Logo 曝光",
+				"quantity": "O"
+			},
+			{
+				"item_id": "36",
+				"item_name": "議程廳講者背板",
+				"quantity": "O"
+			},
+			{
+				"item_id": "37",
+				"item_name": "入口落地窗背板",
+				"quantity": "O"
+			},
+			{
+				"item_id": "38",
+				"item_name": "年會意象背板",
+				"quantity": "O"
+			},
+			{
+				"item_id": "39",
+				"item_name": "年會共筆 Logo 曝光",
+				"quantity": "O"
+			},
+			{
+				"item_id": "40",
+				"item_name": "網頁 Logo 曝光",
+				"quantity": "O"
+			},
+			{
+				"item_id": "27",
+				"item_name": "會場電視輪播",
+				"quantity": "Logo 露出"
+			},
+			{
+				"item_id": "",
+				"item_name": "Instagram 精選動態",
+				"quantity": "1"
+			},
+			{
+				"item_id": "",
+				"item_name": "Facebook 粉絲專頁貼文",
+				"quantity": "2"
+			},
+			{
+				"item_id": "19",
+				"item_name": "SITCON 網站議程表置入",
+				"quantity": "O"
+			}
+		]
+	},
+	"nt$79,000": {
+		"id": "nt$79,000",
+		"name_zh": "NT$79,000",
+		"name_en": "NT$79,000",
+		"price": "",
+		"order": 2,
+		"benefits": [
+			{
+				"item_id": "28",
+				"item_name": "會場攤位",
+				"quantity": "1"
+			},
+			{
+				"item_id": "29",
+				"item_name": "R0 影片輪播",
+				"quantity": "logo"
+			},
+			{
+				"item_id": "30",
+				"item_name": "迎賓袋文宣",
+				"quantity": "1"
+			},
+			{
+				"item_id": "31",
+				"item_name": "贈票",
+				"quantity": "4"
+			},
+			{
+				"item_id": "32",
+				"item_name": "接駁車車內廣播",
+				"quantity": ""
+			},
+			{
+				"item_id": "33",
+				"item_name": "R0 議程前夥伴宣讀",
+				"quantity": ""
+			},
+			{
+				"item_id": "34",
+				"item_name": "直播模板  Logo 曝光",
+				"quantity": ""
+			},
+			{
+				"item_id": "35",
+				"item_name": "門口議程表 Logo 曝光",
+				"quantity": ""
+			},
+			{
+				"item_id": "36",
+				"item_name": "議程廳講者背板",
+				"quantity": ""
+			},
+			{
+				"item_id": "37",
+				"item_name": "入口落地窗背板",
+				"quantity": "O"
+			},
+			{
+				"item_id": "38",
+				"item_name": "年會意象背板",
+				"quantity": "O"
+			},
+			{
+				"item_id": "39",
+				"item_name": "年會共筆 Logo 曝光",
+				"quantity": "O"
+			},
+			{
+				"item_id": "40",
+				"item_name": "網頁 Logo 曝光",
+				"quantity": "O"
+			},
+			{
+				"item_id": "27",
+				"item_name": "會場電視輪播",
+				"quantity": "Logo 露出"
+			},
+			{
+				"item_id": "",
+				"item_name": "Instagram 精選動態",
+				"quantity": "1"
+			},
+			{
+				"item_id": "",
+				"item_name": "Facebook 粉絲專頁貼文",
+				"quantity": "1"
+			},
+			{
+				"item_id": "19",
+				"item_name": "SITCON 網站議程表置入",
+				"quantity": "O"
+			}
+		]
+	},
+	"nt$35,000": {
+		"id": "nt$35,000",
+		"name_zh": "NT$35,000",
+		"name_en": "NT$35,000",
+		"price": "",
+		"order": 3,
+		"benefits": [
+			{
+				"item_id": "28",
+				"item_name": "會場攤位",
+				"quantity": ""
+			},
+			{
+				"item_id": "29",
+				"item_name": "R0 影片輪播",
+				"quantity": ""
+			},
+			{
+				"item_id": "30",
+				"item_name": "迎賓袋文宣",
+				"quantity": ""
+			},
+			{
+				"item_id": "31",
+				"item_name": "贈票",
+				"quantity": "2"
+			},
+			{
+				"item_id": "32",
+				"item_name": "接駁車車內廣播",
+				"quantity": ""
+			},
+			{
+				"item_id": "33",
+				"item_name": "R0 議程前夥伴宣讀",
+				"quantity": ""
+			},
+			{
+				"item_id": "34",
+				"item_name": "直播模板  Logo 曝光",
+				"quantity": ""
+			},
+			{
+				"item_id": "35",
+				"item_name": "門口議程表 Logo 曝光",
+				"quantity": ""
+			},
+			{
+				"item_id": "36",
+				"item_name": "議程廳講者背板",
+				"quantity": ""
+			},
+			{
+				"item_id": "37",
+				"item_name": "入口落地窗背板",
+				"quantity": ""
+			},
+			{
+				"item_id": "38",
+				"item_name": "年會意象背板",
+				"quantity": ""
+			},
+			{
+				"item_id": "39",
+				"item_name": "年會共筆 Logo 曝光",
+				"quantity": "O"
+			},
+			{
+				"item_id": "40",
+				"item_name": "網頁 Logo 曝光",
+				"quantity": "O"
+			},
+			{
+				"item_id": "27",
+				"item_name": "會場電視輪播",
+				"quantity": "Logo 露出"
+			},
+			{
+				"item_id": "",
+				"item_name": "Instagram 精選動態",
+				"quantity": "1"
+			},
+			{
+				"item_id": "",
+				"item_name": "Facebook 粉絲專頁貼文",
+				"quantity": "1"
+			},
+			{
+				"item_id": "19",
+				"item_name": "SITCON 網站議程表置入",
+				"quantity": ""
+			}
+		]
+	}
 }

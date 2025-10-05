@@ -19,12 +19,7 @@ const tiers = [
 ];
 
 // Create rows from benefits (assuming all tiers have the same items in same order)
-const maxBenefits = Math.max(
-	planData.navigator.benefits.length,
-	planData.deep_cultivation.benefits.length,
-	planData.visionary.benefits.length,
-	planData.new_sprout.benefits.length
-);
+const maxBenefits = Math.max(planData.navigator.benefits.length, planData.deep_cultivation.benefits.length, planData.visionary.benefits.length, planData.new_sprout.benefits.length);
 
 // Helper function to generate fallback row IDs
 const getFallbackRowId = (index: number) => `row-${index}`;
@@ -43,12 +38,14 @@ for (let i = 0; i < maxBenefits; i++) {
 	const itemExists = rowId && rowId !== getFallbackRowId(i) && itemsMap.has(rowId);
 
 	// Check if any tier has a non-empty quantity AND the item exists in items data
-	const hasAnyAvailableItem = itemExists && !!(
-		(navBenefit?.quantity && navBenefit.quantity !== "") ||
-		(deepBenefit?.quantity && deepBenefit.quantity !== "") ||
-		(visBenefit?.quantity && visBenefit.quantity !== "") ||
-		(sproutBenefit?.quantity && sproutBenefit.quantity !== "")
-	);
+	const hasAnyAvailableItem =
+		itemExists &&
+		!!(
+			(navBenefit?.quantity && navBenefit.quantity !== "") ||
+			(deepBenefit?.quantity && deepBenefit.quantity !== "") ||
+			(visBenefit?.quantity && visBenefit.quantity !== "") ||
+			(sproutBenefit?.quantity && sproutBenefit.quantity !== "")
+		);
 
 	rows.push({
 		id: rowId,
@@ -97,7 +94,7 @@ const uniqueItemIds = new Set<string>();
 				</div>
 				{
 					rows.map((row: any) => (
-						<div class={`plan-row ${!row.isAvailable ? 'disabled' : ''}`} data-row-id={row.id} data-is-available={row.isAvailable}>
+						<div class={`plan-row ${!row.isAvailable ? "disabled" : ""}`} data-row-id={row.id} data-is-available={row.isAvailable}>
 							{row.values.map((value: any) => {
 								const isAvailable = value.quantity && value.quantity !== "";
 								const isCheckmark = value.quantity === "O" || value.quantity === "o";
@@ -107,7 +104,7 @@ const uniqueItemIds = new Set<string>();
 
 								// Get item data for unit and name
 								const itemData = value.itemId ? itemsMap.get(value.itemId) : null;
-								const itemUnit = itemData?.unit ? (t.unit[itemData.unit] || itemData.unit) : "";
+								const itemUnit = itemData?.unit ? t.unit[itemData.unit] || itemData.unit : "";
 
 								// Special handling for item ID 28 (booth)
 								const isBoothItem = value.itemId === "28";
@@ -125,9 +122,7 @@ const uniqueItemIds = new Set<string>();
 								return (
 									<div class="plan-cell" data-item-id={value.itemId}>
 										{isCheckmark ? (
-											<>
-												{value.name && <div class="cell-sub">{value.name}</div>}
-											</>
+											<>{value.name && <div class="cell-sub">{value.name}</div>}</>
 										) : shouldShowIcons ? (
 											<>
 												<div class="cell-icon cell-main">
@@ -313,7 +308,7 @@ const uniqueItemIds = new Set<string>();
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-    padding-bottom: 1.5rem;
+		padding-bottom: 1.5rem;
 		border-bottom: 1px solid var(--border-light);
 		gap: 0.5rem;
 	}
@@ -451,7 +446,6 @@ const uniqueItemIds = new Set<string>();
 		.plan-row {
 			min-width: 800px;
 		}
-
 	}
 
 	@media (max-width: 768px) {

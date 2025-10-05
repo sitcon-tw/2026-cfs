@@ -9,7 +9,7 @@
 		"astro": "astro",
 		"format": "prettier --write .",
 		"test": "astro check",
-    "fetch-data": "node ./scripts/fetch-and-merge.js"
+		"fetch-data": "node ./scripts/fetch-and-merge.js"
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.9.4",
