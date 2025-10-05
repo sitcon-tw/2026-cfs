@@ -8,47 +8,55 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 
 <section id="cycle">
 	<div class="title">
-		<h2 class="aos aos-fadeIn"><span>不只是一次合作</span>而是一場能持續十年、二十年的循環。</h2>
+    <h2 class="aos aos-fadeIn"><span>{t.title}</span>{t.title2}</h2>
     <picture>
       <source srcset={mobileCycle.src} media="(max-width: 50rem)" />
       <img src={CycleImg.src} alt="Cycle" id="cycle-img" />
     </picture>
 		<!-- mobile Text -->
 		<div class="mobileCycleText">
-			<h3 class="emfont-XiaoLai">發覺新秀</h3>
-			<p>舉辦年會、黑客松，提供各領域人才展現自我與交流所學的舞台。</p>
-			<h3 class="emfont-XiaoLai">培育人才</h3>
-			<p>推動教育公平、促進產學交流，培養組織與領導能力</p>
-			<h3 class="emfont-XiaoLai">創造影響</h3>
-			<p>尋找使用者與徵才，搶佔年輕開發者的心</p>
+      <h3 class="emfont-XiaoLai">{t.mobileCycleText.title1}</h3>
+      <p>{t.mobileCycleText.desc1}</p>
+      <h3 class="emfont-XiaoLai">{t.mobileCycleText.title2}</h3>
+      <p>{t.mobileCycleText.desc2}</p>
+      <h3 class="emfont-XiaoLai">{t.mobileCycleText.title3}</h3>
+      <p>{t.mobileCycleText.desc3}</p>
 		</div>
 
 		<p class="slogan">
-			參與 SITCON 不只是曝光，而是成為社群的一部分。<br />從第一場 SITCON 到第一個專案團隊，企業與人才的故事由你啟動。
+    {t.slogan1}<br />{t.slogan2}
 		</p>
 	</div>
 	<div class="sdgs">
 		<div class="sdgs-item">
       <img src={Hungry.src} alt="Hungry">
 			<div class="sdgs-text">
-				<h4>消除飢餓</h4>
-				<p>開會前後或沒事會揪團去吃好吃的。</p>
+        <h4>{t.sdgs.title1}</h4>
+        <p>{t.sdgs.desc1}</p>
 			</div>
 		</div>
 
 		<div class="sdgs-item init">
       <img src={Hungry.src} alt="Hungry">
 			<div class="sdgs-text">
-				<h4>健康生活</h4>
-				<p>大家一起運動，保持身心健康。</p>
+        <h4>{t.sdgs.title2}</h4>
+        <p>{t.sdgs.desc2}</p>
 			</div>
 		</div>
 
 		<div class="sdgs-item">
       <img src={Hungry.src} alt="Hungry">
 			<div class="sdgs-text">
-				<h4>優質教育</h4>
-				<p>推動學習分享，促進教育公平。</p>
+        <h4>{t.sdgs.title3}</h4>
+        <p>{t.sdgs.desc3}</p>
+			</div>
+		</div>
+
+		<div class="sdgs-item">
+      <img src={Hungry.src} alt="Hungry">
+			<div class="sdgs-text">
+        <h4>{t.sdgs.title4}</h4>
+        <p>{t.sdgs.desc4}</p>
 			</div>
 		</div>
 	</div>
@@ -103,7 +111,7 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 		align-items: center;
 		flex-wrap: wrap;
 		gap: 2rem;
-		margin-bottom: 9rem;
+		margin-bottom: 12rem;
 		position: relative;
 	}
 
