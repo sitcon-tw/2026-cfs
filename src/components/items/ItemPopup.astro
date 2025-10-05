@@ -720,12 +720,12 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 <script>
 	import { addInterestedItem, removeInterestedItem, updateItemQuantity, getItemQuantity } from "../../utils/local-storage.ts";
 
-	document.addEventListener("DOMContentLoaded", function () {
-		// Constants
-		const UNLIMITED_TEXT = "不限";
-		const CHECKMARK_VALUES = ["O", "o"];
-		const QUANTITY_PATTERN = /max\s+(\d+)/i;
+	// Constants
+	const UNLIMITED_TEXT = "不限";
+	const CHECKMARK_VALUES = ["O", "o"];
+	const QUANTITY_PATTERN = /max\s+(\d+)/i;
 
+	document.addEventListener("DOMContentLoaded", function () {
 		// Parse quantity from item.quantity field (e.g., "max 5", "不限", "獨家", "打包專屬")
 		function parseQuantityLimit(quantityStr: string): number | null {
 			if (!quantityStr) return null;
