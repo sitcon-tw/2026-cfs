@@ -1,137 +1,89 @@
 ---
-import type { ImageMetadata } from "astro";
 const { t } = Astro.props;
 import Popup from "@components/Popup.astro";
 import r0 from "@assets/img/r0.webp";
 import volunteer from "@assets/img/sitcon-volunteer.webp";
+import { ChevronDown } from "@lucide/astro";
 
-type timelineItem = {
-	date: string;
-	event: string;
-};
-type placeItem = {
+const teams = t.teams;
+
+const formatted = Object.entries(t.timeline_items).map(([date, text]) => {
+	return { date, text };
+});
+
+interface PlaceItem {
 	code: string;
 	name: string;
 	description: string;
-	img: ImageMetadata;
-};
-type PersonInfo = {
+}
+
+interface TeamItem {
 	title: string;
 	name: string;
 	school: string;
 	major: string;
-};
-const timelineItems: timelineItem[] = [
-	{ date: "07/16", event: t.timeline_items["0716"] },
-	{ date: "09/27", event: t.timeline_items["0927"] },
-	{ date: "10/12", event: t.timeline_items["1012"] },
-	{ date: "01/23", event: t.timeline_items["0123"] },
-	{ date: "01/25", event: t.timeline_items["0125"] },
-	{ date: "02/06", event: t.timeline_items["0206"] },
-	{ date: "03/28", event: t.timeline_items["0328"] }
-];
-const teams: PersonInfo[] = t.teams;
-const placeItems: placeItem[] = [
-	{
-		code: "R0",
-		name: t.place_items.R0.name,
-		description: t.place_items.R0.description,
-		img: r0
-	},
-	{
-		code: "R1 R2",
-		name: t.place_items.R1R2.name,
-		description: t.place_items.R1R2.description,
-		img: r0
-	},
-	{
-		code: "R3",
-		name: t.place_items.R3.name,
-		description: t.place_items.R3.description,
-		img: r0
-	},
-	{
-		code: "",
-		name: t.place_items.lounge.name,
-		description: t.place_items.lounge.description,
-		img: r0
-	}
-];
+}
 ---
 
 <section id="time">
-	<div class="container">
+	<div class="time-container">
 		<h2>{t.title1}<br />{t.title2}</h2>
 		<p>{t.date}</p>
 		<p>{t.location}</p>
 	</div>
 	<div class="aos spacer"></div>
 	<Popup btnText={t.popup_label} title={t.popup_label} hero={true} id="place-staff-popup" background={r0.src}>
-		<div class="popup-div">
-			<p class="title">{t.activity_schedule}</p>
-			<div id="timeline">
-				<div id="timeline-items">
-					{
-						timelineItems.map(item => (
-							<div id="item">
-								<p>{item.date}</p>
-								<p>{item.event}</p>
-							</div>
-						))
-					}
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						class="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6"></path></svg
-					>
-				</div>
-			</div>
-		</div>
-		<div class="popup-div">
-			<p class="title">{t.place_detail}</p>
-			<div class="place-info-wrapper">
-				<div id="place-info">
-					<p id="name" set:html={t.location_name} />
-					<div class="people-info">
-						<p class="people-info-title">{t.max_people}</p>
-						<p id="people">{t.people_count_unit}</p>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="place-items">
-			{
-				placeItems.map(item => (
-					<div class="place-item-box">
-						<div class="place-item-content">
-							<div class="place-item-header">
-								<p>{item.code}</p>
-								<p>{item.name}</p>
-							</div>
-							<p class="place-item-desc">{item.description}</p>
+		<div class="info-container">
+			<h3>{t.activity_schedule}</h3>
+			<div class="timeline">
+				{
+					formatted.map(({ date, text }) => (
+						<div>
+							<span class="date">{date}</span> {text}
 						</div>
-						<img src={item.img.src} alt={item.name} class="place-item-img" />
+					))
+				}
+				<div class="line"><div class="circle"></div><ChevronDown size={38} /></div>
+			</div>
+			<h3>{t.place_detail}</h3>
+			<div class="location">
+				<div class="location-name" set:html={t.location_name} />
+				<div class="location-info">{t.max_people}<div>{t.people_count_unit}</div></div>
+			</div>
+		</div>
+
+		<div class="venue-container">
+			{
+				t.place_items.map((item: PlaceItem) => (
+					<div class="venue">
+						<div class="venue-text-container">
+							<div class="venue-text">
+								<h4>
+									{item.code && <div>{item.code}</div>}
+									{item.name}
+								</h4>
+								<p>{item.description}</p>
+							</div>
+						</div>
+						<img src={item.code} alt={item.name} />
 					</div>
 				))
 			}
 		</div>
-		<div class="popup-div">
-			<p class="title">{t.team}</p>
-			<div id="team-info">
+		<div class="info-container">
+			<h3>{t.team}</h3>
+			<div class="team-container">
 				{
-					teams.map(item => (
-						<div class="team-item">
-							<p class="team-item-title">{item.title}</p>
-							<p class="team-item-title">{item.name}</p>
-							<p>{item.school}</p>
-							<p>{item.major}</p>
+					teams.map((item: TeamItem) => (
+						<div class="team">
+							<strong>
+								{item.title}
+								<br />
+								{item.name}
+							</strong>
+							{item.school}
+							<br />
+							{item.major}
 						</div>
 					))
 				}
@@ -150,7 +102,7 @@ const placeItems: placeItem[] = [
 		flex-direction: column;
 	}
 
-	.container {
+	.time-container {
 		width: 100%;
 		max-width: 60rem;
 		margin: 0 auto;
@@ -161,209 +113,181 @@ const placeItems: placeItem[] = [
 		text-align: left;
 	}
 
-	.spacer{
+	.spacer {
 		flex: 1;
 	}
 
-	.title-box {
-		margin-bottom: 2.7rem;
-	}
-	.title-box p {
-		color: var(--white);
-		font-size: 3.6rem;
-		font-weight: 700;
-		line-height: 133%;
-	}
-	.info-box p {
-		color: var(--white);
-		font-size: 1.7rem;
-		font-weight: 700;
-		line-height: 133%;
-	}
+	/* popup */
 
-	#timeline {
-		align-items: center;
-		display: flex;
-		gap: 5rem;
-		justify-content: center;
-		margin: 2rem;
-		padding: 1rem;
-	}
-	#timeline-items::before {
-		content: "";
-		position: absolute;
-		width: 2rem;
-		height: 2rem;
-		border-radius: 50%;
-		background: #646565;
-		left: -0.15rem;
-		transform: translate(-50%, -50%);
-	}
-	.lucide-chevron-down-icon {
-		position: absolute;
-		width: 4rem;
-		color: #646565;
-		height: 4rem;
-		left: -0.15rem;
-		transform: translate(-50%, -60%);
-	}
-	#timeline-items::after {
-		content: "";
-	}
-	#timeline-items {
-		position: relative;
-		border-left: #646565 0.3rem solid;
-		padding-left: 5rem;
-	}
-	#timeline-items #item {
-		display: grid;
-		gap: 0.5rem;
-		grid-template-columns: 0.5fr 1fr;
-		margin: 2rem 0;
-	}
-	#timeline-items #item p {
-		color: #000;
-		font-size: 2rem;
-		font-weight: 700;
-	}
-
-	.popup-div {
+	.info-container {
 		padding: 2rem;
-	}
-	.title {
-		color: #000;
-		font-weight: 700;
-		line-height: 120%;
-		font-size: clamp(2.5rem, 2.5vw + 0.5rem, 3.7rem);
-	}
-
-	.place-info-wrapper {
-		align-items: center;
 		display: flex;
-		justify-content: center;
-		margin-top: 3rem;
-	}
-
-	#place-info {
+		flex-direction: column;
 		align-items: center;
-		background: #e8e8ec;
-		border-radius: 1rem;
-		display: flex;
-		gap: 2.8rem;
-		justify-content: center;
-		padding: 3.9rem 5.9rem;
-	}
-	#place-info p {
-		color: #000;
-		line-height: 120%;
-	}
-	#name {
-		font-size: 2.6rem;
-		font-weight: 700;
-		text-align: left;
-	}
-	.people-info {
-		text-align: center;
-	}
-	.people-info-title {
-		font-size: 1.8rem;
-		line-height: 120%;
 		margin-bottom: 1rem;
 	}
-	#place-info #people {
-		font-size: 3.3rem;
-		font-weight: 700;
+
+	h3 {
+		font-size: 2.5rem;
+		width: 100%;
 	}
 
-	.place-item-box {
-		align-items: center;
-		display: flex;
-		justify-content: space-between;
-		margin: 2rem 0;
+	h3 {
+		max-width: 50rem;
+		margin-block: 1rem;
 	}
-	.place-item-box:nth-child(2n) {
+
+	.timeline {
+		white-space: pre;
+		line-height: 2;
+		font-size: 1.6rem;
+		font-weight: bold;
+		position: relative;
+		--left: 7rem;
+		padding-left: var(--left);
+		display: flex;
+		flex-direction: column;
+		max-width: 100%;
+		overflow-x: auto;
+	}
+
+	@media (max-width: 36rem) {
+		.timeline {
+			--left: 4rem;
+		}
+	}
+
+	.line {
+		position: absolute;
+		left: calc(var(--left) / 2 - 1.5px);
+		top: 1ch;
+		bottom: 1ch;
+		width: 3px;
+		background-color: var(--black);
+		color: var(--black);
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.circle {
+		width: 16px;
+		aspect-ratio: 1;
+		background-color: var(--black);
+		border-radius: 50%;
+	}
+
+	.lucide-chevron-down {
+		transform: translateY(42%);
+	}
+
+	.timeline span.date {
+		font-family: "firacode", monospace;
+		display: inline-block;
+		width: 6ch;
+		text-align: left;
+	}
+
+	.location {
+		background-color: var(--gray-container);
+		padding: 2rem 4rem;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 2rem;
+		border-radius: 1rem;
+	}
+
+	.location-name {
+		font-size: 1.6rem;
+		font-weight: bold;
+	}
+
+	.location-info {
+		text-align: center;
+	}
+
+	.location-info div {
+		font-size: 2rem;
+		font-weight: bold;
+	}
+
+	.venue {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.venue-container .venue:nth-child(even) {
 		flex-direction: row-reverse;
 	}
-	.place-item-content {
-		padding: 3rem;
+
+	.venue-text-container,
+	.venue img {
+		flex: 1;
+		padding: 2rem;
 	}
-	.place-item-header {
-		font-size: 3.7rem;
-		font-weight: 700;
-		line-height: 120%;
-		margin-bottom: 5.3rem;
+
+	.venue-text h4 {
+		font-size: 1.8rem;
 	}
-	.place-item-desc {
-		color: #6e6e73;
-		font-size: 1.9rem;
-		line-height: 120%;
+
+	.venue-text p {
+		white-space: pre-line;
+		color: var(--gray);
 	}
-	.place-item-img {
-		border-radius: 1.6rem 0 0 1.6rem;
-		height: 32.9rem;
+
+	.venue-text {
+		max-width: 20rem;
+		margin: auto;
+	}
+
+	.venue img {
+		height: 20rem;
 		object-fit: cover;
-		width: 45rem;
+		background-color: var(--gray-container);
+		border-radius: 1.5rem 0 0 1.5rem;
 	}
-	.place-item-box:nth-child(2n) .place-item-img {
-		border-radius: 0 1.6rem 1.6rem 0;
+
+	.venue-container .venue:nth-child(even) img {
+		border-radius: 0 1.5rem 1.5rem 0;
 	}
-	@media (max-width: 660px) {
-		#place-info {
-			flex-direction: column;
-			padding: 1rem;
-		}
-		.place-item-header {
-			font-size: 2rem;
-		}
-		.place-item-desc {
-			font-size: 1.5rem;
-		}
-		.place-item-content {
-			padding: 1rem;
-		}
-	}
-	@media (max-width: 800px) {
-		.popup-div {
-			padding: 1rem;
-		}
-		#timeline-items #item {
+
+	@media (max-width: 42rem) {
+		.venue {
 			display: block;
 		}
-		#timeline-items {
-			padding-left: 1rem;
+
+		.venue img,
+		.venue-container .venue:nth-child(even) img {
+			border-radius: 1.5rem;
+			margin: 0 2rem;
+			display: block;
+			height: 10rem;
+			color: #bbbbbb;
 		}
-		#place-info #name {
-			font-size: 2rem;
-			text-align: center;
+		.venue-text {
+			max-width: unset;
 		}
-	}
-	@media (max-width: 1200px) {
-		.place-item-img {
-			border-radius: 1.6rem 0 0 1.6rem;
-			height: 32.9rem;
-			overflow: hidden;
-			width: auto;
+
+		.venue-text-container {
+			padding: 2rem 2rem 1rem;
 		}
 	}
 
-	#team-info {
+	.team-container {
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr 1fr;
-		margin-top: 5rem;
+		justify-content: center;
+		grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+		gap: 1.5rem;
 		text-align: center;
+		width: min(100%, 50rem);
+		line-height: 2;
 	}
-	@media (max-width: 800px) {
-		#team-info {
-			grid-template-columns: 1fr 1fr;
-		}
-	}
-	.team-item {
-		line-height: 230%;
-		margin-bottom: 4.3rem;
-		text-align: center;
-	}
-	.team-item-title {
-		font-size: 1.6rem;
-		font-weight: 700;
+
+	strong {
+		display: block;
 	}
 </style>
