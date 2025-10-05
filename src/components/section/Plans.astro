@@ -26,6 +26,9 @@ const maxBenefits = Math.max(
 	planData.new_sprout.benefits.length
 );
 
+// Helper function to generate fallback row IDs
+const getFallbackRowId = (index: number) => `row-${index}`;
+
 const rows = [];
 for (let i = 0; i < maxBenefits; i++) {
 	const navBenefit = planData.navigator.benefits[i];
@@ -34,10 +37,10 @@ for (let i = 0; i < maxBenefits; i++) {
 	const sproutBenefit = planData.new_sprout.benefits[i];
 
 	// Use the first available item_id as the row id
-	const rowId = navBenefit?.item_id || deepBenefit?.item_id || visBenefit?.item_id || sproutBenefit?.item_id || `row-${i}`;
+	const rowId = navBenefit?.item_id || deepBenefit?.item_id || visBenefit?.item_id || sproutBenefit?.item_id || getFallbackRowId(i);
 
 	// Check if the item exists in the items data
-	const itemExists = rowId && rowId !== `row-${i}` && itemsMap.has(rowId);
+	const itemExists = rowId && rowId !== getFallbackRowId(i) && itemsMap.has(rowId);
 
 	// Check if any tier has a non-empty quantity AND the item exists in items data
 	const hasAnyAvailableItem = itemExists && !!(
