@@ -1,6 +1,6 @@
 {
 	"meta": {
-		"title": "SITCON 2026 贊助徵求書 - 支持開源，支持下一代的電資未來",
+		"title": "SITCON 2026 贊助徵求書 - 學生需舞台，產業要人才，SITCON 是兩者相遇的最佳橋樑",
 		"description": "SITCON 是由學生組成、投身資訊教育與推廣開源精神的社群。也是一個由學生主辦的資訊研討會，給學生們一個發表交流技術的舞台。"
 	},
 	"nav": {
@@ -261,6 +261,51 @@
 	"addons": {
 		"title": "加購項目",
 		"subtitle": "點擊查看詳情"
+	},
+	"form": {
+		"titleLine1": "今天的支持，",
+		"titleLine2": "成就十年後的技術領袖",
+		"corporateTitle": "公司贊助",
+		"fields": {
+			"organization": {
+				"title": "單位名稱",
+				"description": "",
+				"placeholder": "您的回答"
+			},
+			"department": {
+				"title": "部門/負責業務",
+				"description": "單位名稱",
+				"placeholder": "您的回答"
+			},
+			"name": {
+				"title": "如何稱呼您？",
+				"description": "",
+				"placeholder": "您的回答"
+			},
+			"contact": {
+				"title": "聯絡方式",
+				"description": "Email、FB、LINE ID 或 Telegram ... 等，各式我們能聯絡到您的方式。",
+				"placeholder": "Telegram / @SITCONgeneral"
+			},
+			"message": {
+				"title": "還有什麼想和我們說的嗎？",
+				"description": "",
+				"placeholder": "您的回答"
+			}
+		},
+		"button": {
+			"default": "送出",
+			"loading": "送出中..."
+		},
+		"messages": {
+			"required": "請確認必填欄位",
+			"leadingEqual": "回答的第一個字不可是=",
+			"error": "發生錯誤，請稍後再試"
+		},
+		"personal": {
+			"title": "或是以個人名義贊助 SITCON",
+			"cta": "立即贊助"
+		}
 	},
 	"about": {
 		"detail": "查看受眾與統計",

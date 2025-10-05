@@ -4,24 +4,63 @@ import FormInput from "../FormInput.astro";
 ---
 
 <section id="form">
-	<h2>今天的支持，<br class="rwd-hidden" />成就十年後的技術領袖</h2>
+	<h2>
+		{t.titleLine1}
+		<br class="rwd-hidden" />
+		{t.titleLine2}
+	</h2>
 	<div class="container">
-		<form id="sponsor-form">
-			<h3>公司贊助</h3>
-			<FormInput title="單位名稱" name="organization" required />
-			<FormInput title="部門/負責業務" name="department" description="單位名稱" />
-			<FormInput title="如何稱呼您？" name="name" required />
-			<FormInput title="聯絡方式" name="contact" placeholder="Telegram / @SITCONgeneral" description="Email、FB、LINE ID 或 Telegram ... 等，各式我們能聯絡到您的方式。" required />
-			<FormInput title="還有什麼想和我們說的嗎？" name="message" />
+		<form
+			id="sponsor-form"
+			data-required-message={t.messages.required}
+			data-leading-equal-message={t.messages.leadingEqual}
+			data-error-message={t.messages.error}
+		>
+			<h3>{t.corporateTitle}</h3>
+			<FormInput
+				title={t.fields.organization.title}
+				name="organization"
+				description={t.fields.organization.description}
+				placeholder={t.fields.organization.placeholder}
+				required
+			/>
+			<FormInput
+				title={t.fields.department.title}
+				name="department"
+				description={t.fields.department.description}
+				placeholder={t.fields.department.placeholder}
+			/>
+			<FormInput
+				title={t.fields.name.title}
+				name="name"
+				description={t.fields.name.description}
+				placeholder={t.fields.name.placeholder}
+				required
+			/>
+			<FormInput
+				title={t.fields.contact.title}
+				name="contact"
+				description={t.fields.contact.description}
+				placeholder={t.fields.contact.placeholder}
+				required
+			/>
+			<FormInput
+				title={t.fields.message.title}
+				name="message"
+				description={t.fields.message.description}
+				placeholder={t.fields.message.placeholder}
+			/>
 			<div id="submit-section">
-				<button id="submit">送出</button>
-				<span id="form-message"></span>
+				<button id="submit" type="submit" data-default-text={t.button.default} data-loading-text={t.button.loading}>
+					{t.button.default}
+				</button>
+				<span id="form-message" aria-live="polite"></span>
 			</div>
 		</form>
 		<div class="divider"></div>
 		<div class="personal">
-			<h3>或是以個人名義贊助 SITCON</h3>
-			<a class="personal-button" href="https://sitcon.org/donate" target="_blank">立即贊助</a>
+			<h3>{t.personal.title}</h3>
+			<a class="personal-button" href="https://sitcon.org/donate" target="_blank">{t.personal.cta}</a>
 		</div>
 	</div>
 </section>
@@ -29,58 +68,71 @@ import FormInput from "../FormInput.astro";
 <script>
 	const apiUrl = "https://script.google.com/macros/s/AKfycbyykeFH0wcHMu8_kM3GWa3DWOvJt7Fq0wNc5hROMO1pN8PTjazUTJQi30OEkSrmVZpO/exec";
 
-	const form = document.getElementById("sponsor-form") as HTMLFormElement;
-	const submitButton = document.getElementById("submit") as HTMLButtonElement;
-	const messageElement = document.getElementById("form-message") as HTMLDivElement;
-	const submitButtonText = document.getElementById("submit") as HTMLSpanElement;
+	const form = document.getElementById("sponsor-form") as HTMLFormElement | null;
+	const submitButton = document.getElementById("submit") as HTMLButtonElement | null;
+	const messageElement = document.getElementById("form-message") as HTMLSpanElement | null;
 
-	const checkForm = () => {
-		const formData = new FormData(form);
-		if (!formData.get("organization") || !formData.get("name") || !formData.get("contact")) {
-			messageElement.textContent = "請確認必填欄位";
-			return false;
-		}
-		if (
-			(formData.get("contact") && formData.get("contact")?.toString()[0] == "=") ||
-			(formData.get("name") && formData.get("name")?.toString()[0] == "=") ||
-			(formData.get("organization") && formData.get("organization")?.toString()[0] == "=") ||
-			(formData.get("department") && formData.get("department")?.toString()[0] == "=") ||
-			(formData.get("message") && formData.get("message")?.toString()[0] == "=")
-		) {
-			messageElement.textContent = "回答的第一個字不可是=";
-			return false;
-		}
-		messageElement.textContent = "";
-		return true;
-	};
+	if (!form || !submitButton || !messageElement) {
+		console.warn("Sponsor form elements are missing.");
+	} else {
+		const requiredMessage = form.dataset.requiredMessage ?? "請確認必填欄位";
+		const leadingEqualMessage = form.dataset.leadingEqualMessage ?? "回答的第一個字不可是=";
+		const errorMessage = form.dataset.errorMessage ?? "發生錯誤，請稍後再試";
+		const defaultButtonText = submitButton.dataset.defaultText ?? submitButton.textContent ?? "";
+		const loadingButtonText = submitButton.dataset.loadingText ?? defaultButtonText;
+		const fieldsToCheck = ["contact", "name", "organization", "department", "message"] as const;
 
-	submitButton?.addEventListener("click", event => {
-		event.preventDefault();
-		submitButton.disabled = true;
-		submitButtonText.textContent = "送出中...";
-		if (checkForm()) {
+		const checkForm = () => {
+			const formData = new FormData(form);
+			if (!formData.get("organization") || !formData.get("name") || !formData.get("contact")) {
+				messageElement.textContent = requiredMessage;
+				return false;
+			}
+			if (
+				fieldsToCheck.some(field => {
+					const value = formData.get(field);
+					return typeof value === "string" && value.startsWith("=");
+				})
+			) {
+				messageElement.textContent = leadingEqualMessage;
+				return false;
+			}
+			messageElement.textContent = "";
+			return true;
+		};
+
+		form.addEventListener("submit", event => {
+			event.preventDefault();
+			if (!checkForm()) {
+				submitButton.disabled = false;
+				submitButton.textContent = defaultButtonText;
+				return;
+			}
+
+			submitButton.disabled = true;
+			submitButton.textContent = loadingButtonText;
+
 			fetch(apiUrl, {
 				method: "POST",
 				body: new FormData(form)
 			})
 				.then(async res => {
 					const data = await res.json();
-					if (data.code == 200) {
+					if (data.code === 200) {
 						form.reset();
-						submitButton.disabled = false;
-						submitButtonText.textContent = "送出";
 					}
-					messageElement.textContent = data.message;
+					messageElement.textContent = data.message ?? "";
 				})
 				.catch(e => {
 					console.error(e);
-					messageElement.textContent = "發生錯誤，請稍後再試";
+					messageElement.textContent = errorMessage;
+				})
+				.finally(() => {
+					submitButton.disabled = false;
+					submitButton.textContent = defaultButtonText;
 				});
-		} else {
-			submitButton.disabled = false;
-			submitButtonText.textContent = "送出";
-		}
-	});
+		});
+	}
 </script>
 
 <style>

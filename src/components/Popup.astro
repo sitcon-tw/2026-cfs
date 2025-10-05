@@ -175,7 +175,7 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 		}
 	}
 </style>
-<script define:vars={{ id }}>
+<script is:inline define:vars={{ id }}>
 	document.getElementById(id)?.addEventListener("click", () => {
 		popupCtrl(id, "open");
 	});

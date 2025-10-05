@@ -1,16 +1,4 @@
 {
-	"global": {
-		"unit": {
-			"ticket": "Ticket(s)",
-			"booth": "Booth(s)",
-			"agenda": "Session(s)",
-			"ad": "Ad(s)",
-			"other": "Item(s)",
-			"copy": "Copy/Copies",
-			"second": "Second(s)",
-			"time": "Time(s)"
-		}
-	},
 	"meta": {
 		"title": "SITCON 2026 Sponsorship Prospectus - Support Open Source, Empower the Next Generation",
 		"description": "SITCON is a student-led community devoted to computing education and the promotion of open-source values. It is also a student-organized tech conference that gives students a stage to present and exchange ideas."
@@ -279,6 +267,51 @@
 	"addons": {
 		"title": "Add-ons",
 		"subtitle": "Click to view details"
+	},
+	"form": {
+		"titleLine1": "Your support today,",
+		"titleLine2": "shapes the tech leaders of the next decade.",
+		"corporateTitle": "Corporate Sponsorship",
+		"fields": {
+			"organization": {
+				"title": "Organization Name",
+				"description": "",
+				"placeholder": "Your answer"
+			},
+			"department": {
+				"title": "Department / Business Unit",
+				"description": "Organization name",
+				"placeholder": "Your answer"
+			},
+			"name": {
+				"title": "How should we address you?",
+				"description": "",
+				"placeholder": "Your answer"
+			},
+			"contact": {
+				"title": "Ways to reach you",
+				"description": "Email, Facebook, LINE ID, Telegram, or any channel we can contact you through.",
+				"placeholder": "Telegram / @SITCONgeneral"
+			},
+			"message": {
+				"title": "Anything else you’d like to tell us?",
+				"description": "",
+				"placeholder": "Your answer"
+			}
+		},
+		"button": {
+			"default": "Submit",
+			"loading": "Submitting..."
+		},
+		"messages": {
+			"required": "Please make sure all required fields are filled in.",
+			"leadingEqual": "The first character of your answer can’t be '='.",
+			"error": "Something went wrong. Please try again later."
+		},
+		"personal": {
+			"title": "Prefer to support SITCON as an individual?",
+			"cta": "Donate Now"
+		}
 	},
 	"about": {
 		"detail": "View Audience & Statistics",
