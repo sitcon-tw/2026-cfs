@@ -109,7 +109,7 @@ import { ChevronDown } from "@lucide/astro";
 		padding: 0 0 0 0;
 		line-height: 1.6;
 		color: var(--gray);
-		font-size: 1.3rem;
+		font-size: 1.2rem;
 		transition:
 			max-height 0.3s linear,
 			padding 0.3s linear;
@@ -125,13 +125,20 @@ import { ChevronDown } from "@lucide/astro";
 	}
 
 	@media (max-width: 768px) {
+		.question-text{
+			font-size: 1.3rem;
+		}
 		.faq-question {
-			padding: 20px 0;
+			padding: 1rem 0;
 			font-size: 1.75rem;
 		}
 
 		.faq-answer {
-			font-size: 1.2rem;
+			font-size: 1rem;
+		}
+
+		.lucide-chevron-down{
+			width: 30px;
 		}
 	}
 
