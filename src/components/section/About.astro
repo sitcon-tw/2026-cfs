@@ -304,96 +304,80 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 				});
 			}
 
-			// Facebook Gender Chart
-			const fbGenderData = JSON.parse(document.getElementById("fb-gender-data")!.textContent);
-			const fbGenderTitle = document.getElementById("fb-gender-title")!.textContent;
-			const fbGenderCanvas = document.getElementById("fb-gender-chart") as HTMLCanvasElement;
-
-			if (fbGenderCanvas) {
-				fbGenderChart = new Chart(fbGenderCanvas, {
-					type: "doughnut",
-					data: {
-						labels: Object.keys(fbGenderData),
-						datasets: [
-							{
-								data: Object.values(fbGenderData) as number[],
-								backgroundColor: ["#4FC3F7", "#FFB74D"],
-								borderWidth: 1
-							}
-						]
-					},
-					options: {
-						responsive: true,
-						maintainAspectRatio: false,
-						plugins: {
-							legend: {
-								display: true,
-								position: "top",
-								labels: { font: { size: 12 } }
-							},
-							title: {
-								display: true,
-								text: fbGenderTitle,
-								font: { size: 20, weight: "bold" },
-								color: "#48484A"
-							},
-							datalabels: {
-								color: "#000000",
-								font: { weight: "bold", size: 14 },
-								formatter: (value: any) => `${value}%`
-							}
-						}
-					},
-					plugins: [ChartDataLabels]
-				});
-			}
-
-			// Instagram Age Chart
-			const igAgeData = JSON.parse(document.getElementById("ig-age-data")!.textContent);
-			const igAgeTitle = document.getElementById("ig-age-title")!.textContent;
-			const igAgeCanvas = document.getElementById("ig-age-chart") as HTMLCanvasElement;
-
-			if (igAgeCanvas) {
-				igAgeChart = new Chart(igAgeCanvas, {
-					type: "doughnut",
-					data: {
-						labels: Object.keys(igAgeData),
-						datasets: [
-							{
-								data: Object.values(igAgeData) as number[],
-								backgroundColor: socialMediaColors,
-								borderWidth: 1
-							}
-						]
-					},
-					options: {
-						responsive: true,
-						maintainAspectRatio: false,
-						plugins: {
-							legend: {
-								display: true,
-								position: "top",
-								labels: { font: { size: 12 } }
-							},
-							title: {
-								display: true,
-								text: igAgeTitle,
-								font: { size: 20, weight: "bold" },
-								color: "#48484A"
-							},
-							datalabels: {
-								color: "#000000",
-								font: { weight: "bold", size: 12 },
-								formatter: (value: any) => {
-									return value > 5 ? `${value}%` : "";
+			// Helper to create doughnut charts
+			function createDoughnutChart({
+				canvasId,
+				dataId,
+				titleId,
+				colors,
+				datalabelFontSize = 14,
+				datalabelFormatter = (value: any) => `${value}%`
+			}) {
+				const data = JSON.parse(document.getElementById(dataId)!.textContent);
+				const title = document.getElementById(titleId)!.textContent;
+				const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+				if (canvas) {
+					return new Chart(canvas, {
+						type: "doughnut",
+						data: {
+							labels: Object.keys(data),
+							datasets: [
+								{
+									data: Object.values(data),
+									backgroundColor: colors,
+									borderWidth: 1
+								}
+							]
+						},
+						options: {
+							responsive: true,
+							maintainAspectRatio: false,
+							plugins: {
+								legend: {
+									display: true,
+									position: "top",
+									labels: { font: { size: 12 } }
+								},
+								title: {
+									display: true,
+									text: title,
+									font: { size: 20, weight: "bold" },
+									color: "#48484A"
+								},
+								datalabels: {
+									color: "#000000",
+									font: { weight: "bold", size: datalabelFontSize },
+									formatter: datalabelFormatter
 								}
 							}
-						}
-					},
-					plugins: [ChartDataLabels]
-				});
+						},
+						plugins: [ChartDataLabels]
+					});
+				}
+				return null;
 			}
 
+			// Facebook Gender Chart
+			fbGenderChart = createDoughnutChart({
+				canvasId: "fb-gender-chart",
+				dataId: "fb-gender-data",
+				titleId: "fb-gender-title",
+				colors: ["#4FC3F7", "#FFB74D"],
+				datalabelFontSize: 14,
+				datalabelFormatter: (value: any) => `${value}%`
+			});
+
+			// Instagram Age Chart
+			igAgeChart = createDoughnutChart({
+				canvasId: "ig-age-chart",
+				dataId: "ig-age-data",
+				titleId: "ig-age-title",
+				colors: socialMediaColors,
+				datalabelFontSize: 12,
+				datalabelFormatter: (value: any) => {
+					return value > 5 ? `${value}%` : "";
+				}
+			});
 			// Instagram Gender Chart
 			const igGenderData = JSON.parse(document.getElementById("ig-gender-data")!.textContent);
 			const igGenderTitle = document.getElementById("ig-gender-title")!.textContent;
