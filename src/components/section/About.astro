@@ -163,7 +163,7 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 		datasets: [
 			{
 				label: unit,
-				data: Object.values(attenderRoleData),
+				data: Object.values(attenderRoleData) as number[],
 				borderWidth: 1,
 				backgroundColor: colors,
 				hoverOffset: 5
@@ -179,7 +179,7 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 		datasets: [
 			{
 				label: unit,
-				data: Object.values(programmingLevelData),
+				data: Object.values(programmingLevelData) as number[],
 				borderWidth: 1,
 				backgroundColor: colors,
 				hoverOffset: 5
@@ -188,12 +188,12 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 	};
 
 	// Store chart instances
-	let roleChart: Chart;
-	let levelChart: Chart;
-	let fbAgeChart: Chart;
-	let fbGenderChart: Chart;
-	let igAgeChart: Chart;
-	let igGenderChart: Chart;
+	let roleChart: any;
+	let levelChart: any;
+	let fbAgeChart: any;
+	let fbGenderChart: any;
+	let igAgeChart: any;
+	let igGenderChart: any;
 
 	// Initialize main charts immediately (they're visible on page load)
 	for (let i = 0; i < 2; i++) {
@@ -267,7 +267,7 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 						labels: Object.keys(fbAgeData),
 						datasets: [
 							{
-								data: Object.values(fbAgeData),
+								data: Object.values(fbAgeData) as number[],
 								backgroundColor: socialMediaColors,
 								borderWidth: 1
 							}
@@ -313,7 +313,7 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 						labels: Object.keys(fbGenderData),
 						datasets: [
 							{
-								data: Object.values(fbGenderData),
+								data: Object.values(fbGenderData) as number[],
 								backgroundColor: ["#4FC3F7", "#FFB74D"],
 								borderWidth: 1
 							}
@@ -357,7 +357,7 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 						labels: Object.keys(igAgeData),
 						datasets: [
 							{
-								data: Object.values(igAgeData),
+								data: Object.values(igAgeData) as number[],
 								backgroundColor: socialMediaColors,
 								borderWidth: 1
 							}
@@ -403,7 +403,7 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 						labels: Object.keys(igGenderData),
 						datasets: [
 							{
-								data: Object.values(igGenderData),
+								data: Object.values(igGenderData) as number[],
 								backgroundColor: ["#4FC3F7", "#FFB74D"],
 								borderWidth: 1
 							}
