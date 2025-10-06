@@ -420,14 +420,14 @@
 				"social_media": {
 					"title": "社群媒體統計",
 					"facebook": {
-						"name": "Facebook",
+						"name": "Facebook 粉絲",
 						"stats": {
 							"followers": "1.2 萬人",
 							"reach": "1.5 萬人",
 							"views": "8.7 萬次"
 						},
 						"labels": {
-							"followers": "追蹤人數",
+							"followers": "粉絲人數",
 							"reach": "90 天內觸及",
 							"views": "90 天內點閱瀏覽",
 							"age_distribution": "年齡分布",
@@ -447,7 +447,7 @@
 						}
 					},
 					"instagram": {
-						"name": "Instagram",
+						"name": "Instagram 追蹤者",
 						"stats": {
 							"followers": "約 3500 人",
 							"reach": "1.8 萬人",
