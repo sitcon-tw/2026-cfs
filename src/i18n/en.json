@@ -395,6 +395,63 @@
 					"Intermediate": "Can devise solutions to problems.",
 					"Proficient": "Can evaluate trade-offs among multiple solutions.",
 					"Advanced": "Has rich experience and can advise others effectively."
+				},
+				"social_media": {
+					"title": "Social Media Statistics",
+					"facebook": {
+						"name": "Facebook",
+						"stats": {
+							"followers": "12.2K",
+							"reach": "15K",
+							"views": "87K"
+						},
+						"labels": {
+							"followers": "Followers",
+							"reach": "Reach (Past 90 Days)",
+							"views": "Views (Past 90 Days)",
+							"age_distribution": "Age Distribution",
+							"gender_ratio": "Gender Ratio"
+						},
+						"gender": {
+							"Male": 69.8,
+							"Female": 30.2
+						},
+						"age": {
+							"18-24": 16,
+							"25-34": 57.3,
+							"35-44": 15.3,
+							"45-54": 8.4,
+							"55-64": 1.8,
+							"65+": 1.2
+						}
+					},
+					"instagram": {
+						"name": "Instagram",
+						"stats": {
+							"followers": "3.5K",
+							"reach": "18K",
+							"views": "357K"
+						},
+						"labels": {
+							"followers": "Followers",
+							"reach": "Reach (Past 90 Days)",
+							"views": "Views (Past 90 Days)",
+							"age_distribution": "Age Distribution",
+							"gender_ratio": "Gender Ratio"
+						},
+						"gender": {
+							"Male": 69.3,
+							"Female": 30.7
+						},
+						"age": {
+							"18-24": 49.9,
+							"25-34": 37.2,
+							"35-44": 6.9,
+							"45-54": 4.1,
+							"55-64": 1.1,
+							"65+": 0.8
+						}
+					}
 				}
 			}
 		}
@@ -431,7 +488,11 @@
 		"description": "We welcome various forms of event or media collaboration—co-hosting workshops, hackathons, podcasts, and more. Reach out with your ideas.",
 		"contact": "Marketing & Media Contacts",
 		"email": "contact@sitcon.org",
-		"contact_list": ["曾煥軒 +886-908-593-538", "巫玟槿 +886-963-584-326", "黃一晉 +886-922-686-223"],
+		"contact_list": [
+			"曾煥軒 +886-908-593-538",
+			"巫玟槿 +886-963-584-326",
+			"黃一晉 +886-922-686-223"
+		],
 		"contact_us": "Contact Us",
 		"contact_us_description": "For collaboration:",
 		"contact_us_description2": "For registration:",
