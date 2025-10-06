@@ -396,6 +396,7 @@
 					"Proficient": "Can evaluate trade-offs among multiple solutions.",
 					"Advanced": "Has rich experience and can advise others effectively."
 				},
+				"schools_text_title": "Attendee School Distribution",
 				"social_media": {
 					"title": "Social Media Statistics",
 					"facebook": {
@@ -488,11 +489,7 @@
 		"description": "We welcome various forms of event or media collaboration—co-hosting workshops, hackathons, podcasts, and more. Reach out with your ideas.",
 		"contact": "Marketing & Media Contacts",
 		"email": "contact@sitcon.org",
-		"contact_list": [
-			"曾煥軒 +886-908-593-538",
-			"巫玟槿 +886-963-584-326",
-			"黃一晉 +886-922-686-223"
-		],
+		"contact_list": ["曾煥軒 +886-908-593-538", "巫玟槿 +886-963-584-326", "黃一晉 +886-922-686-223"],
 		"contact_us": "Contact Us",
 		"contact_us_description": "For collaboration:",
 		"contact_us_description2": "For registration:",
