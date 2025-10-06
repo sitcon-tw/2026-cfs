@@ -251,7 +251,7 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 
 	function initializeSocialMediaCharts() {
 		// Only initialize if charts haven't been created yet
-		if (fbAgeChart || fbGenderChart || igAgeChart || igGenderChart) return;
+		if (fbAgeChart && fbGenderChart && igAgeChart && igGenderChart) return;
 
 		// Small delay to ensure popup is fully rendered
 		setTimeout(() => {
