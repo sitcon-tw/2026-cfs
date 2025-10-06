@@ -164,13 +164,15 @@ const news: News[] = [
 
 	h4 {
 		font-size: 1.5rem;
+		line-height: 1.4;
+		margin-bottom: 1rem;
 	}
 
 	.things-description {
 		line-height: 134%;
 	}
 
-	@media (max-height: 35rem), (max-width: 40rem) {
+	@media screen and (max-height: 35rem), (max-width: 40rem) {
 		.things-area {
 			flex-direction: column;
 			align-items: center;
@@ -184,5 +186,14 @@ const news: News[] = [
 		h3 {
 			padding-inline: 2rem;
 		}
+	}
+
+	@media print {
+		#news {
+			display: none !important;
+		}
+	}
+	.news-img {
+		width: 40vw;
 	}
 </style>

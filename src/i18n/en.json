@@ -5,26 +5,26 @@
 	},
 	"nav": {
 		"title": "SITCON 2026 Sponsorship Prospectus",
-		"data": "Audience Data",
+		"data": "Audience",
 		"info": "Event Info",
-		"plan": "Sponsorship Plans",
-		"langChange": "English Version",
+		"plan": "Plans",
+		"langChange": "中文",
 		"contact": "Contact Us",
 		"export": "Export PDF"
 	},
 	"hero": {
-		"title": "Students need a stage, the industry needs talent",
-		"title2": "SITCON is the bridge where both meet",
-		"subtitle": "SITCON 2026 Students’ Information Technology Conference",
+		"title": "Students Need a Stage, Industries Need Talent",
+		"title2": "SITCON is Where We Meet",
+		"subtitle": "Students' Information Technology Conference 2026",
 		"subtitle2": "Sponsorship Prospectus"
 	},
 	"intro": {
 		"sentence1": "SITCON is a student community dedicated to computing education and championing open-source culture.",
-		"sentence2": "It’s also a student-run conference that offers a stage for students to share and discuss technology."
+		"sentence2": " It's also a student-run conference that offers a stage for students to share and discuss technology."
 	},
 	"cycle": {
 		"title": "More than a one-off collaboration",
-		"title2": "It’s a cycle that can last ten or twenty years.",
+		"title2": "It's a cycle that can last ten or twenty years.",
 		"mobileCycleText": {
 			"title1": "Spotting Rising Talent",
 			"desc1": "We host conferences and hackathons that give people from different fields a stage to showcase themselves and exchange knowledge.",
@@ -33,7 +33,7 @@
 			"title3": "Creating Impact",
 			"desc3": "Find users and hire candidates—win the hearts of young developers."
 		},
-		"slogan1": "Joining SITCON isn’t just about exposure—it’s about becoming part of the community.",
+		"slogan1": "Joining SITCON isn't just about exposure—it's about becoming part of the community.",
 		"slogan2": "From the first SITCON to your first project team, let your company start a new story with talent.",
 		"sdgs": {
 			"title1": "Goal 4: Quality Education",
@@ -48,7 +48,7 @@
 	},
 	"time": {
 		"title1": "Our once-a-year moment,",
-		"title2": "we’re ready.",
+		"title2": "we're ready.",
 		"date": "Saturday, March 28, 2026",
 		"location": "Academia Sinica, Humanities and Social Sciences Building",
 		"popup_label": "View event details and the organizing team",
@@ -67,107 +67,99 @@
 			"0129": "Program published",
 			"0308": "Conference day"
 		},
-		"place_items": {
-			"R0": {
-				"name": "International Conference Hall",
-				"description": "Total 426 seats\nOpening and Keynote will take place here."
-			},
-			"R1R2": {
-				"name": "First / Second Conference Room",
-				"description": "Each room has 112 seats; aisles and the back area can accommodate additional attendees."
-			},
-			"R3": {
-				"name": "Teleconference Room",
-				"description": "Total 36 seats; additional standing space at both sides of the stage, in front of the first row, and at the back."
-			},
-			"lounge": {
+		"place_items": [
+			{ "code": "R0", "name": "International Conference Hall", "description": "Total 426 seats\nOpening and Keynote will take place here." },
+			{ "code": "R1 R2", "name": "First / Second Conference Room", "description": "Each room has 112 seats; aisles and the back area can accommodate additional attendees." },
+			{ "code": "R3", "name": "Teleconference Room", "description": "Total 36 seats; additional standing space at both sides of the stage, in front of the first row, and at the back." },
+			{
+				"code": "lounge",
 				"name": "Lounge",
 				"description": "A spacious, unobstructed open area with a wall of sunlit floor-to-ceiling windows. Unlike the lecture format in other rooms, this space supports flexible furniture layouts for various activities."
 			}
-		},
+		],
 		"teams": [
 			{
 				"title": "General Chair",
 				"name": "徐嘉謙",
-				"school": "國立宜蘭大學",
-				"major": "資訊工程系"
+				"school": "NIU",
+				"major": "CSIE"
 			},
 			{
 				"title": "Vice Chair",
 				"name": "邱翊盛",
-				"school": "臺北市立內湖高級職業工業學校",
+				"school": "NIHS",
 				"major": ""
 			},
 			{
 				"title": "Vice Chair",
 				"name": "康智惟",
-				"school": "國立臺灣科技大學",
-				"major": "電機工程系"
+				"school": "NTUST",
+				"major": "EE"
 			},
 			{
 				"title": "Marketing Lead",
 				"name": "巫玟槿",
-				"school": "國立成功大學",
-				"major": "資訊工程系"
+				"school": "NCKU",
+				"major": "CSIE"
 			},
 			{
 				"title": "Program Lead",
 				"name": "吳政葶",
-				"school": "國立清華大學",
-				"major": "資訊工程研究所"
+				"school": "NTHU",
+				"major": "CSIE Graduate Institute"
 			},
 			{
 				"title": "Operations Lead",
 				"name": "黃映綺",
-				"school": "國立中山大學",
-				"major": "人文暨科技跨領域學士學位學程"
+				"school": "NSYSU",
+				"major": "Interdisciplinary Studies"
 			},
 			{
-				"title": "Production Lead",
+				"title": "Prod. Lead",
 				"name": "詹博翔",
-				"school": "大同大學",
-				"major": "資訊經營學系"
+				"school": "TTU",
+				"major": "IM"
 			},
 			{
 				"title": "Design Lead",
 				"name": "楊沁璇",
-				"school": "國立東華大學",
-				"major": "資訊管理學系"
+				"school": "NDHU",
+				"major": "IM"
 			},
 			{
 				"title": "Finance Lead",
 				"name": "吳芷伶",
-				"school": "國立屏東大學",
-				"major": "電腦科學與人工智慧學系"
+				"school": "NPTU",
+				"major": "CSAI"
 			},
 			{
-				"title": "Development Lead",
-				"name": "毛宥鈞",
-				"school": "國立陽明交通大學",
-				"major": "資訊工程學系"
+				"title": "Dev Lead",
+				"name": "Elvis Mao",
+				"school": "NYCU",
+				"major": "CSIE"
 			},
 			{
 				"title": "Venue Lead",
 				"name": "盧明澤",
-				"school": "國立鳳山高級中學",
+				"school": "FSSH",
 				"major": ""
 			},
 			{
-				"title": "Documentation Lead",
+				"title": "Docs Lead",
 				"name": "吳睿琦",
-				"school": "國立中央大學",
-				"major": "通訊工程系"
+				"school": "NCU",
+				"major": "COMM"
 			},
 			{
 				"title": "Editorial Lead",
 				"name": "賴亭瑜",
-				"school": "國立彰化師範大學",
-				"major": "特殊教育學系"
+				"school": "NCUE",
+				"major": "SPED"
 			}
 		]
 	},
 	"news": {
-		"title": "What We’ve Done",
+		"title": "What We've Done",
 		"things": [
 			{
 				"title": "The largest student CS conference in East Asia",
@@ -179,7 +171,7 @@
 			},
 			{
 				"title": "SITCON Hour of Code",
-				"description": "Since 2014, in partnership with the Ministry of Education, we’ve regularly hosted Hour of Code events across Taiwan, sparking curiosity for computing among hundreds of children aged 4–16."
+				"description": "Since 2014, in partnership with the Ministry of Education, we've regularly hosted Hour of Code events across Taiwan, sparking curiosity for computing among hundreds of children aged 4–16."
 			},
 			{
 				"title": "SITCON Hackathon",
@@ -251,11 +243,9 @@
 		},
 		"item_categories": {
 			"all": "All",
+			"talent_recruitment": "Talent Recruitment",
 			"brand_exposure": "Brand Exposure",
-			"live_interaction": "On-site Engagement",
-			"recruitment_and_promotion": "Recruitment & Promotion",
-			"exclusive_agenda": "Exclusive Sessions",
-			"others": "Others"
+			"product_promotion": "Product Promotion"
 		},
 		"tier_names": {
 			"flagship": "Flagship",
@@ -294,7 +284,7 @@
 				"placeholder": "Telegram / @SITCONgeneral"
 			},
 			"message": {
-				"title": "Anything else you’d like to tell us?",
+				"title": "Anything else you'd like to tell us?",
 				"description": "",
 				"placeholder": "Your answer"
 			}
@@ -305,7 +295,7 @@
 		},
 		"messages": {
 			"required": "Please make sure all required fields are filled in.",
-			"leadingEqual": "The first character of your answer can’t be '='.",
+			"leadingEqual": "The first character of your answer can't be '='.",
 			"error": "Something went wrong. Please try again later."
 		},
 		"personal": {
@@ -316,7 +306,7 @@
 	"about": {
 		"detail": "View Audience & Statistics",
 		"subtitle": "The largest student community",
-		"title": "in Southeast Asia for 13 years",
+		"title": " in Southeast Asia for 13 years",
 		"stats": [
 			{
 				"number": "14000",
@@ -328,11 +318,11 @@
 			},
 			{
 				"number": "500",
-				"label": "meetups and talks"
+				"label": "talks"
 			},
 			{
 				"number": "10",
-				"label": "summer camps"
+				"label": "camps"
 			},
 			{
 				"number": "1400",
@@ -340,7 +330,7 @@
 			}
 		],
 		"review": {
-			"title": "A Look Back at 2025",
+			"title": "2025 rewind",
 			"stats": [
 				{
 					"label": "Venue attendance",
@@ -468,7 +458,7 @@
 		"questions": [
 			{
 				"question": "Can we negotiate the price?",
-				"answer": "Our plan pricing is carefully calculated and already offers the best value. If you have specific needs or budget considerations, we’re happy to discuss."
+				"answer": "Our plan pricing is carefully calculated and already offers the best value. If you have specific needs or budget considerations, we're happy to discuss."
 			},
 			{
 				"question": "Can it be cheaper?",
@@ -476,7 +466,7 @@
 			},
 			{
 				"question": "Why is it so expensive?",
-				"answer": "The pricing reflects the event’s scale and impact. If it exceeds your budget, consider a lower tier or talk with us about a customized package."
+				"answer": "The pricing reflects the event's scale and impact. If it exceeds your budget, consider a lower tier or talk with us about a customized package."
 			},
 			{
 				"question": "Do you offer discounts?",

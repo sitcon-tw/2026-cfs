@@ -27,9 +27,12 @@ interface TeamItem {
 
 <section id="time">
 	<div class="time-container">
-		<h2>{t.title1}<br />{t.title2}</h2>
-		<p>{t.date}</p>
-		<p>{t.location}</p>
+		<div>
+			<h2>{t.title1}<br />{t.title2}</h2>
+			<p>{t.date}</p>
+			<p>{t.location}</p>
+		</div>
+		<img src={volunteer.src} alt="志工" class="volunteer-img" />
 	</div>
 	<div class="aos spacer"></div>
 	<Popup btnText={t.popup_label} title={t.popup_label} hero={true} id="place-staff-popup" background={r0.src}>
@@ -151,7 +154,7 @@ interface TeamItem {
 		overflow-x: auto;
 	}
 
-	@media (max-width: 36rem) {
+	@media screen and (max-width: 36rem) {
 		.timeline {
 			--left: 4rem;
 		}
@@ -218,6 +221,7 @@ interface TeamItem {
 		justify-content: center;
 		align-items: center;
 		gap: 1rem;
+		break-inside: avoid;
 	}
 
 	.venue-container .venue:nth-child(even) {
@@ -256,7 +260,25 @@ interface TeamItem {
 		border-radius: 0 1.5rem 1.5rem 0;
 	}
 
-	@media (max-width: 42rem) {
+	.team-container {
+		display: grid;
+		justify-content: center;
+		grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+		gap: 2rem;
+		text-align: center;
+		width: min(100%, 50rem);
+		line-height: 2;
+	}
+
+	strong {
+		display: block;
+	}
+
+	.volunteer-img {
+		display: none;
+	}
+
+	@media screen and (max-width: 42rem) {
 		.venue {
 			display: block;
 		}
@@ -278,17 +300,40 @@ interface TeamItem {
 		}
 	}
 
-	.team-container {
-		display: grid;
-		justify-content: center;
-		grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
-		gap: 2rem;
-		text-align: center;
-		width: min(100%, 50rem);
-		line-height: 2;
-	}
+	@media print {
+		#time {
+			padding: 0;
+			min-height: unset;
+			background: none;
+		}
 
-	strong {
-		display: block;
+		.time-container {
+			margin-block: 32pt 72pt;
+			color: inherit;
+			display: flex;
+			align-items: stretch;
+		}
+
+		.time-container > div,
+		.volunteer-img {
+			flex: 1;
+		}
+		.time-container > div {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+
+		.volunteer-img {
+			width: 0;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+			border-radius: 25px;
+		}
+
+		#time :global(.popup-hero) {
+			display: none;
+		}
 	}
 </style>

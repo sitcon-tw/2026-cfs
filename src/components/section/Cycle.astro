@@ -13,7 +13,7 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 	<div class="title">
 		<h2 class="aos aos-fadeIn"><span>{t.title}</span>{t.title2}</h2>
 		<picture>
-			<source srcset={mobileCycle.src} media="(max-width: 50rem)" />
+			<source srcset={mobileCycle.src} media="screen and (max-width: 50rem)" />
 			<img src={CycleImg.src} alt="Cycle" id="cycle-img" />
 		</picture>
 		<!-- mobile Text -->
@@ -68,6 +68,7 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 <style define:vars={{ arrowURL: `url(${Arrow.src})` }}>
 	section {
 		padding: 2rem;
+		break-inside: avoid;
 	}
 
 	#cycle-img {
@@ -115,7 +116,7 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 		align-items: center;
 		flex-wrap: wrap;
 		gap: 2rem;
-		margin-bottom: 12rem;
+		margin-bottom: 14rem;
 		position: relative;
 	}
 
@@ -173,7 +174,7 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 		visibility: visible;
 	}
 
-	@media (max-width: 50rem) {
+	@media screen and (max-width: 50rem) {
 		#cycle-img {
 			width: 70%;
 			height: auto;
@@ -184,9 +185,40 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 		}
 	}
 
-	@media (max-width: 40rem) {
+	@media screen and (max-width: 40rem) {
 		.sdgs img {
 			width: 5rem;
+		}
+	}
+
+	@media print {
+		.sdgs-text {
+			position: static;
+			transform: none;
+			opacity: 1 !important;
+			visibility: visible !important;
+			transform: none;
+			max-width: calc(50vw - 4rem);
+			font-size: 10pt;
+			margin-top: 12pt;
+		}
+
+		h4{
+			font-size: 12pt;
+			margin-bottom: 0.5rem;
+		}
+
+		.sdgs-item img {
+			transform: none !important;
+			width: 45pt;
+		}
+
+		#cycle-img {
+			width: 350pt;
+		}
+
+		.mobileCycleText {
+			display: none;
 		}
 	}
 </style>

@@ -47,7 +47,7 @@ import IntroImg from "@assets/img/intro.webp";
 	.anchor,
 	.anchor2 {
 		position: absolute;
-		top: 70%;
+		top: 75%;
 	}
 
 	.anchor2 {
@@ -67,5 +67,27 @@ import IntroImg from "@assets/img/intro.webp";
 	.line2 {
 		color: transparent;
 		transition: color 0.5s ease-in-out;
+	}
+
+	@media print {
+		section {
+			min-height: unset;
+			background: none;
+		}
+
+		section::after {
+			display: none;
+		}
+
+		h2 {
+			margin-top: 32pt;
+			font-size: 18pt;
+			text-align: left;
+		}
+
+		h2,
+		h2 span {
+			color: #1d1d1f !important;
+		}
 	}
 </style>

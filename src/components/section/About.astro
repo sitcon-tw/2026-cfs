@@ -552,7 +552,7 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 		font-size: 1.5em;
 	}
 
-	@media (max-width: 70rem) {
+	@media screen and (max-width: 70rem) {
 		.stat-card {
 			flex: 1 1 calc(50% - 2rem);
 			padding: 5rem 1rem 2rem;
@@ -574,19 +574,19 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 			font-size: 2rem;
 		}
 	}
-	@media (max-width: 40rem) {
+	@media screen and (max-width: 40rem) {
 		.stat-number {
 			font-size: 2.5rem;
 		}
 	}
 
-	@media (max-width: 33rem) {
+	@media screen and (max-width: 33rem) {
 		.stat-card {
 			flex: 1 1 100%;
 			max-width: 100%;
 		}
 	}
-	@media (max-width: 75rem) {
+	@media screen and (max-width: 75rem) {
 		.chart-area {
 			grid-template-columns: 1fr;
 		}
@@ -705,6 +705,47 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 	@media (max-width: 600px) {
 		.stats-cards-wrapper {
 			grid-template-columns: 1fr;
+    }
+  }
+  
+	@media print {
+		#about {
+			padding: 0;
+			margin-top: 24pt;
+		}
+
+		h2 span {
+			display: inline;
+		}
+
+		.stats-cards {
+			flex-wrap: nowrap;
+			gap: 16pt;
+		}
+
+		.stat-card {
+			padding: 140pt 12pt 12pt;
+		}
+
+		.stat-number {
+			font-size: 24pt;
+		}
+
+		.stat-card::before {
+			opacity: 1;
+		}
+
+		.rewind {
+			margin-bottom: 64pt;
+			font-size: 18pt;
+		}
+
+		.review-title {
+			font-size: 24pt;
+		}
+
+		.chart-area {
+			overflow-x: hidden;
 		}
 	}
 </style>

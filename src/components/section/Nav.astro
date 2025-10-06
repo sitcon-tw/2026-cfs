@@ -4,7 +4,7 @@ const { t } = Astro.props;
 
 <nav aria-label="Main Navigation" class="navbar">
 	<div class="nav-container">
-		<h1 class="nav-title">{t.title}</h1>
+		<a href="#"><h1 class="nav-title">{t.title}</h1></a>
 		<button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
 			<span class="hamburger-line"></span>
 			<span class="hamburger-line"></span>
@@ -14,8 +14,8 @@ const { t } = Astro.props;
 			<a href="#data" class="nav-link">{t.data}</a>
 			<a href="#info" class="nav-link">{t.info}</a>
 			<a href="#plan" class="nav-link">{t.plan}</a>
-			<a href="/en/" class="nav-link lang-switch">{t.langChange}</a>
-			<a href="#contact" class="nav-link contact-btn">{t.contact}</a>
+			<a href="/2026/cfs/en/" class="nav-link lang-switch">{t.langChange}</a>
+			<a href="#form" class="nav-link contact-btn">{t.contact}</a>
 			<button class="nav-link export-btn">{t.export}</button>
 		</div>
 	</div>
@@ -51,9 +51,10 @@ const { t } = Astro.props;
 		display: flex;
 		align-items: center;
 		gap: 1rem;
+		white-space: nowrap;
 	}
 
-	.nav-link {
+	a {
 		text-decoration: none;
 		color: inherit;
 		transition: 0.2s ease-out;
@@ -123,7 +124,7 @@ const { t } = Astro.props;
 		transform: rotate(-45deg) translate(0.35rem, -0.35rem);
 	}
 
-	@media (max-width: 60rem) {
+	@media screen and (max-width: 60rem) {
 		.hamburger {
 			display: flex;
 		}
@@ -156,7 +157,7 @@ const { t } = Astro.props;
 		}
 	}
 
-	@media (max-width: 30rem) {
+	@media screen and (max-width: 30rem) {
 		.nav-menu {
 			padding: 2rem 1rem 1rem;
 		}
@@ -165,6 +166,12 @@ const { t } = Astro.props;
 		}
 		.hamburger {
 			scale: 0.95;
+		}
+	}
+
+	@media print {
+		nav{
+			display: none;
 		}
 	}
 </style>
@@ -177,5 +184,10 @@ const { t } = Astro.props;
 		hamburger.setAttribute("aria-expanded", String(!isExpanded));
 		hamburger.classList.toggle("active");
 		navMenu.classList.toggle("active");
+	});
+
+	const printButton = document.querySelector(".export-btn") as HTMLButtonElement;
+	printButton.addEventListener("click", () => {
+		window.print();
 	});
 </script>
