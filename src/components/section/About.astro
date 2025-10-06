@@ -312,6 +312,13 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 				colors,
 				datalabelFontSize = 14,
 				datalabelFormatter = (value: any) => `${value}%`
+			}: {
+				canvasId: string;
+				dataId: string;
+				titleId: string;
+				colors: string[];
+				datalabelFontSize?: number;
+				datalabelFormatter?: (value: any) => string;
 			}) {
 				const data = JSON.parse(document.getElementById(dataId)!.textContent);
 				const title = document.getElementById(titleId)!.textContent;
@@ -462,7 +469,8 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 	#schools-text {
 		max-width: 40rem;
 		width: 100%;
-		margin: auto;display: block;
+		margin: auto;
+		display: block;
 	}
 	#schools-text-container {
 		margin-top: 5rem;
@@ -599,7 +607,7 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 		border-top: 1px solid #e0e0e0;
 	}
 
-	 h3 {
+	h3 {
 		text-align: center;
 		font-size: 1.8rem;
 		margin-bottom: 2rem;
@@ -705,9 +713,9 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 	@media (max-width: 600px) {
 		.stats-cards-wrapper {
 			grid-template-columns: 1fr;
-    }
-  }
-  
+		}
+	}
+
 	@media print {
 		#about {
 			padding: 0;
