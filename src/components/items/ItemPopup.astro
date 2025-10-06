@@ -562,7 +562,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 		margin-top: 0;
 	}
 
-	@media (max-width: 900px) {
+	@media screen and (max-width: 900px) {
 		.popup-content {
 			grid-template-columns: 1fr;
 			height: unset;
@@ -582,10 +582,26 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 			padding: 2rem 2rem 7rem;
 		}
 	}
-	@media (max-width: 40rem) {
+	@media screen and (max-width: 40rem) {
 		.sub-item-name.long {
 			flex: 1 1 100%;
 			margin-bottom: 0.5rem;
+		}
+	}
+
+	@media print {
+		.popup-content {
+			height: unset;
+			min-height: unset;
+		}
+
+		.carousel-btn,
+		.sub-item-controls {
+			display: none;
+		}
+
+		.item-details {
+			padding: 3rem;
 		}
 	}
 </style>

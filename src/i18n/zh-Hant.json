@@ -51,7 +51,7 @@
 		"title2": "我們準備好了。",
 		"date": "2026 年 3 月 28 日 (六)",
 		"location": "中央研究院 人文社會科學館",
-		"popup_label": "查看活動詳情與籌備團隊",
+		"popup_label": "活動詳情與籌備團隊",
 		"activity_schedule": "活動時程",
 		"place_detail": "場地詳情",
 		"location_name": "中央研究院<br />人文社會科學館",
@@ -308,7 +308,7 @@
 		}
 	},
 	"about": {
-		"detail": "查看受眾與統計",
+		"detail": "受眾與統計",
 		"subtitle": "13 年來全東南亞",
 		"title": "最大的學生社群",
 		"stats": [

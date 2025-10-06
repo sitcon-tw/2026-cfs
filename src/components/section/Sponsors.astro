@@ -84,7 +84,7 @@ const { t } = Astro.props;
 		}
 	}
 
-	@media (max-width: 55rem) {
+	@media screen and (max-width: 55rem) {
 		h2 span {
 			display: inline;
 		}
@@ -116,5 +116,31 @@ const { t } = Astro.props;
 		.marquee-track {
 			animation: none;
 		}
+	}
+
+	@media print {
+		section {
+			padding: 0;
+			padding-top: 0px;
+		}
+
+		h2{
+			font-size: 18pt;
+			margin: 0 auto;
+		}
+
+		.sponsor-image {
+			height: 100pt;
+		}
+
+		.marquee-track {
+			animation: none;
+		}
+
+		.marquee-container {
+			opacity: 1;
+			margin: 1rem 0;
+		}
+		
 	}
 </style>

@@ -1,5 +1,6 @@
 ---
 const { t } = Astro.props;
+import IntroImg from "@assets/img/intro.webp";
 ---
 
 <section id="hero">
@@ -8,6 +9,7 @@ const { t } = Astro.props;
 		<h2 class="aos aos-fadeZoom">{t.title}<br />{t.title2}</h2>
 		<p class="aos aos-fadeIn">{t.subtitle}<br />{t.subtitle2}</p>
 	</div>
+	<img src={IntroImg.src} class="coverImg" />
 </section>
 
 <style>
@@ -57,13 +59,45 @@ const { t } = Astro.props;
 		opacity: 1;
 	}
 
-	@media (max-width: 50rem) {
+	@media screen and (max-width: 50rem) {
 		h2 {
 			font-size: 3rem;
 		}
 
 		p.aos-fadeIn {
 			font-size: 1.25rem;
+		}
+	}
+
+	@media screen {
+		.coverImg {
+			display: none;
+		}
+	}
+
+	@media print {
+		section {
+			height: unset;
+		}
+
+		#hero > div {
+			margin-block: 60pt;
+		}
+
+		h2 {
+			font-size: 32pt;
+		}
+
+		.aos-fadeZoom {
+			scale: 1;
+			opacity: 1;
+		}
+
+		.coverImg {
+			display: block;
+			height: 400pt;
+			max-width: 100%;
+			object-fit: cover;
 		}
 	}
 </style>

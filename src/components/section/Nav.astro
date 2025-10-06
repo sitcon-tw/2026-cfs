@@ -124,7 +124,7 @@ const { t } = Astro.props;
 		transform: rotate(-45deg) translate(0.35rem, -0.35rem);
 	}
 
-	@media (max-width: 60rem) {
+	@media screen and (max-width: 60rem) {
 		.hamburger {
 			display: flex;
 		}
@@ -157,7 +157,7 @@ const { t } = Astro.props;
 		}
 	}
 
-	@media (max-width: 30rem) {
+	@media screen and (max-width: 30rem) {
 		.nav-menu {
 			padding: 2rem 1rem 1rem;
 		}
@@ -166,6 +166,12 @@ const { t } = Astro.props;
 		}
 		.hamburger {
 			scale: 0.95;
+		}
+	}
+
+	@media print {
+		nav{
+			display: none;
 		}
 	}
 </style>

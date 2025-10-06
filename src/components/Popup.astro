@@ -164,7 +164,7 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 		text-align: left;
 	}
 
-	@media (max-width: 45rem) {
+	@media screen and (max-width: 45rem) {
 		.popup-hero {
 			height: 20rem;
 			padding: 5rem 2rem 2rem;
@@ -172,6 +172,58 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 
 		.popup-bg {
 			padding-inline: 1rem;
+		}
+	}
+
+	@media print {
+		.detail-btn,
+		.close-btn {
+			display: none !important;
+		}
+
+		.popup-bg {
+			position: static;
+			display: block !important;
+			opacity: 1 !important;
+			pointer-events: auto;
+			background: none !important;
+			backdrop-filter: none !important;
+			padding: 0;
+			width: auto;
+			height: auto;
+			overflow: visible;
+		}
+
+		.popup {
+			position: static;
+			transform: none !important;
+			box-shadow: none;
+			max-width: none;
+			width: 100%;
+			margin: 0 0 2rem;
+		}
+
+		.popup-hero {
+			height: auto;
+			padding: 2rem;
+		}
+
+		.popup-hero h2 {
+			color: var(--black);
+		}
+
+		.popup-hero::after {
+			display: none;
+		}
+
+		.popup-hero img {
+			position: static;
+			height: 200pt;
+			border-radius: 1.6rem;
+		}
+
+		.chart-area {
+			grid-template-columns: 1fr 1fr !important;
 		}
 	}
 </style>

@@ -273,22 +273,22 @@ const uniqueItemIds = new Set<string>();
 <style>
 	section {
 		background-color: var(--items-bg);
-		padding: 5rem 0;
+		padding: 5rem 2rem;
+		break-inside: avoid;
 	}
 	.container {
-		max-width: 100rem;
+		max-width: 1200px;
+		width: fit-content;
 		border-radius: 2rem;
 		background-color: var(--white);
-		width: calc(100% - 4rem);
 		margin: 0 auto;
-		padding: 5rem;
+		padding: 2rem;
 		flex: auto;
 		display: flex;
 		justify-content: center;
 	}
 
 	.plans-table {
-		max-width: 1200px;
 		background-color: var(--white);
 		border-radius: 2rem;
 		overflow: hidden;
@@ -314,14 +314,14 @@ const uniqueItemIds = new Set<string>();
 	}
 
 	.tier-name {
-		font-size: 3rem;
+		font-size: 2.3rem;
 		font-weight: 700;
 		margin-bottom: 0.5rem;
 		line-height: 1.2;
 	}
 
 	.tier-price {
-		font-size: 2rem;
+		font-size: 1.5rem;
 		font-weight: 600;
 		color: var(--black);
 		margin-bottom: 1rem;
@@ -422,7 +422,7 @@ const uniqueItemIds = new Set<string>();
 		line-height: 1.2;
 	}
 
-	@media (max-width: 1024px) {
+	@media screen and (max-width: 1024px) {
 		.plans-table {
 			width: (100% - 2rem);
 			overflow-x: auto;
@@ -448,9 +448,8 @@ const uniqueItemIds = new Set<string>();
 		}
 	}
 
-	@media (max-width: 768px) {
+	@media screen and (max-width: 768px) {
 		.container {
-			width: calc(100% - 2rem);
 			padding: 2rem 1rem;
 		}
 
@@ -486,7 +485,7 @@ const uniqueItemIds = new Set<string>();
 		}
 	}
 
-	@media (max-width: 480px) {
+	@media screen and (max-width: 480px) {
 		section {
 			width: calc(100% - 2rem);
 			padding: 2rem 0;
@@ -516,6 +515,18 @@ const uniqueItemIds = new Set<string>();
 
 	.plan-row.disabled .plan-cell {
 		pointer-events: none;
+	}
+
+	@media print {
+		.container {
+			width: 100%;
+			padding: 16pt;
+			background-color: transparent;
+		}
+		.plans-table {
+			max-width: unset;
+			padding: 16pt;
+		}
 	}
 </style>
 
