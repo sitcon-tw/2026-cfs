@@ -523,8 +523,8 @@ const config = shopConfig;
 				const viewportTop = 0;
 				const viewportBottom = window.innerHeight;
 
-				// User is within range if the last section hasn't scrolled past completely
-				// or the first section hasn't been reached yet
+				// User is within range if the first section is above the viewport bottom
+				// and the last section is below the viewport top
 				isWithinTargetRange = firstRect.top < viewportBottom && lastRect.bottom > viewportTop;
 			}
 
