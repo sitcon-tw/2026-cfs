@@ -453,6 +453,8 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 			});
 		}, 200);
 	});
+
+	initializeSocialMediaCharts();
 </script>
 <style>
 	#about {
@@ -643,7 +645,7 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 
 	.charts-container {
 		display: flex;
-		flex-direction: column;
+		justify-content: center;
 		gap: 2rem;
 		align-items: center;
 	}
@@ -658,11 +660,6 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 		.social-platforms {
 			grid-template-columns: 1fr;
 			gap: 2rem;
-		}
-
-		.charts-container {
-			flex-direction: row;
-			justify-content: space-around;
 		}
 
 		.charts-container canvas {
@@ -756,12 +753,12 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 			overflow-x: hidden;
 		}
 
-		canvas{
-			width: 100pt!important;
-			height: 60pt!important;
+		canvas {
+			width: 100pt !important;
+			height: 60pt !important;
 		}
 
-		#schools-text{
+		#schools-text {
 			height: 200pt;
 		}
 	}
