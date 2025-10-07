@@ -519,13 +519,9 @@ const config = shopConfig;
 				const firstRect = firstSection.getBoundingClientRect();
 				const lastRect = lastSection.getBoundingClientRect();
 
-				// Check if viewport is between the top of first section and bottom of last section
-				const viewportTop = 0;
 				const viewportBottom = window.innerHeight;
 
-				// User is within range if the first section is above the viewport bottom
-				// and the last section is below the viewport top
-				isWithinTargetRange = firstRect.top < viewportBottom && lastRect.bottom > viewportTop;
+				isWithinTargetRange = firstRect.top < viewportBottom && lastRect.bottom > 0;
 			}
 
 			// Show/hide button based on whether user is within target range
@@ -682,7 +678,7 @@ const config = shopConfig;
 		background-color: var(--white);
 		border: none;
 		cursor: pointer;
-		display: flex;
+		display: none;
 		align-items: center;
 		justify-content: center;
 		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
