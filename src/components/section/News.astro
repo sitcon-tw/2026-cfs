@@ -1,10 +1,10 @@
 ---
 import Popup from "@components/Popup.astro";
-import appleNews from "@assets/img/news/apple-news.webp";
-import owlNews from "@assets/img/news/owlnews.webp";
-import posuNews from "@assets/img/news/pc-posu.webp";
-import taiwanNews from "@assets/img/news/taiwan-news.webp";
-import yahooNews from "@assets/img/news/yahoo.webp";
+import youratorNews from "@assets/img/news/youratorNews.webp";
+import ettodayNews from "@assets/img/news/ettodayNews.webp";
+import yahooNews from "@assets/img/news/yahooNews.webp";
+import moneyUdnNews from "@assets/img/news/moneyUdnNews.webp";
+import yahooNews2 from "@assets/img/news/yahooNews2.webp";
 import hk from "@assets/img/sitcon_hk.webp";
 import groups from "@assets/img/groups.webp";
 import edu from "@assets/img/edu.webp";
@@ -49,16 +49,21 @@ const news: News[] = [
 
 <section id="news">
 	<div class="news-content">
-		<a target="_blank" class="aos aos-fadeInBottom" href="https://applealmond.com/posts/224233"><img src={appleNews.src} alt="applealmond.com" class="news-img" /></a>
-		<a target="_blank" class="aos aos-fadeInBottom" href="https://news.owlting.com/articles/631704"><img src={owlNews.src} alt="news.owlting.com" class="news-img" /></a>
-		<a target="_blank" class="aos aos-fadeInBottom" href="https://pc.posu.tw/life_view.php?new_sn=11433"><img src={posuNews.src} alt="pc.posu.tw" class="news-img" /></a>
-		<a target="_blank" class="aos aos-fadeInBottom" href="https://newstaiwan.net/2025/03/08/289040/"><img src={taiwanNews.src} alt="newstaiwan.net" class="news-img" /></a>
+		<a target="_blank" class="aos aos-fadeInBottom" href="https://www.ettoday.net/news/20200813/1784111.htm"><img src={ettodayNews.src} alt="news.owlting.com" class="news-img" /></a>
 		<a
 			target="_blank"
 			class="aos aos-fadeInBottom"
-			href="https://tw.news.yahoo.com/%E5%A4%A7%E8%AB%87ai%E8%88%87%E7%A7%91%E6%8A%80%E6%95%99%E8%82%B2%E7%99%BC%E5%B1%95-sitcon-2024%E5%B9%B4%E6%9C%83%E5%9C%93%E6%BB%BF%E8%90%BD%E5%B9%95-134127533.html?guccounter=1"
-			><img src={yahooNews.src} alt="tw.news.yahoo.com" class="news-img" /></a
+			href="https://tw.news.yahoo.com/%E5%A4%A7%E8%AB%87ai%E8%88%87%E7%A7%91%E6%8A%80%E6%95%99%E8%82%B2%E7%99%BC%E5%B1%95-sitcon-2024%E5%B9%B4%E6%9C%83%E5%9C%93%E6%BB%BF%E8%90%BD%E5%B9%95-134127533.html"
+			><img src={yahooNews2.src} alt="tw.news.yahoo.com" class="news-img" /></a
 		>
+		<a target="_blank" class="aos aos-fadeInBottom" href="https://www.yourator.co/articles/215"><img src={youratorNews.src} alt="yourator.co" class="news-img" /></a>
+		<a target="_blank" class="aos aos-fadeInBottom" href="https://money.udn.com/money/story/5723/9018057"><img src={moneyUdnNews.src} alt="money.udn.com" class="news-img" /></a>
+    <a
+      target="_blank"
+      class="aos aos-fadeInBottom"
+      href="https://tw.news.yahoo.com/1300-%E9%9D%92%E5%B9%B4%E5%BC%95%E7%88%86ai-%E5%89%B5%E6%96%B0%E8%88%87%E8%B7%A8%E7%95%8C%E5%A4%A7%E9%9D%A9%E5%91%BD-020635586.html"
+      ><img src={yahooNews.src} alt="yahoo.com" class="news-img" /></a
+    >
 		<div class="spacing"></div>
 		<Popup hero={false} btnText={t.title} id="news-popup">
 			<h3>{t.title}</h3>
