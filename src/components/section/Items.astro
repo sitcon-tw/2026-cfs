@@ -461,6 +461,7 @@ const config = shopConfig;
 		const targetSections = ["items", "plans", "addons", "form"];
 		let currentSection = "";
 		let hasVisitedPlans = false;
+		let isButtonVisible = false;
 
 		// Store text constants for JavaScript access
 		const viewPlanDetailsText = document.getElementById("viewPlanBtnText")?.textContent || "檢視方案詳情";
@@ -480,8 +481,11 @@ const config = shopConfig;
 		function updateInterestButtonVisibility() {
 			const interestButtons = document.querySelectorAll(".interest-button");
 
+			// Check if user is within the range of target sections
+			let isWithinTargetRange = false;
 			let foundSection = "";
 
+			// Determine which section is most visible for tracking purposes
 			for (const sectionName of targetSections) {
 				const section = document.getElementById(sectionName);
 				if (section) {
@@ -496,7 +500,8 @@ const config = shopConfig;
 				}
 			}
 
-			if (foundSection !== currentSection) {
+			// Update current section if it changed
+			if (foundSection && foundSection !== currentSection) {
 				currentSection = foundSection;
 
 				// Check if user has visited the plans section
@@ -504,14 +509,28 @@ const config = shopConfig;
 					hasVisitedPlans = true;
 					updateViewPlanButtonText();
 				}
+			}
 
+			// Calculate if user is within the range of target sections
+			const firstSection = document.getElementById(targetSections[0]);
+			const lastSection = document.getElementById(targetSections[targetSections.length - 1]);
+
+			if (firstSection && lastSection) {
+				const firstRect = firstSection.getBoundingClientRect();
+				const lastRect = lastSection.getBoundingClientRect();
+
+				const viewportBottom = window.innerHeight;
+
+				isWithinTargetRange = firstRect.top < viewportBottom && lastRect.bottom > 0;
+			}
+
+			// Show/hide button based on whether user is within target range
+			// Only update DOM if visibility state has changed
+			if (isWithinTargetRange !== isButtonVisible) {
+				isButtonVisible = isWithinTargetRange;
 				interestButtons.forEach(button => {
 					const buttonElement = button as HTMLElement;
-					if (foundSection) {
-						buttonElement.style.display = "flex";
-					} else {
-						buttonElement.style.display = "none";
-					}
+					buttonElement.style.display = isWithinTargetRange ? "flex" : "none";
 				});
 			}
 		}
@@ -659,7 +678,7 @@ const config = shopConfig;
 		background-color: var(--white);
 		border: none;
 		cursor: pointer;
-		display: flex;
+		display: none;
 		align-items: center;
 		justify-content: center;
 		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
