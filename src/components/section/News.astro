@@ -58,12 +58,12 @@ const news: News[] = [
 		>
 		<a target="_blank" class="aos aos-fadeInBottom" href="https://www.yourator.co/articles/215"><img src={youratorNews.src} alt="yourator.co" class="news-img" /></a>
 		<a target="_blank" class="aos aos-fadeInBottom" href="https://money.udn.com/money/story/5723/9018057"><img src={moneyUdnNews.src} alt="money.udn.com" class="news-img" /></a>
-    <a
-      target="_blank"
-      class="aos aos-fadeInBottom"
-      href="https://tw.news.yahoo.com/1300-%E9%9D%92%E5%B9%B4%E5%BC%95%E7%88%86ai-%E5%89%B5%E6%96%B0%E8%88%87%E8%B7%A8%E7%95%8C%E5%A4%A7%E9%9D%A9%E5%91%BD-020635586.html"
-      ><img src={yahooNews.src} alt="yahoo.com" class="news-img" /></a
-    >
+		<a
+			target="_blank"
+			class="aos aos-fadeInBottom"
+			href="https://tw.news.yahoo.com/1300-%E9%9D%92%E5%B9%B4%E5%BC%95%E7%88%86ai-%E5%89%B5%E6%96%B0%E8%88%87%E8%B7%A8%E7%95%8C%E5%A4%A7%E9%9D%A9%E5%91%BD-020635586.html"
+			><img src={yahooNews.src} alt="yahoo.com" class="news-img" /></a
+		>
 		<div class="spacing"></div>
 		<Popup hero={false} btnText={t.title} id="news-popup">
 			<h3>{t.title}</h3>
@@ -126,11 +126,11 @@ const news: News[] = [
 	}
 
 	.news-content a:nth-child(4) {
-		margin-top: calc(var(--unit) / 30);
+		margin-top: calc(var(--unit) / 7);
 	}
 
 	.news-content a:nth-child(5) {
-		margin-top: calc(var(--unit) / 3);
+		margin-top: calc(var(--unit) / 3.5);
 	}
 
 	.news-img:hover {
@@ -197,8 +197,8 @@ const news: News[] = [
 		#news {
 			display: none !important;
 		}
-	}
-	.news-img {
-		width: 40vw;
+		.news-img {
+			width: 40vw;
+		}
 	}
 </style>
