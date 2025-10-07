@@ -11,10 +11,10 @@ const { t } = Astro.props;
 			<span class="hamburger-line"></span>
 		</button>
 		<div class="nav-menu" id="nav-menu">
-			<a href="#data" class="nav-link">{t.data}</a>
-			<a href="#info" class="nav-link">{t.info}</a>
-			<a href="#plan" class="nav-link">{t.plan}</a>
-			<a href="/2026/cfs/en/" class="nav-link lang-switch">{t.langChange}</a>
+			<a href="#about" class="nav-link">{t.data}</a>
+			<a href="#time" class="nav-link">{t.info}</a>
+			<a href="#plans" class="nav-link">{t.plan}</a>
+			<a href={"/2026/cfs/" + (t.langChange == "中文" ? "" : "en/")} class="nav-link lang-switch">{t.langChange}</a>
 			<a href="#form" class="nav-link contact-btn">{t.contact}</a>
 			<button class="nav-link export-btn">{t.export}</button>
 		</div>
@@ -170,7 +170,7 @@ const { t } = Astro.props;
 	}
 
 	@media print {
-		nav{
+		nav {
 			display: none;
 		}
 	}

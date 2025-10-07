@@ -59,13 +59,13 @@
 		"people_count_unit": "1,300 people",
 		"team": "Organizing Team",
 		"timeline_items": {
-			"0928": "Conference preparation kicks off",
-			"1019": "Theme finalized",
-			"1122": "Public announcement & Call for Papers",
-			"0112": "Ticket sales open",
-			"0121": "Call for Papers deadline",
-			"0129": "Program published",
-			"0308": "Conference day"
+			"07/16": "Conference preparation kicks off",
+			"09/27": "Theme finalized",
+			"10/12": "Public announcement & Call for Papers",
+			"01/23": "Call for Papers deadline",
+			"01/25": "Ticket sales open",
+			"02/06": "Program published",
+			"03/28": "Conference day"
 		},
 		"place_items": [
 			{ "code": "R0", "name": "International Conference Hall", "description": "Total 426 seats\nOpening and Keynote will take place here." },
@@ -477,6 +477,7 @@
 	"footer": {
 		"collaboration": "Future Collaboration",
 		"description": "We welcome various forms of event or media collaboration—co-hosting workshops, hackathons, podcasts, and more. Reach out with your ideas.",
+		"scan_qrcode": "You can scan the QR code to fill out the form in our online sponsorship prospectus to keep in touch.",
 		"contact": "Marketing & Media Contacts",
 		"email": "contact@sitcon.org",
 		"contact_list": ["曾煥軒 +886-908-593-538", "巫玟槿 +886-963-584-326", "黃一晉 +886-922-686-223"],

@@ -119,13 +119,10 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 		position: relative;
 	}
 
-	.sdgs-item {
-		cursor: pointer;
-	}
-
 	.sdgs-item img {
 		width: 8rem;
 		transition: transform 0.3s ease;
+		cursor: pointer;
 	}
 
 	.sdgs:has(.sdgs-item:hover) .init img,
@@ -171,6 +168,7 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 	.sdgs:has(.sdgs-item:hover) .sdgs-item:active .sdgs-text {
 		opacity: 1;
 		visibility: visible;
+		pointer-events: auto;
 	}
 
 	@media screen and (max-width: 50rem) {
@@ -195,9 +193,9 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 			padding-top: 0;
 		}
 
-		.sdgs{
+		.sdgs {
 			padding-top: 50pt;
-			padding-bottom:110pt;
+			padding-bottom: 110pt;
 		}
 
 		.sdgs-text {

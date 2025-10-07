@@ -6,22 +6,23 @@ import telegram from "@assets/img/social/telegram.svg";
 import twitter from "@assets/img/social/twitter.svg";
 import youtube from "@assets/img/social/youtube.svg";
 import plurk from "@assets/img/social/plurk.svg";
+import qrcode from "@assets/img/qrcode.webp";
 const { t } = Astro.props;
 ---
 
 <footer class="footer">
 	<div class="footer-container">
-		<!-- Collaboration Section -->
 		<div class="collaboration-section">
-			<h2 class="collaboration-title">{t.collaboration}</h2>
-			<p>{t.description}</p>
+			<div>
+				<h2 class="collaboration-title">{t.collaboration}</h2>
+				<p>{t.description}</p>
+				<p class="qrcode-text">{t.scan_qrcode}</p>
+			</div>
+			<img src={qrcode.src} alt="QR Code" class="qrcode" />
 		</div>
 
-		<!-- Main Content Grid -->
 		<div class="footer-content">
-			<!-- Left Column -->
 			<div class="footer-left">
-				<!-- Marketing Contacts -->
 				<div class="contact-section">
 					<h3>{t.contact}</h3>
 					<p>
@@ -29,7 +30,6 @@ const { t } = Astro.props;
 						<span set:html={t.contact_list.join("<br>")} />
 					</p>
 				</div>
-				<!-- Conference Info -->
 				<div>
 					<h3>{t.contact_us}</h3>
 					<p>
@@ -41,9 +41,7 @@ const { t } = Astro.props;
 				<div class="conference-title">學生計算機年會<br />Students' Information Technology Conference</div>
 			</div>
 
-			<!-- Right Column -->
 			<div class="footer-right">
-				<!-- Social Media -->
 				<div class="social-section">
 					<h3>Social Media</h3>
 					<div class="social-icons">
@@ -71,7 +69,6 @@ const { t } = Astro.props;
 					</div>
 				</div>
 
-				<!-- Past Websites -->
 				<div class="past-websites">
 					<h3>{t.past_websites}</h3>
 					<div class="years-grid">
@@ -96,6 +93,7 @@ const { t } = Astro.props;
 
 	p {
 		line-height: 2;
+		max-width: 50rem;
 	}
 
 	a {
@@ -239,9 +237,35 @@ const { t } = Astro.props;
 		}
 	}
 
+	@media screen {
+		.qrcode,
+		.qrcode-text {
+			display: none;
+		}
+	}
+
 	@media print {
 		footer {
 			break-inside: avoid;
+		}
+
+		.collaboration-section {
+			display: flex;
+			gap: 16pt;
+			justify-content: space-between;
+		}
+
+		.qrcode,
+		.qrcode-text {
+			display: block;
+		}
+
+		.qrcode {
+			height: 80pt;
+		}
+
+		.conference-title{
+			margin-top: 150pt;
 		}
 	}
 </style>
