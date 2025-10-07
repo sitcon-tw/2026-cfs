@@ -33,7 +33,7 @@ import FormInput from "../FormInput.astro";
 </section>
 
 <script>
-	const apiUrl = "https://script.google.com/macros/s/AKfycbyykeFH0wcHMu8_kM3GWa3DWOvJt7Fq0wNc5hROMO1pN8PTjazUTJQi30OEkSrmVZpO/exec";
+	const apiUrl = "https://docs.google.com/forms/d/e/1FAIpQLSftAam5nJJQU925yOzuMoome-XY3MEs7idtbd56eqMDRrPKGw/formResponse";
 
 	const form = document.getElementById("sponsor-form") as HTMLFormElement | null;
 	const submitButton = document.getElementById("submit") as HTMLButtonElement | null;
@@ -44,10 +44,18 @@ import FormInput from "../FormInput.astro";
 	} else {
 		const requiredMessage = form.dataset.requiredMessage ?? "請確認必填欄位";
 		const leadingEqualMessage = form.dataset.leadingEqualMessage ?? "回答的第一個字不可是=";
+		const successMessage = form.dataset.successMessage ?? "已送出成功！感謝您的填寫";
 		const errorMessage = form.dataset.errorMessage ?? "發生錯誤，請稍後再試";
 		const defaultButtonText = submitButton.dataset.defaultText ?? submitButton.textContent ?? "";
-		const loadingButtonText = submitButton.dataset.loadingText ?? defaultButtonText;
-		const fieldsToCheck = ["contact", "name", "organization", "department", "message"] as const;
+		const loadingButtonText = submitButton.dataset.loadingText ?? "送出中…";
+
+		const entryMap = {
+			organization: "entry.1867519928",
+			department: "entry.363990418",
+			name: "entry.1660888396",
+			contact: "entry.1209239304",
+			message: "entry.65159086"
+		} as const;
 
 		const checkForm = () => {
 			const formData = new FormData(form);
@@ -55,14 +63,11 @@ import FormInput from "../FormInput.astro";
 				messageElement.textContent = requiredMessage;
 				return false;
 			}
-			if (
-				fieldsToCheck.some(field => {
-					const value = formData.get(field);
-					return typeof value === "string" && value.startsWith("=");
-				})
-			) {
-				messageElement.textContent = leadingEqualMessage;
-				return false;
+			for (const [key, value] of formData.entries()) {
+				if (typeof value === "string" && value.startsWith("=")) {
+					messageElement.textContent = leadingEqualMessage;
+					return false;
+				}
 			}
 			messageElement.textContent = "";
 			return true;
@@ -70,28 +75,29 @@ import FormInput from "../FormInput.astro";
 
 		form.addEventListener("submit", event => {
 			event.preventDefault();
-			if (!checkForm()) {
-				submitButton.disabled = false;
-				submitButton.textContent = defaultButtonText;
-				return;
-			}
+			if (!checkForm()) return;
 
 			submitButton.disabled = true;
 			submitButton.textContent = loadingButtonText;
 
+			const formData = new FormData();
+			// 把自定義 name 對應到 Google Form 的 entry
+			Object.entries(entryMap).forEach(([localKey, entryKey]) => {
+				const value = (form.querySelector(`[name="${localKey}"]`) as HTMLInputElement | null)?.value ?? "";
+				formData.append(entryKey, value);
+			});
+
 			fetch(apiUrl, {
 				method: "POST",
-				body: new FormData(form)
+				mode: "no-cors", // ✅ 關鍵：避免 CORS 被擋
+				body: formData
 			})
-				.then(async res => {
-					const data = await res.json();
-					if (data.code === 200) {
-						form.reset();
-					}
-					messageElement.textContent = data.message ?? "";
+				.then(() => {
+					form.reset();
+					messageElement.textContent = successMessage;
 				})
 				.catch(e => {
-					console.error(e);
+					console.error("Form submit error:", e);
 					messageElement.textContent = errorMessage;
 				})
 				.finally(() => {
