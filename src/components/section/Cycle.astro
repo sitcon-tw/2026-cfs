@@ -68,7 +68,6 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 <style define:vars={{ arrowURL: `url(${Arrow.src})` }}>
 	section {
 		padding: 2rem;
-		break-inside: avoid;
 	}
 
 	#cycle-img {
@@ -192,6 +191,15 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 	}
 
 	@media print {
+		section {
+			padding-top: 0;
+		}
+
+		.sdgs{
+			padding-top: 50pt;
+			padding-bottom:110pt;
+		}
+
 		.sdgs-text {
 			position: static;
 			transform: none;
@@ -203,7 +211,7 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 			margin-top: 12pt;
 		}
 
-		h4{
+		h4 {
 			font-size: 12pt;
 			margin-bottom: 0.5rem;
 		}

@@ -457,6 +457,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 	.tier-value {
 		font-weight: 700;
 		font-size: 1.5rem;
+		display: flex;align-items: center;
 	}
 
 	.tier-unavailable {
@@ -596,12 +597,42 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 		}
 
 		.carousel-btn,
-		.sub-item-controls {
+		.sub-item-controls,
+		.quantity-controls {
 			display: none;
 		}
 
 		.item-details {
-			padding: 3rem;
+			padding: 20pt;
+		}
+
+		.item-details h3 {
+			font-size: 24pt;
+			margin-bottom: 0;
+		}
+
+		.structured-descriptions h2 {
+			font-size: 16pt;
+			margin-bottom: 0;
+			margin-top: 5pt;
+		}
+
+		.price-value {
+			margin: 0;
+		}
+
+		.tier-name,
+		.tier-arrow,
+		.tier-value,.sub-item-name,.sub-item-price {
+			font-size: 12pt;
+		}
+
+		.tier-arrow{
+			margin-inline: 10pt;
+		}
+
+		.tier-item {
+			margin-bottom: 5pt;
 		}
 	}
 </style>

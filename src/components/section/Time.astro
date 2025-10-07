@@ -128,6 +128,7 @@ interface TeamItem {
 		flex-direction: column;
 		align-items: center;
 		margin-bottom: 1rem;
+		break-inside: avoid;
 	}
 
 	h3 {
@@ -308,7 +309,7 @@ interface TeamItem {
 		}
 
 		.time-container {
-			margin-block: 32pt 72pt;
+			margin-block: 0pt 20pt;
 			color: inherit;
 			display: flex;
 			align-items: stretch;
@@ -324,12 +325,21 @@ interface TeamItem {
 			justify-content: center;
 		}
 
+		h3 {
+			font-size: 20pt;
+			margin-block: 10pt;
+		}
+
 		.volunteer-img {
 			width: 0;
 			height: 100%;
 			object-fit: cover;
 			display: block;
 			border-radius: 25px;
+		}
+
+		.venue img{
+			height: 180pt;
 		}
 
 		#time :global(.popup-hero) {

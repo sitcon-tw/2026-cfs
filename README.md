@@ -1,10 +1,17 @@
-# SITCON 贊助徵求書
+# SITCON 2026 贊助徵求書
 
-此網頁使用 Astro 建設。畢竟是一個一頁式的靜態網頁所以我盡量讓他變得簡單。
+Astro 一頁式靜態網頁
 
-## 啟動專案
+<https://sitcon.org/2026/cfs>
+
+## Dev
 
 ```bash
-pnpm install
-pnpm run dev
+pnpm i
+pnpm dev
+```
+## Build
+
+```bash
+pnpm build
 ```
