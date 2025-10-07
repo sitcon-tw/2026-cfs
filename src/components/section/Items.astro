@@ -480,23 +480,44 @@ const config = shopConfig;
 		function updateInterestButtonVisibility() {
 			const interestButtons = document.querySelectorAll(".interest-button");
 
+			// Check if user is within the range of target sections
+			let isWithinTargetRange = false;
 			let foundSection = "";
 
-			for (const sectionName of targetSections) {
-				const section = document.getElementById(sectionName);
-				if (section) {
-					const rect = section.getBoundingClientRect();
-					const sectionHeight = rect.height;
-					const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+			// Get the first and last target sections
+			const firstSection = document.getElementById(targetSections[0]);
+			const lastSection = document.getElementById(targetSections[targetSections.length - 1]);
 
-					if (visibleHeight > sectionHeight * 0.3) {
-						foundSection = sectionName;
-						break;
+			if (firstSection && lastSection) {
+				const firstRect = firstSection.getBoundingClientRect();
+				const lastRect = lastSection.getBoundingClientRect();
+
+				// Check if viewport is between the top of first section and bottom of last section
+				const viewportTop = 0;
+				const viewportBottom = window.innerHeight;
+
+				// User is within range if the last section hasn't scrolled past completely
+				// or the first section hasn't been reached yet
+				isWithinTargetRange = firstRect.top < viewportBottom && lastRect.bottom > viewportTop;
+
+				// Determine which section is most visible for tracking purposes
+				for (const sectionName of targetSections) {
+					const section = document.getElementById(sectionName);
+					if (section) {
+						const rect = section.getBoundingClientRect();
+						const sectionHeight = rect.height;
+						const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+
+						if (visibleHeight > sectionHeight * 0.3) {
+							foundSection = sectionName;
+							break;
+						}
 					}
 				}
 			}
 
-			if (foundSection !== currentSection) {
+			// Update current section if it changed
+			if (foundSection && foundSection !== currentSection) {
 				currentSection = foundSection;
 
 				// Check if user has visited the plans section
@@ -504,16 +525,17 @@ const config = shopConfig;
 					hasVisitedPlans = true;
 					updateViewPlanButtonText();
 				}
-
-				interestButtons.forEach(button => {
-					const buttonElement = button as HTMLElement;
-					if (foundSection) {
-						buttonElement.style.display = "flex";
-					} else {
-						buttonElement.style.display = "none";
-					}
-				});
 			}
+
+			// Show/hide button based on whether user is within target range
+			interestButtons.forEach(button => {
+				const buttonElement = button as HTMLElement;
+				if (isWithinTargetRange) {
+					buttonElement.style.display = "flex";
+				} else {
+					buttonElement.style.display = "none";
+				}
+			});
 		}
 
 		let scrollTimeout: number | undefined;
