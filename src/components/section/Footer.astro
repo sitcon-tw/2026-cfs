@@ -98,7 +98,7 @@ const { t } = Astro.props;
 		line-height: 2;
 	}
 
-	a{
+	a {
 		color: inherit;
 	}
 
@@ -193,7 +193,7 @@ const { t } = Astro.props;
 		display: grid;
 		grid-template-columns: repeat(6, 1fr);
 		gap: 0.5rem;
-		letter-spacing: .5px;
+		letter-spacing: 0.5px;
 	}
 
 	.year-link {
@@ -236,6 +236,12 @@ const { t } = Astro.props;
 
 		.years-grid {
 			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+
+	@media print {
+		footer {
+			break-inside: avoid;
 		}
 	}
 </style>

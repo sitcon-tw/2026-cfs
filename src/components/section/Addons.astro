@@ -231,4 +231,49 @@ const categories = Object.keys(groupedItems);
 			font-size: 0.9rem;
 		}
 	}
+
+	@media print {
+		section {
+			padding: 1rem 0;
+		}
+
+		.container{
+			padding: 2rem 2rem;
+			margin: 16pt auto;
+		}
+
+		.category-title{
+			font-size: 16pt;
+			margin-bottom: 10pt;
+		}
+
+		.subtitle{
+			display: none;
+		}
+
+		.items-grid{
+			grid-template-columns: repeat(3, 1fr);
+			gap: 8pt;
+			justify-content: flex-start;
+			margin-bottom: 16pt;
+		}
+
+		.card-title{
+			font-size: 12pt;
+			text-align: center;
+			text-wrap: balance;
+		}
+
+		.addon-card{
+			padding: 7pt;
+		}
+
+		.card-icon{
+			display: none;
+		}
+
+		.category-section{
+			margin-bottom: 16pt;
+		}
+	}
 </style>

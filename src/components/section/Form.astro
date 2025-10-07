@@ -10,46 +10,13 @@ import FormInput from "../FormInput.astro";
 		{t.titleLine2}
 	</h2>
 	<div class="container">
-		<form
-			id="sponsor-form"
-			data-required-message={t.messages.required}
-			data-leading-equal-message={t.messages.leadingEqual}
-			data-error-message={t.messages.error}
-		>
+		<form id="sponsor-form" data-required-message={t.messages.required} data-leading-equal-message={t.messages.leadingEqual} data-error-message={t.messages.error}>
 			<h3>{t.corporateTitle}</h3>
-			<FormInput
-				title={t.fields.organization.title}
-				name="organization"
-				description={t.fields.organization.description}
-				placeholder={t.fields.organization.placeholder}
-				required
-			/>
-			<FormInput
-				title={t.fields.department.title}
-				name="department"
-				description={t.fields.department.description}
-				placeholder={t.fields.department.placeholder}
-			/>
-			<FormInput
-				title={t.fields.name.title}
-				name="name"
-				description={t.fields.name.description}
-				placeholder={t.fields.name.placeholder}
-				required
-			/>
-			<FormInput
-				title={t.fields.contact.title}
-				name="contact"
-				description={t.fields.contact.description}
-				placeholder={t.fields.contact.placeholder}
-				required
-			/>
-			<FormInput
-				title={t.fields.message.title}
-				name="message"
-				description={t.fields.message.description}
-				placeholder={t.fields.message.placeholder}
-			/>
+			<FormInput title={t.fields.organization.title} name="organization" description={t.fields.organization.description} placeholder={t.fields.organization.placeholder} required />
+			<FormInput title={t.fields.department.title} name="department" description={t.fields.department.description} placeholder={t.fields.department.placeholder} />
+			<FormInput title={t.fields.name.title} name="name" description={t.fields.name.description} placeholder={t.fields.name.placeholder} required />
+			<FormInput title={t.fields.contact.title} name="contact" description={t.fields.contact.description} placeholder={t.fields.contact.placeholder} required />
+			<FormInput title={t.fields.message.title} name="message" description={t.fields.message.description} placeholder={t.fields.message.placeholder} />
 			<div id="submit-section">
 				<button id="submit" type="submit" data-default-text={t.button.default} data-loading-text={t.button.loading}>
 					{t.button.default}
@@ -236,6 +203,17 @@ import FormInput from "../FormInput.astro";
 		.container {
 			flex-direction: column;
 			gap: 5rem;
+		}
+	}
+
+	@media print {
+		.container {
+			display: none;
+		}
+
+		h2 {
+			margin: 0;
+			padding: 0;
 		}
 	}
 </style>

@@ -419,7 +419,8 @@ const uniqueItemIds = new Set<string>();
 	.cell-sub {
 		font-size: 1rem;
 		color: var(--black);
-		line-height: 1.2;
+		line-height: 1.5;
+		text-wrap: balance;
 	}
 
 	@media screen and (max-width: 1024px) {
@@ -518,6 +519,10 @@ const uniqueItemIds = new Set<string>();
 	}
 
 	@media print {
+		section {
+			padding: 2rem;
+		}
+
 		.container {
 			width: 100%;
 			padding: 16pt;
@@ -525,7 +530,40 @@ const uniqueItemIds = new Set<string>();
 		}
 		.plans-table {
 			max-width: unset;
-			padding: 16pt;
+			padding: 24pt;
+		}
+
+		.tier-name {
+			font-size: 16pt;
+			margin-bottom: 0;
+			line-height: 1;
+		}
+
+		.tier-price {
+			font-size: 12pt;
+		}
+
+		.tier-interest-button {
+			display: none;
+		}
+
+		.tier-column {
+			padding-bottom: 0;
+		}
+
+		.plan-row {
+			padding: 0;
+		}
+
+		.cell-text {
+			font-size: 18pt;
+		}
+		.cell-sub {
+			font-size: 10pt;
+		}
+
+		.plans-content{
+			gap: 8pt;
 		}
 	}
 </style>

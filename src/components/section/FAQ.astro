@@ -3,24 +3,27 @@ const { t } = Astro.props;
 import { ChevronDown } from "@lucide/astro";
 ---
 
-<div class="container">
-	<div class="faq-list">
-		{
-			t.questions.map((question: { question: string; answer: string }, index: number) => (
-				<div class="faq-item">
-					<button class="faq-question" data-faq={index + 1}>
-						<span class="question-text">{question.question}</span>
-						<ChevronDown class="chevron-icon" size={40} />
-					</button>
+<section id="faq">
+	<h2>FAQ</h2>
+	<div class="container">
+		<div class="faq-list">
+			{
+				t.questions.map((question: { question: string; answer: string }, index: number) => (
+					<div class="faq-item">
+						<button class="faq-question" data-faq={index + 1}>
+							<span class="question-text">{question.question}</span>
+							<ChevronDown class="chevron-icon" size={40} />
+						</button>
 
-					<div class="faq-answer" data-answer={index + 1}>
-						<p>{question.answer}</p>
+						<div class="faq-answer" data-answer={index + 1}>
+							<p>{question.answer}</p>
+						</div>
 					</div>
-				</div>
-			))
-		}
+				))
+			}
+		</div>
 	</div>
-</div>
+</section>
 
 <script>
 	document.addEventListener("DOMContentLoaded", function () {
@@ -63,7 +66,7 @@ import { ChevronDown } from "@lucide/astro";
 	.container {
 		max-width: 1200px;
 		margin: 0 auto;
-		padding: 80px 20px;
+		padding: 2rem 1rem 3rem;
 	}
 
 	.faq-list {
@@ -124,8 +127,14 @@ import { ChevronDown } from "@lucide/astro";
 		margin: 0;
 	}
 
+	@media screen {
+		h2 {
+			display: none;
+		}
+	}
+
 	@media screen and (max-width: 768px) {
-		.question-text{
+		.question-text {
 			font-size: 1.3rem;
 		}
 		.faq-question {
@@ -137,7 +146,7 @@ import { ChevronDown } from "@lucide/astro";
 			font-size: 1rem;
 		}
 
-		.lucide-chevron-down{
+		.lucide-chevron-down {
 			width: 30px;
 		}
 	}
@@ -150,6 +159,35 @@ import { ChevronDown } from "@lucide/astro";
 		.faq-question {
 			padding: 16px 0;
 			font-size: 1.5rem;
+		}
+	}
+
+	@media print {
+		.container {
+			padding: 10pt;
+		}
+		.faq-answer {
+			max-height: none;
+			overflow: visible;
+			padding: 0 0 24px 0;
+		}
+
+		.faq-question .chevron-icon {
+			display: none;
+		}
+
+		.faq-question {
+			cursor: default;
+			font-size: 16pt;
+			padding: 12pt 0 0;
+		}
+
+		.faq-answer {
+			padding: 0 0 12pt 0;
+		}
+
+		p {
+			font-size: 10pt;
 		}
 	}
 </style>
