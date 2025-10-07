@@ -30,7 +30,7 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 			{t.slogan1}<br />{t.slogan2}
 		</p>
 	</div>
-	<div class="sdgs">
+	<div class="sdgs" id="sdgs-container">
 		<div class="sdgs-item">
 			<img src={SDGs4.src} alt="Hungry" />
 			<div class="sdgs-text">
@@ -39,7 +39,7 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 			</div>
 		</div>
 
-		<div class="sdgs-item init">
+		<div class="sdgs-item active">
 			<img src={SDGs9.src} alt="Hungry" />
 			<div class="sdgs-text">
 				<h4>{t.sdgs.title2}</h4>
@@ -64,6 +64,33 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 		</div>
 	</div>
 </section>
+
+<script is:inline>
+(function() {
+	function init() {
+		const sdgsContainer = document.getElementById('sdgs-container');
+		if (!sdgsContainer) {
+			setTimeout(init, 100);
+			return;
+		}
+
+		const items = sdgsContainer.querySelectorAll('.sdgs-item');
+
+		items.forEach((item) => {
+			item.addEventListener('mouseenter', function() {
+				items.forEach(i => i.classList.remove('active'));
+				this.classList.add('active');
+			});
+		});
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', init);
+	} else {
+		init();
+	}
+})();
+</script>
 
 <style define:vars={{ arrowURL: `url(${Arrow.src})` }}>
 	section {
@@ -125,14 +152,12 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 		cursor: pointer;
 	}
 
-	.sdgs:has(.sdgs-item:hover) .init img,
-	.sdgs:has(.sdgs-item:active) .init img {
+	.sdgs:has(.sdgs-item:hover) .active img {
 		transform: none;
 	}
 
 	.sdgs:has(.sdgs-item:hover) .sdgs-item:hover img,
-	.init img,
-	.sdgs:has(.sdgs-item:hover) .sdgs-item:active img {
+	.active img {
 		transform: scale(1.1);
 	}
 
@@ -157,15 +182,13 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 		margin-bottom: 0.5rem;
 	}
 
-	.sdgs:has(.sdgs-item:hover) .init .sdgs-text,
-	.sdgs:has(.sdgs-item:active) .init .sdgs-text {
+	.sdgs:has(.sdgs-item:hover) .active .sdgs-text {
 		opacity: 0;
 		visibility: hidden;
 	}
 
-	.init .sdgs-text,
-	.sdgs:has(.sdgs-item:hover) .sdgs-item:hover .sdgs-text,
-	.sdgs:has(.sdgs-item:hover) .sdgs-item:active .sdgs-text {
+	.active .sdgs-text,
+	.sdgs:has(.sdgs-item:hover) .sdgs-item:hover .sdgs-text {
 		opacity: 1;
 		visibility: visible;
 		pointer-events: auto;
