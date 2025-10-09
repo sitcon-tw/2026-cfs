@@ -9,7 +9,13 @@ const { t } = Astro.props;
 
 const lang = Astro.currentLocale || "zh-Hant";
 
-const items = await loadItemsData(lang); // Keep all items including "打包專屬"
+const itemsUnsorted = await loadItemsData(lang); // Keep all items including "打包專屬"
+// Sort items by order field for initial "all" category display
+const items = itemsUnsorted.sort((a, b) => {
+	const orderA = parseInt(a.order) || 0;
+	const orderB = parseInt(b.order) || 0;
+	return orderA - orderB;
+});
 const config = shopConfig;
 ---
 
