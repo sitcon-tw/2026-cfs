@@ -2,6 +2,7 @@
 const { t } = Astro.props;
 import { Plus, Check } from "@lucide/astro";
 import { loadItemsData, type ItemData } from "../../utils/items-loader";
+import ItemPopup from "@components/items/ItemPopup.astro";
 
 const lang = Astro.currentLocale || "zh-Hant";
 const itemsData = await loadItemsData(lang);
@@ -40,8 +41,8 @@ const categories = Object.keys(groupedItems);
 						<h3 class="category-title">{category}</h3>
 						<div class="items-grid">
 							{groupedItems[category].map((item: ItemData) => (
-								<div class="addon-card" data-item-id={item.id}>
-									<button type="button" class="add-button" data-item-id={item.id} data-item-name={item.name}>
+								<div class="addon-card" data-item-id={item.id} data-has-sub-items={item.sub && item.sub.length > 0 ? "true" : "false"}>
+									<button type="button" class="add-button" data-item-id={item.id} data-item-name={item.name} data-has-sub-items={item.sub && item.sub.length > 0 ? "true" : "false"}>
 										<span class="add-icon">
 											<Plus />
 										</span>
@@ -62,17 +63,35 @@ const categories = Object.keys(groupedItems);
 	</div>
 </section>
 
+{itemsData.map(item => <ItemPopup item={item} t={t} popupId={`addon-popup-${item.id}`} />)}
+
 <script>
-	import { isItemInterested, addInterestedItem, removeInterestedItem } from "../../utils/local-storage.ts";
+	import { isItemInterested, addInterestedItem, removeInterestedItem, getInterestedItems } from "../../utils/local-storage.ts";
 
 	declare function popupCtrl(id: string, action: string): void;
 
 	function updateAddButtons() {
+		const items = getInterestedItems();
+		const ids = new Set(items.map(i => i.id));
+
 		const addButtons = document.querySelectorAll(".addon-card .add-button") as NodeListOf<HTMLButtonElement>;
 		addButtons.forEach(button => {
 			const itemId = button.getAttribute("data-item-id");
 			if (itemId) {
-				if (isItemInterested(itemId)) {
+				// Check if this item or any of its sub-items are in cart
+				let hasItemInCart = ids.has(itemId);
+
+				// Also check if any sub-items are in cart (sub-items have IDs like "parent-id-sub-0")
+				if (!hasItemInCart) {
+					for (const id of ids) {
+						if (id.startsWith(itemId + "-sub-")) {
+							hasItemInCart = true;
+							break;
+						}
+					}
+				}
+
+				if (hasItemInCart) {
 					button.classList.add("added");
 				} else {
 					button.classList.remove("added");
@@ -108,22 +127,30 @@ const categories = Object.keys(groupedItems);
 				e.stopPropagation();
 				const itemId = this.getAttribute("data-item-id");
 				const itemName = this.getAttribute("data-item-name");
+				const hasSubItems = this.getAttribute("data-has-sub-items") === "true";
 
-				if (itemId && itemName) {
-					if (isItemInterested(itemId)) {
-						removeInterestedItem(itemId);
-					} else {
-						addInterestedItem({
-							id: itemId,
-							title: itemName,
-							category: "addon",
-							image: "",
-							deadline: "",
-							quantity: 1,
-							maxQuantity: null
-						});
+				if (itemId) {
+					if (hasSubItems) {
+						// Open the popup for items with sub-items
+						const popupId = `addon-popup-${itemId}`;
+						popupCtrl(popupId, "open");
+					} else if (itemName) {
+						// Toggle interested state for items without sub-items
+						if (isItemInterested(itemId)) {
+							removeInterestedItem(itemId);
+						} else {
+							addInterestedItem({
+								id: itemId,
+								title: itemName,
+								category: "addon",
+								image: "",
+								deadline: "",
+								quantity: 1,
+								maxQuantity: null
+							});
+						}
+						updateAddButtons();
 					}
-					updateAddButtons();
 				}
 			});
 		});
