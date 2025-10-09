@@ -9,7 +9,8 @@ const { t } = Astro.props;
 
 const lang = Astro.currentLocale || "zh-Hant";
 
-const items = await loadItemsData(lang);
+const allItems = await loadItemsData(lang);
+const items = allItems.filter(item => item.quantity !== "打包專屬");
 const config = shopConfig;
 ---
 
