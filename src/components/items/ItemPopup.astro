@@ -82,21 +82,6 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 			</div>
 			<div class="title-row">
 				<h3>{item.name}</h3>
-				{
-					!(item.sub && item.sub.length > 0) && (
-						<div class="quantity-controls" data-item-id={item.id} data-quantity={item.quantity} data-remaining={item.remaining}>
-							<button type="button" class="quantity-btn minus" aria-label="Decrease quantity">
-								<Minus size={16} />
-							</button>
-							<span class="quantity-display" role="status" aria-live="polite">
-								0
-							</span>
-							<button type="button" class="quantity-btn plus" aria-label="Increase quantity">
-								<Plus size={16} />
-							</button>
-						</div>
-					)
-				}
 			</div>
 			{
 				item.price && (
@@ -698,41 +683,6 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 			return maxPerOrder;
 		}
 
-		// Sync quantity controls with localStorage
-		function syncQuantityControls(itemId: string) {
-			try {
-				const controls = document.querySelector(`.quantity-controls[data-item-id="${itemId}"]`) as HTMLElement;
-				if (!controls) return;
-
-				const display = controls.querySelector(".quantity-display") as HTMLElement;
-				const minusBtn = controls.querySelector(".quantity-btn.minus") as HTMLButtonElement;
-				const plusBtn = controls.querySelector(".quantity-btn.plus") as HTMLButtonElement;
-
-				const currentQty = getItemQuantity(itemId) || 0;
-				if (display) display.textContent = currentQty.toString();
-
-				// Get max quantity from data attributes
-				const quantityStr = controls.getAttribute("data-quantity") || "";
-				const remainingStr = controls.getAttribute("data-remaining") || "";
-
-				// Calculate effective max quantity
-				const maxQuantity = calculateMaxQuantity(quantityStr, remainingStr);
-
-				// Disable plus button if at max quantity
-				if (maxQuantity !== null && plusBtn) {
-					plusBtn.disabled = currentQty >= maxQuantity;
-				} else if (plusBtn) {
-					plusBtn.disabled = false;
-				}
-
-				// Disable minus button if at 0
-				if (minusBtn) {
-					minusBtn.disabled = currentQty <= 0;
-				}
-			} catch (error) {
-				if (import.meta.env.DEV) console.error("Error syncing quantity controls:", error);
-			}
-		}
 
 		// Sync sub-item quantity controls with localStorage (treats sub-items as regular items)
 		function syncSubItemControls(subItemId: string) {
@@ -747,15 +697,12 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 				const currentQty = getItemQuantity(subItemId) || 0;
 				if (display) display.textContent = currentQty.toString();
 
-				// Get max quantity from data attribute
-				const remainingStr = controls.getAttribute("data-sub-item-remaining") || "";
-				const maxQuantity = parseMaxQuantity(remainingStr);
+				// Set max quantity to 99 for sub-items
+				const maxQuantity = 99;
 
 				// Disable plus button if at max quantity
-				if (maxQuantity !== null && plusBtn) {
+				if (plusBtn) {
 					plusBtn.disabled = currentQty >= maxQuantity;
-				} else if (plusBtn) {
-					plusBtn.disabled = false;
 				}
 
 				// Disable minus button if at 0
@@ -795,9 +742,8 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 					const deadlineEl = popup?.querySelector(".category");
 					const itemDeadline = deadlineEl?.textContent || "";
 
-					// Parse max quantity from data attribute
-					const remainingStr = controls.getAttribute("data-sub-item-remaining") || "";
-					const maxQuantity = parseMaxQuantity(remainingStr);
+					// Set max quantity to 99 for sub-items
+					const maxQuantity = 99;
 
 					// Add item to cart with quantity 1
 					addInterestedItem({
@@ -844,90 +790,10 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 				syncSubItemControls(subItemId);
 			}
 
-			// Plus button
-			if (target.closest(".quantity-btn.plus")) {
-				e.preventDefault();
-				e.stopPropagation();
-
-				const btn = target.closest(".quantity-btn.plus") as HTMLButtonElement;
-				const controls = btn.closest(".quantity-controls");
-				if (!controls) return;
-
-				const itemId = controls.getAttribute("data-item-id");
-				if (!itemId) return;
-
-				const currentQty = getItemQuantity(itemId) || 0;
-				const newQty = currentQty + 1;
-
-				if (currentQty === 0) {
-					// Get item data from popup
-					const popup = controls.closest(".popup-content");
-					const itemTitle = popup?.querySelector("h3")?.textContent || "";
-					const img = popup?.querySelector("img");
-					const itemImage = img?.getAttribute("src") || img?.getAttribute("alt") || "";
-					const deadlineEl = popup?.querySelector(".category");
-					const itemDeadline = deadlineEl?.textContent || "";
-
-					// Get max quantity from data attributes
-					const quantityStr = controls.getAttribute("data-quantity") || "";
-					const remainingStr = controls.getAttribute("data-remaining") || "";
-					const maxQuantity = calculateMaxQuantity(quantityStr, remainingStr);
-
-					// Add item to cart with quantity 1
-					addInterestedItem({
-						id: itemId,
-						title: itemTitle,
-						category: "all",
-						image: itemImage,
-						deadline: itemDeadline,
-						quantity: 1,
-						maxQuantity: maxQuantity
-					});
-				} else {
-					// Update existing quantity
-					updateItemQuantity(itemId, newQty);
-				}
-
-				syncQuantityControls(itemId);
-			}
-
-			// Minus button
-			if (target.closest(".quantity-btn.minus")) {
-				e.preventDefault();
-				e.stopPropagation();
-
-				const btn = target.closest(".quantity-btn.minus") as HTMLButtonElement;
-				const controls = btn.closest(".quantity-controls");
-				if (!controls) return;
-
-				const itemId = controls.getAttribute("data-item-id");
-				if (!itemId) return;
-
-				const currentQty = getItemQuantity(itemId) || 0;
-				if (currentQty <= 0) return;
-
-				const newQty = currentQty - 1;
-
-				if (newQty === 0) {
-					// Remove from cart when quantity reaches 0
-					removeInterestedItem(itemId);
-				} else {
-					updateItemQuantity(itemId, newQty);
-				}
-
-				syncQuantityControls(itemId);
-			}
 		});
 
 		// Listen to itemsChange events from localStorage
 		window.addEventListener("itemsChange", function () {
-			document.querySelectorAll(".quantity-controls").forEach(controls => {
-				const itemId = controls.getAttribute("data-item-id");
-				if (itemId) {
-					syncQuantityControls(itemId);
-				}
-			});
-
 			// Sync all sub-item controls
 			document.querySelectorAll(".sub-item-controls").forEach(controls => {
 				const subItemId = controls.getAttribute("data-sub-item-id");
@@ -935,14 +801,6 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 					syncSubItemControls(subItemId);
 				}
 			});
-		});
-
-		// Initial sync on page load
-		document.querySelectorAll(".quantity-controls").forEach(controls => {
-			const itemId = controls.getAttribute("data-item-id");
-			if (itemId) {
-				syncQuantityControls(itemId);
-			}
 		});
 
 		// Initial sync for sub-items on page load

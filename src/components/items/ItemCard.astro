@@ -32,10 +32,18 @@ const subItemsData = hasSubItems
 			}))
 		)
 	: "[]";
+
+// Calculate total remaining for items with sub-items
+const totalRemaining = hasSubItems
+	? card.sub.reduce((sum: number, sub: any) => {
+			const remaining = parseInt(sub.remaining, 10);
+			return sum + (isNaN(remaining) ? 0 : remaining);
+		}, 0)
+	: parseInt(card.remaining, 10) || 0;
 ---
 
 <div
-	class="card"
+	class={`card ${card.quantity === "打包專屬" ? "package-exclusive-item" : ""}`}
 	data-card-id={card.id}
 	data-descriptions={descriptionData}
 	data-order={card.order}
@@ -58,8 +66,10 @@ const subItemsData = hasSubItems
 		<div class="tag">
 			{card.quantity === "獨家" && <div class="exclusive-tag">{t.exclusive}</div>}
 			{card.quantity === "打包專屬" && <div class="package-exclusive-tag">{t.package_exclusive}</div>}
-			{card.quantity !== "獨家" && card.quantity !== "打包專屬" && (
-				<div class="remaining-tag" data-initial-remaining={card.remaining} data-unit={t.unit[card.unit] || card.unit}>{t.remaining} {card.remaining} {t.unit[card.unit] || card.unit}</div>
+			{card.quantity !== "獨家" && card.quantity !== "打包專屬" && card.quantity !== "不限" && totalRemaining > 0 && (
+				<div class="remaining-tag" data-initial-remaining={totalRemaining} data-unit={t.unit[card.unit] || card.unit}>
+					{t.remaining} {totalRemaining} {t.unit[card.unit] || card.unit}
+				</div>
 			)}
 			<div class="deadline-tag">{`${new Date(card.deadline).getMonth() + 1}/${new Date(card.deadline).getDate()}`} {t.deadline}</div>
 		</div>

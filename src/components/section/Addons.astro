@@ -1,6 +1,6 @@
 ---
 const { t } = Astro.props;
-import { Flag } from "@lucide/astro";
+import { Plus, Check } from "@lucide/astro";
 import { loadItemsData, type ItemData } from "../../utils/items-loader";
 
 const lang = Astro.currentLocale || "zh-Hant";
@@ -11,9 +11,14 @@ interface GroupedItems {
 	[key: string]: ItemData[];
 }
 
-// Group items by type field
+// Group items by type field, excluding items with quantity "打包專屬"
 const groupedItems: GroupedItems = {};
 itemsData.forEach((item: ItemData) => {
+	// Skip items with quantity "打包專屬"
+	if (item.quantity === "打包專屬") {
+		return;
+	}
+
 	const displayCategory = item.type || "其他";
 	if (!groupedItems[displayCategory]) {
 		groupedItems[displayCategory] = [];
@@ -36,9 +41,14 @@ const categories = Object.keys(groupedItems);
 						<div class="items-grid">
 							{groupedItems[category].map((item: ItemData) => (
 								<div class="addon-card" data-item-id={item.id}>
-									<div class="card-icon">
-										<Flag />
-									</div>
+									<button type="button" class="add-button" data-item-id={item.id} data-item-name={item.name}>
+										<span class="add-icon">
+											<Plus />
+										</span>
+										<span class="added-icon">
+											<Check />
+										</span>
+									</button>
 									<div class="card-content">
 										<div class="card-title">{item.name}</div>
 									</div>
@@ -53,19 +63,19 @@ const categories = Object.keys(groupedItems);
 </section>
 
 <script>
-	import { isItemInterested } from "../../utils/local-storage.ts";
+	import { isItemInterested, addInterestedItem, removeInterestedItem } from "../../utils/local-storage.ts";
 
 	declare function popupCtrl(id: string, action: string): void;
 
-	function updateHighlighting() {
-		const addonCards = document.querySelectorAll(".addon-card");
-		addonCards.forEach(card => {
-			const itemId = card.getAttribute("data-item-id");
+	function updateAddButtons() {
+		const addButtons = document.querySelectorAll(".addon-card .add-button") as NodeListOf<HTMLButtonElement>;
+		addButtons.forEach(button => {
+			const itemId = button.getAttribute("data-item-id");
 			if (itemId) {
 				if (isItemInterested(itemId)) {
-					card.classList.add("highlighted");
+					button.classList.add("added");
 				} else {
-					card.classList.remove("highlighted");
+					button.classList.remove("added");
 				}
 			}
 		});
@@ -78,6 +88,11 @@ const categories = Object.keys(groupedItems);
 			if (itemIdStr) {
 				card.style.cursor = "pointer";
 				card.addEventListener("click", function (e) {
+					// Check if click was on the add button or its children
+					const target = e.target as HTMLElement;
+					if (target.closest(".add-button")) {
+						return; // Let the button handle its own click
+					}
 					e.stopPropagation();
 					const popupId = `item-popup-${itemIdStr}`;
 					popupCtrl(popupId, "open");
@@ -86,14 +101,43 @@ const categories = Object.keys(groupedItems);
 		});
 	}
 
+	function addButtonClickHandlers() {
+		const addButtons = document.querySelectorAll(".addon-card .add-button") as NodeListOf<HTMLButtonElement>;
+		addButtons.forEach(button => {
+			button.addEventListener("click", function (e) {
+				e.stopPropagation();
+				const itemId = this.getAttribute("data-item-id");
+				const itemName = this.getAttribute("data-item-name");
+
+				if (itemId && itemName) {
+					if (isItemInterested(itemId)) {
+						removeInterestedItem(itemId);
+					} else {
+						addInterestedItem({
+							id: itemId,
+							title: itemName,
+							category: "addon",
+							image: "",
+							deadline: "",
+							quantity: 1,
+							maxQuantity: null
+						});
+					}
+					updateAddButtons();
+				}
+			});
+		});
+	}
+
 	document.addEventListener("DOMContentLoaded", function () {
-		updateHighlighting();
+		updateAddButtons();
 		addCardClickHandlers();
+		addButtonClickHandlers();
 	});
 
-	window.addEventListener("itemsChange", updateHighlighting);
+	window.addEventListener("itemsChange", updateAddButtons);
 
-	document.addEventListener("interested-items-changed", updateHighlighting);
+	document.addEventListener("interested-items-changed", updateAddButtons);
 </script>
 
 <style>
@@ -153,19 +197,6 @@ const categories = Object.keys(groupedItems);
 		transition: all 0.2s ease;
 	}
 
-	.addon-card.highlighted {
-		background-color: var(--items-green);
-		color: white;
-	}
-
-	.card-icon {
-		font-size: 1.5rem;
-		min-width: 24px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
 	.card-content {
 	}
 
@@ -175,8 +206,56 @@ const categories = Object.keys(groupedItems);
 		line-height: 1.3;
 	}
 
-	.addon-card.highlighted .card-title {
-		color: white;
+	.add-button {
+		width: 2rem;
+		aspect-ratio: 1 / 1;
+		border-radius: 50%;
+		background-color: var(--black);
+		color: var(--white);
+		border: none;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: transform 0.2s ease;
+		flex-shrink: 0;
+	}
+
+	.add-button svg {
+		width: 20px;
+		height: 20px;
+	}
+
+	.add-icon,
+	.added-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		line-height: 1;
+	}
+
+	.add-button .added-icon {
+		display: none;
+	}
+
+	.add-button.added .added-icon {
+		display: flex;
+	}
+
+	.add-button.added .add-icon {
+		display: none;
+	}
+
+	.add-button:hover {
+		transform: scale(1.1);
+	}
+
+	.add-button.added {
+		background-color: var(--items-progress);
+	}
+
+	.add-button.added:hover {
+		background-color: var(--items-progress);
 	}
 
 	@media screen and (max-width: 1024px) {
@@ -268,7 +347,7 @@ const categories = Object.keys(groupedItems);
 			padding: 7pt;
 		}
 
-		.card-icon{
+		.add-button{
 			display: none;
 		}
 
