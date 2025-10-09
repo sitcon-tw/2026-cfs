@@ -56,7 +56,11 @@ const subItemsData = hasSubItems
 			)
 		}
 		<div class="tag">
-			<div class="remaining-tag" data-initial-remaining={card.remaining} data-unit={t.unit[card.unit] || card.unit}>{t.remaining} {card.remaining} {t.unit[card.unit] || card.unit}</div>
+			{card.quantity === "獨家" && <div class="exclusive-tag">{t.exclusive}</div>}
+			{card.quantity === "打包專屬" && <div class="package-exclusive-tag">{t.package_exclusive}</div>}
+			{card.quantity !== "獨家" && card.quantity !== "打包專屬" && (
+				<div class="remaining-tag" data-initial-remaining={card.remaining} data-unit={t.unit[card.unit] || card.unit}>{t.remaining} {card.remaining} {t.unit[card.unit] || card.unit}</div>
+			)}
 			<div class="deadline-tag">{`${new Date(card.deadline).getMonth() + 1}/${new Date(card.deadline).getDate()}`} {t.deadline}</div>
 		</div>
 	</div>
@@ -107,6 +111,24 @@ const subItemsData = hasSubItems
 		color: var(--black);
 		display: flex;
 		gap: 0.5rem;
+		flex-wrap: wrap;
+		max-width: calc(100% - 2rem);
+	}
+
+	.exclusive-tag {
+		background-color: #ff9999;
+		padding: 0.1rem 0.7rem;
+		border-radius: 20px;
+		font-size: 0.9rem;
+		font-weight: 500;
+	}
+
+	.package-exclusive-tag {
+		background-color: #9999ff;
+		padding: 0.1rem 0.7rem;
+		border-radius: 20px;
+		font-size: 0.9rem;
+		font-weight: 500;
 	}
 
 	.remaining-tag {
@@ -221,73 +243,3 @@ const subItemsData = hasSubItems
 	}
 </style>
 
-<script>
-	import { getItemQuantity } from "../../utils/local-storage.ts";
-
-	// Update remaining badge for a card
-	function updateCardRemainingBadge(cardId: string) {
-		const card = document.querySelector(`.card[data-card-id="${cardId}"]`);
-		if (!card) return;
-
-		const remainingTag = card.querySelector(".remaining-tag") as HTMLElement;
-		if (!remainingTag) return;
-
-		const hasSubItems = card.getAttribute("data-has-sub-items") === "true";
-		const unit = remainingTag.getAttribute("data-unit") || "";
-
-		let totalInitialRemaining = 0;
-		let totalSelectedQuantity = 0;
-
-		if (hasSubItems) {
-			// For items with sub-items: sum all sub-item remainings and quantities
-			try {
-				const subItemsData = JSON.parse(card.getAttribute("data-sub-items") || "[]");
-				subItemsData.forEach((subItem: { id: string; remaining: string }) => {
-					const initialRemaining = parseInt(subItem.remaining, 10);
-					if (!isNaN(initialRemaining)) {
-						totalInitialRemaining += initialRemaining;
-					}
-
-					const selectedQty = getItemQuantity(subItem.id) || 0;
-					totalSelectedQuantity += selectedQty;
-				});
-			} catch (error) {
-				console.error("Error parsing sub-items data:", error);
-				return;
-			}
-		} else {
-			// For regular items: use the item's own remaining and quantity
-			const initialRemaining = parseInt(remainingTag.getAttribute("data-initial-remaining") || "0", 10);
-			totalInitialRemaining = initialRemaining;
-
-			const selectedQty = getItemQuantity(cardId) || 0;
-			totalSelectedQuantity = selectedQty;
-		}
-
-		const newRemaining = Math.max(0, totalInitialRemaining - totalSelectedQuantity);
-
-		// Extract the translation text (e.g., "剩餘" or "Remaining")
-		const remainingText = remainingTag.textContent?.split(" ")[0] || "";
-		remainingTag.textContent = `${remainingText} ${newRemaining} ${unit}`;
-	}
-
-	// Listen to itemsChange events to update all card badges
-	window.addEventListener("itemsChange", function () {
-		document.querySelectorAll(".card").forEach(card => {
-			const cardId = card.getAttribute("data-card-id");
-			if (cardId) {
-				updateCardRemainingBadge(cardId);
-			}
-		});
-	});
-
-	// Initial update on page load
-	document.addEventListener("DOMContentLoaded", function () {
-		document.querySelectorAll(".card").forEach(card => {
-			const cardId = card.getAttribute("data-card-id");
-			if (cardId) {
-				updateCardRemainingBadge(cardId);
-			}
-		});
-	});
-</script>

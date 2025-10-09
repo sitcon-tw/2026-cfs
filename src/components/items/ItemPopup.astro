@@ -73,7 +73,11 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 		</div>
 		<div class="item-details">
 			<div class="item-meta">
-				<span class="remaining" data-initial-remaining={item.remaining} data-unit={t.unit[item.unit] || item.unit}>{t.remaining} {item.remaining} {t.unit[item.unit] || item.unit}</span>
+				{item.quantity === "獨家" && <span class="exclusive">{t.exclusive}</span>}
+				{item.quantity === "打包專屬" && <span class="package-exclusive">{t.package_exclusive}</span>}
+				{item.quantity !== "獨家" && item.quantity !== "打包專屬" && (
+					<span class="remaining" data-initial-remaining={item.remaining} data-unit={t.unit[item.unit] || item.unit}>{t.remaining} {item.remaining} {t.unit[item.unit] || item.unit}</span>
+				)}
 				<span class="category">{`${new Date(item.deadline).getMonth() + 1}/${new Date(item.deadline).getDate()}`} {t.deadline}</span>
 			</div>
 			<div class="title-row">
@@ -301,6 +305,23 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 		display: flex;
 		gap: 0.8rem;
 		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	.exclusive {
+		background-color: #ff9999;
+		padding: 0.1rem 0.7rem;
+		border-radius: 20px;
+		font-size: 0.9rem;
+		font-weight: 500;
+	}
+
+	.package-exclusive {
+		background-color: #9999ff;
+		padding: 0.1rem 0.7rem;
+		border-radius: 20px;
+		font-size: 0.9rem;
+		font-weight: 500;
 	}
 
 	.remaining {
@@ -677,65 +698,6 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 			return maxPerOrder;
 		}
 
-		// Update remaining badge for items WITHOUT sub-items
-		function updateRemainingBadge(itemId: string) {
-			try {
-				const popup = document.querySelector(`.popup-content[data-item-id="${itemId}"]`);
-				if (!popup) return;
-
-				const remainingBadge = popup.querySelector(".remaining") as HTMLElement;
-				if (!remainingBadge) return;
-
-				const initialRemaining = parseInt(remainingBadge.getAttribute("data-initial-remaining") || "0", 10);
-				const unit = remainingBadge.getAttribute("data-unit") || "";
-				const currentQty = getItemQuantity(itemId) || 0;
-
-				const newRemaining = Math.max(0, initialRemaining - currentQty);
-
-				// Extract the translation text (e.g., "剩餘" or "Remaining")
-				const remainingText = remainingBadge.textContent?.split(" ")[0] || "";
-				remainingBadge.textContent = `${remainingText} ${newRemaining} ${unit}`;
-			} catch (error) {
-				if (import.meta.env.DEV) console.error("Error updating remaining badge:", error);
-			}
-		}
-
-		// Update remaining badge for items WITH sub-items
-		function updateRemainingBadgeForParentWithSubs(itemId: string) {
-			try {
-				const popup = document.querySelector(`.popup-content[data-item-id="${itemId}"]`);
-				if (!popup) return;
-
-				const remainingBadge = popup.querySelector(".remaining") as HTMLElement;
-				if (!remainingBadge) return;
-
-				const unit = remainingBadge.getAttribute("data-unit") || "";
-
-				// Get all sub-item controls for this parent item
-				const subItemControls = popup.querySelectorAll(`.sub-item-controls[data-item-id="${itemId}"]`);
-
-				let totalInitialRemaining = 0;
-				let totalSelectedQuantity = 0;
-
-				subItemControls.forEach(controls => {
-					const initialRemaining = parseInt(controls.getAttribute("data-initial-sub-item-remaining") || "0", 10);
-					totalInitialRemaining += initialRemaining;
-
-					const subItemId = controls.getAttribute("data-sub-item-id") || "";
-					const selectedQty = getItemQuantity(subItemId) || 0;
-					totalSelectedQuantity += selectedQty;
-				});
-
-				const newRemaining = Math.max(0, totalInitialRemaining - totalSelectedQuantity);
-
-				// Extract the translation text (e.g., "剩餘" or "Remaining")
-				const remainingText = remainingBadge.textContent?.split(" ")[0] || "";
-				remainingBadge.textContent = `${remainingText} ${newRemaining} ${unit}`;
-			} catch (error) {
-				if (import.meta.env.DEV) console.error("Error updating remaining badge for parent:", error);
-			}
-		}
-
 		// Sync quantity controls with localStorage
 		function syncQuantityControls(itemId: string) {
 			try {
@@ -767,9 +729,6 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 				if (minusBtn) {
 					minusBtn.disabled = currentQty <= 0;
 				}
-
-				// Update remaining badge for regular items
-				updateRemainingBadge(itemId);
 			} catch (error) {
 				if (import.meta.env.DEV) console.error("Error syncing quantity controls:", error);
 			}
@@ -802,12 +761,6 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 				// Disable minus button if at 0
 				if (minusBtn) {
 					minusBtn.disabled = currentQty <= 0;
-				}
-
-				// Update remaining badge for parent item with sub-items
-				const parentItemId = controls.getAttribute("data-item-id");
-				if (parentItemId) {
-					updateRemainingBadgeForParentWithSubs(parentItemId);
 				}
 			} catch (error) {
 				if (import.meta.env.DEV) console.error("Error syncing sub-item controls:", error);
