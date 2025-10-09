@@ -115,13 +115,17 @@ const config = shopConfig;
 			applyExpandState();
 		});
 
+		function getVisibleCards(cards: HTMLElement[]): HTMLElement[] {
+			return cards.filter(card => !card.classList.contains("package-exclusive-item"));
+		}
+
 		function sortCards(selectedCategory: string) {
 			const cardsGrid = document.querySelector(".cards-grid");
 			if (!cardsGrid) return;
 
 			const cards = Array.from(cardsGrid.querySelectorAll(".card")) as HTMLElement[];
 			// Count only visible cards (exclude package-exclusive-item)
-			let visibleCount = cards.filter(card => !card.classList.contains("package-exclusive-item")).length;
+			let visibleCount = getVisibleCards(cards).length;
 
 			if (selectedCategory === "all") {
 				// For "all", sort by order field
@@ -219,16 +223,12 @@ const config = shopConfig;
 			});
 		});
 
-		const totalCards = Array.from(document.querySelectorAll(".card")).filter(
-			(card) => !card.classList.contains("package-exclusive-item")
-		).length;
+		const totalCards = getVisibleCards(Array.from(document.querySelectorAll(".card")) as HTMLElement[]).length;
 		updateExpandButtonVisibility(totalCards);
 		applyExpandState();
 
 		window.addEventListener("resize", function () {
-			const allCards = Array.from(document.querySelectorAll(".card")).filter(
-				(card) => !card.classList.contains("package-exclusive-item")
-			);
+			const allCards = getVisibleCards(Array.from(document.querySelectorAll(".card")) as HTMLElement[]);
 			updateExpandButtonVisibility(allCards.length);
 		});
 

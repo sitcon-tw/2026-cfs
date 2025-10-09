@@ -39,37 +39,59 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 	<div class="popup-content" data-item-id={item.id}>
 		<div class="item-image">
 			{
-				item.sub && item.sub.length > 0 ? (
-					<div class="image-carousel" data-item-id={item.id}>
-						<div class="carousel-images">
-							{item.sub.map((subItem: SubItem, index: number) => {
-								const subImagePath = `../../assets/img/items/${subItem.image}`;
-								const subImageDescription = subItem.image_description;
+				(() => {
+					// Filter sub-items that have images
+					const subItemsWithImages = item.sub ? item.sub.filter((subItem: SubItem) => subItem.image && subItem.image.trim() !== "") : [];
+					const hasMultipleImages = subItemsWithImages.length > 0;
 
-								return (
-									<div class={`carousel-slide ${index === 0 ? "active" : ""}`} data-slide-index={index} data-description={subImageDescription || ""}>
-										{images[subImagePath] ? (
-											<Image src={images[subImagePath]()} alt={subImageDescription || subItem.name} />
+					if (hasMultipleImages) {
+						// Show carousel with main item image first, then sub-item images
+						return (
+							<div class="image-carousel" data-item-id={item.id}>
+								<div class="carousel-images">
+									{/* Main item image as first slide */}
+									<div class="carousel-slide active" data-slide-index={0} data-description={item.image_description || ""}>
+										{images[imagePath] ? (
+											<Image src={images[imagePath]()} alt={item.image_description || item.name} />
 										) : (
-											<img src={subItem.image} alt={subImageDescription || subItem.name} />
+											<img src={item.image} alt={item.image_description || item.name} />
 										)}
 									</div>
-								);
-							})}
-						</div>
-						<button class="carousel-btn carousel-prev" aria-label="Previous image">
-							<ChevronLeft />
-						</button>
-						<button class="carousel-btn carousel-next" aria-label="Next image">
-							<ChevronRight />
-						</button>
-						<div class="carousel-description" />
-					</div>
-				) : images[imagePath] ? (
-					<Image src={images[imagePath]()} alt={item.image_description || item.name} />
-				) : (
-					<img src={item.image} alt={item.image_description || item.name} />
-				)
+									{/* Sub-item images */}
+									{subItemsWithImages.map((subItem: SubItem, index: number) => {
+										const subImagePath = `../../assets/img/items/${subItem.image}`;
+										const subImageDescription = subItem.image_description;
+										const slideIndex = index + 1; // +1 because main image is at index 0
+
+										return (
+											<div class="carousel-slide" data-slide-index={slideIndex} data-description={subImageDescription || ""}>
+												{images[subImagePath] ? (
+													<Image src={images[subImagePath]()} alt={subImageDescription || subItem.name} />
+												) : (
+													<img src={subItem.image} alt={subImageDescription || subItem.name} />
+												)}
+											</div>
+										);
+									})}
+								</div>
+								<button class="carousel-btn carousel-prev" aria-label="Previous image">
+									<ChevronLeft />
+								</button>
+								<button class="carousel-btn carousel-next" aria-label="Next image">
+									<ChevronRight />
+								</button>
+								<div class="carousel-description" />
+							</div>
+						);
+					} else {
+						// Show only main item image (no carousel needed)
+						return images[imagePath] ? (
+							<Image src={images[imagePath]()} alt={item.image_description || item.name} />
+						) : (
+							<img src={item.image} alt={item.image_description || item.name} />
+						);
+					}
+				})()
 			}
 		</div>
 		<div class="item-details">
