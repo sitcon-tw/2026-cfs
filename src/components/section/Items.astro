@@ -9,7 +9,13 @@ const { t } = Astro.props;
 
 const lang = Astro.currentLocale || "zh-Hant";
 
-const items = await loadItemsData(lang);
+const itemsUnsorted = await loadItemsData(lang); // Keep all items including "打包專屬"
+// Sort items by order field for initial "all" category display
+const items = itemsUnsorted.sort((a, b) => {
+	const orderA = parseInt(a.order) || 0;
+	const orderB = parseInt(b.order) || 0;
+	return orderA - orderB;
+});
 const config = shopConfig;
 ---
 
@@ -76,7 +82,7 @@ const config = shopConfig;
 {items.map(item => <ItemPopup item={item} t={t} popupId={`item-popup-${item.id}`} />)}
 
 <script>
-	import { getInterestedItems, removeInterestedItem, isItemInterested } from "../../utils/local-storage.ts";
+	import { getInterestedItems, removeInterestedItem, isItemInterested, addInterestedItem } from "../../utils/local-storage.ts";
 
 	declare function popupCtrl(id: string, action: string): void;
 
@@ -115,12 +121,17 @@ const config = shopConfig;
 			applyExpandState();
 		});
 
+		function getVisibleCards(cards: HTMLElement[]): HTMLElement[] {
+			return cards.filter(card => !card.classList.contains("package-exclusive-item"));
+		}
+
 		function sortCards(selectedCategory: string) {
 			const cardsGrid = document.querySelector(".cards-grid");
 			if (!cardsGrid) return;
 
 			const cards = Array.from(cardsGrid.querySelectorAll(".card")) as HTMLElement[];
-			let visibleCount = cards.length;
+			// Count only visible cards (exclude package-exclusive-item)
+			let visibleCount = getVisibleCards(cards).length;
 
 			if (selectedCategory === "all") {
 				// For "all", sort by order field
@@ -218,12 +229,12 @@ const config = shopConfig;
 			});
 		});
 
-		const totalCards = document.querySelectorAll(".card").length;
+		const totalCards = getVisibleCards(Array.from(document.querySelectorAll(".card")) as HTMLElement[]).length;
 		updateExpandButtonVisibility(totalCards);
 		applyExpandState();
 
 		window.addEventListener("resize", function () {
-			const allCards = document.querySelectorAll(".card");
+			const allCards = getVisibleCards(Array.from(document.querySelectorAll(".card")) as HTMLElement[]);
 			updateExpandButtonVisibility(allCards.length);
 		});
 
@@ -292,9 +303,39 @@ const config = shopConfig;
 			e.preventDefault();
 			e.stopPropagation();
 			const id = button.getAttribute("data-item-id") || "";
-			// Open the popup instead of adding to cart
-			const popupId = `item-popup-${id}`;
-			popupCtrl(popupId, "open");
+
+			// Check if this item has sub-items
+			const card = button.closest(".card");
+			const hasSubItems = card?.getAttribute("data-has-sub-items") === "true";
+
+			if (hasSubItems) {
+				// Open the popup for items with sub-items
+				const popupId = `item-popup-${id}`;
+				popupCtrl(popupId, "open");
+			} else {
+				// Toggle interested state for items without sub-items
+				const itemTitle = button.getAttribute("data-item-title") || "";
+				const itemImage = button.getAttribute("data-item-image") || "";
+
+				if (isItemInterested(id)) {
+					// Remove from interested items
+					removeInterestedItem(id);
+				} else {
+					// Add to interested items with quantity 1
+					const deadlineEl = card?.querySelector(".deadline-tag");
+					const itemDeadline = deadlineEl?.textContent || "";
+
+					addInterestedItem({
+						id: id,
+						title: itemTitle,
+						category: "all",
+						image: itemImage,
+						deadline: itemDeadline,
+						quantity: 1,
+						maxQuantity: 1
+					});
+				}
+			}
 		});
 		function updateInterestButton() {
 			const items = getInterestedItems();
@@ -639,6 +680,11 @@ const config = shopConfig;
 		grid-template-columns: repeat(3, 1fr);
 		justify-content: center;
 		gap: 2rem;
+	}
+
+	/* Hide package-exclusive items from the grid but keep them in DOM */
+	:global(.card.package-exclusive-item) {
+		display: none !important;
 	}
 
 	.expand-button {

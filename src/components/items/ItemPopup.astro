@@ -4,6 +4,7 @@ import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import { X, Plus, Minus, ChevronLeft, ChevronRight, Check } from "@lucide/astro";
 import planData from "@data/plan.json";
+import { marked } from "marked";
 
 import type { SubItem } from "../../utils/items-loader";
 
@@ -38,61 +39,72 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 	<div class="popup-content" data-item-id={item.id}>
 		<div class="item-image">
 			{
-				item.sub && item.sub.length > 0 ? (
-					<div class="image-carousel" data-item-id={item.id}>
-						<div class="carousel-images">
-							{item.sub.map((subItem: SubItem, index: number) => {
-								const subImagePath = `../../assets/img/items/${subItem.image}`;
-								const subImageDescription = subItem.image_description;
+				(() => {
+					// Filter sub-items that have images
+					const subItemsWithImages = item.sub ? item.sub.filter((subItem: SubItem) => subItem.image && subItem.image.trim() !== "") : [];
+					const hasMultipleImages = subItemsWithImages.length > 0;
 
-								return (
-									<div class={`carousel-slide ${index === 0 ? "active" : ""}`} data-slide-index={index} data-description={subImageDescription || ""}>
-										{images[subImagePath] ? (
-											<Image src={images[subImagePath]()} alt={subImageDescription || subItem.name} />
+					if (hasMultipleImages) {
+						// Show carousel with main item image first, then sub-item images
+						return (
+							<div class="image-carousel" data-item-id={item.id}>
+								<div class="carousel-images">
+									{/* Main item image as first slide */}
+									<div class="carousel-slide active" data-slide-index={0} data-description={item.image_description || ""}>
+										{images[imagePath] ? (
+											<Image src={images[imagePath]()} alt={item.image_description || item.name} />
 										) : (
-											<img src={subItem.image} alt={subImageDescription || subItem.name} />
+											<img src={item.image} alt={item.image_description || item.name} />
 										)}
 									</div>
-								);
-							})}
-						</div>
-						<button class="carousel-btn carousel-prev" aria-label="Previous image">
-							<ChevronLeft />
-						</button>
-						<button class="carousel-btn carousel-next" aria-label="Next image">
-							<ChevronRight />
-						</button>
-						<div class="carousel-description" />
-					</div>
-				) : images[imagePath] ? (
-					<Image src={images[imagePath]()} alt={item.image_description || item.name} />
-				) : (
-					<img src={item.image} alt={item.image_description || item.name} />
-				)
+									{/* Sub-item images */}
+									{subItemsWithImages.map((subItem: SubItem, index: number) => {
+										const subImagePath = `../../assets/img/items/${subItem.image}`;
+										const subImageDescription = subItem.image_description;
+										const slideIndex = index + 1; // +1 because main image is at index 0
+
+										return (
+											<div class="carousel-slide" data-slide-index={slideIndex} data-description={subImageDescription || ""}>
+												{images[subImagePath] ? (
+													<Image src={images[subImagePath]()} alt={subImageDescription || subItem.name} />
+												) : (
+													<img src={subItem.image} alt={subImageDescription || subItem.name} />
+												)}
+											</div>
+										);
+									})}
+								</div>
+								<button class="carousel-btn carousel-prev" aria-label="Previous image">
+									<ChevronLeft />
+								</button>
+								<button class="carousel-btn carousel-next" aria-label="Next image">
+									<ChevronRight />
+								</button>
+								<div class="carousel-description" />
+							</div>
+						);
+					} else {
+						// Show only main item image (no carousel needed)
+						return images[imagePath] ? (
+							<Image src={images[imagePath]()} alt={item.image_description || item.name} />
+						) : (
+							<img src={item.image} alt={item.image_description || item.name} />
+						);
+					}
+				})()
 			}
 		</div>
 		<div class="item-details">
 			<div class="item-meta">
-				<span class="remaining" data-initial-remaining={item.remaining} data-unit={t.unit[item.unit] || item.unit}>{t.remaining} {item.remaining} {t.unit[item.unit] || item.unit}</span>
+				{item.quantity === "獨家" && <span class="exclusive">{t.exclusive}</span>}
+				{item.quantity === "打包專屬" && <span class="package-exclusive">{t.package_exclusive}</span>}
+				{item.quantity !== "獨家" && item.quantity !== "打包專屬" && (
+					<span class="remaining" data-initial-remaining={item.remaining} data-unit={t.unit[item.unit] || item.unit}>{t.remaining} {item.remaining} {t.unit[item.unit] || item.unit}</span>
+				)}
 				<span class="category">{`${new Date(item.deadline).getMonth() + 1}/${new Date(item.deadline).getDate()}`} {t.deadline}</span>
 			</div>
 			<div class="title-row">
 				<h3>{item.name}</h3>
-				{
-					!(item.sub && item.sub.length > 0) && (
-						<div class="quantity-controls" data-item-id={item.id} data-quantity={item.quantity} data-remaining={item.remaining}>
-							<button type="button" class="quantity-btn minus" aria-label="Decrease quantity">
-								<Minus size={16} />
-							</button>
-							<span class="quantity-display" role="status" aria-live="polite">
-								0
-							</span>
-							<button type="button" class="quantity-btn plus" aria-label="Increase quantity">
-								<Plus size={16} />
-							</button>
-						</div>
-					)
-				}
 			</div>
 			{
 				item.price && (
@@ -170,9 +182,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 			<div class="structured-descriptions">
 				{
 					item.global_description && (
-						<>
-							<p>{item.global_description}</p>
-						</>
+						<div set:html={marked.parse(item.global_description)} />
 					)
 				}
 
@@ -180,7 +190,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 					item.talent_recruitment && (
 						<>
 							<h2>{t.item_categories.talent_recruitment}</h2>
-							<p>{item.talent_recruitment}</p>
+							<div set:html={marked.parse(item.talent_recruitment)} />
 						</>
 					)
 				}
@@ -189,7 +199,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 					item.brand_exposure && (
 						<>
 							<h2>{t.item_categories.brand_exposure}</h2>
-							<p>{item.brand_exposure}</p>
+							<div set:html={marked.parse(item.brand_exposure)} />
 						</>
 					)
 				}
@@ -198,7 +208,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 					item.product_promotion && (
 						<>
 							<h2>{t.item_categories.product_promotion}</h2>
-							<p>{item.product_promotion}</p>
+							<div set:html={marked.parse(item.product_promotion)} />
 						</>
 					)
 				}
@@ -301,6 +311,23 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 		display: flex;
 		gap: 0.8rem;
 		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	.exclusive {
+		background-color: #ff9999;
+		padding: 0.1rem 0.7rem;
+		border-radius: 20px;
+		font-size: 0.9rem;
+		font-weight: 500;
+	}
+
+	.package-exclusive {
+		background-color: #9999ff;
+		padding: 0.1rem 0.7rem;
+		border-radius: 20px;
+		font-size: 0.9rem;
+		font-weight: 500;
 	}
 
 	.remaining {
@@ -330,7 +357,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 	.item-image img {
 		width: 100%;
 		height: 100%;
-		object-fit: cover;
+		object-fit: contain;
 		color: transparent;
 	}
 
@@ -677,103 +704,6 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 			return maxPerOrder;
 		}
 
-		// Update remaining badge for items WITHOUT sub-items
-		function updateRemainingBadge(itemId: string) {
-			try {
-				const popup = document.querySelector(`.popup-content[data-item-id="${itemId}"]`);
-				if (!popup) return;
-
-				const remainingBadge = popup.querySelector(".remaining") as HTMLElement;
-				if (!remainingBadge) return;
-
-				const initialRemaining = parseInt(remainingBadge.getAttribute("data-initial-remaining") || "0", 10);
-				const unit = remainingBadge.getAttribute("data-unit") || "";
-				const currentQty = getItemQuantity(itemId) || 0;
-
-				const newRemaining = Math.max(0, initialRemaining - currentQty);
-
-				// Extract the translation text (e.g., "剩餘" or "Remaining")
-				const remainingText = remainingBadge.textContent?.split(" ")[0] || "";
-				remainingBadge.textContent = `${remainingText} ${newRemaining} ${unit}`;
-			} catch (error) {
-				if (import.meta.env.DEV) console.error("Error updating remaining badge:", error);
-			}
-		}
-
-		// Update remaining badge for items WITH sub-items
-		function updateRemainingBadgeForParentWithSubs(itemId: string) {
-			try {
-				const popup = document.querySelector(`.popup-content[data-item-id="${itemId}"]`);
-				if (!popup) return;
-
-				const remainingBadge = popup.querySelector(".remaining") as HTMLElement;
-				if (!remainingBadge) return;
-
-				const unit = remainingBadge.getAttribute("data-unit") || "";
-
-				// Get all sub-item controls for this parent item
-				const subItemControls = popup.querySelectorAll(`.sub-item-controls[data-item-id="${itemId}"]`);
-
-				let totalInitialRemaining = 0;
-				let totalSelectedQuantity = 0;
-
-				subItemControls.forEach(controls => {
-					const initialRemaining = parseInt(controls.getAttribute("data-initial-sub-item-remaining") || "0", 10);
-					totalInitialRemaining += initialRemaining;
-
-					const subItemId = controls.getAttribute("data-sub-item-id") || "";
-					const selectedQty = getItemQuantity(subItemId) || 0;
-					totalSelectedQuantity += selectedQty;
-				});
-
-				const newRemaining = Math.max(0, totalInitialRemaining - totalSelectedQuantity);
-
-				// Extract the translation text (e.g., "剩餘" or "Remaining")
-				const remainingText = remainingBadge.textContent?.split(" ")[0] || "";
-				remainingBadge.textContent = `${remainingText} ${newRemaining} ${unit}`;
-			} catch (error) {
-				if (import.meta.env.DEV) console.error("Error updating remaining badge for parent:", error);
-			}
-		}
-
-		// Sync quantity controls with localStorage
-		function syncQuantityControls(itemId: string) {
-			try {
-				const controls = document.querySelector(`.quantity-controls[data-item-id="${itemId}"]`) as HTMLElement;
-				if (!controls) return;
-
-				const display = controls.querySelector(".quantity-display") as HTMLElement;
-				const minusBtn = controls.querySelector(".quantity-btn.minus") as HTMLButtonElement;
-				const plusBtn = controls.querySelector(".quantity-btn.plus") as HTMLButtonElement;
-
-				const currentQty = getItemQuantity(itemId) || 0;
-				if (display) display.textContent = currentQty.toString();
-
-				// Get max quantity from data attributes
-				const quantityStr = controls.getAttribute("data-quantity") || "";
-				const remainingStr = controls.getAttribute("data-remaining") || "";
-
-				// Calculate effective max quantity
-				const maxQuantity = calculateMaxQuantity(quantityStr, remainingStr);
-
-				// Disable plus button if at max quantity
-				if (maxQuantity !== null && plusBtn) {
-					plusBtn.disabled = currentQty >= maxQuantity;
-				} else if (plusBtn) {
-					plusBtn.disabled = false;
-				}
-
-				// Disable minus button if at 0
-				if (minusBtn) {
-					minusBtn.disabled = currentQty <= 0;
-				}
-
-				// Update remaining badge for regular items
-				updateRemainingBadge(itemId);
-			} catch (error) {
-				if (import.meta.env.DEV) console.error("Error syncing quantity controls:", error);
-			}
-		}
 
 		// Sync sub-item quantity controls with localStorage (treats sub-items as regular items)
 		function syncSubItemControls(subItemId: string) {
@@ -788,26 +718,17 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 				const currentQty = getItemQuantity(subItemId) || 0;
 				if (display) display.textContent = currentQty.toString();
 
-				// Get max quantity from data attribute
-				const remainingStr = controls.getAttribute("data-sub-item-remaining") || "";
-				const maxQuantity = parseMaxQuantity(remainingStr);
+				// Set max quantity to 99 for sub-items
+				const maxQuantity = 99;
 
 				// Disable plus button if at max quantity
-				if (maxQuantity !== null && plusBtn) {
+				if (plusBtn) {
 					plusBtn.disabled = currentQty >= maxQuantity;
-				} else if (plusBtn) {
-					plusBtn.disabled = false;
 				}
 
 				// Disable minus button if at 0
 				if (minusBtn) {
 					minusBtn.disabled = currentQty <= 0;
-				}
-
-				// Update remaining badge for parent item with sub-items
-				const parentItemId = controls.getAttribute("data-item-id");
-				if (parentItemId) {
-					updateRemainingBadgeForParentWithSubs(parentItemId);
 				}
 			} catch (error) {
 				if (import.meta.env.DEV) console.error("Error syncing sub-item controls:", error);
@@ -842,9 +763,8 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 					const deadlineEl = popup?.querySelector(".category");
 					const itemDeadline = deadlineEl?.textContent || "";
 
-					// Parse max quantity from data attribute
-					const remainingStr = controls.getAttribute("data-sub-item-remaining") || "";
-					const maxQuantity = parseMaxQuantity(remainingStr);
+					// Set max quantity to 99 for sub-items
+					const maxQuantity = 99;
 
 					// Add item to cart with quantity 1
 					addInterestedItem({
@@ -891,90 +811,10 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 				syncSubItemControls(subItemId);
 			}
 
-			// Plus button
-			if (target.closest(".quantity-btn.plus")) {
-				e.preventDefault();
-				e.stopPropagation();
-
-				const btn = target.closest(".quantity-btn.plus") as HTMLButtonElement;
-				const controls = btn.closest(".quantity-controls");
-				if (!controls) return;
-
-				const itemId = controls.getAttribute("data-item-id");
-				if (!itemId) return;
-
-				const currentQty = getItemQuantity(itemId) || 0;
-				const newQty = currentQty + 1;
-
-				if (currentQty === 0) {
-					// Get item data from popup
-					const popup = controls.closest(".popup-content");
-					const itemTitle = popup?.querySelector("h3")?.textContent || "";
-					const img = popup?.querySelector("img");
-					const itemImage = img?.getAttribute("src") || img?.getAttribute("alt") || "";
-					const deadlineEl = popup?.querySelector(".category");
-					const itemDeadline = deadlineEl?.textContent || "";
-
-					// Get max quantity from data attributes
-					const quantityStr = controls.getAttribute("data-quantity") || "";
-					const remainingStr = controls.getAttribute("data-remaining") || "";
-					const maxQuantity = calculateMaxQuantity(quantityStr, remainingStr);
-
-					// Add item to cart with quantity 1
-					addInterestedItem({
-						id: itemId,
-						title: itemTitle,
-						category: "all",
-						image: itemImage,
-						deadline: itemDeadline,
-						quantity: 1,
-						maxQuantity: maxQuantity
-					});
-				} else {
-					// Update existing quantity
-					updateItemQuantity(itemId, newQty);
-				}
-
-				syncQuantityControls(itemId);
-			}
-
-			// Minus button
-			if (target.closest(".quantity-btn.minus")) {
-				e.preventDefault();
-				e.stopPropagation();
-
-				const btn = target.closest(".quantity-btn.minus") as HTMLButtonElement;
-				const controls = btn.closest(".quantity-controls");
-				if (!controls) return;
-
-				const itemId = controls.getAttribute("data-item-id");
-				if (!itemId) return;
-
-				const currentQty = getItemQuantity(itemId) || 0;
-				if (currentQty <= 0) return;
-
-				const newQty = currentQty - 1;
-
-				if (newQty === 0) {
-					// Remove from cart when quantity reaches 0
-					removeInterestedItem(itemId);
-				} else {
-					updateItemQuantity(itemId, newQty);
-				}
-
-				syncQuantityControls(itemId);
-			}
 		});
 
 		// Listen to itemsChange events from localStorage
 		window.addEventListener("itemsChange", function () {
-			document.querySelectorAll(".quantity-controls").forEach(controls => {
-				const itemId = controls.getAttribute("data-item-id");
-				if (itemId) {
-					syncQuantityControls(itemId);
-				}
-			});
-
 			// Sync all sub-item controls
 			document.querySelectorAll(".sub-item-controls").forEach(controls => {
 				const subItemId = controls.getAttribute("data-sub-item-id");
@@ -982,14 +822,6 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 					syncSubItemControls(subItemId);
 				}
 			});
-		});
-
-		// Initial sync on page load
-		document.querySelectorAll(".quantity-controls").forEach(controls => {
-			const itemId = controls.getAttribute("data-item-id");
-			if (itemId) {
-				syncQuantityControls(itemId);
-			}
 		});
 
 		// Initial sync for sub-items on page load

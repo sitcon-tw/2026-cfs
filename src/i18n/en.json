@@ -231,6 +231,8 @@
 	},
 	"global": {
 		"remaining": "Remaining",
+		"exclusive": "Exclusive",
+		"package_exclusive": "Package-exclusive",
 		"unit": {
 			"ticket": "tickets",
 			"booth": "booths",

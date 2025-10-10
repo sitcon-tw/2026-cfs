@@ -33,6 +33,8 @@ import FormInput from "../FormInput.astro";
 </section>
 
 <script>
+	import { getInterestedItems } from "../../utils/local-storage.ts";
+
 	const apiUrl = "https://docs.google.com/forms/d/e/1FAIpQLSftAam5nJJQU925yOzuMoome-XY3MEs7idtbd56eqMDRrPKGw/formResponse";
 
 	const form = document.getElementById("sponsor-form") as HTMLFormElement | null;
@@ -56,6 +58,23 @@ import FormInput from "../FormInput.astro";
 			contact: "entry.1209239304",
 			message: "entry.65159086"
 		} as const;
+
+		// Get formatted cart items string
+		function getCartItemsString() {
+			const interestedItems = getInterestedItems();
+			if (interestedItems.length === 0) return "";
+
+			const itemsList = interestedItems
+				.map(item => {
+					if (item.quantity && item.quantity > 1) {
+						return `${item.title} ${item.quantity} 份`;
+					}
+					return item.title;
+				})
+				.join('、');
+
+			return `感興趣的項目：${itemsList}`;
+		}
 
 		const checkForm = () => {
 			const formData = new FormData(form);
@@ -83,7 +102,16 @@ import FormInput from "../FormInput.astro";
 			const formData = new FormData();
 			// 把自定義 name 對應到 Google Form 的 entry
 			Object.entries(entryMap).forEach(([localKey, entryKey]) => {
-				const value = (form.querySelector(`[name="${localKey}"]`) as HTMLInputElement | null)?.value ?? "";
+				let value = (form.querySelector(`[name="${localKey}"]`) as HTMLInputElement | null)?.value ?? "";
+
+				// Append cart items to message field
+				if (localKey === "message") {
+					const cartItems = getCartItemsString();
+					if (cartItems) {
+						value = value.trim() ? `${value}\n\n${cartItems}` : cartItems;
+					}
+				}
+
 				formData.append(entryKey, value);
 			});
 
