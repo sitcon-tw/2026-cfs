@@ -63,8 +63,6 @@ const categories = Object.keys(groupedItems);
 	</div>
 </section>
 
-{itemsData.map(item => <ItemPopup item={item} t={t} popupId={`addon-popup-${item.id}`} />)}
-
 <script>
 	import { isItemInterested, addInterestedItem, removeInterestedItem, getInterestedItems } from "../../utils/local-storage.ts";
 
@@ -132,7 +130,7 @@ const categories = Object.keys(groupedItems);
 				if (itemId) {
 					if (hasSubItems) {
 						// Open the popup for items with sub-items
-						const popupId = `addon-popup-${itemId}`;
+						const popupId = `item-popup-${itemId}`;
 						popupCtrl(popupId, "open");
 					} else if (itemName) {
 						// Toggle interested state for items without sub-items
