@@ -27,7 +27,7 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 			)
 		}
 		<slot />
-		<div class="close-btn"><X stroke-width={3} /></div>
+		<div class="close-btn"><X stroke-width={3.5} /></div>
 	</div>
 </div>
 <style is:global>
@@ -48,32 +48,30 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 		justify-content: center;
 		align-items: center;
 		border-radius: 10rem;
-		box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.11) inset;
-		backdrop-filter: blur(3.5px);
-		background-color: #e8e8ed;
-		width: fit-content;
 		cursor: pointer;
-		position: sticky;
-		bottom: 2rem;
-		margin: auto;
 		z-index: 5;
 	}
 
 	.detail-btn {
 		padding: 0.62rem 0.7rem 0.62rem 1.88rem;
 		gap: 1.125rem;
-	}
-	.close-btn {
-		width: 3.5rem;
-		aspect-ratio: 1 / 1;
-		bottom: 0;
+		box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.11) inset;
+		backdrop-filter: blur(3.5px);
+		background-color: #e8e8ed;
+		width: fit-content;
+		position: sticky;
+		bottom: 2rem;
+		margin: auto;
 	}
 
-	.no-hero .close-btn {
-		position: fixed;
-		bottom: 2rem;
-		left: 50%;
-		transform: translateX(-50%);
+	.close-btn {
+		width: 2.8rem;
+		aspect-ratio: 1 / 1;
+		position: absolute;
+		top: 2rem;
+		right: 2rem;
+		background-color: var(--black);
+		color: var(--white);
 	}
 
 	.detail-btn .plus {
@@ -239,7 +237,7 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 	});
 
 	// Close popup when clicking on background
-	document.querySelector(`#${id} + .popup-bg`)?.addEventListener("click", (e) => {
+	document.querySelector(`#${id} + .popup-bg`)?.addEventListener("click", e => {
 		if (e.target === e.currentTarget) {
 			popupCtrl(id, "close");
 		}
