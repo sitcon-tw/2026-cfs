@@ -240,54 +240,6 @@ const items = itemsUnsorted.sort((a, b) => {
 		});
 	};
 
-	document.addEventListener("click", e => {
-		const target = e.target;
-		if (!(target instanceof Element)) return;
-		const button = target.closest(".add-button");
-		if (!button) return;
-		e.preventDefault();
-		e.stopPropagation();
-		const id = button.getAttribute("data-item-id") || "";
-
-		// Check if this item has sub-items
-		const card = button.closest(".card");
-		const hasSubItems = card?.getAttribute("data-has-sub-items") === "true";
-
-		if (hasSubItems) {
-			// Open the popup for items with sub-items
-			const popupId = `item-popup-${id}`;
-			popupCtrl(popupId, "open");
-		} else {
-			// Toggle interested state for items without sub-items
-			const itemTitle = button.getAttribute("data-item-title") || "";
-			const itemImage = button.getAttribute("data-item-image") || "";
-			const itemPrice = button.getAttribute("data-item-price") || "";
-
-			if (isItemInterested(id)) {
-				// Remove from interested items
-				removeInterestedItem(id);
-			} else {
-				// Add to interested items with quantity 1
-				const deadlineEl = card?.querySelector(".deadline-tag");
-				const itemDeadline = deadlineEl?.textContent || "";
-
-				// Get display price (either actual price or plan inclusion info)
-				const displayPrice = getItemDisplayPrice(id, itemPrice);
-
-				addInterestedItem({
-					id: id,
-					title: itemTitle,
-					category: "all",
-					image: itemImage,
-					deadline: itemDeadline,
-					quantity: 1,
-					maxQuantity: 1,
-					price: displayPrice
-				});
-			}
-		}
-	});
-
 	const updateInterestButton = () => {
 		const items = getInterestedItems();
 		const countElement = document.querySelector(".interest-count");
@@ -406,21 +358,61 @@ const items = itemsUnsorted.sort((a, b) => {
 		});
 	}
 
+	// Consolidated click event listener for all click interactions
 	document.addEventListener("click", e => {
+		const target = e.target;
+		if (!(target instanceof Element)) return;
+
+		// Handle add button clicks
+		const button = target.closest(".add-button");
+		if (button) {
+			e.preventDefault();
+			e.stopPropagation();
+			const id = button.getAttribute("data-item-id") || "";
+
+			// Check if this item has sub-items
+			const card = button.closest(".card");
+			const hasSubItems = card?.getAttribute("data-has-sub-items") === "true";
+
+			if (hasSubItems) {
+				// Open the popup for items with sub-items
+				const popupId = `item-popup-${id}`;
+				popupCtrl(popupId, "open");
+			} else {
+				// Toggle interested state for items without sub-items
+				const itemTitle = button.getAttribute("data-item-title") || "";
+				const itemImage = button.getAttribute("data-item-image") || "";
+				const itemPrice = button.getAttribute("data-item-price") || "";
+
+				if (isItemInterested(id)) {
+					// Remove from interested items
+					removeInterestedItem(id);
+				} else {
+					// Add to interested items with quantity 1
+					const deadlineEl = card?.querySelector(".deadline-tag");
+					const itemDeadline = deadlineEl?.textContent || "";
+
+					// Get display price (either actual price or plan inclusion info)
+					const displayPrice = getItemDisplayPrice(id, itemPrice);
+
+					addInterestedItem({
+						id: id,
+						title: itemTitle,
+						category: "all",
+						image: itemImage,
+						deadline: itemDeadline,
+						price: displayPrice
+					});
+				}
+			}
+			return;
+		}
+
+		// Handle popover close when clicking outside
 		if (interestPopover?.classList.contains("active") && !interestPopover.contains(e.target as Node) && !interestButton?.contains(e.target as Node)) {
 			closePopover();
+			return;
 		}
-	});
-
-	document.addEventListener("keydown", e => {
-		if (e.key === "Escape") {
-			closePopover();
-		}
-	});
-
-	// Add click handler for download quote button
-	document.addEventListener("click", e => {
-		const target = e.target as Element;
 
 		// Handle download quote button
 		if (target.closest(".download-quote-btn")) {
@@ -428,6 +420,7 @@ const items = itemsUnsorted.sort((a, b) => {
 			const quotationUrl = window.location.origin + "/2026/cfs/quotation";
 			window.open(quotationUrl, "_blank");
 			closePopover();
+			return;
 		}
 
 		// Handle view plan details button
@@ -452,6 +445,13 @@ const items = itemsUnsorted.sort((a, b) => {
 					updateViewPlanButtonText();
 				}
 			}
+			return;
+		}
+	});
+
+	document.addEventListener("keydown", e => {
+		if (e.key === "Escape") {
+			closePopover();
 		}
 	});
 

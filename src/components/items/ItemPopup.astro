@@ -1,6 +1,6 @@
 ---
 import Popup from "../Popup.astro";
-import { X, Plus, Minus, ChevronLeft, ChevronRight, Check } from "@lucide/astro";
+import { X, Plus, ChevronLeft, ChevronRight, Check } from "@lucide/astro";
 import planData from "@data/plan.json";
 import { marked } from "marked";
 
@@ -109,24 +109,21 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 								<div class="sub-item" data-sub-item-id={subItemId}>
 									<span class={"sub-item-name" + (subItem.name.length > 8 ? " long" : "")}>{subItem.name}</span>
 									<span class="sub-item-price">{subItem.price}</span>
-									<div
-										class="sub-item-controls"
-										data-item-id={item.id}
+									<button
+										type="button"
+										class="sub-add-button"
 										data-sub-item-id={subItemId}
 										data-sub-item-name={subItem.name}
-										data-sub-item-remaining={subItem.remaining || ""}
-										data-initial-sub-item-remaining={subItem.remaining || ""}
+										data-sub-item-price={subItem.price}
+										aria-label={`Add ${subItem.name}`}
 									>
-										<button type="button" class="sub-quantity-btn minus" aria-label={`Decrease ${subItem.name} quantity`}>
-											<Minus size={12} />
-										</button>
-										<span class="sub-quantity-display" role="status" aria-live="polite">
-											0
+										<span class="add-icon">
+											<Plus />
 										</span>
-										<button type="button" class="sub-quantity-btn plus" aria-label={`Increase ${subItem.name} quantity`}>
-											<Plus size={12} />
-										</button>
-									</div>
+										<span class="added-icon">
+											<Check />
+										</span>
+									</button>
 								</div>
 							);
 						})}
@@ -503,51 +500,56 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 		font-size: 1.1rem;
 	}
 
-	.sub-item-controls {
-		display: flex;
-		align-items: center;
-		gap: 0.65rem;
-	}
-
-	.sub-quantity-btn {
-		width: 1.5rem;
+	.sub-add-button {
+		width: 2rem;
 		aspect-ratio: 1 / 1;
 		border-radius: 50%;
-		background-color: #45454c;
+		background-color: var(--black);
 		color: var(--white);
 		border: none;
 		cursor: pointer;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 1rem;
-		font-weight: 400;
 		transition: transform 0.2s ease;
+		flex-shrink: 0;
+	}
+
+	.sub-add-button svg {
+		width: 20px;
+		height: 20px;
+	}
+
+	.sub-add-button .add-icon,
+	.sub-add-button .added-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		line-height: 1;
 	}
 
-	.sub-quantity-btn svg {
-		display: block;
+	.sub-add-button .added-icon {
+		display: none;
 	}
 
-	.sub-quantity-btn:hover {
+	.sub-add-button.added .added-icon {
+		display: flex;
+	}
+
+	.sub-add-button.added .add-icon {
+		display: none;
+	}
+
+	.sub-add-button:hover {
 		transform: scale(1.1);
 	}
 
-	.sub-quantity-btn:disabled {
-		opacity: 0.3;
-		cursor: not-allowed;
+	.sub-add-button.added {
+		background-color: var(--items-progress);
 	}
 
-	.sub-quantity-btn:disabled:hover {
-		transform: scale(1);
-	}
-
-	.sub-quantity-display {
-		font-size: 1rem;
-		font-weight: 600;
-		color: var(--black);
-		text-align: center;
+	.sub-add-button.added:hover {
+		background-color: var(--items-progress);
 	}
 
 	.structured-descriptions {
@@ -599,7 +601,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 		}
 
 		.carousel-btn,
-		.sub-item-controls,
+		.sub-add-button,
 		.quantity-controls {
 			display: none;
 		}
@@ -642,182 +644,90 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 </style>
 
 <script>
-	import { addInterestedItem, removeInterestedItem, updateItemQuantity, getItemQuantity } from "../../utils/local-storage.ts";
+	import { addInterestedItem, removeInterestedItem, isItemInterested } from "../../utils/local-storage.ts";
 	import { getItemDisplayPrice } from "../../utils/plan-helper.ts";
 
-	// Constants
-	const UNLIMITED_TEXT = "不限";
-	const QUANTITY_PATTERN = /max\s+(\d+)/i;
-
 	document.addEventListener("DOMContentLoaded", function () {
-		// Parse quantity from item.quantity field (e.g., "max 5", "不限", "獨家", "打包專屬")
-		function parseQuantityLimit(quantityStr: string): number | null {
-			if (!quantityStr) return null;
-			if (quantityStr === UNLIMITED_TEXT) return null; // unlimited
-
-			const match = quantityStr.match(QUANTITY_PATTERN);
-			if (match) return parseInt(match[1], 10);
-
-			return null;
-		}
-
-		// Parse max quantity from remaining string (handles direct numbers or "max X" format)
-		function parseMaxQuantity(remainingStr: string): number | null {
-			if (!remainingStr) return null;
-
-			// Try parsing as a direct number first
-			const directNum = parseInt(remainingStr, 10);
-			if (!isNaN(directNum)) {
-				return directNum;
-			}
-
-			// Try parsing "max X" format
-			return parseQuantityLimit(remainingStr);
-		}
-
-		// Calculate effective max quantity (minimum of remaining and max per order)
-		function calculateMaxQuantity(quantityStr: string, remainingStr: string): number | null {
-			const maxPerOrder = parseQuantityLimit(quantityStr);
-			const remaining = parseInt(remainingStr, 10);
-
-			if (!isNaN(remaining)) {
-				return maxPerOrder !== null && maxPerOrder < remaining ? maxPerOrder : remaining;
-			}
-			return maxPerOrder;
-		}
-
-		// Sync sub-item quantity controls with localStorage (treats sub-items as regular items)
-		function syncSubItemControls(subItemId: string) {
+		// Sync sub-item button state with localStorage
+		function syncSubItemButton(subItemId: string) {
 			try {
-				const controls = document.querySelector(`.sub-item-controls[data-sub-item-id="${subItemId}"]`) as HTMLElement;
-				if (!controls) return;
+				const button = document.querySelector(`.sub-add-button[data-sub-item-id="${subItemId}"]`) as HTMLElement;
+				if (!button) return;
 
-				const display = controls.querySelector(".sub-quantity-display") as HTMLElement;
-				const minusBtn = controls.querySelector(".sub-quantity-btn.minus") as HTMLButtonElement;
-				const plusBtn = controls.querySelector(".sub-quantity-btn.plus") as HTMLButtonElement;
-
-				const currentQty = getItemQuantity(subItemId) || 0;
-				if (display) display.textContent = currentQty.toString();
-
-				// Set max quantity to 99 for sub-items
-				const maxQuantity = 99;
-
-				// Disable plus button if at max quantity
-				if (plusBtn) {
-					plusBtn.disabled = currentQty >= maxQuantity;
-				}
-
-				// Disable minus button if at 0
-				if (minusBtn) {
-					minusBtn.disabled = currentQty <= 0;
+				const isAdded = isItemInterested(subItemId);
+				if (isAdded) {
+					button.classList.add("added");
+				} else {
+					button.classList.remove("added");
 				}
 			} catch (error) {
-				if (import.meta.env.DEV) console.error("Error syncing sub-item controls:", error);
+				if (import.meta.env.DEV) console.error("Error syncing sub-item button:", error);
 			}
 		}
 
-		// Handle quantity controls
+		// Handle sub-item add button clicks
 		document.addEventListener("click", function (e) {
 			const target = e.target as Element;
 
-			// Sub-item Plus button (treat sub-items as regular items)
-			if (target.closest(".sub-quantity-btn.plus")) {
+			// Sub-item add button
+			if (target.closest(".sub-add-button")) {
 				e.preventDefault();
 				e.stopPropagation();
 
-				const btn = target.closest(".sub-quantity-btn.plus") as HTMLButtonElement;
-				const controls = btn.closest(".sub-item-controls");
-				if (!controls) return;
-
-				const subItemId = controls.getAttribute("data-sub-item-id");
+				const btn = target.closest(".sub-add-button") as HTMLButtonElement;
+				const subItemId = btn.getAttribute("data-sub-item-id");
 				if (!subItemId) return;
 
-				const currentQty = getItemQuantity(subItemId) || 0;
-				const newQty = currentQty + 1;
+				const isAdded = isItemInterested(subItemId);
 
-				if (currentQty === 0) {
-					// Get item data from popup (same as regular item)
-					const popup = controls.closest(".popup-content");
-					const subItemName = controls.getAttribute("data-sub-item-name") || "";
+				if (isAdded) {
+					// Remove from interested items
+					removeInterestedItem(subItemId);
+				} else {
+					// Add to interested items
+					const subItemName = btn.getAttribute("data-sub-item-name") || "";
+					const subItemPrice = btn.getAttribute("data-sub-item-price") || "";
+
+					// Get popup data for image and deadline
+					const popup = btn.closest(".popup-content");
 					const img = popup?.querySelector(".item-image img");
 					const itemImage = img?.getAttribute("src") || "";
 					const deadlineEl = popup?.querySelector(".category");
 					const itemDeadline = deadlineEl?.textContent || "";
-					
-					// Get the sub-item price from the sub-item element
-					const subItemElement = controls.closest(".sub-item");
-					const priceElement = subItemElement?.querySelector(".sub-item-price");
-					const subItemPrice = priceElement?.textContent || "";
-					
+
 					// Get display price (either actual price or plan inclusion info)
 					const displayPrice = getItemDisplayPrice(subItemId, subItemPrice);
 
-					// Set max quantity to 99 for sub-items
-					const maxQuantity = 99;
-
-					// Add item to cart with quantity 1
 					addInterestedItem({
 						id: subItemId,
 						title: subItemName,
 						category: "all",
 						image: itemImage,
 						deadline: itemDeadline,
-						quantity: 1,
-						maxQuantity: maxQuantity,
 						price: displayPrice
 					});
-				} else {
-					// Update existing quantity
-					updateItemQuantity(subItemId, newQty);
 				}
 
-				syncSubItemControls(subItemId);
-			}
-
-			// Sub-item Minus button (treat sub-items as regular items)
-			if (target.closest(".sub-quantity-btn.minus")) {
-				e.preventDefault();
-				e.stopPropagation();
-
-				const btn = target.closest(".sub-quantity-btn.minus") as HTMLButtonElement;
-				const controls = btn.closest(".sub-item-controls");
-				if (!controls) return;
-
-				const subItemId = controls.getAttribute("data-sub-item-id");
-				if (!subItemId) return;
-
-				const currentQty = getItemQuantity(subItemId) || 0;
-				if (currentQty <= 0) return;
-
-				const newQty = currentQty - 1;
-
-				if (newQty === 0) {
-					// Remove from cart when quantity reaches 0
-					removeInterestedItem(subItemId);
-				} else {
-					updateItemQuantity(subItemId, newQty);
-				}
-
-				syncSubItemControls(subItemId);
+				syncSubItemButton(subItemId);
 			}
 		});
 
 		// Listen to itemsChange events from localStorage
 		window.addEventListener("itemsChange", function () {
-			// Sync all sub-item controls
-			document.querySelectorAll(".sub-item-controls").forEach(controls => {
-				const subItemId = controls.getAttribute("data-sub-item-id");
+			// Sync all sub-item buttons
+			document.querySelectorAll(".sub-add-button").forEach(button => {
+				const subItemId = button.getAttribute("data-sub-item-id");
 				if (subItemId) {
-					syncSubItemControls(subItemId);
+					syncSubItemButton(subItemId);
 				}
 			});
 		});
 
 		// Initial sync for sub-items on page load
-		document.querySelectorAll(".sub-item-controls").forEach(controls => {
-			const subItemId = controls.getAttribute("data-sub-item-id");
+		document.querySelectorAll(".sub-add-button").forEach(button => {
+			const subItemId = button.getAttribute("data-sub-item-id");
 			if (subItemId) {
-				syncSubItemControls(subItemId);
+				syncSubItemButton(subItemId);
 			}
 		});
 
