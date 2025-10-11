@@ -215,12 +215,12 @@ const uniqueItemIds = new Set<string>();
 			if (tierName && tierTitle) {
 				button.addEventListener("click", function (e) {
 					e.stopPropagation();
-					
+
 					// Get the tier price from the tier-price element
 					const tierColumn = button.closest(".tier-column");
 					const tierPriceElement = tierColumn?.querySelector(".tier-price");
 					const tierPrice = tierPriceElement?.textContent || "";
-					
+
 					const tierItem = {
 						id: `tier-${tierName}`,
 						title: tierTitle,
@@ -495,17 +495,14 @@ const uniqueItemIds = new Set<string>();
 
 	@media screen and (max-width: 480px) {
 		section {
-			width: calc(100% - 2rem);
-			padding: 2rem 0;
+			padding: 0 1rem;
 		}
+    .container {
+      padding: 1.5rem;
+    }
 
 		.plans-table {
-			padding: 0.75rem;
-		}
-
-		.plans-header,
-		.plan-row {
-			min-width: 500px;
+			padding: 0rem;
 		}
 	}
 
