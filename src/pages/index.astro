@@ -14,9 +14,10 @@ import Form from "@components/section/Form.astro";
 import FAQ from "@components/section/FAQ.astro";
 import Footer from "@components/section/Footer.astro";
 import ogImage from "@assets/img/og.webp";
+import ItemsPopup from "@components/section/ItemsPopup.astro";
 const { lang = "zh-Hant" } = Astro.props;
 const t = await import(`../i18n/${lang}.json`).then(m => m.default);
-const sections = [Nav, Hero, Intro, About, News, Sponsors, Cycle, Time, Items, Plans, Addons, Form, FAQ, Footer];
+const sections = [Nav, Hero, Intro, About, News, Sponsors, Cycle, Time, Items, Plans, Addons, ItemsPopup, Form, FAQ, Footer];
 const { title = t.meta.title, description = t.meta.description } = Astro.props;
 
 // Default schema for homepage (Organization + WebSite)
@@ -25,22 +26,19 @@ const defaultSchema = {
 	"@graph": [
 		{
 			"@type": "Organization",
-			"name": "SITCON 學生計算機年會",
-			"alternateName": "SITCON",
-			"url": "https://sitcon.org",
-			"logo": "https://sitcon.org/2026/cfs/SITCON.svg",
-			"description": description,
-			"sameAs": [
-				"https://www.facebook.com/SITCONtw",
-				"https://twitter.com/sitcontw"
-			]
+			name: "SITCON 學生計算機年會",
+			alternateName: "SITCON",
+			url: "https://sitcon.org",
+			logo: "https://sitcon.org/2026/cfs/SITCON.svg",
+			description: description,
+			sameAs: ["https://www.facebook.com/SITCONtw", "https://twitter.com/sitcontw"]
 		},
 		{
 			"@type": "WebSite",
-			"name": title,
-			"url": "https://sitcon.org/2026/cfs/",
-			"description": description,
-			"inLanguage": lang
+			name: title,
+			url: "https://sitcon.org/2026/cfs/",
+			description: description,
+			inLanguage: lang
 		}
 	]
 };
@@ -96,18 +94,20 @@ const defaultSchema = {
 						// Dispatch custom event for chart initialization
 						document.dispatchEvent(new CustomEvent("popupOpened", { detail: { id } }));
 					}, 0);
-					
+
 					// Update URL based on popup type
 					if (updateUrl) {
 						if (id.startsWith("item-popup-")) {
 							// Extract item ID and use SPA-style path
 							const itemId = id.replace("item-popup-", "");
 							const currentPath = window.location.pathname;
-							const newPath = currentPath.endsWith('/') ? `${currentPath}item/${itemId}` : `${currentPath}/item/${itemId}`;
-							history.pushState({ popupId: id, type: 'item' }, '', newPath);
+							// Remove any existing /item/{id} from the path first
+							const basePath = currentPath.replace(/\/item\/[^\/]+$/, "");
+							const newPath = basePath.endsWith("/") ? `${basePath}item/${itemId}` : `${basePath}/item/${itemId}`;
+							history.pushState({ popupId: id, type: "item" }, "", newPath);
 						} else {
 							// Use anchor for other popups
-							history.pushState({ popupId: id, type: 'anchor' }, '', `#${id}`);
+							history.pushState({ popupId: id, type: "anchor" }, "", `#${id}`);
 						}
 					}
 				} else {
@@ -115,47 +115,47 @@ const defaultSchema = {
 					setTimeout(() => {
 						popupBg.style.display = "none";
 					}, 300);
-					
+
 					// Remove URL hash/path when closing
 					if (updateUrl) {
 						const currentState = history.state;
 						if (currentState && currentState.popupId === id) {
-							if (currentState.type === 'item') {
+							if (currentState.type === "item") {
 								// Remove /item/{id} from path
 								const currentPath = window.location.pathname;
-								const basePath = currentPath.replace(/\/item\/[^\/]+$/, '');
-								history.pushState(null, '', basePath || window.location.pathname.split('/item/')[0]);
+								const basePath = currentPath.replace(/\/item\/[^\/]+$/, "");
+								history.pushState(null, "", basePath || window.location.pathname.split("/item/")[0]);
 							} else {
 								// Remove hash
-								history.pushState(null, '', window.location.pathname);
+								history.pushState(null, "", window.location.pathname);
 							}
 						}
 					}
 				}
 			};
-			
+
 			// Handle browser back/forward buttons
-			window.addEventListener('popstate', (event) => {
+			window.addEventListener("popstate", event => {
 				// Close all open popups
-				document.querySelectorAll('.popup-bg.show').forEach((popupBg) => {
+				document.querySelectorAll(".popup-bg.show").forEach(popupBg => {
 					const popup = popupBg.previousElementSibling;
 					if (popup) {
 						const popupId = popup.id;
-						popupCtrl(popupId, 'close', false);
+						popupCtrl(popupId, "close", false);
 					}
 				});
-				
+
 				// Open popup if state contains popup info
 				if (event.state && event.state.popupId) {
-					popupCtrl(event.state.popupId, 'open', false);
+					popupCtrl(event.state.popupId, "open", false);
 				} else if (window.location.hash) {
 					// Handle anchor-based popups
 					const popupId = window.location.hash.substring(1);
 					const popupElement = document.getElementById(popupId);
 					if (popupElement) {
-						popupCtrl(popupId, 'open', false);
+						popupCtrl(popupId, "open", false);
 					}
-				} else if (window.location.pathname.includes('/item/')) {
+				} else if (window.location.pathname.includes("/item/")) {
 					// Handle item path
 					const match = window.location.pathname.match(/\/item\/([^\/]+)/);
 					if (match) {
@@ -163,28 +163,28 @@ const defaultSchema = {
 						const popupId = `item-popup-${itemId}`;
 						const popupElement = document.getElementById(popupId);
 						if (popupElement) {
-							popupCtrl(popupId, 'open', false);
+							popupCtrl(popupId, "open", false);
 						}
 					}
 				}
 			});
-			
+
 			// Initialize: Check URL on page load and open popup if needed
-			window.addEventListener('DOMContentLoaded', () => {
+			window.addEventListener("DOMContentLoaded", () => {
 				if (window.location.hash) {
 					const popupId = window.location.hash.substring(1);
 					const popupElement = document.getElementById(popupId);
 					if (popupElement) {
-						setTimeout(() => popupCtrl(popupId, 'open', false), 100);
+						setTimeout(() => popupCtrl(popupId, "open", false), 100);
 					}
-				} else if (window.location.pathname.includes('/item/')) {
+				} else if (window.location.pathname.includes("/item/")) {
 					const match = window.location.pathname.match(/\/item\/([^\/]+)/);
 					if (match) {
 						const itemId = match[1];
 						const popupId = `item-popup-${itemId}`;
 						const popupElement = document.getElementById(popupId);
 						if (popupElement) {
-							setTimeout(() => popupCtrl(popupId, 'open', false), 100);
+							setTimeout(() => popupCtrl(popupId, "open", false), 100);
 						}
 					}
 				}
