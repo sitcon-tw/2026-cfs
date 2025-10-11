@@ -35,7 +35,7 @@ const productSchema = {
 	},
 	"offers": {
 		"@type": "Offer",
-		"price": item.price || "0",
+		"price": item.price ? parseFloat(item.price.toString().replace(/[^0-9.]/g, '')) : 0,
 		"priceCurrency": "TWD",
 		"availability": item.remaining && parseInt(item.remaining) > 0 
 			? "https://schema.org/InStock" 
