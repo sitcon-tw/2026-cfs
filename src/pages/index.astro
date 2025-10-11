@@ -82,8 +82,9 @@ const defaultSchema = {
 			})(window, document, "script", "dataLayer", "GTM-NPVBCDZ");
 
 			// popup 控制
-			const popupCtrl = (id = "", action = "open", updateUrl = true) => {
-				const popupBg = document.querySelector(`#${id} + .popup-bg`);
+			const popupCtrl = (id = "", action = "open", updateUrl = true, find) => {
+				
+				const popupBg = find || document.querySelector(`#${id} + .popup-bg`);
 				if (action === "open") {
 					popupBg.style.display = "flex";
 					setTimeout(() => {
@@ -187,6 +188,13 @@ const defaultSchema = {
 							setTimeout(() => popupCtrl(popupId, "open", false), 100);
 						}
 					}
+				}
+			});
+
+			document.addEventListener("keydown", event => {
+				if (event.key === "Escape" || event.key === "Esc") {
+					const openPopups = document.querySelector(".popup-bg.show");
+					openPopups && popupCtrl("", "close", true, openPopups);
 				}
 			});
 		</script>
