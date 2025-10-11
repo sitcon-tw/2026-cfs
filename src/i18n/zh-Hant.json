@@ -295,7 +295,7 @@
 			"contact": {
 				"title": "聯絡方式",
 				"description": "Email、FB、LINE ID 或 Telegram ... 等，各式我們能聯絡到您的方式。",
-				"placeholder": "Telegram / @SITCONgeneral"
+				"placeholder": "Email / contact@sitcon.org"
 			},
 			"message": {
 				"title": "還有什麼想和我們說的嗎？",

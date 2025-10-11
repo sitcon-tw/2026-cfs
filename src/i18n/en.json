@@ -283,7 +283,7 @@
 			"contact": {
 				"title": "Ways to reach you",
 				"description": "Email, Facebook, LINE ID, Telegram, or any channel we can contact you through.",
-				"placeholder": "Telegram / @SITCONgeneral"
+				"placeholder": "Email / contact@sitcon.org"
 			},
 			"message": {
 				"title": "Anything else you'd like to tell us?",
