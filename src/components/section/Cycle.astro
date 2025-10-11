@@ -65,31 +65,16 @@ import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
 	</div>
 </section>
 
-<script is:inline>
-(function() {
-	function init() {
-		const sdgsContainer = document.getElementById('sdgs-container');
-		if (!sdgsContainer) {
-			setTimeout(init, 100);
-			return;
-		}
+<script>
+	const sdgsContainer = document.getElementById("sdgs-container") as HTMLElement;
+	const items = sdgsContainer.querySelectorAll(".sdgs-item");
 
-		const items = sdgsContainer.querySelectorAll('.sdgs-item');
-
-		items.forEach((item) => {
-			item.addEventListener('mouseenter', function() {
-				items.forEach(i => i.classList.remove('active'));
-				this.classList.add('active');
-			});
+	items.forEach(item => {
+		item.addEventListener("mouseenter", function (this: HTMLElement) {
+			items.forEach(i => i.classList.remove("active"));
+			this.classList.add("active");
 		});
-	}
-
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', init);
-	} else {
-		init();
-	}
-})();
+	});
 </script>
 
 <style define:vars={{ arrowURL: `url(${Arrow.src})` }}>
