@@ -379,8 +379,8 @@ function mergeSheetData(sheets) {
 async function downloadAllImages(itemsData) {
 	console.log("Downloading images...");
 
-	// Create images directory if it doesn't exist
-	const imagesDir = "./src/assets/img/items";
+	// Create images directory if it doesn't exist (using public for stable URLs)
+	const imagesDir = "./public/items";
 
 	if (!fs.existsSync(imagesDir)) {
 		fs.mkdirSync(imagesDir, { recursive: true });

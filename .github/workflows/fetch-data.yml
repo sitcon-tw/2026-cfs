@@ -38,6 +38,6 @@ jobs:
               run: |
                   git config --local user.email "github-actions[bot]@users.noreply.github.com"
                   git config --local user.name "github-actions[bot]"
-                  git add src/data/item.json src/data/plan.json src/assets/img/items/
+                  git add src/data/item.json src/data/plan.json public/items/
                   git diff --staged --quiet || git commit -m "chore: update data from Google Sheets"
                   git push git@github.com:${{ github.repository }} HEAD:${{ github.ref }}

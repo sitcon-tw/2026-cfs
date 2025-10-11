@@ -1,7 +1,5 @@
 ---
 import Popup from "../Popup.astro";
-import { Image } from "astro:assets";
-import type { ImageMetadata } from "astro";
 import { X, Plus, Minus, ChevronLeft, ChevronRight, Check } from "@lucide/astro";
 import planData from "@data/plan.json";
 import { marked } from "marked";
@@ -9,10 +7,6 @@ import { marked } from "marked";
 import type { SubItem } from "../../utils/items-loader";
 
 const { item, t, popupId } = Astro.props;
-
-// Import images dynamically using import.meta.glob
-const images = import.meta.glob<{ default: ImageMetadata }>("../../assets/img/items/*");
-const imagePath = `../../assets/img/items/${item.image}`;
 
 // Find this item in plan.json benefits and collect tier info
 const tiers = [
@@ -51,25 +45,16 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 								<div class="carousel-images">
 									{/* Main item image as first slide */}
 									<div class="carousel-slide active" data-slide-index={0} data-description={item.image_description || ""}>
-										{images[imagePath] ? (
-											<Image src={images[imagePath]()} alt={item.image_description || item.name} />
-										) : (
-											<img src={item.image} alt={item.image_description || item.name} />
-										)}
+										<img src={`/2026/cfs/items/${item.image}`} alt={item.image_description || item.name} />
 									</div>
 									{/* Sub-item images */}
 									{subItemsWithImages.map((subItem: SubItem, index: number) => {
-										const subImagePath = `../../assets/img/items/${subItem.image}`;
 										const subImageDescription = subItem.image_description;
 										const slideIndex = index + 1; // +1 because main image is at index 0
 
 										return (
 											<div class="carousel-slide" data-slide-index={slideIndex} data-description={subImageDescription || ""}>
-												{images[subImagePath] ? (
-													<Image src={images[subImagePath]()} alt={subImageDescription || subItem.name} />
-												) : (
-													<img src={subItem.image} alt={subImageDescription || subItem.name} />
-												)}
+												<img src={`/2026/cfs/items/${subItem.image}`} alt={subImageDescription || subItem.name} />
 											</div>
 										);
 									})}
@@ -85,7 +70,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 						);
 					} else {
 						// Show only main item image (no carousel needed)
-						return images[imagePath] ? <Image src={images[imagePath]()} alt={item.image_description || item.name} /> : <img src={item.image} alt={item.image_description || item.name} />;
+						return <img src={`/2026/cfs/items/${item.image}`} alt={item.image_description || item.name} />;
 					}
 				})()
 			}

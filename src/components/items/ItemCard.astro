@@ -1,15 +1,9 @@
 ---
 import { Plus, Check } from "@lucide/astro";
-import { Image } from "astro:assets";
-import type { ImageMetadata } from "astro";
 import { getItemDescription } from "../../utils/items-loader";
 import Stone from "@assets/img/小石.svg";
 
 const { t, card, selectedCategory = "all" } = Astro.props;
-
-// Import images dynamically using import.meta.glob
-const images = import.meta.glob<{ default: ImageMetadata }>("../../assets/img/items/*");
-const imagePath = `../../assets/img/items/${card.image}`;
 
 // Get current description based on selected category
 const currentDescription = getItemDescription(card, selectedCategory);
@@ -55,8 +49,8 @@ const totalRemaining = hasSubItems
 >
 	<div class="card-image">
 		{
-			images[imagePath] ? (
-				<Image src={images[imagePath]()} alt={card.image_description || card.name} />
+			card.image ? (
+				<img src={`/2026/cfs/items/${card.image}`} alt={card.image_description || card.name} />
 			) : (
 				<div class="placeholder-image">
 					<img src={Stone.src} alt="No Image" />
@@ -79,7 +73,7 @@ const totalRemaining = hasSubItems
 	<div class="card-content">
 		<div class="title-row">
 			<h3>{card.name}</h3>
-			<button type="button" class="add-button" data-item-id={card.id} data-item-title={card.name} data-item-image={images[imagePath] ? imagePath : ""} data-item-price={card.price || ""}>
+			<button type="button" class="add-button" data-item-id={card.id} data-item-title={card.name} data-item-image={card.image || ""} data-item-price={card.price || ""}>
 				<span class="add-icon">
 					<Plus />
 				</span>
