@@ -16,7 +16,7 @@ export const getStaticPaths = async () => {
 };
 
 const { item, lang } = Astro.props;
-const t = await import(`@i18n/${lang}.json`).then(m => m.default);
+const t = await import(`../../../i18n/${lang}.json`).then(m => m.default);
 
 const title = `${item.name} - ${t.meta.title}`;
 const description = item.global_description || t.meta.description;

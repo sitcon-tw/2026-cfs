@@ -76,16 +76,17 @@ const chartData = JSON.stringify({
 		<div class="container">
 			<div class="chart-area">
 				<div id="role-chart" class="chart-container"></div>
-				<div id="level-chart" class="chart-container"></div>
-				<div></div>
-				<div id="level-info">
-					{
-						Object.entries(t.popup.chart.level_info).map(([key, value]) => (
-							<p>
-								{key} : {value}
-							</p>
-						))
-					}
+				<div class="level">
+					<div id="level-chart" class="chart-container"></div>
+					<div id="level-info">
+						{
+							Object.entries(t.popup.chart.level_info).map(([key, value]) => (
+								<p>
+									{key} : {value}
+								</p>
+							))
+						}
+					</div>
 				</div>
 			</div>
 			<div id="schools-text-container">
@@ -258,9 +259,9 @@ const chartData = JSON.stringify({
 			const windowWidth = window.innerWidth;
 			let chartWidth, chartHeight;
 
-			if (windowWidth > 1200) {
+			if (windowWidth > 1000) {
 				// Desktop: popup max-width is 1200px, with padding, 2 columns
-				chartWidth = Math.min((1200 - 64) / 2, 550); // 64px total padding
+				chartWidth = Math.min((1200 - 120) / 2, 400); // 64px total padding
 				chartHeight = 450;
 			} else if (windowWidth > 768) {
 				// Tablet: single column
@@ -425,31 +426,31 @@ const chartData = JSON.stringify({
 
 	.chart-area {
 		margin: 2rem 0;
-		display: grid;
-		grid-template-columns: 1fr 1fr;
+		display: flex;
+		justify-content: center;
 		align-items: start;
-		justify-items: center;
-		gap: 3rem 2rem; /* Increased vertical gap for more spacing between rows */
+		flex-wrap: wrap;
 		width: 100%;
+		gap: 2rem;
 	}
 
 	.chart-container {
 		width: auto;
 		min-height: 350px;
-		margin: 0 auto;
 		padding: 1rem 0; /* Add vertical padding for breathing room */
 	}
 	#level-info {
+		margin-top: 1rem;
 		padding: 1rem 2rem;
 		font-weight: 700;
 		line-height: 125%;
 	}
 
-	.stats-cards {
+	.stats-cards,
+	.charts-container {
 		display: flex;
 		justify-content: center;
 		flex-wrap: wrap;
-		gap: 2rem;
 		color: var(--white);
 	}
 
@@ -510,6 +511,10 @@ const chartData = JSON.stringify({
 		font-size: 1.5em;
 	}
 
+	canvas {
+		page-break-inside: avoid;
+	}
+
 	@media screen and (max-width: 70rem) {
 		.stat-card {
 			flex: 1 1 calc(50% - 2rem);
@@ -552,13 +557,7 @@ const chartData = JSON.stringify({
 			max-width: 100%;
 		}
 	}
-	@media screen and (max-width: 75rem) {
-		.chart-area {
-			grid-template-columns: 1fr;
-		}
-	}
 
-	/* Social Media Styles */
 	.social-media-section {
 		margin-top: 3rem;
 		padding: 2rem;
@@ -612,15 +611,6 @@ const chartData = JSON.stringify({
 		font-weight: 500;
 	}
 
-	.charts-container {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 3rem 2rem; /* Increased vertical gap */
-		align-items: start;
-		width: 100%;
-		margin-top: 1.5rem;
-	}
-
 	.charts-container .chart-container {
 		width: auto;
 		height: auto;
@@ -629,21 +619,6 @@ const chartData = JSON.stringify({
 		padding: 1rem 0; /* Add vertical padding */
 	}
 
-	@media (max-width: 75rem) {
-		.chart-area {
-			grid-template-columns: 1fr;
-		}
-
-		.charts-container {
-			grid-template-columns: 1fr;
-		}
-	}
-
-	@media (max-width: 50rem) {
-		.charts-container {
-			grid-template-columns: 1fr;
-		}
-	}
 	.stats-cards-wrapper {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
