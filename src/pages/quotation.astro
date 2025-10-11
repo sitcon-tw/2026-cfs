@@ -16,17 +16,19 @@
 			}
 
 			body {
-				font-family: "Noto Sans TC", "PingFang 					<div class="notes">
-						<h3>注意事項</h3>
-						<ul>
-							<li>本報價單僅供參考，實際金額與權益請以正式合約為準</li>
-							<li>標示「包含在XXX級」的項目為贊助方案內含項目，選購方案即可享有該權益</li>
-							<li>部分項目標示「獨家」，採先到先得方式，售完為止</li>
-							<li>請注意各項目的截止日期，逾期可能影響權益提供</li>
-							${hasNonNumericPrices ? '<li>部分項目包含於贊助方案中，總計僅計算單獨販售項目</li>' : ''}
-							<li>如有任何疑問，歡迎來信 sponsor@sitcon.org 洽詢</li>
-						</ul>
-					</div>rosoft JhengHei", sans-serif;
+				font-family:
+					"Noto Sans TC",
+					system-ui,
+					-apple-system,
+					BlinkMacSystemFont,
+					"Segoe UI",
+					Roboto,
+					Oxygen,
+					Ubuntu,
+					Cantarell,
+					"Open Sans",
+					"Helvetica Neue",
+					sans-serif;
 				line-height: 1.6;
 				color: #333;
 				background: white;
@@ -264,7 +266,7 @@
 		<div class="quotation-container">
 			<header>
 				<h1>SITCON 2026 贊助報價單</h1>
-				<p class="subtitle">學生計算機年會 Sponsorship Quotation</p>
+				<p class="subtitle">學生計算機年會贊助報價單</p>
 			</header>
 
 			<div id="content">
@@ -309,7 +311,7 @@
 			function formatCurrency(amount: number): string {
 				return `NT$${amount.toLocaleString("zh-TW")}`;
 			}
-			
+
 			function isPlanIncluded(price: string): boolean {
 				return price.includes("方案包含項目") || price.includes("Plan Included");
 			}
@@ -344,11 +346,11 @@
 						const quantity = item.quantity || 1;
 						const itemPrice = item.price || "";
 						const isPlanItem = isPlanIncluded(itemPrice);
-						
+
 						if (isPlanItem) {
 							hasNonNumericPrices = true;
 						}
-						
+
 						const pricePerUnit = formatPrice(itemPrice);
 						const subtotal = pricePerUnit * quantity;
 						totalAmount += subtotal;
@@ -364,7 +366,7 @@
 							</td>
 							<td class="quantity-cell">${quantity}</td>
 							<td class="price-cell">${itemPrice || "—"}</td>
-							<td class="subtotal-cell">${!isPlanItem && pricePerUnit > 0 ? formatCurrency(subtotal) : (itemPrice || "—")}</td>
+							<td class="subtotal-cell">${!isPlanItem && pricePerUnit > 0 ? formatCurrency(subtotal) : itemPrice || "—"}</td>
 						</tr>
 					`;
 					})
@@ -424,7 +426,7 @@
 							<li>標示「方案包含項目」的項目為贊助方案內含權益，需選購相應方案</li>
 							<li>部分項目標示「獨家」，採先到先得方式，售完為止</li>
 							<li>請注意各項目的截止日期，逾期可能影響權益提供</li>
-							${hasNonNumericPrices ? '<li>部分項目包含於贊助方案中，總計僅計算單獨販售項目與方案費用</li>' : ''}
+							${hasNonNumericPrices ? "<li>部分項目包含於贊助方案中，總計僅計算單獨販售項目與方案費用</li>" : ""}
 							<li>若需要開立「統一發票」則需額外增加 5% 的營業稅</li>
 							<li>如有任何疑問，歡迎來信 sponsor@sitcon.org 洽詢</li>
 						</ul>
@@ -432,7 +434,7 @@
 
 					<div class="footer">
 						<p>SITCON 學生計算機年會 Students' Information Technology Conference</p>
-						<p>本報價單由系統自動生成於 ${today}</p>
+						<p>本報價單於 ${today} 由系統自動生成</p>
 					</div>
 				`;
 			}
