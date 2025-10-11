@@ -4,7 +4,7 @@ const { type = "text", title = "", name = "", description = "", placeholder = "æ
 
 <label for={name} class={required ? "required" : ""}>{title}</label>
 {description && <p>{description}</p>}
-<input type={type} name={name} required={required} placeholder={placeholder} id={name} />
+{type === "textarea" ? <textarea name={name} placeholder={placeholder} id={name} rows="4" /> : <input type={type} name={name} required={required} placeholder={placeholder} id={name} />}
 
 <style>
 	label {
@@ -21,7 +21,8 @@ const { type = "text", title = "", name = "", description = "", placeholder = "æ
 		color: var(--gray);
 	}
 
-	input {
+	input,
+	textarea {
 		border-radius: 0.75rem;
 		border: 1px solid #86868b;
 		padding: 0.5rem 1rem;

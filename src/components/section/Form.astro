@@ -16,7 +16,7 @@ import FormInput from "../FormInput.astro";
 			<FormInput title={t.fields.department.title} name="department" description={t.fields.department.description} placeholder={t.fields.department.placeholder} />
 			<FormInput title={t.fields.name.title} name="name" description={t.fields.name.description} placeholder={t.fields.name.placeholder} required />
 			<FormInput title={t.fields.contact.title} name="contact" description={t.fields.contact.description} placeholder={t.fields.contact.placeholder} required />
-			<FormInput title={t.fields.message.title} name="message" description={t.fields.message.description} placeholder={t.fields.message.placeholder} />
+			<FormInput title={t.fields.message.title} name="message" description={t.fields.message.description} placeholder={t.fields.message.placeholder} type="textarea" />
 			<div id="submit-section">
 				<button id="submit" type="submit" data-default-text={t.button.default} data-loading-text={t.button.loading}>
 					{t.button.default}
