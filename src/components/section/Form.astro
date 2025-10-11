@@ -59,7 +59,9 @@ import FormInput from "../FormInput.astro";
 			message: "entry.65159086"
 		} as const;
 
-		// Get formatted cart items string
+		const messageTextarea = form.querySelector('[name="message"]') as HTMLTextAreaElement | null;
+		let userMessage = "";
+
 		function getCartItemsString() {
 			const interestedItems = getInterestedItems();
 			if (interestedItems.length === 0) return "";
@@ -74,6 +76,36 @@ import FormInput from "../FormInput.astro";
 				.join("、");
 
 			return `感興趣的項目：${itemsList}`;
+		}
+
+		function updateMessageField() {
+			if (!messageTextarea) return;
+
+			const cartItems = getCartItemsString();
+			if (cartItems) {
+				messageTextarea.value = userMessage.trim() ? `${userMessage}\n\n${cartItems}` : cartItems;
+			} else {
+				messageTextarea.value = userMessage;
+			}
+		}
+
+		if (messageTextarea) {
+			messageTextarea.addEventListener("input", () => {
+				const currentValue = messageTextarea.value;
+				const cartItems = getCartItemsString();
+
+				if (cartItems && currentValue.includes(cartItems)) {
+					userMessage = currentValue.replace(`\n\n${cartItems}`, "").replace(cartItems, "").trim();
+				} else {
+					userMessage = currentValue;
+				}
+			});
+
+			updateMessageField();
+
+			window.addEventListener("itemsChange", () => {
+				updateMessageField();
+			});
 		}
 
 		const checkForm = () => {
@@ -100,28 +132,20 @@ import FormInput from "../FormInput.astro";
 			submitButton.textContent = loadingButtonText;
 
 			const formData = new FormData();
-			// 把自定義 name 對應到 Google Form 的 entry
 			Object.entries(entryMap).forEach(([localKey, entryKey]) => {
-				let value = (form.querySelector(`[name="${localKey}"]`) as HTMLInputElement | null)?.value ?? "";
-
-				// Append cart items to message field
-				if (localKey === "message") {
-					const cartItems = getCartItemsString();
-					if (cartItems) {
-						value = value.trim() ? `${value}\n\n${cartItems}` : cartItems;
-					}
-				}
-
+				const value = (form.querySelector(`[name="${localKey}"]`) as HTMLInputElement | null)?.value ?? "";
 				formData.append(entryKey, value);
 			});
 
 			fetch(apiUrl, {
 				method: "POST",
-				mode: "no-cors", // ✅ 關鍵：避免 CORS 被擋
+				mode: "no-cors",
 				body: formData
 			})
 				.then(() => {
 					form.reset();
+					userMessage = "";
+					updateMessageField();
 					messageElement.textContent = successMessage;
 				})
 				.catch(e => {
