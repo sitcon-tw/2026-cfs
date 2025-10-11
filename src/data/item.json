@@ -1,7 +1,7 @@
 {
   "1": {
     "name": "午餐旗、點心旗",
-    "order": "1",
+    "order": 6,
     "quantity": "獨家",
     "remaining": "",
     "unit": "copy",
@@ -45,7 +45,7 @@
   },
   "2": {
     "name": "一次性紙餐墊",
-    "order": "2",
+    "order": 11,
     "quantity": "獨家",
     "remaining": "1",
     "unit": "",
@@ -70,7 +70,7 @@
   },
   "3": {
     "name": "樓梯欄杆垂掛布條展出",
-    "order": "3",
+    "order": 30,
     "quantity": "max 2",
     "remaining": "2",
     "unit": "copy",
@@ -95,7 +95,7 @@
   },
   "4": {
     "name": "樓梯打卡牆",
-    "order": "4",
+    "order": 15,
     "quantity": "獨家",
     "remaining": "1",
     "unit": "booth",
@@ -120,7 +120,7 @@
   },
   "5": {
     "name": "獨家帆布袋",
-    "order": "5",
+    "order": 3,
     "quantity": "獨家",
     "remaining": "",
     "unit": "booth",
@@ -164,7 +164,7 @@
   },
   "6": {
     "name": "Badge 繩廠商 Logo 曝光",
-    "order": "6",
+    "order": 1,
     "quantity": "獨家",
     "remaining": "1",
     "unit": "booth",
@@ -189,7 +189,7 @@
   },
   "7": {
     "name": "年會 T-shirt Logo 曝光",
-    "order": "7",
+    "order": 2,
     "quantity": "獨家",
     "remaining": "1",
     "unit": "booth",
@@ -214,7 +214,7 @@
   },
   "8": {
     "name": "工作人員徽章曝光",
-    "order": "8",
+    "order": 23,
     "quantity": "獨家",
     "remaining": "1",
     "unit": "booth",
@@ -239,7 +239,7 @@
   },
   "9": {
     "name": "SITCON 貼紙置入",
-    "order": "9",
+    "order": 9,
     "quantity": "獨家",
     "remaining": "1",
     "unit": "copy",
@@ -264,7 +264,7 @@
   },
   "10": {
     "name": "面紙包",
-    "order": "10",
+    "order": 25,
     "quantity": "max 2",
     "remaining": "1",
     "unit": "",
@@ -289,7 +289,7 @@
   },
   "11": {
     "name": "明信片",
-    "order": "11",
+    "order": 24,
     "quantity": "獨家",
     "remaining": "1",
     "unit": "",
@@ -314,7 +314,7 @@
   },
   "12": {
     "name": "網路宣傳",
-    "order": "12",
+    "order": 27,
     "quantity": "不限",
     "remaining": "",
     "unit": "",
@@ -385,7 +385,7 @@
   },
   "13": {
     "name": "OPass App 推播公告",
-    "order": "13",
+    "order": 29,
     "quantity": "max 5",
     "remaining": "5",
     "unit": "",
@@ -410,7 +410,7 @@
   },
   "14": {
     "name": "獨家議程",
-    "order": "14",
+    "order": 7,
     "quantity": "獨家",
     "remaining": "",
     "unit": "",
@@ -463,7 +463,7 @@
   },
   "15": {
     "name": "遠距會議室議程",
-    "order": "15",
+    "order": 8,
     "quantity": "max 2",
     "remaining": "",
     "unit": "",
@@ -507,7 +507,7 @@
   },
   "16": {
     "name": "會場攤位加大",
-    "order": "16",
+    "order": 14,
     "quantity": "不限",
     "remaining": "",
     "unit": "",
@@ -532,7 +532,7 @@
   },
   "17": {
     "name": "R0 影片輪播加時",
-    "order": "17",
+    "order": 32,
     "quantity": "不限",
     "remaining": "",
     "unit": "",
@@ -557,7 +557,7 @@
   },
   "18": {
     "name": "拍貼機贊助商方案",
-    "order": "18",
+    "order": 12,
     "quantity": "max 3",
     "remaining": "3",
     "unit": "",
@@ -582,7 +582,7 @@
   },
   "19": {
     "name": "SITCON 網站議程表置入",
-    "order": "19",
+    "order": 21,
     "quantity": "不限",
     "remaining": "",
     "unit": "",
@@ -607,7 +607,7 @@
   },
   "20": {
     "name": "洗手間標語曝光",
-    "order": "20",
+    "order": 16,
     "quantity": "獨家",
     "remaining": "1",
     "unit": "",
@@ -632,7 +632,7 @@
   },
   "21": {
     "name": "「遠道而來票」獨家冠名",
-    "order": "21",
+    "order": 28,
     "quantity": "獨家",
     "remaining": "1",
     "unit": "",
@@ -657,7 +657,7 @@
   },
   "22": {
     "name": "會議室椅套曝光",
-    "order": "22",
+    "order": 5,
     "quantity": "max 3",
     "remaining": "",
     "unit": "",
@@ -710,7 +710,7 @@
   },
   "23": {
     "name": "獨家導遊團行程",
-    "order": "23",
+    "order": 4,
     "quantity": "獨家",
     "remaining": "1",
     "unit": "",
@@ -735,7 +735,7 @@
   },
   "24": {
     "name": "SITCON 會場指標置入",
-    "order": "24",
+    "order": 13,
     "quantity": "獨家",
     "remaining": "1",
     "unit": "",
@@ -760,7 +760,7 @@
   },
   "25": {
     "name": "SITCON 與會者 Email 推播置入",
-    "order": "25",
+    "order": 22,
     "quantity": "max 5",
     "remaining": "5",
     "unit": "",
@@ -785,7 +785,7 @@
   },
   "26": {
     "name": "年會開閉幕口播",
-    "order": "26",
+    "order": 10,
     "quantity": "max 3",
     "remaining": "3",
     "unit": "",
@@ -810,7 +810,7 @@
   },
   "27": {
     "name": "會場電視輪播",
-    "order": "27",
+    "order": 19,
     "quantity": "不限",
     "remaining": "",
     "unit": "",
@@ -835,7 +835,7 @@
   },
   "28": {
     "name": "會場攤位",
-    "order": "28",
+    "order": 20,
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -860,7 +860,7 @@
   },
   "29": {
     "name": "R0 影片輪播",
-    "order": "29",
+    "order": 31,
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -885,7 +885,7 @@
   },
   "30": {
     "name": "迎賓袋文宣",
-    "order": "30",
+    "order": 36,
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -910,7 +910,7 @@
   },
   "31": {
     "name": "贈票",
-    "order": "31",
+    "order": 40,
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -935,7 +935,7 @@
   },
   "32": {
     "name": "接駁車車內廣播",
-    "order": "32",
+    "order": 17,
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -960,7 +960,7 @@
   },
   "33": {
     "name": "R0 議程前夥伴宣讀",
-    "order": "33",
+    "order": 34,
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -985,7 +985,7 @@
   },
   "34": {
     "name": "直播模板  Logo 曝光",
-    "order": "34",
+    "order": 35,
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -1010,7 +1010,7 @@
   },
   "35": {
     "name": "門口議程表 Logo 曝光",
-    "order": "35",
+    "order": 39,
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -1035,7 +1035,7 @@
   },
   "36": {
     "name": "議程廳講者背板",
-    "order": "36",
+    "order": 33,
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -1060,7 +1060,7 @@
   },
   "37": {
     "name": "入口落地窗背板",
-    "order": "37",
+    "order": 18,
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -1085,7 +1085,7 @@
   },
   "38": {
     "name": "年會意象背板",
-    "order": "38",
+    "order": 26,
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -1110,7 +1110,7 @@
   },
   "39": {
     "name": "年會共筆 Logo 曝光",
-    "order": "39",
+    "order": 38,
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",
@@ -1135,7 +1135,7 @@
   },
   "40": {
     "name": "網頁 Logo 曝光",
-    "order": "40",
+    "order": 37,
     "quantity": "打包專屬",
     "remaining": "",
     "unit": "",

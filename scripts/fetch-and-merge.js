@@ -338,7 +338,7 @@ function mergeSheetData(sheets) {
 
 		items[itemId] = {
 			name: itemRow["項目"] || itemRow["項目名稱"] || "",
-			order: itemId,
+			order: parseInt(itemRow["預設推薦排序"] || "0") || 0,
 			quantity: itemRow["數量"] || "",
 			remaining: itemRow["剩餘數量"] || "",
 			unit: normalizeUnit(itemRow["單位"] || ""),
