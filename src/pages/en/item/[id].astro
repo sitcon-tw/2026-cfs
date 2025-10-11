@@ -1,0 +1,18 @@
+---
+import Page from "../../index.astro";
+import { loadItemsData } from "../../../utils/items-loader";
+
+export async function getStaticPaths() {
+	const lang = "en";
+	const items = await loadItemsData(lang);
+	
+	return items.map((item) => ({
+		params: { id: item.id },
+		props: { itemId: item.id, lang }
+	}));
+}
+
+const { itemId, lang } = Astro.props;
+---
+
+<Page lang={lang} />

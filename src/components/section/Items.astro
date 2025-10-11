@@ -333,7 +333,7 @@ const config = shopConfig;
 					// Add to interested items with quantity 1
 					const deadlineEl = card?.querySelector(".deadline-tag");
 					const itemDeadline = deadlineEl?.textContent || "";
-					
+
 					// Get display price (either actual price or plan inclusion info)
 					const displayPrice = getItemDisplayPrice(id, itemPrice);
 
@@ -485,19 +485,15 @@ const config = shopConfig;
 		// Add click handler for download quote button
 		document.addEventListener("click", function (e) {
 			const target = e.target as Element;
-			
+
 			// Handle download quote button
 			if (target.closest(".download-quote-btn")) {
 				e.preventDefault();
-				
-				// Open quotation page in new tab
-				const quotationUrl = window.location.pathname + "quotation/";
+				const quotationUrl = window.location.pathname + (window.location.pathname.endsWith("/") ? "quotation/" : "/quotation/");
 				window.open(quotationUrl, "_blank");
-				
-				// Optionally close the popover
 				closePopover();
 			}
-			
+
 			// Handle view plan details button
 			if (target.closest(".view-plan-btn")) {
 				e.preventDefault();

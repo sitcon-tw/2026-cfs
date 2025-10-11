@@ -6,7 +6,7 @@ export default defineConfig({
 	site: "https://sitcon.org",
 	base: "/2026/cfs",
 	output: "static",
-	trailingSlash: "always",
+	trailingSlash: "ignore",
 	build: {
 		format: "directory"
 	}
