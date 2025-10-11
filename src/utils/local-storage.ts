@@ -4,8 +4,6 @@ export interface InterestedItem {
 	category: string;
 	image: string;
 	deadline: string;
-	quantity?: number; // @deprecated - no longer used, items are binary (interested or not)
-	maxQuantity?: number | null; // @deprecated - no longer used
 	price?: string; // Price like "$40,000" or plan info like "包含在領航級"
 	minimalPlan?: string; // The minimal plan that includes this item (plan id like "navigator")
 }
