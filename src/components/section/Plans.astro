@@ -215,12 +215,19 @@ const uniqueItemIds = new Set<string>();
 			if (tierName && tierTitle) {
 				button.addEventListener("click", function (e) {
 					e.stopPropagation();
+					
+					// Get the tier price from the tier-price element
+					const tierColumn = button.closest(".tier-column");
+					const tierPriceElement = tierColumn?.querySelector(".tier-price");
+					const tierPrice = tierPriceElement?.textContent || "";
+					
 					const tierItem = {
 						id: `tier-${tierName}`,
 						title: tierTitle,
 						category: "plan",
 						image: "",
-						deadline: ""
+						deadline: "",
+						price: tierPrice
 					};
 
 					if (isItemInterested(tierItem.id)) {

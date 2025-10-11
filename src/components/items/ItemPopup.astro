@@ -658,6 +658,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 
 <script>
 	import { addInterestedItem, removeInterestedItem, updateItemQuantity, getItemQuantity } from "../../utils/local-storage.ts";
+	import { getItemDisplayPrice } from "../../utils/plan-helper.ts";
 
 	// Constants
 	const UNLIMITED_TEXT = "不限";
@@ -757,6 +758,14 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 					const itemImage = img?.getAttribute("src") || "";
 					const deadlineEl = popup?.querySelector(".category");
 					const itemDeadline = deadlineEl?.textContent || "";
+					
+					// Get the sub-item price from the sub-item element
+					const subItemElement = controls.closest(".sub-item");
+					const priceElement = subItemElement?.querySelector(".sub-item-price");
+					const subItemPrice = priceElement?.textContent || "";
+					
+					// Get display price (either actual price or plan inclusion info)
+					const displayPrice = getItemDisplayPrice(subItemId, subItemPrice);
 
 					// Set max quantity to 99 for sub-items
 					const maxQuantity = 99;
@@ -769,7 +778,8 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 						image: itemImage,
 						deadline: itemDeadline,
 						quantity: 1,
-						maxQuantity: maxQuantity
+						maxQuantity: maxQuantity,
+						price: displayPrice
 					});
 				} else {
 					// Update existing quantity

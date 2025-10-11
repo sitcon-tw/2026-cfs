@@ -6,6 +6,8 @@ export interface InterestedItem {
 	deadline: string;
 	quantity?: number;
 	maxQuantity?: number | null; // null = unlimited (不限), number = max X
+	price?: string; // Price like "$40,000" or plan info like "包含在領航級"
+	minimalPlan?: string; // The minimal plan that includes this item (plan id like "navigator")
 }
 
 const INTEREST_ITEMS_KEY = "interestItems";

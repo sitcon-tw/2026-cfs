@@ -79,7 +79,7 @@ const totalRemaining = hasSubItems
 	<div class="card-content">
 		<div class="title-row">
 			<h3>{card.name}</h3>
-			<button type="button" class="add-button" data-item-id={card.id} data-item-title={card.name} data-item-image={images[imagePath] ? imagePath : ""}>
+			<button type="button" class="add-button" data-item-id={card.id} data-item-title={card.name} data-item-image={images[imagePath] ? imagePath : ""} data-item-price={card.price || ""}>
 				<span class="add-icon">
 					<Plus />
 				</span>

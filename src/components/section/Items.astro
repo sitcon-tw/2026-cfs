@@ -83,6 +83,7 @@ const config = shopConfig;
 
 <script>
 	import { getInterestedItems, removeInterestedItem, isItemInterested, addInterestedItem } from "../../utils/local-storage.ts";
+	import { getItemDisplayPrice } from "../../utils/plan-helper.ts";
 
 	declare function popupCtrl(id: string, action: string): void;
 
@@ -323,6 +324,7 @@ const config = shopConfig;
 				// Toggle interested state for items without sub-items
 				const itemTitle = button.getAttribute("data-item-title") || "";
 				const itemImage = button.getAttribute("data-item-image") || "";
+				const itemPrice = button.getAttribute("data-item-price") || "";
 
 				if (isItemInterested(id)) {
 					// Remove from interested items
@@ -331,6 +333,9 @@ const config = shopConfig;
 					// Add to interested items with quantity 1
 					const deadlineEl = card?.querySelector(".deadline-tag");
 					const itemDeadline = deadlineEl?.textContent || "";
+					
+					// Get display price (either actual price or plan inclusion info)
+					const displayPrice = getItemDisplayPrice(id, itemPrice);
 
 					addInterestedItem({
 						id: id,
@@ -339,7 +344,8 @@ const config = shopConfig;
 						image: itemImage,
 						deadline: itemDeadline,
 						quantity: 1,
-						maxQuantity: 1
+						maxQuantity: 1,
+						price: displayPrice
 					});
 				}
 			}
@@ -476,9 +482,23 @@ const config = shopConfig;
 			}
 		});
 
-		// Add click handler for view plan details button
+		// Add click handler for download quote button
 		document.addEventListener("click", function (e) {
 			const target = e.target as Element;
+			
+			// Handle download quote button
+			if (target.closest(".download-quote-btn")) {
+				e.preventDefault();
+				
+				// Open quotation page in new tab
+				const quotationUrl = window.location.pathname + "quotation/";
+				window.open(quotationUrl, "_blank");
+				
+				// Optionally close the popover
+				closePopover();
+			}
+			
+			// Handle view plan details button
 			if (target.closest(".view-plan-btn")) {
 				e.preventDefault();
 
@@ -874,6 +894,14 @@ const config = shopConfig;
 		font-weight: 500;
 		text-align: left;
 		padding-right: 1rem;
+	}
+
+	:global(.item-price-tag) {
+		font-size: 0.8rem;
+		color: #0171e3;
+		font-weight: 400;
+		margin-top: 0.25rem;
+		display: inline-block;
 	}
 
 	:global(.remove-item) {
