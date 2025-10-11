@@ -98,6 +98,7 @@ const config = shopConfig;
 
 		let isExpanded = false; // false = collapsed (fade-active), true = expanded (fade-hidden)
 		let canExpand = true;
+		let isInitialLoad = true; // Track if this is the initial page load
 
 		function applyExpandState() {
 			const shouldShowExpandedUI = !canExpand || isExpanded;
@@ -115,17 +116,21 @@ const config = shopConfig;
 				(hideText as HTMLElement).style.display = "none";
 				(arrow as HTMLElement).style.transform = "rotate(0deg)";
 
-				const itemsSection = document.getElementById("items");
-				if (itemsSection) {
-					const yOffset = -20;
-					const y = itemsSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
-					window.scrollTo({ top: y, behavior: "smooth" });
+				// Only scroll when collapsing via button click, not on initial page load
+				if (!isInitialLoad) {
+					const itemsSection = document.getElementById("items");
+					if (itemsSection) {
+						const yOffset = -20;
+						const y = itemsSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+						window.scrollTo({ top: y, behavior: "smooth" });
+					}
 				}
 			}
 		}
 
 		expandButton.addEventListener("click", function () {
 			isExpanded = !isExpanded;
+			isInitialLoad = false; // Mark that user has interacted
 			applyExpandState();
 		});
 
