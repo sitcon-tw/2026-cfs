@@ -49,7 +49,7 @@
 	"time": {
 		"title1": "一年一度的時刻，",
 		"title2": "我們準備好了。",
-		"date": "2026 年 3 月 28 日 (六)",
+		"date": "2026 年 3 月 28 日（六）",
 		"location": "中央研究院 人文社會科學館",
 		"popup_label": "活動詳情與籌備團隊",
 		"activity_schedule": "活動時程",
@@ -522,8 +522,8 @@
 		"email": "contact@sitcon.org",
 		"contact_list": ["巫玟槿 +886-963-584-326", "呂承紘 +886-965-508-785", "黃一晉 +886-922-686-223"],
 		"contact_us": "聯繫我們",
-		"contact_us_description": "合作聯繫:",
-		"contact_us_description2": "報名事宜:",
+		"contact_us_description": "合作聯繫：",
+		"contact_us_description2": "報名事宜：",
 		"past_websites": "歷年網站"
 	}
 }
