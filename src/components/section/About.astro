@@ -7,6 +7,22 @@ import AttendeeImg from "@assets/img/stat/attendee-stat.webp";
 import SpeakerImg from "@assets/img/stat/speaker-stat.webp";
 import EventsImg from "@assets/img/stat/events-stat.webp";
 import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
+
+const chartData = JSON.stringify({
+	attenderRole: t.popup.chart.attender_role,
+	programmingLevel: t.popup.chart.programming_level,
+	unit: t.popup.chart.unit,
+	attenderRoleTitle: t.popup.chart.attender_role_title,
+	programmingLevelTitle: t.popup.chart.programming_level_title,
+	fbAge: t.popup.chart.social_media.facebook.age,
+	fbGender: t.popup.chart.social_media.facebook.gender,
+	igAge: t.popup.chart.social_media.instagram.age,
+	igGender: t.popup.chart.social_media.instagram.gender,
+	fbAgeTitle: `${t.popup.chart.social_media.facebook.name} ${t.popup.chart.social_media.facebook.labels.age_distribution}`,
+	fbGenderTitle: `${t.popup.chart.social_media.facebook.name} ${t.popup.chart.social_media.facebook.labels.gender_ratio}`,
+	igAgeTitle: `${t.popup.chart.social_media.instagram.name} ${t.popup.chart.social_media.instagram.labels.age_distribution}`,
+	igGenderTitle: `${t.popup.chart.social_media.instagram.name} ${t.popup.chart.social_media.instagram.labels.gender_ratio}`
+});
 ---
 
 <section id="about" class="about-section">
@@ -59,8 +75,8 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 	<Popup btnText={t.detail} title={t.detail} background={Volunteer.src} id="stat-popup" class="popup">
 		<div class="container">
 			<div class="chart-area">
-				<canvas id="role-chart"></canvas>
-				<canvas id="level-chart"></canvas>
+				<div id="role-chart" class="chart-container"></div>
+				<div id="level-chart" class="chart-container"></div>
 				<div></div>
 				<div id="level-info">
 					{
@@ -99,8 +115,8 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 								</div>
 							</div>
 							<div class="charts-container">
-								<canvas id="fb-age-chart"></canvas>
-								<canvas id="fb-gender-chart"></canvas>
+								<div id="fb-age-chart" class="chart-container"></div>
+								<div id="fb-gender-chart" class="chart-container"></div>
 							</div>
 						</div>
 					</div>
@@ -124,8 +140,8 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 								</div>
 							</div>
 							<div class="charts-container">
-								<canvas id="ig-age-chart"></canvas>
-								<canvas id="ig-gender-chart"></canvas>
+								<div id="ig-age-chart" class="chart-container"></div>
+								<div id="ig-gender-chart" class="chart-container"></div>
 							</div>
 						</div>
 					</div>
@@ -133,327 +149,249 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 			</div>
 		</div>
 	</Popup>
+	<div style="display:none" id="chart-data">{chartData}</div>
 </section>
-<div style="display: none;">
-	<p id="chart-attender-data">{JSON.stringify(t.popup.chart.attender_role)}</p>
-	<p id="chart-programming-level-data">{JSON.stringify(t.popup.chart.programming_level)}</p>
-	<p id="chart-unit">{t.popup.chart.unit}</p>
-	<p id="attender-role-title">{t.popup.chart.attender_role_title}</p>
-	<p id="chart-programming-level-titlea">{t.popup.chart.programming_level_title}</p>
-	<p id="fb-age-data">{JSON.stringify(t.popup.chart.social_media.facebook.age)}</p>
-	<p id="fb-gender-data">{JSON.stringify(t.popup.chart.social_media.facebook.gender)}</p>
-	<p id="ig-age-data">{JSON.stringify(t.popup.chart.social_media.instagram.age)}</p>
-	<p id="ig-gender-data">{JSON.stringify(t.popup.chart.social_media.instagram.gender)}</p>
-	<p id="fb-age-title">{t.popup.chart.social_media.facebook.name} {t.popup.chart.social_media.facebook.labels.age_distribution}</p>
-	<p id="fb-gender-title">{t.popup.chart.social_media.facebook.name} {t.popup.chart.social_media.facebook.labels.gender_ratio}</p>
-	<p id="ig-age-title">{t.popup.chart.social_media.instagram.name} {t.popup.chart.social_media.instagram.labels.age_distribution}</p>
-	<p id="ig-gender-title">{t.popup.chart.social_media.instagram.name} {t.popup.chart.social_media.instagram.labels.gender_ratio}</p>
-</div>
 
 <script>
-	import Chart from "chart.js/auto";
-	import ChartDataLabels from "chartjs-plugin-datalabels";
+	import * as echarts from "echarts";
 
 	const colors = ["#6CE5E8", "#40B8D5", "#2C8BBA", "#2F5F98", "#31356E", "#5E3967", "#895273", "#B97286", "#E28385"];
-	const unit = document.getElementById("chart-unit")!.textContent;
-	const roleTitle = document.getElementById("attender-role-title")!.textContent;
-	const roleEle = document.getElementById("role-chart");
-	const attenderRoleData = JSON.parse(document.getElementById("chart-attender-data")!.textContent);
-	const roleData = {
-		labels: Object.keys(attenderRoleData),
-		datasets: [
-			{
-				label: unit,
-				data: Object.values(attenderRoleData) as number[],
-				borderWidth: 1,
-				backgroundColor: colors,
-				hoverOffset: 5
-			}
-		]
-	};
-
-	const levelTitle = document.getElementById("chart-programming-level-titlea")!.textContent;
-	const levelEle = document.getElementById("level-chart");
-	const programmingLevelData = JSON.parse(document.getElementById("chart-programming-level-data")!.textContent);
-	const levelData = {
-		labels: Object.keys(programmingLevelData),
-		datasets: [
-			{
-				label: unit,
-				data: Object.values(programmingLevelData) as number[],
-				borderWidth: 1,
-				backgroundColor: colors,
-				hoverOffset: 5
-			}
-		]
-	};
-
-	// Store chart instances
-	let roleChart: any;
-	let levelChart: any;
-	let fbAgeChart: any;
-	let fbGenderChart: any;
-	let igAgeChart: any;
-	let igGenderChart: any;
-
-	Chart.defaults.font.family = '"LINESeedTW", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
-
-	// Initialize main charts immediately (they're visible on page load)
-	for (let i = 0; i < 2; i++) {
-		const chart = new Chart(i == 0 ? (roleEle as HTMLCanvasElement) : (levelEle as HTMLCanvasElement), {
-			type: "doughnut",
-			data: i == 0 ? roleData : levelData,
-			options: {
-				responsive: true,
-				maintainAspectRatio: false,
-				plugins: {
-					legend: {
-						display: true,
-						position: "top",
-						labels: {
-							boxWidth: 20,
-							boxHeight: 20,
-							padding: 20,
-							font: { size: 14 }
-						}
-					},
-					title: {
-						display: true,
-						text: i == 0 ? roleTitle : levelTitle,
-						font: {
-							size: 30,
-							weight: "bold"
-						},
-						padding: {
-							bottom: 20
-						},
-						color: "#48484A"
-					},
-					datalabels: {
-						clamp: true,
-						color: "#000000",
-						font: { weight: "bold", size: 14 },
-						formatter: (value: any, ctx: any) => {
-							const label = ctx.chart.data.labels![ctx.dataIndex];
-							const total: number = ctx.chart.data.datasets[0].data.filter((v: any): v is number => typeof v === "number").reduce((a: number, b: number) => a + b, 0);
-							const percentage = ((value / total) * 100).toFixed(0) + "%";
-							return value >= 100 ? `${label}: ${percentage}` : ``;
-						}
-					}
-				}
-			},
-			plugins: [ChartDataLabels]
-		});
-
-		if (i == 0) roleChart = chart;
-		else levelChart = chart;
-	}
-
-	// Social Media Charts - Initialize when popup opens
 	const socialMediaColors = ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40"];
 
+	const chartDataElement = document.getElementById("chart-data");
+	const chartData = chartDataElement ? JSON.parse(chartDataElement.textContent || "{}") : {};
+	// Store chart instances
+	let roleChart = null;
+	let levelChart = null;
+	let fbAgeChart = null;
+	let fbGenderChart = null;
+	let igAgeChart = null;
+	let igGenderChart = null;
+
+	// Helper function to create pie chart data
+	function createPieData(data, colors) {
+		return Object.entries(data).map(([name, value], index) => ({
+			name,
+			value,
+			itemStyle: { color: colors[index % colors.length] }
+		}));
+	}
+
+	// Helper function to create ECharts pie chart option
+	function createPieOption(title, data, showPercentage = true) {
+		const total = data.reduce((sum, item) => sum + item.value, 0);
+
+		return {
+			title: {
+				text: title,
+				left: "center",
+				top: 10,
+				textStyle: {
+					fontSize: 24,
+					fontWeight: "bold",
+					color: "#48484A"
+				},
+				padding: [10, 0, 20, 0] // Add bottom padding to title
+			},
+			tooltip: {
+				trigger: "item",
+				formatter: "{b}: {c} ({d}%)"
+			},
+			legend: {
+				orient: "horizontal",
+				bottom: 10,
+				left: "center",
+				itemWidth: 20,
+				itemHeight: 20,
+				textStyle: {
+					fontSize: 12
+				}
+			},
+			series: [
+				{
+					type: "pie",
+					radius: ["35%", "65%"],
+					center: ["50%", "55%"], // Move chart down to avoid title overlap
+					avoidLabelOverlap: true,
+					itemStyle: {
+						borderRadius: 8,
+						borderColor: "#fff",
+						borderWidth: 2
+					},
+					label: {
+						show: true,
+						formatter: params => {
+							const percentage = ((params.value / total) * 100).toFixed(0);
+							if (params.value >= 100 || showPercentage) {
+								return `${params.name}\n${percentage}%`;
+							}
+							return "";
+						},
+						fontSize: 12,
+						fontWeight: "bold"
+					},
+					emphasis: {
+						label: {
+							show: true,
+							fontSize: 14,
+							fontWeight: "bold"
+						},
+						itemStyle: {
+							shadowBlur: 10,
+							shadowOffsetX: 0,
+							shadowColor: "rgba(0, 0, 0, 0.5)"
+						}
+					},
+					data: data
+				}
+			]
+		};
+	}
+
+	// Initialize main charts
+	function initMainCharts() {
+		const roleElement = document.getElementById("role-chart");
+		const levelElement = document.getElementById("level-chart");
+
+		if (roleElement && levelElement) {
+			// Calculate available width based on window size
+			const windowWidth = window.innerWidth;
+			let chartWidth, chartHeight;
+
+			if (windowWidth > 1200) {
+				// Desktop: popup max-width is 1200px, with padding, 2 columns
+				chartWidth = Math.min((1200 - 64) / 2, 550); // 64px total padding
+				chartHeight = 450;
+			} else if (windowWidth > 768) {
+				// Tablet: single column
+				chartWidth = Math.min(windowWidth - 100, 550);
+				chartHeight = 400;
+			} else {
+				// Mobile: single column, smaller
+				chartWidth = windowWidth - 40;
+				chartHeight = 350;
+			}
+
+			// Set explicit dimensions
+			roleElement.style.width = `${chartWidth}px`;
+			roleElement.style.height = `${chartHeight}px`;
+			levelElement.style.width = `${chartWidth}px`;
+			levelElement.style.height = `${chartHeight}px`;
+
+			// Role chart
+			roleChart = echarts.init(roleElement, null, { width: chartWidth, height: chartHeight });
+			const roleData = createPieData(chartData.attenderRole, colors);
+			roleChart.setOption(createPieOption(chartData.attenderRoleTitle, roleData));
+
+			// Level chart
+			levelChart = echarts.init(levelElement, null, { width: chartWidth, height: chartHeight });
+			const levelData = createPieData(chartData.programmingLevel, colors);
+			levelChart.setOption(createPieOption(chartData.programmingLevelTitle, levelData));
+		}
+	}
+
+	// Initialize social media charts
 	function initializeSocialMediaCharts() {
-		// Only initialize if charts haven't been created yet
 		if (fbAgeChart && fbGenderChart && igAgeChart && igGenderChart) return;
 
-		// Small delay to ensure popup is fully rendered
+		// Calculate available width for social media charts
+		const windowWidth = window.innerWidth;
+		let chartWidth, chartHeight;
+
+		if (windowWidth > 1200) {
+			// Desktop: 2 columns in social media section
+			chartWidth = Math.min((1200 - 100) / 2, 400);
+			chartHeight = 350;
+		} else if (windowWidth > 768) {
+			// Tablet: 2 columns but narrower
+			chartWidth = Math.min((windowWidth - 100) / 2, 350);
+			chartHeight = 350;
+		} else {
+			// Mobile: single column
+			chartWidth = windowWidth - 60;
+			chartHeight = 300;
+		}
+
 		setTimeout(() => {
-			// Facebook Age Chart
-			const fbAgeData = JSON.parse(document.getElementById("fb-age-data")!.textContent);
-			const fbAgeTitle = document.getElementById("fb-age-title")!.textContent;
-			const fbAgeCanvas = document.getElementById("fb-age-chart") as HTMLCanvasElement;
+			const fbAgeElement = document.getElementById("fb-age-chart");
+			const fbGenderElement = document.getElementById("fb-gender-chart");
+			const igAgeElement = document.getElementById("ig-age-chart");
+			const igGenderElement = document.getElementById("ig-gender-chart");
 
-			if (fbAgeCanvas) {
-				fbAgeChart = new Chart(fbAgeCanvas, {
-					type: "doughnut",
-					data: {
-						labels: Object.keys(fbAgeData),
-						datasets: [
-							{
-								data: Object.values(fbAgeData) as number[],
-								backgroundColor: socialMediaColors,
-								borderWidth: 1
-							}
-						]
-					},
-					options: {
-						responsive: true,
-						maintainAspectRatio: false,
-						plugins: {
-							legend: {
-								display: true,
-								position: "top",
-								labels: { font: { size: 12 } }
-							},
-							title: {
-								display: true,
-								text: fbAgeTitle,
-								font: { size: 20, weight: "bold" },
-								color: "#48484A"
-							},
-							datalabels: {
-								color: "#000000",
-								font: { weight: "bold", size: 12 },
-								formatter: (value: any) => {
-									return value > 5 ? `${value}%` : "";
-								}
-							}
-						}
-					},
-					plugins: [ChartDataLabels]
-				});
+			if (fbAgeElement && !fbAgeChart) {
+				fbAgeElement.style.width = `${chartWidth}px`;
+				fbAgeElement.style.height = `${chartHeight}px`;
+				fbAgeChart = echarts.init(fbAgeElement, null, { width: chartWidth, height: chartHeight });
+				const fbAgeData = createPieData(chartData.fbAge, socialMediaColors);
+				fbAgeChart.setOption(createPieOption(chartData.fbAgeTitle, fbAgeData, false));
 			}
 
-			// Helper to create doughnut charts
-			function createDoughnutChart({
-				canvasId,
-				dataId,
-				titleId,
-				colors,
-				datalabelFontSize = 14,
-				datalabelFormatter = (value: any) => `${value}%`
-			}: {
-				canvasId: string;
-				dataId: string;
-				titleId: string;
-				colors: string[];
-				datalabelFontSize?: number;
-				datalabelFormatter?: (value: any) => string;
-			}) {
-				const data = JSON.parse(document.getElementById(dataId)!.textContent);
-				const title = document.getElementById(titleId)!.textContent;
-				const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
-				if (canvas) {
-					return new Chart(canvas, {
-						type: "doughnut",
-						data: {
-							labels: Object.keys(data),
-							datasets: [
-								{
-									data: Object.values(data),
-									backgroundColor: colors,
-									borderWidth: 1
-								}
-							]
-						},
-						options: {
-							responsive: true,
-							maintainAspectRatio: false,
-							plugins: {
-								legend: {
-									display: true,
-									position: "top",
-									labels: { font: { size: 12 } }
-								},
-								title: {
-									display: true,
-									text: title,
-									font: { size: 20, weight: "bold" },
-									color: "#48484A"
-								},
-								datalabels: {
-									color: "#000000",
-									font: { weight: "bold", size: datalabelFontSize },
-									formatter: datalabelFormatter
-								}
-							}
-						},
-						plugins: [ChartDataLabels]
-					});
-				}
-				return null;
+			if (fbGenderElement && !fbGenderChart) {
+				fbGenderElement.style.width = `${chartWidth}px`;
+				fbGenderElement.style.height = `${chartHeight}px`;
+				fbGenderChart = echarts.init(fbGenderElement, null, { width: chartWidth, height: chartHeight });
+				const fbGenderData = createPieData(chartData.fbGender, ["#4FC3F7", "#FFB74D"]);
+				fbGenderChart.setOption(createPieOption(chartData.fbGenderTitle, fbGenderData));
 			}
 
-			// Facebook Gender Chart
-			fbGenderChart = createDoughnutChart({
-				canvasId: "fb-gender-chart",
-				dataId: "fb-gender-data",
-				titleId: "fb-gender-title",
-				colors: ["#4FC3F7", "#FFB74D"],
-				datalabelFontSize: 14,
-				datalabelFormatter: (value: any) => `${value}%`
-			});
+			if (igAgeElement && !igAgeChart) {
+				igAgeElement.style.width = `${chartWidth}px`;
+				igAgeElement.style.height = `${chartHeight}px`;
+				igAgeChart = echarts.init(igAgeElement, null, { width: chartWidth, height: chartHeight });
+				const igAgeData = createPieData(chartData.igAge, socialMediaColors);
+				igAgeChart.setOption(createPieOption(chartData.igAgeTitle, igAgeData, false));
+			}
 
-			// Instagram Age Chart
-			igAgeChart = createDoughnutChart({
-				canvasId: "ig-age-chart",
-				dataId: "ig-age-data",
-				titleId: "ig-age-title",
-				colors: socialMediaColors,
-				datalabelFontSize: 12,
-				datalabelFormatter: (value: any) => {
-					return value > 5 ? `${value}%` : "";
-				}
-			});
-			// Instagram Gender Chart
-			const igGenderData = JSON.parse(document.getElementById("ig-gender-data")!.textContent);
-			const igGenderTitle = document.getElementById("ig-gender-title")!.textContent;
-			const igGenderCanvas = document.getElementById("ig-gender-chart") as HTMLCanvasElement;
-
-			if (igGenderCanvas) {
-				igGenderChart = new Chart(igGenderCanvas, {
-					type: "doughnut",
-					data: {
-						labels: Object.keys(igGenderData),
-						datasets: [
-							{
-								data: Object.values(igGenderData) as number[],
-								backgroundColor: ["#4FC3F7", "#FFB74D"],
-								borderWidth: 1
-							}
-						]
-					},
-					options: {
-						responsive: true,
-						maintainAspectRatio: false,
-						plugins: {
-							legend: {
-								display: true,
-								position: "top",
-								labels: { font: { size: 12 } }
-							},
-							title: {
-								display: true,
-								text: igGenderTitle,
-								font: { size: 20, weight: "bold" },
-								color: "#48484A"
-							},
-							datalabels: {
-								color: "#000000",
-								font: { weight: "bold", size: 14 },
-								formatter: (value: any) => `${value}%`
-							}
-						}
-					},
-					plugins: [ChartDataLabels]
-				});
+			if (igGenderElement && !igGenderChart) {
+				igGenderElement.style.width = `${chartWidth}px`;
+				igGenderElement.style.height = `${chartHeight}px`;
+				igGenderChart = echarts.init(igGenderElement, null, { width: chartWidth, height: chartHeight });
+				const igGenderData = createPieData(chartData.igGender, ["#4FC3F7", "#FFB74D"]);
+				igGenderChart.setOption(createPieOption(chartData.igGenderTitle, igGenderData));
 			}
 		}, 100);
 	}
 
+	// Initialize main charts on load
+	initMainCharts();
+
 	// Listen for popup open events
-	document.addEventListener("popupOpened", (event: Event) => {
-		const customEvent = event as CustomEvent;
+	document.addEventListener("popupOpened", event => {
+		const customEvent = event;
 		if (customEvent.detail && customEvent.detail.id === "stat-popup") {
-			// Initialize social media charts when stats popup is opened
 			setTimeout(initializeSocialMediaCharts, 200);
 		}
 	});
 
-	// Also listen for window resize to refresh charts if needed
-	let resizeTimeout: ReturnType<typeof setTimeout>;
+	// Handle window resize
+	let resizeTimeout;
 	window.addEventListener("resize", () => {
 		clearTimeout(resizeTimeout);
 		resizeTimeout = setTimeout(() => {
+			// Recalculate dimensions on resize
+			const windowWidth = window.innerWidth;
+
 			[roleChart, levelChart, fbAgeChart, fbGenderChart, igAgeChart, igGenderChart].forEach(chart => {
 				if (chart) {
 					chart.resize();
-					chart.update("resize");
 				}
 			});
 		}, 200);
 	});
 
+	// Also handle print event - reinitialize charts for proper sizing
+	window.addEventListener("beforeprint", () => {
+		// Reinitialize to ensure proper sizing for print
+		setTimeout(() => {
+			[roleChart, levelChart, fbAgeChart, fbGenderChart, igAgeChart, igGenderChart].forEach(chart => {
+				if (chart) {
+					chart.resize();
+				}
+			});
+		}, 0);
+	});
+
+	// Initialize social media charts when popup is already open
 	initializeSocialMediaCharts();
 </script>
 <style>
@@ -477,19 +415,29 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 	#schools-text-container {
 		margin-top: 5rem;
 	}
-	.chart-area {
-		margin: 1rem 0;
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		align-items: center;
-		justify-items: center;
+
+	.container {
+		width: 100%;
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 2rem;
 	}
 
-	canvas {
-		max-width: 35em;
-		max-height: 30rem;
-		margin: auto;
-		padding: 2rem 1.5rem 0 1.5rem;
+	.chart-area {
+		margin: 2rem 0;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: start;
+		justify-items: center;
+		gap: 3rem 2rem; /* Increased vertical gap for more spacing between rows */
+		width: 100%;
+	}
+
+	.chart-container {
+		width: auto;
+		min-height: 350px;
+		margin: 0 auto;
+		padding: 1rem 0; /* Add vertical padding for breathing room */
 	}
 	#level-info {
 		padding: 1rem 2rem;
@@ -583,10 +531,18 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 		.review-item {
 			font-size: 2rem;
 		}
+
+		.container {
+			padding: 1.5rem;
+		}
 	}
 	@media screen and (max-width: 40rem) {
 		.stat-number {
 			font-size: 2.5rem;
+		}
+
+		.container {
+			padding: 0.5rem;
 		}
 	}
 
@@ -609,6 +565,11 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 		border-top: 1px solid #e0e0e0;
 	}
 
+	.social-media-section .container {
+		max-width: 100%;
+		padding: 0 1rem;
+	}
+
 	h3 {
 		text-align: center;
 		font-size: 1.8rem;
@@ -618,9 +579,13 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 	}
 
 	.social-platforms {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 3rem;
+		display: flex;
+		gap: 2rem;
+		flex-wrap: wrap;
+	}
+
+	.platform-section {
+		width: 100%;
 	}
 
 	.platform-section h4 {
@@ -629,6 +594,10 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 		margin-bottom: 1.5rem;
 		color: #48484a;
 		font-weight: bold;
+	}
+
+	.platform-stats {
+		width: 100%;
 	}
 
 	.stats-info {
@@ -644,38 +613,35 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 	}
 
 	.charts-container {
-		display: flex;
-		justify-content: center;
-		gap: 2rem;
-		align-items: center;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 3rem 2rem; /* Increased vertical gap */
+		align-items: start;
+		width: 100%;
+		margin-top: 1.5rem;
 	}
 
-	.charts-container canvas {
-		/* max-width: 300px;
-		max-height: 250px; */
-		padding: 1rem;
+	.charts-container .chart-container {
+		width: auto;
+		height: auto;
+		min-height: 300px;
+		margin: 0 auto;
+		padding: 1rem 0; /* Add vertical padding */
 	}
 
 	@media (max-width: 75rem) {
-		.social-platforms {
+		.chart-area {
 			grid-template-columns: 1fr;
-			gap: 2rem;
 		}
 
-		.charts-container canvas {
-			max-width: 250px;
-			width: 100%;
-			height: 360px;
+		.charts-container {
+			grid-template-columns: 1fr;
 		}
 	}
 
 	@media (max-width: 50rem) {
 		.charts-container {
-			flex-direction: column;
-		}
-
-		.charts-container canvas {
-			max-width: 100%;
+			grid-template-columns: 1fr;
 		}
 	}
 	.stats-cards-wrapper {
@@ -721,50 +687,6 @@ import VolunteerImg from "@assets/img/stat/volunteer-stat.webp";
 
 		h2 span {
 			display: inline;
-		}
-
-		.stats-cards {
-			flex-wrap: nowrap;
-			gap: 16pt;
-		}
-
-		.stat-card {
-			padding: 140pt 12pt 12pt;
-		}
-
-		.stat-number {
-			font-size: 24pt;
-		}
-
-		.stat-label{
-			font-size: 10pt;
-		}
-
-		.stat-card::before {
-			opacity: 1;
-		}
-
-		.rewind {
-			margin-bottom: 64pt;
-			font-size: 18pt;
-		}
-
-		.review-title {
-			font-size: 14pt;
-			margin-bottom: 14pt;
-		}
-
-		.chart-area {
-			overflow-x: hidden;
-		}
-
-		canvas {
-			width: 100pt !important;
-			height: 60pt !important;
-		}
-
-		#schools-text {
-			height: 200pt;
 		}
 	}
 </style>
