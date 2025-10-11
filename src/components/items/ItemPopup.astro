@@ -122,7 +122,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 
 							return (
 								<div class="sub-item" data-sub-item-id={subItemId}>
-									<span class={"sub-item-name" + (subItem.name.length > 8 && " long")}>{subItem.name}</span>
+									<span class={"sub-item-name" + (subItem.name.length > 8 ? " long" :"")}>{subItem.name}</span>
 									<span class="sub-item-price">{subItem.price}</span>
 									<div
 										class="sub-item-controls"
@@ -505,6 +505,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 		display: flex;
 		align-items: center;
 		flex-wrap: wrap;
+		gap: 1rem;
 		margin-bottom: 0.5rem;
 		font-family: "Fira Mono", monospace;
 	}
@@ -519,7 +520,6 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 	.sub-item-price {
 		color: rgba(0, 0, 0, 0.6);
 		font-size: 1.1rem;
-		margin-right: 1rem;
 	}
 
 	.sub-item-controls {
