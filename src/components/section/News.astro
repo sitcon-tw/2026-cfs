@@ -66,37 +66,34 @@ const news: News[] = [
 			><img src={yahooNews.src} alt="yahoo.com" class="news-img" /></a
 		>
 		<div class="spacing"></div>
-		<Popup hero={false} btnText={t.title} id="news-popup">
-			<h3>{t.title}</h3>
-			<div class="things-container">
-				<button class="scroll-arrow scroll-left" aria-label="Scroll left">
-					<ChevronLeft />
-				</button>
-				<div class="things-area">
-					{
-						news.map(item => (
-							<div class="things-item">
-								<img src={item.img.src} alt={item.title} class="things-img" />
-								<div class="content">
-									<h4>{item.title}</h4>
-									<p class="things-description">{item.description}</p>
-								</div>
-							</div>
-						))
-					}
-				</div>
-				<button class="scroll-arrow scroll-right" aria-label="Scroll right">
-					<ChevronRight />
-				</button>
-			</div>
-		</Popup>
 	</div>
+	<Popup hero={false} btnText={t.title} id="news-popup">
+		<h3>{t.title}</h3>
+		<div class="things-container">
+			<button class="scroll-arrow scroll-left" aria-label="Scroll left">
+				<ChevronLeft />
+			</button>
+			<div class="things-area">
+				{
+					news.map(item => (
+						<div class="things-item">
+							<img src={item.img.src} alt={item.title} class="things-img" />
+							<div class="content">
+								<h4>{item.title}</h4>
+								<p class="things-description">{item.description}</p>
+							</div>
+						</div>
+					))
+				}
+			</div>
+			<button class="scroll-arrow scroll-right" aria-label="Scroll right">
+				<ChevronRight />
+			</button>
+		</div>
+	</Popup>
 </section>
 
 <style>
-	#news-popup {
-	}
-
 	h3 {
 		font-size: 2.5rem;
 		padding: 3rem 3rem 1rem;
@@ -232,7 +229,7 @@ const news: News[] = [
 		line-height: 134%;
 	}
 
-	@media screen and (max-height: 35rem), (max-width: 40rem) {
+	@media screen and (max-width: 40rem) {
 		.things-container {
 			padding-inline: 2rem;
 		}
@@ -256,11 +253,41 @@ const news: News[] = [
 	}
 
 	@media print {
-		#news {
-			display: none !important;
+		#news :global(.popup) {
+			page-break-inside: avoid;
 		}
-		.news-img {
-			width: 40vw;
+
+		.scroll-arrow {
+			display: none;
+		}
+
+		.things-item {
+			display: flex;
+		}
+
+		.things-area {
+			flex-direction: column;
+		}
+
+		.news-content {
+			max-width: 800px;
+		}
+
+		.things-item {
+			width: unset;
+		}
+
+		.things-img {
+			width: 150pt;
+		}
+
+		.things-item .content {
+			padding: 12pt 24pt;
+		}
+
+		h4 {
+			font-size: 14pt;
+			margin-bottom: 6pt;
 		}
 	}
 </style>
