@@ -22,7 +22,7 @@ export interface SubItem {
 
 export interface ItemDataRaw {
 	name: string;
-	order: string;
+	order: number;
 	quantity: string;
 	remaining: string;
 	unit: string;
@@ -49,7 +49,7 @@ export interface ItemDataRaw {
 export interface ItemData {
 	id: string;
 	name: string;
-	order: string;
+	order: number;
 	quantity: string;
 	remaining: string;
 	unit: string;

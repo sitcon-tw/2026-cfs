@@ -60,7 +60,7 @@ const defaultSchema = {
 		<meta name="twitter:image" content={ogImage.src} />
 		<meta name="twitter:card" content="summary_large_image" />
 		<slot name="schema">
-			<script type="application/ld+json" set:html={JSON.stringify(defaultSchema)} />
+			<script type="application/ld+json" set:html={JSON.stringify(defaultSchema)} is:inline />
 		</slot>
 		<link rel="icon" type="image/png" href="/2026/cfs/favicon/favicon-96x96.png" sizes="96x96" />
 		<link rel="icon" type="image/svg+xml" href="/2026/cfs/SITCON.svg" />
@@ -83,7 +83,6 @@ const defaultSchema = {
 
 			// popup 控制
 			const popupCtrl = (id = "", action = "open", updateUrl = true, find) => {
-				
 				const popupBg = find || document.querySelector(`#${id} + .popup-bg`);
 				if (action === "open") {
 					popupBg.style.display = "flex";

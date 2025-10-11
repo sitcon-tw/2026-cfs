@@ -154,7 +154,9 @@ const chartData = JSON.stringify({
 </section>
 
 <script>
+	// @ts-ignore - echarts esm interop
 	import * as echarts from "echarts";
+	type EChartsInstance = ReturnType<typeof echarts.init>;
 
 	const colors = ["#6CE5E8", "#40B8D5", "#2C8BBA", "#2F5F98", "#31356E", "#5E3967", "#895273", "#B97286", "#E28385"];
 	const socialMediaColors = ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40"];
@@ -162,15 +164,15 @@ const chartData = JSON.stringify({
 	const chartDataElement = document.getElementById("chart-data");
 	const chartData = chartDataElement ? JSON.parse(chartDataElement.textContent || "{}") : {};
 	// Store chart instances
-	let roleChart = null;
-	let levelChart = null;
-	let fbAgeChart = null;
-	let fbGenderChart = null;
-	let igAgeChart = null;
-	let igGenderChart = null;
+	let roleChart: EChartsInstance | null = null;
+	let levelChart: EChartsInstance | null = null;
+	let fbAgeChart: EChartsInstance | null = null;
+	let fbGenderChart: EChartsInstance | null = null;
+	let igAgeChart: EChartsInstance | null = null;
+	let igGenderChart: EChartsInstance | null = null;
 
 	// Helper function to create pie chart data
-	function createPieData(data, colors) {
+	function createPieData(data: Record<string, number>, colors: string[]) {
 		return Object.entries(data).map(([name, value], index) => ({
 			name,
 			value,
@@ -179,8 +181,8 @@ const chartData = JSON.stringify({
 	}
 
 	// Helper function to create ECharts pie chart option
-	function createPieOption(title, data, showPercentage = true) {
-		const total = data.reduce((sum, item) => sum + item.value, 0);
+	function createPieOption(title: string, data: Array<{ name: string; value: number; itemStyle: { color: string } }>, showPercentage = true) {
+		const total = data.reduce((sum: number, item: { name: string; value: number; itemStyle: { color: string } }) => sum + item.value, 0);
 
 		return {
 			title: {
@@ -221,7 +223,7 @@ const chartData = JSON.stringify({
 					},
 					label: {
 						show: true,
-						formatter: params => {
+						formatter: (params: any) => {
 							const percentage = ((params.value / total) * 100).toFixed(0);
 							if (params.value >= 100 || showPercentage) {
 								return `${params.name}\n${percentage}%`;
@@ -357,21 +359,18 @@ const chartData = JSON.stringify({
 	initMainCharts();
 
 	// Listen for popup open events
-	document.addEventListener("popupOpened", event => {
-		const customEvent = event;
+	document.addEventListener("popupOpened", (event: Event) => {
+		const customEvent = event as CustomEvent;
 		if (customEvent.detail && customEvent.detail.id === "stat-popup") {
 			setTimeout(initializeSocialMediaCharts, 200);
 		}
 	});
 
 	// Handle window resize
-	let resizeTimeout;
+	let resizeTimeout: ReturnType<typeof setTimeout> | undefined;
 	window.addEventListener("resize", () => {
 		clearTimeout(resizeTimeout);
 		resizeTimeout = setTimeout(() => {
-			// Recalculate dimensions on resize
-			const windowWidth = window.innerWidth;
-
 			[roleChart, levelChart, fbAgeChart, fbGenderChart, igAgeChart, igGenderChart].forEach(chart => {
 				if (chart) {
 					chart.resize();
