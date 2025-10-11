@@ -1,6 +1,8 @@
 ---
 const { t } = Astro.props;
 import FormInput from "../FormInput.astro";
+import CorporateQR from "@assets/img/qrcode-form.webp";
+import PersonalQR from "@assets/img/qrcode-personal.webp";
 ---
 
 <section id="form">
@@ -9,6 +11,16 @@ import FormInput from "../FormInput.astro";
 		<br class="rwd-hidden" />
 		{t.titleLine2}
 	</h2>
+	<div class="qrcodes">
+		<div>
+			<img src={CorporateQR.src} alt={t.qrAlt} />
+			<p>{t.corporateTitle}</p>
+		</div>
+		<div>
+			<img src={PersonalQR.src} alt={t.qrAlt} />
+			<p>{t.personal.qrcode}</p>
+		</div>
+	</div>
 	<div class="container">
 		<form id="sponsor-form" data-required-message={t.messages.required} data-leading-equal-message={t.messages.leadingEqual} data-error-message={t.messages.error}>
 			<h3>{t.corporateTitle}</h3>
@@ -264,6 +276,12 @@ import FormInput from "../FormInput.astro";
 		}
 	}
 
+	@media screen {
+		.qrcodes {
+			display: none;
+		}
+	}
+
 	@media print {
 		.container {
 			display: none;
@@ -272,6 +290,19 @@ import FormInput from "../FormInput.astro";
 		h2 {
 			margin: 0;
 			padding: 0;
+			margin-top: 32pt;
+		}
+
+		.qrcodes {
+			display: flex;
+			justify-content: center;
+			gap: 4rem;
+			margin-top: 2rem;
+			text-align: center;
+		}
+
+		.qrcodes img {
+			width: 80pt;
 		}
 	}
 </style>

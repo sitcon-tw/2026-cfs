@@ -314,7 +314,8 @@
 		},
 		"personal": {
 			"title": "或是以個人名義贊助 SITCON",
-			"cta": "立即贊助"
+			"cta": "立即贊助",
+			"qrcode": "個人贊助"
 		}
 	},
 	"about": {
