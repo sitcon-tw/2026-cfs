@@ -2,7 +2,6 @@
 const { t } = Astro.props;
 import { Plus, Check } from "@lucide/astro";
 import { loadItemsData, type ItemData } from "../../utils/items-loader";
-import ItemPopup from "@components/items/ItemPopup.astro";
 
 const lang = Astro.currentLocale || "zh-Hant";
 const itemsData = await loadItemsData(lang);
@@ -142,9 +141,7 @@ const categories = Object.keys(groupedItems);
 								title: itemName,
 								category: "addon",
 								image: "",
-								deadline: "",
-								quantity: 1,
-								maxQuantity: null
+								deadline: ""
 							});
 						}
 						updateAddButtons();

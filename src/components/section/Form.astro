@@ -121,7 +121,7 @@ import PersonalQR from "@assets/img/qrcode-personal.webp";
 				messageElement.textContent = requiredMessage;
 				return false;
 			}
-			for (const [key, value] of formData.entries()) {
+			for (const [, value] of formData.entries()) {
 				if (typeof value === "string" && value.startsWith("=")) {
 					messageElement.textContent = leadingEqualMessage;
 					return false;
