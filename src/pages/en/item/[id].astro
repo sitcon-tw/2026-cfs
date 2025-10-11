@@ -8,11 +8,49 @@ export async function getStaticPaths() {
 	
 	return items.map((item) => ({
 		params: { id: item.id },
-		props: { itemId: item.id, lang }
+		props: { 
+			item,
+			lang 
+		},
 	}));
 }
 
-const { itemId, lang } = Astro.props;
+const { item, lang } = Astro.props;
+const t = await import(`../../../i18n/${lang}.json`).then(m => m.default);
+
+// Generate SEO-friendly title and description
+const title = `${item.name} - ${t.meta.title}`;
+const description = item.global_description || t.meta.description;
+
+// Generate Product Schema for SEO
+const productSchema = {
+	"@context": "https://schema.org",
+	"@type": "Product",
+	"name": item.name,
+	"description": description,
+	"image": item.image ? `https://sitcon.org/2026/cfs/src/assets/img/items/${item.image}` : undefined,
+	"brand": {
+		"@type": "Organization",
+		"name": "SITCON"
+	},
+	"offers": {
+		"@type": "Offer",
+		"price": item.price || "0",
+		"priceCurrency": "TWD",
+		"availability": item.remaining && parseInt(item.remaining) > 0 
+			? "https://schema.org/InStock" 
+			: item.quantity === "不限"
+			? "https://schema.org/InStock"
+			: "https://schema.org/LimitedAvailability",
+		"priceValidUntil": item.deadline || undefined,
+		"seller": {
+			"@type": "Organization",
+			"name": "SITCON"
+		}
+	}
+};
 ---
 
-<Page lang={lang} />
+<Page lang={lang} title={title} description={description}>
+	<script type="application/ld+json" slot="schema" set:html={JSON.stringify(productSchema)} />
+</Page>
