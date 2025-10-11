@@ -281,8 +281,6 @@
 				category: string;
 				image: string;
 				deadline: string;
-				quantity?: number;
-				maxQuantity?: number | null;
 				price?: string;
 			}
 
@@ -343,7 +341,6 @@
 
 				const tableRows = items
 					.map((item, index) => {
-						const quantity = item.quantity || 1;
 						const itemPrice = item.price || "";
 						const isPlanItem = isPlanIncluded(itemPrice);
 
@@ -352,7 +349,7 @@
 						}
 
 						const pricePerUnit = formatPrice(itemPrice);
-						const subtotal = pricePerUnit * quantity;
+						const subtotal = pricePerUnit;
 						totalAmount += subtotal;
 
 						// const imageSrc = item.image.startsWith("http") ? item.image : `/src/assets/img/items/${item.image}`;
@@ -364,7 +361,7 @@
 								<div class="item-title">${item.title}</div>
 								${item.deadline ? `<div class="item-deadline">截止日期：${item.deadline}</div>` : ""}
 							</td>
-							<td class="quantity-cell">${quantity}</td>
+							<td class="quantity-cell">1</td>
 							<td class="price-cell">${itemPrice || "—"}</td>
 							<td class="subtotal-cell">${!isPlanItem && pricePerUnit > 0 ? formatCurrency(subtotal) : itemPrice || "—"}</td>
 						</tr>

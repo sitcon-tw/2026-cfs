@@ -79,12 +79,7 @@ import PersonalQR from "@assets/img/qrcode-personal.webp";
 			if (interestedItems.length === 0) return "";
 
 			const itemsList = interestedItems
-				.map(item => {
-					if (item.quantity && item.quantity > 1) {
-						return `${item.title} ${item.quantity} 份`;
-					}
-					return item.title;
-				})
+				.map(item => item.title)
 				.join("、");
 
 			return `感興趣的項目：${itemsList}`;
