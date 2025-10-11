@@ -113,6 +113,13 @@ const config = shopConfig;
 				(showText as HTMLElement).style.display = "inline";
 				(hideText as HTMLElement).style.display = "none";
 				(arrow as HTMLElement).style.transform = "rotate(0deg)";
+
+				const itemsSection = document.getElementById("items");
+				if (itemsSection) {
+					const yOffset = -20;
+					const y = itemsSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+					window.scrollTo({ top: y, behavior: "smooth" });
+				}
 			}
 		}
 
@@ -645,17 +652,16 @@ const config = shopConfig;
 	.cards-container {
 		position: relative;
 		margin-bottom: 3rem;
-		transition: all 0.3s ease;
+		transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+		overflow: hidden;
 	}
 
 	.cards-container.fade-active {
 		max-height: 800px;
-		overflow: hidden;
 	}
 
 	.cards-container.fade-hidden {
-		max-height: none;
-		overflow: visible;
+		max-height: 50000px;
 	}
 
 	.fade-overlay {
