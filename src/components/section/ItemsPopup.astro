@@ -1,8 +1,5 @@
 ---
-import { X, Heart } from "@lucide/astro";
 import { loadItemsData } from "../../utils/items-loader";
-import shopConfig from "@data/shop_config.json";
-import ItemCard from "@components/items/ItemCard.astro";
 import ItemPopup from "@components/items/ItemPopup.astro";
 
 const { t } = Astro.props;
@@ -26,538 +23,532 @@ const items = itemsUnsorted.sort((a, b) => {
 
 	declare function popupCtrl(id: string, action: string): void;
 
-	document.addEventListener("DOMContentLoaded", function () {
-		const expandButton = document.getElementById("expandButton");
-		const cardsContainer = document.querySelector(".cards-container");
-		const showText = expandButton ? expandButton.querySelector(".show-text") : null;
-		const hideText = expandButton ? expandButton.querySelector(".hide-text") : null;
-		const arrow = expandButton ? expandButton.querySelector(".arrow") : null;
+	const expandButton = document.getElementById("expandButton");
+	const cardsContainer = document.querySelector(".cards-container");
+	const showText = expandButton ? expandButton.querySelector(".show-text") : null;
+	const hideText = expandButton ? expandButton.querySelector(".hide-text") : null;
+	const arrow = expandButton ? expandButton.querySelector(".arrow") : null;
 
-		if (!expandButton || !cardsContainer || !showText || !hideText || !arrow) return;
+	let isExpanded = false,
+		canExpand = true,
+		isInitialLoad = true;
 
-		let isExpanded = false; // false = collapsed (fade-active), true = expanded (fade-hidden)
-		let canExpand = true;
-		let isInitialLoad = true; // Track if this is the initial page load
+	const applyExpandState = () => {
+		const shouldShowExpandedUI = !canExpand || isExpanded;
 
-		function applyExpandState() {
-			const shouldShowExpandedUI = !canExpand || isExpanded;
+		if (shouldShowExpandedUI) {
+			cardsContainer!.classList.remove("fade-active");
+			cardsContainer!.classList.add("fade-hidden");
+			(showText as HTMLElement).style.display = "none";
+			(hideText as HTMLElement).style.display = "inline";
+			(arrow as HTMLElement).style.transform = "rotate(180deg)";
+		} else {
+			cardsContainer!.classList.remove("fade-hidden");
+			cardsContainer!.classList.add("fade-active");
+			(showText as HTMLElement).style.display = "inline";
+			(hideText as HTMLElement).style.display = "none";
+			(arrow as HTMLElement).style.transform = "rotate(0deg)";
 
-			if (shouldShowExpandedUI) {
-				cardsContainer!.classList.remove("fade-active");
-				cardsContainer!.classList.add("fade-hidden");
-				(showText as HTMLElement).style.display = "none";
-				(hideText as HTMLElement).style.display = "inline";
-				(arrow as HTMLElement).style.transform = "rotate(180deg)";
-			} else {
-				cardsContainer!.classList.remove("fade-hidden");
-				cardsContainer!.classList.add("fade-active");
-				(showText as HTMLElement).style.display = "inline";
-				(hideText as HTMLElement).style.display = "none";
-				(arrow as HTMLElement).style.transform = "rotate(0deg)";
-
-				// Only scroll when collapsing via button click, not on initial page load
-				if (!isInitialLoad) {
-					const itemsSection = document.getElementById("items");
-					if (itemsSection) {
-						const yOffset = -20;
-						const y = itemsSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
-						window.scrollTo({ top: y, behavior: "smooth" });
-					}
+			// Only scroll when collapsing via button click, not on initial page load
+			if (!isInitialLoad) {
+				const itemsSection = document.getElementById("items");
+				if (itemsSection) {
+					const yOffset = -20;
+					const y = itemsSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+					window.scrollTo({ top: y, behavior: "smooth" });
 				}
 			}
 		}
+	};
 
-		expandButton.addEventListener("click", function () {
+	if (expandButton)
+		expandButton.addEventListener("click", () => {
 			isExpanded = !isExpanded;
 			isInitialLoad = false; // Mark that user has interacted
 			applyExpandState();
 		});
 
-		function getVisibleCards(cards: HTMLElement[]): HTMLElement[] {
-			return cards.filter(card => !card.classList.contains("package-exclusive-item"));
-		}
+	const getVisibleCards = (cards: HTMLElement[]): HTMLElement[] => cards.filter(card => !card.classList.contains("package-exclusive-item"));
 
-		function sortCards(selectedCategory: string) {
-			const cardsGrid = document.querySelector(".cards-grid");
-			if (!cardsGrid) return;
+	const sortCards = (selectedCategory: string) => {
+		const cardsGrid = document.querySelector(".cards-grid");
+		if (!cardsGrid) return;
 
-			const cards = Array.from(cardsGrid.querySelectorAll(".card")) as HTMLElement[];
-			// Count only visible cards (exclude package-exclusive-item)
-			let visibleCount = getVisibleCards(cards).length;
+		const cards = Array.from(cardsGrid.querySelectorAll(".card")) as HTMLElement[];
+		// Count only visible cards (exclude package-exclusive-item)
+		let visibleCount = getVisibleCards(cards).length;
 
-			if (selectedCategory === "all") {
-				// For "all", sort by order field
-				cards.sort((a, b) => {
-					const orderA = parseInt(a.getAttribute("data-order") || "0");
-					const orderB = parseInt(b.getAttribute("data-order") || "0");
-					return orderA - orderB;
-				});
-			} else {
-				// Sort by category-specific order field
-				let orderAttr = "data-order";
-				if (selectedCategory === "talent_recruitment") {
-					orderAttr = "data-talent-recruitment-order";
-				} else if (selectedCategory === "brand_exposure") {
-					orderAttr = "data-brand-exposure-order";
-				} else if (selectedCategory === "product_promotion") {
-					orderAttr = "data-product-promotion-order";
-				}
-
-				cards.sort((a, b) => {
-					const orderA = parseInt(a.getAttribute(orderAttr) || "999999");
-					const orderB = parseInt(b.getAttribute(orderAttr) || "999999");
-					return orderA - orderB;
-				});
-			}
-
-			// Update ItemCard descriptions based on selected category
-			cards.forEach(card => {
-				updateCardDescription(card, selectedCategory);
+		if (selectedCategory === "all") {
+			// For "all", sort by order field
+			cards.sort((a, b) => {
+				const orderA = parseInt(a.getAttribute("data-order") || "0");
+				const orderB = parseInt(b.getAttribute("data-order") || "0");
+				return orderA - orderB;
 			});
-
-			// Reorder cards in the DOM
-			cards.forEach(card => cardsGrid.appendChild(card));
-
-			updateExpandButtonVisibility(visibleCount);
-		}
-
-		function getCardsPerRowThreshold() {
-			const width = window.innerWidth;
-			if (width <= 768) {
-				return 2;
-			} else if (width <= 1024) {
-				return 4;
-			} else {
-				return 6;
+		} else {
+			// Sort by category-specific order field
+			let orderAttr = "data-order";
+			if (selectedCategory === "talent_recruitment") {
+				orderAttr = "data-talent-recruitment-order";
+			} else if (selectedCategory === "brand_exposure") {
+				orderAttr = "data-brand-exposure-order";
+			} else if (selectedCategory === "product_promotion") {
+				orderAttr = "data-product-promotion-order";
 			}
-		}
 
-		function updateCardDescription(card: HTMLElement, selectedCategory: string) {
-			const descriptionElement = card.querySelector(".description");
-			if (!descriptionElement) return;
-
-			// Get stored description data from card attributes
-			const descriptionData = card.getAttribute("data-descriptions");
-			if (descriptionData) {
-				try {
-					const descriptions = JSON.parse(descriptionData);
-					const newDescription = descriptions[selectedCategory] || descriptions["all"] || "";
-					descriptionElement.textContent = newDescription;
-				} catch (e) {
-					// Fallback to original description if JSON parsing fails
-				}
-			}
-		}
-
-		function updateExpandButtonVisibility(visibleCount: number) {
-			const expandButton = document.getElementById("expandButton");
-			if (!expandButton) return;
-
-			const threshold = getCardsPerRowThreshold();
-
-			if (visibleCount > threshold) {
-				canExpand = true;
-				expandButton.style.display = "flex";
-				applyExpandState();
-			} else {
-				canExpand = false;
-				expandButton.style.display = "none";
-				applyExpandState();
-			}
-		}
-
-		const tabButtons = document.querySelectorAll(".tab");
-		tabButtons.forEach(button => {
-			button.addEventListener("click", function () {
-				const buttonElement = button;
-
-				tabButtons.forEach(tab => tab.classList.remove("active"));
-
-				buttonElement.classList.add("active");
-
-				const category = buttonElement.getAttribute("data-category") || "all";
-
-				sortCards(category);
+			cards.sort((a, b) => {
+				const orderA = parseInt(a.getAttribute(orderAttr) || "999999");
+				const orderB = parseInt(b.getAttribute(orderAttr) || "999999");
+				return orderA - orderB;
 			});
+		}
+
+		// Update ItemCard descriptions based on selected category
+		cards.forEach(card => {
+			updateCardDescription(card, selectedCategory);
 		});
 
-		const totalCards = getVisibleCards(Array.from(document.querySelectorAll(".card")) as HTMLElement[]).length;
-		updateExpandButtonVisibility(totalCards);
-		applyExpandState();
+		// Reorder cards in the DOM
+		cards.forEach(card => cardsGrid.appendChild(card));
 
-		window.addEventListener("resize", function () {
-			const allCards = getVisibleCards(Array.from(document.querySelectorAll(".card")) as HTMLElement[]);
-			updateExpandButtonVisibility(allCards.length);
-		});
+		updateExpandButtonVisibility(visibleCount);
+	};
 
-		function syncAllAddButtons() {
-			const items = getInterestedItems();
-			const ids = new Set(items.map(i => i.id));
-			document.querySelectorAll(".add-button").forEach(btn => {
-				const id = btn.getAttribute("data-item-id") || "";
-
-				// Check if this item or any of its sub-items are in cart
-				let hasItemInCart = ids.has(id);
-
-				// Also check if any sub-items are in cart (sub-items have IDs like "parent-id-sub-0")
-				if (!hasItemInCart) {
-					for (const itemId of ids) {
-						if (itemId.startsWith(id + "-sub-")) {
-							hasItemInCart = true;
-							break;
-						}
-					}
-				}
-
-				if (hasItemInCart) btn.classList.add("added");
-				else btn.classList.remove("added");
-			});
+	const getCardsPerRowThreshold = () => {
+		const width = window.innerWidth;
+		if (width <= 768) {
+			return 2;
+		} else if (width <= 1024) {
+			return 4;
+		} else {
+			return 6;
 		}
+	};
 
-		function addCardClickHandlers() {
-			const cards = document.querySelectorAll(".card") as NodeListOf<HTMLElement>;
-			cards.forEach(card => {
-				const itemIdStr = card.getAttribute("data-card-id");
-				if (itemIdStr) {
-					card.style.cursor = "pointer";
-					card.addEventListener("click", function (e) {
-						const target = e.target as Element;
-						if (target.closest(".add-button")) {
-							return;
-						}
-						e.stopPropagation();
-						const popupId = `item-popup-${itemIdStr}`;
-						popupCtrl(popupId, "open");
-					});
-				}
-			});
-		}
+	const updateCardDescription = (card: HTMLElement, selectedCategory: string) => {
+		const descriptionElement = card.querySelector(".description");
+		if (!descriptionElement) return;
 
-		function updateCardHighlighting() {
-			const cards = document.querySelectorAll(".card");
-			cards.forEach(card => {
-				const cardId = card.getAttribute("data-card-id");
-				if (cardId) {
-					if (isItemInterested(cardId)) {
-						card.classList.add("highlighted");
-					} else {
-						card.classList.remove("highlighted");
-					}
-				}
-			});
-		}
-
-		document.addEventListener("click", function (e) {
-			const target = e.target;
-			if (!(target instanceof Element)) return;
-			const button = target.closest(".add-button");
-			if (!button) return;
-			e.preventDefault();
-			e.stopPropagation();
-			const id = button.getAttribute("data-item-id") || "";
-
-			// Check if this item has sub-items
-			const card = button.closest(".card");
-			const hasSubItems = card?.getAttribute("data-has-sub-items") === "true";
-
-			if (hasSubItems) {
-				// Open the popup for items with sub-items
-				const popupId = `item-popup-${id}`;
-				popupCtrl(popupId, "open");
-			} else {
-				// Toggle interested state for items without sub-items
-				const itemTitle = button.getAttribute("data-item-title") || "";
-				const itemImage = button.getAttribute("data-item-image") || "";
-				const itemPrice = button.getAttribute("data-item-price") || "";
-
-				if (isItemInterested(id)) {
-					// Remove from interested items
-					removeInterestedItem(id);
-				} else {
-					// Add to interested items with quantity 1
-					const deadlineEl = card?.querySelector(".deadline-tag");
-					const itemDeadline = deadlineEl?.textContent || "";
-
-					// Get display price (either actual price or plan inclusion info)
-					const displayPrice = getItemDisplayPrice(id, itemPrice);
-
-					addInterestedItem({
-						id: id,
-						title: itemTitle,
-						category: "all",
-						image: itemImage,
-						deadline: itemDeadline,
-						quantity: 1,
-						maxQuantity: 1,
-						price: displayPrice
-					});
-				}
-			}
-		});
-		function updateInterestButton() {
-			const items = getInterestedItems();
-			const countElement = document.querySelector(".interest-count");
-
-			if (countElement) {
-				if (items.length > 0) {
-					countElement.textContent = items.length.toString();
-				} else {
-					countElement.textContent = "";
-				}
-			}
-		}
-
-		// Add-button state is centralized here (delegated clicks + sync)
-
-		function renderInterestItemsList() {
-			const items = getInterestedItems();
-			const listContainer = document.getElementById("interestItemsList");
-
-			if (!listContainer) return;
-
-			if (items.length === 0) {
-				listContainer.innerHTML = `<div class="empty-state">${document.querySelector("[data-i18n-no-items]")?.textContent}</div>`;
-				return;
-			}
-
-			listContainer.innerHTML = "";
-
-			const removeIconTemplate = document.getElementById("removeIconTemplate") as HTMLTemplateElement | null;
-
-			items.forEach(item => {
-				const itemDiv = document.createElement("div");
-				itemDiv.className = "interest-item";
-				itemDiv.setAttribute("data-item-id", item.id);
-
-				const contentDiv = document.createElement("div");
-				contentDiv.className = "item-content";
-
-				const titleSpan = document.createElement("span");
-				titleSpan.className = "item-title";
-				titleSpan.textContent = item.title;
-
-				const removeButton = document.createElement("button");
-				removeButton.className = "remove-item";
-				removeButton.setAttribute("data-item-id", item.id);
-
-				if (removeIconTemplate) {
-					const iconClone = removeIconTemplate.content.cloneNode(true);
-					removeButton.appendChild(iconClone);
-				}
-
-				contentDiv.appendChild(titleSpan);
-				contentDiv.appendChild(removeButton);
-				itemDiv.appendChild(contentDiv);
-				listContainer.appendChild(itemDiv);
-			});
-
-			const removeButtons = listContainer.querySelectorAll(".remove-item");
-			removeButtons.forEach(button => {
-				button.addEventListener("click", function (e) {
-					e.stopPropagation();
-					const itemId = button.getAttribute("data-item-id") || "";
-					removeInterestedItem(itemId);
-				});
-			});
-		}
-
-		let previousInterestCount = getInterestedItems().length;
-
-		window.addEventListener("itemsChange", function (e: Event) {
-			updateInterestButton();
-			renderInterestItemsList();
-			updateCardHighlighting();
-
-			let currentCount = previousInterestCount;
+		// Get stored description data from card attributes
+		const descriptionData = card.getAttribute("data-descriptions");
+		if (descriptionData) {
 			try {
-				const ce = e as CustomEvent<{ items?: unknown[] }>;
-				if (ce?.detail && Array.isArray(ce.detail.items)) {
-					currentCount = ce.detail.items.length;
-				} else {
-					currentCount = getInterestedItems().length;
-				}
-			} catch {
-				currentCount = getInterestedItems().length;
-			}
-
-			if (currentCount > previousInterestCount) {
-				setTimeout(() => openPopover(), 0);
-			}
-
-			previousInterestCount = currentCount;
-		});
-
-		const interestButton = document.getElementById("interestButton");
-		const interestPopover = document.getElementById("interestPopover");
-
-		function openPopover() {
-			if (interestPopover) {
-				renderInterestItemsList();
-				interestPopover.classList.add("active");
+				const descriptions = JSON.parse(descriptionData);
+				const newDescription = descriptions[selectedCategory] || descriptions["all"] || "";
+				descriptionElement.textContent = newDescription;
+			} catch (e) {
+				// Fallback to original description if JSON parsing fails
 			}
 		}
+	};
 
-		function closePopover() {
-			if (interestPopover) {
-				interestPopover.classList.remove("active");
-			}
+	const updateExpandButtonVisibility = (visibleCount: number) => {
+		const expandButton = document.getElementById("expandButton");
+		if (!expandButton) return;
+
+		const threshold = getCardsPerRowThreshold();
+
+		if (visibleCount > threshold) {
+			canExpand = true;
+			expandButton.style.display = "flex";
+			applyExpandState();
+		} else {
+			canExpand = false;
+			expandButton.style.display = "none";
+			applyExpandState();
 		}
+	};
 
-		if (interestButton) {
-			interestButton.addEventListener("click", function (e) {
-				e.stopPropagation();
-				if (interestPopover?.classList.contains("active")) {
-					closePopover();
-				} else {
-					openPopover();
-				}
-			});
-		}
+	const tabButtons = document.querySelectorAll(".tab");
+	tabButtons.forEach(button => {
+		button.addEventListener("click", () => {
+			const buttonElement = button;
 
-		document.addEventListener("click", function (e) {
-			if (interestPopover?.classList.contains("active") && !interestPopover.contains(e.target as Node) && !interestButton?.contains(e.target as Node)) {
-				closePopover();
-			}
+			tabButtons.forEach(tab => tab.classList.remove("active"));
+
+			buttonElement.classList.add("active");
+
+			const category = buttonElement.getAttribute("data-category") || "all";
+
+			sortCards(category);
 		});
+	});
 
-		document.addEventListener("keydown", function (e) {
-			if (e.key === "Escape") {
-				closePopover();
-			}
-		});
+	const totalCards = getVisibleCards(Array.from(document.querySelectorAll(".card")) as HTMLElement[]).length;
+	updateExpandButtonVisibility(totalCards);
+	applyExpandState();
 
-		// Add click handler for download quote button
-		document.addEventListener("click", function (e) {
-			const target = e.target as Element;
+	window.addEventListener("resize", () => {
+		const allCards = getVisibleCards(Array.from(document.querySelectorAll(".card")) as HTMLElement[]);
+		updateExpandButtonVisibility(allCards.length);
+	});
 
-			// Handle download quote button
-			if (target.closest(".download-quote-btn")) {
-				e.preventDefault();
-				const quotationUrl = window.location.pathname + (window.location.pathname.endsWith("/") ? "quotation/" : "/quotation/");
-				window.open(quotationUrl, "_blank");
-				closePopover();
-			}
+	const syncAllAddButtons = () => {
+		const items = getInterestedItems();
+		const ids = new Set(items.map(i => i.id));
+		document.querySelectorAll(".add-button").forEach(btn => {
+			const id = btn.getAttribute("data-item-id") || "";
 
-			// Handle view plan details button
-			if (target.closest(".view-plan-btn")) {
-				e.preventDefault();
+			// Check if this item or any of its sub-items are in cart
+			let hasItemInCart = ids.has(id);
 
-				if (hasVisitedPlans) {
-					// Navigate to Form section if user has already visited Plans
-					const formSection = document.getElementById("form");
-					if (formSection) {
-						formSection.scrollIntoView({ behavior: "smooth" });
-						closePopover();
-					}
-				} else {
-					// Navigate to Plans section if user hasn't visited Plans yet
-					const plansSection = document.getElementById("plans");
-					if (plansSection) {
-						plansSection.scrollIntoView({ behavior: "smooth" });
-						closePopover();
-						// Mark that user has visited plans
-						hasVisitedPlans = true;
-						updateViewPlanButtonText();
-					}
-				}
-			}
-		});
-
-		updateInterestButton();
-		syncAllAddButtons();
-
-		const targetSections = ["items", "plans", "addons", "form"];
-		let currentSection = "";
-		let hasVisitedPlans = false;
-		let isButtonVisible = false;
-
-		// Store text constants for JavaScript access
-		const viewPlanDetailsText = document.getElementById("viewPlanBtnText")?.textContent || "檢視方案詳情";
-		const contactUsText = "聯絡我們";
-
-		function updateViewPlanButtonText() {
-			const viewPlanBtnText = document.getElementById("viewPlanBtnText");
-			if (viewPlanBtnText) {
-				if (hasVisitedPlans) {
-					viewPlanBtnText.textContent = contactUsText;
-				} else {
-					viewPlanBtnText.textContent = viewPlanDetailsText;
-				}
-			}
-		}
-
-		function updateInterestButtonVisibility() {
-			const interestButtons = document.querySelectorAll(".interest-button");
-
-			// Check if user is within the range of target sections
-			let isWithinTargetRange = false;
-			let foundSection = "";
-
-			// Determine which section is most visible for tracking purposes
-			for (const sectionName of targetSections) {
-				const section = document.getElementById(sectionName);
-				if (section) {
-					const rect = section.getBoundingClientRect();
-					const sectionHeight = rect.height;
-					const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
-
-					if (visibleHeight > sectionHeight * 0.3) {
-						foundSection = sectionName;
+			// Also check if any sub-items are in cart (sub-items have IDs like "parent-id-sub-0")
+			if (!hasItemInCart) {
+				for (const itemId of ids) {
+					if (itemId.startsWith(id + "-sub-")) {
+						hasItemInCart = true;
 						break;
 					}
 				}
 			}
 
-			// Update current section if it changed
-			if (foundSection && foundSection !== currentSection) {
-				currentSection = foundSection;
+			if (hasItemInCart) btn.classList.add("added");
+			else btn.classList.remove("added");
+		});
+	};
 
-				// Check if user has visited the plans section
-				if (foundSection === "plans" && !hasVisitedPlans) {
+	const addCardClickHandlers = () => {
+		const cards = document.querySelectorAll(".card") as NodeListOf<HTMLElement>;
+		cards.forEach(card => {
+			const itemIdStr = card.getAttribute("data-card-id");
+			if (itemIdStr) {
+				card.style.cursor = "pointer";
+				card.addEventListener("click", e => {
+					const target = e.target as Element;
+					if (target.closest(".add-button")) {
+						return;
+					}
+					e.stopPropagation();
+					const popupId = `item-popup-${itemIdStr}`;
+					popupCtrl(popupId, "open");
+				});
+			}
+		});
+	};
+
+	const updateCardHighlighting = () => {
+		const cards = document.querySelectorAll(".card");
+		cards.forEach(card => {
+			const cardId = card.getAttribute("data-card-id");
+			if (cardId) {
+				if (isItemInterested(cardId)) {
+					card.classList.add("highlighted");
+				} else {
+					card.classList.remove("highlighted");
+				}
+			}
+		});
+	};
+
+	document.addEventListener("click", e => {
+		const target = e.target;
+		if (!(target instanceof Element)) return;
+		const button = target.closest(".add-button");
+		if (!button) return;
+		e.preventDefault();
+		e.stopPropagation();
+		const id = button.getAttribute("data-item-id") || "";
+
+		// Check if this item has sub-items
+		const card = button.closest(".card");
+		const hasSubItems = card?.getAttribute("data-has-sub-items") === "true";
+
+		if (hasSubItems) {
+			// Open the popup for items with sub-items
+			const popupId = `item-popup-${id}`;
+			popupCtrl(popupId, "open");
+		} else {
+			// Toggle interested state for items without sub-items
+			const itemTitle = button.getAttribute("data-item-title") || "";
+			const itemImage = button.getAttribute("data-item-image") || "";
+			const itemPrice = button.getAttribute("data-item-price") || "";
+
+			if (isItemInterested(id)) {
+				// Remove from interested items
+				removeInterestedItem(id);
+			} else {
+				// Add to interested items with quantity 1
+				const deadlineEl = card?.querySelector(".deadline-tag");
+				const itemDeadline = deadlineEl?.textContent || "";
+
+				// Get display price (either actual price or plan inclusion info)
+				const displayPrice = getItemDisplayPrice(id, itemPrice);
+
+				addInterestedItem({
+					id: id,
+					title: itemTitle,
+					category: "all",
+					image: itemImage,
+					deadline: itemDeadline,
+					quantity: 1,
+					maxQuantity: 1,
+					price: displayPrice
+				});
+			}
+		}
+	});
+
+	const updateInterestButton = () => {
+		const items = getInterestedItems();
+		const countElement = document.querySelector(".interest-count");
+
+		if (countElement) {
+			if (items.length > 0) {
+				countElement.textContent = items.length.toString();
+			} else {
+				countElement.textContent = "";
+			}
+		}
+	};
+
+	const renderInterestItemsList = () => {
+		const items = getInterestedItems();
+		const listContainer = document.getElementById("interestItemsList");
+
+		if (!listContainer) return;
+
+		if (items.length === 0) {
+			listContainer.innerHTML = `<div class="empty-state">${document.querySelector("[data-i18n-no-items]")?.textContent}</div>`;
+			return;
+		}
+
+		listContainer.innerHTML = "";
+
+		const removeIconTemplate = document.getElementById("removeIconTemplate") as HTMLTemplateElement | null;
+
+		items.forEach(item => {
+			const itemDiv = document.createElement("div");
+			itemDiv.className = "interest-item";
+			itemDiv.setAttribute("data-item-id", item.id);
+
+			const contentDiv = document.createElement("div");
+			contentDiv.className = "item-content";
+
+			const titleSpan = document.createElement("span");
+			titleSpan.className = "item-title";
+			titleSpan.textContent = item.title;
+
+			const removeButton = document.createElement("button");
+			removeButton.className = "remove-item";
+			removeButton.setAttribute("data-item-id", item.id);
+
+			if (removeIconTemplate) {
+				const iconClone = removeIconTemplate.content.cloneNode(true);
+				removeButton.appendChild(iconClone);
+			}
+
+			contentDiv.appendChild(titleSpan);
+			contentDiv.appendChild(removeButton);
+			itemDiv.appendChild(contentDiv);
+			listContainer.appendChild(itemDiv);
+		});
+
+		const removeButtons = listContainer.querySelectorAll(".remove-item");
+		removeButtons.forEach(button => {
+			button.addEventListener("click", e => {
+				e.stopPropagation();
+				const itemId = button.getAttribute("data-item-id") || "";
+				removeInterestedItem(itemId);
+			});
+		});
+	};
+
+	let previousInterestCount = getInterestedItems().length;
+
+	window.addEventListener("itemsChange", (e: Event) => {
+		updateInterestButton();
+		renderInterestItemsList();
+		updateCardHighlighting();
+
+		let currentCount = previousInterestCount;
+		try {
+			const ce = e as CustomEvent<{ items?: unknown[] }>;
+			if (ce?.detail && Array.isArray(ce.detail.items)) {
+				currentCount = ce.detail.items.length;
+			} else {
+				currentCount = getInterestedItems().length;
+			}
+		} catch {
+			currentCount = getInterestedItems().length;
+		}
+
+		if (currentCount > previousInterestCount) {
+			setTimeout(() => openPopover(), 0);
+		}
+
+		previousInterestCount = currentCount;
+	});
+
+	const interestButton = document.getElementById("interestButton");
+	const interestPopover = document.getElementById("interestPopover");
+
+	const openPopover = () => {
+		if (interestPopover) {
+			renderInterestItemsList();
+			interestPopover.classList.add("active");
+		}
+	};
+
+	const closePopover = () => {
+		if (interestPopover) {
+			interestPopover.classList.remove("active");
+		}
+	};
+
+	if (interestButton) {
+		interestButton.addEventListener("click", e => {
+			e.stopPropagation();
+			if (interestPopover?.classList.contains("active")) {
+				closePopover();
+			} else {
+				openPopover();
+			}
+		});
+	}
+
+	document.addEventListener("click", e => {
+		if (interestPopover?.classList.contains("active") && !interestPopover.contains(e.target as Node) && !interestButton?.contains(e.target as Node)) {
+			closePopover();
+		}
+	});
+
+	document.addEventListener("keydown", e => {
+		if (e.key === "Escape") {
+			closePopover();
+		}
+	});
+
+	// Add click handler for download quote button
+	document.addEventListener("click", e => {
+		const target = e.target as Element;
+
+		// Handle download quote button
+		if (target.closest(".download-quote-btn")) {
+			e.preventDefault();
+			const quotationUrl = window.location.origin + "/2026/cfs/quotation";
+			window.open(quotationUrl, "_blank");
+			closePopover();
+		}
+
+		// Handle view plan details button
+		if (target.closest(".view-plan-btn")) {
+			e.preventDefault();
+
+			if (hasVisitedPlans) {
+				// Navigate to Form section if user has already visited Plans
+				const formSection = document.getElementById("form");
+				if (formSection) {
+					formSection.scrollIntoView({ behavior: "smooth" });
+					closePopover();
+				}
+			} else {
+				// Navigate to Plans section if user hasn't visited Plans yet
+				const plansSection = document.getElementById("plans");
+				if (plansSection) {
+					plansSection.scrollIntoView({ behavior: "smooth" });
+					closePopover();
+					// Mark that user has visited plans
 					hasVisitedPlans = true;
 					updateViewPlanButtonText();
 				}
 			}
-
-			// Calculate if user is within the range of target sections
-			const firstSection = document.getElementById(targetSections[0]);
-			const lastSection = document.getElementById(targetSections[targetSections.length - 1]);
-
-			if (firstSection && lastSection) {
-				const firstRect = firstSection.getBoundingClientRect();
-				const lastRect = lastSection.getBoundingClientRect();
-
-				const viewportBottom = window.innerHeight;
-
-				isWithinTargetRange = firstRect.top < viewportBottom && lastRect.bottom > 0;
-			}
-
-			// Show/hide button based on whether user is within target range
-			// Only update DOM if visibility state has changed
-			if (isWithinTargetRange !== isButtonVisible) {
-				isButtonVisible = isWithinTargetRange;
-				interestButtons.forEach(button => {
-					const buttonElement = button as HTMLElement;
-					buttonElement.style.display = isWithinTargetRange ? "flex" : "none";
-				});
-			}
 		}
-
-		let scrollTimeout: number | undefined;
-		function handleScroll() {
-			if (scrollTimeout) {
-				cancelAnimationFrame(scrollTimeout);
-			}
-			scrollTimeout = requestAnimationFrame(updateInterestButtonVisibility);
-		}
-
-		document.addEventListener("scroll", handleScroll);
-		window.addEventListener("resize", updateInterestButtonVisibility);
-
-		setTimeout(updateInterestButtonVisibility, 100);
-		window.addEventListener("itemsChange", syncAllAddButtons);
-		document.addEventListener("interested-items-changed", updateCardHighlighting);
-		addCardClickHandlers();
-		updateCardHighlighting();
 	});
+
+	updateInterestButton();
+	syncAllAddButtons();
+
+	const targetSections = ["items", "plans", "addons", "form"];
+	let currentSection = "";
+	let hasVisitedPlans = false;
+	let isButtonVisible = false;
+
+	// Store text constants for JavaScript access
+	const viewPlanDetailsText = document.getElementById("viewPlanBtnText")?.textContent || "檢視方案詳情";
+	const contactUsText = "聯絡我們";
+
+	const updateViewPlanButtonText = () => {
+		const viewPlanBtnText = document.getElementById("viewPlanBtnText");
+		if (viewPlanBtnText) {
+			if (hasVisitedPlans) {
+				viewPlanBtnText.textContent = contactUsText;
+			} else {
+				viewPlanBtnText.textContent = viewPlanDetailsText;
+			}
+		}
+	};
+
+	const updateInterestButtonVisibility = () => {
+		const interestButtons = document.querySelectorAll(".interest-button");
+
+		// Check if user is within the range of target sections
+		let isWithinTargetRange = false;
+		let foundSection = "";
+
+		// Determine which section is most visible for tracking purposes
+		for (const sectionName of targetSections) {
+			const section = document.getElementById(sectionName);
+			if (section) {
+				const rect = section.getBoundingClientRect();
+				const sectionHeight = rect.height;
+				const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+
+				if (visibleHeight > sectionHeight * 0.3) {
+					foundSection = sectionName;
+					break;
+				}
+			}
+		}
+
+		// Update current section if it changed
+		if (foundSection && foundSection !== currentSection) {
+			currentSection = foundSection;
+
+			// Check if user has visited the plans section
+			if (foundSection === "plans" && !hasVisitedPlans) {
+				hasVisitedPlans = true;
+				updateViewPlanButtonText();
+			}
+		}
+
+		// Calculate if user is within the range of target sections
+		const firstSection = document.getElementById(targetSections[0]);
+		const lastSection = document.getElementById(targetSections[targetSections.length - 1]);
+
+		if (firstSection && lastSection) {
+			const firstRect = firstSection.getBoundingClientRect();
+			const lastRect = lastSection.getBoundingClientRect();
+
+			const viewportBottom = window.innerHeight;
+
+			isWithinTargetRange = firstRect.top < viewportBottom && lastRect.bottom > 0;
+		}
+
+		// Show/hide button based on whether user is within target range
+		// Only update DOM if visibility state has changed
+		if (isWithinTargetRange !== isButtonVisible) {
+			isButtonVisible = isWithinTargetRange;
+			interestButtons.forEach(button => {
+				const buttonElement = button as HTMLElement;
+				buttonElement.style.display = isWithinTargetRange ? "flex" : "none";
+			});
+		}
+	};
+
+	let scrollTimeout: number | undefined;
+	const handleScroll = () => {
+		if (scrollTimeout) {
+			cancelAnimationFrame(scrollTimeout);
+		}
+		scrollTimeout = requestAnimationFrame(updateInterestButtonVisibility);
+	};
+
+	document.addEventListener("scroll", handleScroll);
+	window.addEventListener("resize", updateInterestButtonVisibility);
+
+	setTimeout(updateInterestButtonVisibility, 100);
+	window.addEventListener("itemsChange", syncAllAddButtons);
+	document.addEventListener("interested-items-changed", updateCardHighlighting);
+	addCardClickHandlers();
+	updateCardHighlighting();
 </script>

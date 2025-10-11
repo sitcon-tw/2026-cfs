@@ -2,50 +2,45 @@
 import Page from "../../index.astro";
 import { loadItemsData } from "../../../utils/items-loader";
 
-export async function getStaticPaths() {
+export const getStaticPaths = async () => {
 	const lang = "en";
 	const items = await loadItemsData(lang);
-	
-	return items.map((item) => ({
+
+	return items.map(item => ({
 		params: { id: item.id },
-		props: { 
+		props: {
 			item,
-			lang 
-		},
+			lang
+		}
 	}));
-}
+};
 
 const { item, lang } = Astro.props;
-const t = await import(`../../../i18n/${lang}.json`).then(m => m.default);
+const t = await import(`@i18n/${lang}.json`).then(m => m.default);
 
-// Generate SEO-friendly title and description
 const title = `${item.name} - ${t.meta.title}`;
 const description = item.global_description || t.meta.description;
 
-// Generate Product Schema for SEO
 const productSchema = {
 	"@context": "https://schema.org",
 	"@type": "Product",
-	"name": item.name,
-	"description": description,
-	"image": item.image ? `https://sitcon.org/2026/cfs/items/${item.image}` : undefined,
-	"brand": {
+	name: item.name,
+	description: description,
+	image: item.image ? `https://sitcon.org/2026/cfs/items/${item.image}` : undefined,
+	brand: {
 		"@type": "Organization",
-		"name": "SITCON"
+		name: "SITCON"
 	},
-	"offers": {
+	offers: {
 		"@type": "Offer",
-		"price": item.price ? parseFloat(item.price.toString().replace(/[^0-9.]/g, '')) : 0,
-		"priceCurrency": "TWD",
-		"availability": item.remaining && parseInt(item.remaining) > 0 
-			? "https://schema.org/InStock" 
-			: item.quantity === "不限"
-			? "https://schema.org/InStock"
-			: "https://schema.org/LimitedAvailability",
-		"priceValidUntil": item.deadline || undefined,
-		"seller": {
+		price: item.price ? parseFloat(item.price.toString().replace(/[^0-9.]/g, "")) : 0,
+		priceCurrency: "TWD",
+		availability:
+			item.remaining && parseInt(item.remaining) > 0 ? "https://schema.org/InStock" : item.quantity === "不限" ? "https://schema.org/InStock" : "https://schema.org/LimitedAvailability",
+		priceValidUntil: item.deadline || undefined,
+		seller: {
 			"@type": "Organization",
-			"name": "SITCON"
+			name: "SITCON"
 		}
 	}
 };
