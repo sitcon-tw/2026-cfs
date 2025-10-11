@@ -11,6 +11,7 @@ import edu from "@assets/img/edu.webp";
 import hackathon from "@assets/img/hackathon.webp";
 import camp from "@assets/img/camp.webp";
 import type { ImageMetadata } from "astro";
+import { ChevronLeft, ChevronRight } from "@lucide/astro";
 
 const { t } = Astro.props;
 type News = {
@@ -67,18 +68,26 @@ const news: News[] = [
 		<div class="spacing"></div>
 		<Popup hero={false} btnText={t.title} id="news-popup">
 			<h3>{t.title}</h3>
-			<div class="things-area">
-				{
-					news.map(item => (
-						<div class="things-item">
-							<img src={item.img.src} alt={item.title} class="things-img" />
-							<div class="content">
-								<h4>{item.title}</h4>
-								<p class="things-description">{item.description}</p>
+			<div class="things-container">
+				<button class="scroll-arrow scroll-left" aria-label="Scroll left">
+					<ChevronLeft />
+				</button>
+				<div class="things-area">
+					{
+						news.map(item => (
+							<div class="things-item">
+								<img src={item.img.src} alt={item.title} class="things-img" />
+								<div class="content">
+									<h4>{item.title}</h4>
+									<p class="things-description">{item.description}</p>
+								</div>
 							</div>
-						</div>
-					))
-				}
+						))
+					}
+				</div>
+				<button class="scroll-arrow scroll-right" aria-label="Scroll right">
+					<ChevronRight />
+				</button>
 			</div>
 		</Popup>
 	</div>
@@ -141,11 +150,57 @@ const news: News[] = [
 		height: 2rem;
 	}
 
+	.things-container {
+		position: relative;
+		padding: 0 3rem 3.5rem;
+	}
+
 	.things-area {
 		display: flex;
 		overflow-x: scroll;
 		gap: 1.5rem;
-		padding: 0 3rem 3.5rem;
+		scroll-behavior: smooth;
+		scrollbar-width: none; /* Firefox */
+		-ms-overflow-style: none; /* IE and Edge */
+	}
+
+	.things-area::-webkit-scrollbar {
+		display: none; /* Chrome, Safari, Opera */
+	}
+
+	.scroll-arrow {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		background: rgba(255, 255, 255, 0.9);
+		border: 1px solid #ddd;
+		border-radius: 50%;
+		width: 3rem;
+		height: 3rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		z-index: 10;
+		transition: all 0.3s;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	.scroll-arrow:hover {
+		background: white;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	}
+
+	.scroll-arrow:active {
+		transform: translateY(-50%) scale(0.95);
+	}
+
+	.scroll-left {
+		left: 0.8rem;
+	}
+
+	.scroll-right {
+		right: 0.8rem;
 	}
 
 	.things-item {
@@ -178,10 +233,13 @@ const news: News[] = [
 	}
 
 	@media screen and (max-height: 35rem), (max-width: 40rem) {
+		.things-container {
+			padding-inline: 2rem;
+		}
+
 		.things-area {
 			flex-direction: column;
 			align-items: center;
-			padding-inline: 2rem;
 		}
 
 		.content {
@@ -190,6 +248,10 @@ const news: News[] = [
 
 		h3 {
 			padding-inline: 2rem;
+		}
+
+		.scroll-arrow {
+			display: none;
 		}
 	}
 
@@ -202,3 +264,23 @@ const news: News[] = [
 		}
 	}
 </style>
+
+<script>
+	const scrollLeft = document.querySelector("#news-popup + .popup-bg .scroll-left") as HTMLButtonElement;
+	const scrollRight = document.querySelector("#news-popup + .popup-bg .scroll-right") as HTMLButtonElement;
+	const thingsArea = document.querySelector("#news-popup + .popup-bg .things-area") as HTMLElement;
+
+	scrollLeft.addEventListener("click", () => {
+		thingsArea.scrollBy({
+			left: -350,
+			behavior: "smooth"
+		});
+	});
+
+	scrollRight.addEventListener("click", () => {
+		thingsArea.scrollBy({
+			left: 350,
+			behavior: "smooth"
+		});
+	});
+</script>
