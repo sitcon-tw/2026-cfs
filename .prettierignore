@@ -1,1 +1,3 @@
 pnpm-lock.yaml
+src/data/item.json
+src/data/plan.json
