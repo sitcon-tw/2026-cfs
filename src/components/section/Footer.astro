@@ -18,7 +18,10 @@ const { t } = Astro.props;
 				<p>{t.description}</p>
 				<p class="qrcode-text">{t.scan_qrcode}</p>
 			</div>
-			<img src={qrcode.src} alt="QR Code" class="qrcode" />
+			<div class="qrcode-container">
+				<img src={qrcode.src} alt="QR Code" class="qrcode" />
+				<div>線上贊助徵求書</div>
+			</div>
 		</div>
 
 		<div class="footer-content">
@@ -241,7 +244,7 @@ const { t } = Astro.props;
 	}
 
 	@media screen {
-		.qrcode,
+		.qrcode-container,
 		.qrcode-text {
 			display: none;
 		}
@@ -252,15 +255,23 @@ const { t } = Astro.props;
 			break-inside: avoid;
 		}
 
+		p {
+			text-wrap: balance;
+		}
+
 		.collaboration-section {
 			display: flex;
-			gap: 16pt;
+			gap: 26pt;
 			justify-content: space-between;
 		}
 
-		.qrcode,
+		.qrcode-container,
 		.qrcode-text {
 			display: block;
+		}
+
+		.qrcode-container {
+			text-align: center;
 		}
 
 		.qrcode {

@@ -517,7 +517,7 @@
 	"footer": {
 		"collaboration": "後續合作",
 		"description": "我們期待各種形式的活動或媒體合作，如共同舉辦工作坊、黑客松或 Podcast 等，有任何想法都歡迎與我們聯繫。",
-		"scan_qrcode": "你可以掃描 QR Code 在線上贊助徵求書中填寫表單留下聯絡資訊。",
+		"scan_qrcode": "你可以掃描 QR Code（sitcon.org/cfs）在線上贊助徵求書中填寫表單留下聯絡資訊。",
 		"contact": "行銷與媒體聯絡人",
 		"email": "contact@sitcon.org",
 		"contact_list": ["巫玟槿 +886-963-584-326", "呂承紘 +886-965-508-785", "黃一晉 +886-922-686-223"],
