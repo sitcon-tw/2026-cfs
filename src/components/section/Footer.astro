@@ -98,6 +98,12 @@ const { t } = Astro.props;
 
 	a {
 		color: inherit;
+		transition: color 0.3s ease-out;
+		text-decoration: none;
+	}
+
+	a:hover {
+		color: #0171e3;
 	}
 
 	h3 {
@@ -174,11 +180,14 @@ const { t } = Astro.props;
 		justify-content: center;
 		color: #424242;
 		text-decoration: none;
-		transition: background-color 0.3s ease;
+		transition:
+			transform 0.3s ease,
+			filter 0.3s ease;
 	}
 
-	.social-icon svg {
-		width: 1.25rem;
+	.social-icon:hover {
+		transform: scale(1.1);
+		filter: brightness(1.2);
 	}
 
 	.past-websites {
@@ -264,7 +273,7 @@ const { t } = Astro.props;
 			height: 80pt;
 		}
 
-		.conference-title{
+		.conference-title {
 			margin-top: 150pt;
 		}
 	}

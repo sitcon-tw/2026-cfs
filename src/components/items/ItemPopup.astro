@@ -85,11 +85,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 						);
 					} else {
 						// Show only main item image (no carousel needed)
-						return images[imagePath] ? (
-							<Image src={images[imagePath]()} alt={item.image_description || item.name} />
-						) : (
-							<img src={item.image} alt={item.image_description || item.name} />
-						);
+						return images[imagePath] ? <Image src={images[imagePath]()} alt={item.image_description || item.name} /> : <img src={item.image} alt={item.image_description || item.name} />;
 					}
 				})()
 			}
@@ -98,9 +94,13 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 			<div class="item-meta">
 				{item.quantity === "獨家" && <span class="exclusive">{t.exclusive}</span>}
 				{item.quantity === "打包專屬" && <span class="package-exclusive">{t.package_exclusive}</span>}
-				{item.quantity !== "獨家" && item.quantity !== "打包專屬" && (
-					<span class="remaining" data-initial-remaining={item.remaining} data-unit={t.unit[item.unit] || item.unit}>{t.remaining} {item.remaining} {t.unit[item.unit] || item.unit}</span>
-				)}
+				{
+					item.quantity !== "獨家" && item.quantity !== "打包專屬" && (
+						<span class="remaining" data-initial-remaining={item.remaining} data-unit={t.unit[item.unit] || item.unit}>
+							{t.remaining} {item.remaining} {t.unit[item.unit] || item.unit}
+						</span>
+					)
+				}
 				<span class="category">{`${new Date(item.deadline).getMonth() + 1}/${new Date(item.deadline).getDate()}`} {t.deadline}</span>
 			</div>
 			<div class="title-row">
@@ -122,7 +122,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 
 							return (
 								<div class="sub-item" data-sub-item-id={subItemId}>
-									<span class={"sub-item-name" + (subItem.name.length > 8 ? " long" :"")}>{subItem.name}</span>
+									<span class={"sub-item-name" + (subItem.name.length > 8 ? " long" : "")}>{subItem.name}</span>
 									<span class="sub-item-price">{subItem.price}</span>
 									<div
 										class="sub-item-controls"
@@ -180,11 +180,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 			}
 
 			<div class="structured-descriptions">
-				{
-					item.global_description && (
-						<div set:html={marked.parse(item.global_description)} />
-					)
-				}
+				{item.global_description && <div set:html={marked.parse(item.global_description)} />}
 
 				{
 					item.talent_recruitment && (
@@ -704,7 +700,6 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 			return maxPerOrder;
 		}
 
-
 		// Sync sub-item quantity controls with localStorage (treats sub-items as regular items)
 		function syncSubItemControls(subItemId: string) {
 			try {
@@ -810,7 +805,6 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 
 				syncSubItemControls(subItemId);
 			}
-
 		});
 
 		// Listen to itemsChange events from localStorage

@@ -29,15 +29,15 @@ jobs:
 
             - name: Setup SSH
               run: |
-                mkdir -p ~/.ssh
-                echo "${{ secrets.PUSH_KEY }}" > ~/.ssh/id_ed25519
-                chmod 600 ~/.ssh/id_ed25519
-                ssh-keyscan github.com >> ~/.ssh/known_hosts
+                  mkdir -p ~/.ssh
+                  echo "${{ secrets.PUSH_KEY }}" > ~/.ssh/id_ed25519
+                  chmod 600 ~/.ssh/id_ed25519
+                  ssh-keyscan github.com >> ~/.ssh/known_hosts
 
             - name: Commit and push changes
               run: |
-                git config --local user.email "github-actions[bot]@users.noreply.github.com"
-                git config --local user.name "github-actions[bot]"
-                git add src/data/item.json src/data/plan.json src/assets/img/items/
-                git diff --staged --quiet || git commit -m "chore: update data from Google Sheets"
-                git push git@github.com:${{ github.repository }} HEAD:${{ github.ref }}
+                  git config --local user.email "github-actions[bot]@users.noreply.github.com"
+                  git config --local user.name "github-actions[bot]"
+                  git add src/data/item.json src/data/plan.json src/assets/img/items/
+                  git diff --staged --quiet || git commit -m "chore: update data from Google Sheets"
+                  git push git@github.com:${{ github.repository }} HEAD:${{ github.ref }}

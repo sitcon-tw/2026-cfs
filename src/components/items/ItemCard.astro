@@ -66,11 +66,13 @@ const totalRemaining = hasSubItems
 		<div class="tag">
 			{card.quantity === "獨家" && <div class="exclusive-tag">{t.exclusive}</div>}
 			{card.quantity === "打包專屬" && <div class="package-exclusive-tag">{t.package_exclusive}</div>}
-			{card.quantity !== "獨家" && card.quantity !== "打包專屬" && card.quantity !== "不限" && totalRemaining > 0 && (
-				<div class="remaining-tag" data-initial-remaining={totalRemaining} data-unit={t.unit[card.unit] || card.unit}>
-					{t.remaining} {totalRemaining} {t.unit[card.unit] || card.unit}
-				</div>
-			)}
+			{
+				card.quantity !== "獨家" && card.quantity !== "打包專屬" && card.quantity !== "不限" && totalRemaining > 0 && (
+					<div class="remaining-tag" data-initial-remaining={totalRemaining} data-unit={t.unit[card.unit] || card.unit}>
+						{t.remaining} {totalRemaining} {t.unit[card.unit] || card.unit}
+					</div>
+				)
+			}
 			<div class="deadline-tag">{`${new Date(card.deadline).getMonth() + 1}/${new Date(card.deadline).getDate()}`} {t.deadline}</div>
 		</div>
 	</div>
@@ -252,4 +254,3 @@ const totalRemaining = hasSubItems
 		height: unset;
 	}
 </style>
-
