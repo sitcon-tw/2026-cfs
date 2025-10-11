@@ -261,11 +261,11 @@ const chartData = JSON.stringify({
 
 			if (windowWidth > 1000) {
 				// Desktop: popup max-width is 1200px, with padding, 2 columns
-				chartWidth = Math.min((1200 - 120) / 2, 400); // 64px total padding
-				chartHeight = 450;
+				chartWidth = Math.min((window.innerWidth - 150) / 2, 480); // 480
+				chartHeight = 540;
 			} else if (windowWidth > 768) {
 				// Tablet: single column
-				chartWidth = Math.min(windowWidth - 100, 550);
+				chartWidth = Math.min(windowWidth - 100, 480);
 				chartHeight = 400;
 			} else {
 				// Mobile: single column, smaller
@@ -444,6 +444,9 @@ const chartData = JSON.stringify({
 		padding: 1rem 2rem;
 		font-weight: 700;
 		line-height: 125%;
+	}
+	.stats-cards {
+		gap: 1rem;
 	}
 
 	.stats-cards,
