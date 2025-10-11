@@ -13,6 +13,7 @@
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.9.4",
+		"@astrojs/sitemap": "^3.6.0",
 		"@lucide/astro": "^0.543.0",
 		"astro": "^5.13.7",
 		"chart.js": "^4.5.0",
