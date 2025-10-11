@@ -107,6 +107,7 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 	.show {
 		opacity: 1;
 		pointer-events: auto;
+		cursor: pointer;
 	}
 
 	.popup {
@@ -120,6 +121,7 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 		transition: 0.3s ease-in-out;
 		position: relative;
 		padding-bottom: 2rem;
+		cursor: auto;
 	}
 	.no-hero.popup {
 		padding-bottom: 0;
@@ -234,5 +236,12 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 
 	document.querySelector(`#${id} + .popup-bg .close-btn`)?.addEventListener("click", () => {
 		popupCtrl(id, "close");
+	});
+
+	// Close popup when clicking on background
+	document.querySelector(`#${id} + .popup-bg`)?.addEventListener("click", (e) => {
+		if (e.target === e.currentTarget) {
+			popupCtrl(id, "close");
+		}
 	});
 </script>
