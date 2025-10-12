@@ -265,29 +265,6 @@ function normalizeUnit(chineseUnit) {
 	return unitMap[chineseUnit] || chineseUnit;
 }
 
-/**
- * Remove Chinese unit suffix from quantity string (e.g., "4 場" -> "4")
- * @param {string} quantityStr - The quantity string that might contain a Chinese unit
- * @returns {string} - The quantity without the unit suffix
- */
-function removeChineseUnit(quantityStr) {
-	if (!quantityStr) return "";
-
-	const str = quantityStr.toString().trim();
-
-	// List of Chinese unit characters to remove
-	const chineseUnits = ["份", "個", "張", "場", "則", "項", "秒", "次"];
-
-	// Remove any trailing Chinese unit
-	let result = str;
-	for (const unit of chineseUnits) {
-		// Remove the unit if it appears at the end (with or without space before it)
-		result = result.replace(new RegExp(`\\s*${unit}\\s*$`), "");
-	}
-
-	return result.trim();
-}
-
 function extractSubItems(itemRow) {
 	const subItems = [];
 	const MAX_SUB_ITEMS = 50; // Safety limit to prevent infinite loops
