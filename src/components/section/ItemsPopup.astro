@@ -2,9 +2,7 @@
 import { loadItemsData } from "../../utils/items-loader";
 import ItemPopup from "@components/items/ItemPopup.astro";
 
-const { t } = Astro.props;
-
-const lang = Astro.url.pathname.includes("/en") ? "en" : "zh-Hant";
+const { t, lang } = Astro.props;
 const itemsUnsorted = await loadItemsData(lang); // Keep all items including "打包專屬"
 // Sort items by order field for initial "all" category display
 const items = itemsUnsorted.sort((a, b) => {
@@ -14,7 +12,7 @@ const items = itemsUnsorted.sort((a, b) => {
 });
 ---
 
-{items.map(item => <ItemPopup item={item} t={t} popupId={`item-popup-${item.id}`} />)}
+{items.map(item => <ItemPopup item={item} t={t} lang={lang} popupId={`item-popup-${item.id}`} />)}
 
 <script>
 	import { getInterestedItems, removeInterestedItem, isItemInterested, addInterestedItem } from "../../utils/local-storage.ts";

@@ -220,7 +220,7 @@ const defaultSchema = {
 			sections.map(Component => {
 				// 簡單來說就是複製貼上所有 HTML 上來，只是用 for 迴圈寫比較簡潔。
 				const key = Component.name.toLowerCase();
-				return <Component t={{ ...t[key], ...t.global }} />;
+				return <Component t={{ ...t[key], ...t.global }} lang={lang} />;
 			})
 		}
 		<script>
