@@ -8,12 +8,35 @@ import type { SubItem } from "../../utils/items-loader";
 
 const { item, t, popupId } = Astro.props;
 
+// Detect language from URL
+const lang = Astro.url.pathname.includes("/en") ? "en" : "zh-Hant";
+
 // Find this item in plan.json benefits and collect tier info
 const tiers = [
-	{ id: "navigator", name: planData.navigator.name_zh, nameEn: planData.navigator.name_en, textColor: "#FF928A", data: planData.navigator },
-	{ id: "deep_cultivation", name: planData.deep_cultivation.name_zh, nameEn: planData.deep_cultivation.name_en, textColor: "#537FF1", data: planData.deep_cultivation },
-	{ id: "visionary", name: planData.visionary.name_zh, nameEn: planData.visionary.name_en, textColor: "#6FD195", data: planData.visionary },
-	{ id: "new_sprout", name: planData.new_sprout.name_zh, nameEn: planData.new_sprout.name_en, textColor: "#77B55A", data: planData.new_sprout }
+	{
+		id: "navigator",
+		name: lang === "en" ? planData.navigator.name_en : planData.navigator.name_zh,
+		textColor: "#FF928A",
+		data: planData.navigator
+	},
+	{
+		id: "deep_cultivation",
+		name: lang === "en" ? planData.deep_cultivation.name_en : planData.deep_cultivation.name_zh,
+		textColor: "#537FF1",
+		data: planData.deep_cultivation
+	},
+	{
+		id: "visionary",
+		name: lang === "en" ? planData.visionary.name_en : planData.visionary.name_zh,
+		textColor: "#6FD195",
+		data: planData.visionary
+	},
+	{
+		id: "new_sprout",
+		name: lang === "en" ? planData.new_sprout.name_en : planData.new_sprout.name_zh,
+		textColor: "#77B55A",
+		data: planData.new_sprout
+	}
 ];
 
 // Check if this item appears in any plan tier

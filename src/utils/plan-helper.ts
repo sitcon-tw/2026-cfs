@@ -1,4 +1,5 @@
 import planData from "@data/plan.json" with { type: "json" };
+import type { ItemDataRaw } from "./items-loader.js";
 
 interface Plan {
 	id: string;
@@ -14,6 +15,77 @@ interface Plan {
 }
 
 const plans: Plan[] = Object.values(planData);
+
+// Cache for item data to avoid repeated imports
+let itemDataCache: Record<string, ItemDataRaw> | null = null;
+
+/**
+ * Load and cache item data
+ */
+async function getItemData(): Promise<Record<string, ItemDataRaw>> {
+	if (!itemDataCache) {
+		const itemModule = await import("../data/item.json");
+		itemDataCache = itemModule.default as Record<string, ItemDataRaw>;
+	}
+	return itemDataCache;
+}
+
+/**
+ * Find an item by Chinese name (name_zh) or by ID
+ * @param itemNameOrId The Chinese name or ID to search for
+ * @returns Object with itemId and itemData, or null if not found
+ */
+export async function findItemByNameOrId(itemNameOrId: string): Promise<{ itemId: string; itemData: ItemDataRaw } | null> {
+	const items = await getItemData();
+
+	// First try direct ID match
+	if (items[itemNameOrId]) {
+		return { itemId: itemNameOrId, itemData: items[itemNameOrId] };
+	}
+
+	// Then try matching by name_zh
+	for (const [id, item] of Object.entries(items)) {
+		if (item.name_zh === itemNameOrId) {
+			return { itemId: id, itemData: item };
+		}
+
+		// Also check sub-items
+		for (let i = 0; i < item.sub.length; i++) {
+			if (item.sub[i].name_zh === itemNameOrId) {
+				return { itemId: `${id}-sub-${i}`, itemData: item };
+			}
+		}
+	}
+
+	return null;
+}
+
+/**
+ * Get localized name for a plan benefit
+ * @param benefit The benefit object from plan.json
+ * @param lang Language code ("zh-Hant" or "en")
+ * @returns Localized name string
+ */
+export async function getBenefitLocalizedName(benefit: { item_id: string; item_name: string; quantity: string }, lang: string = "zh-Hant"): Promise<string> {
+	// If we have an item_id, use it to look up the item
+	if (benefit.item_id) {
+		const result = await findItemByNameOrId(benefit.item_id);
+		if (result) {
+			return lang === "en" ? result.itemData.name_en : result.itemData.name_zh;
+		}
+	}
+
+	// If no item_id, try to match by Chinese name
+	if (benefit.item_name) {
+		const result = await findItemByNameOrId(benefit.item_name);
+		if (result) {
+			return lang === "en" ? result.itemData.name_en : result.itemData.name_zh;
+		}
+	}
+
+	// Fallback to the original item_name
+	return benefit.item_name;
+}
 
 /**
  * Find the minimal (cheapest) plan that includes a specific item

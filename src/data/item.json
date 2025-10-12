@@ -1,6 +1,7 @@
 {
   "1": {
-    "name": "午餐旗、點心旗",
+    "name_zh": "午餐旗、點心旗",
+    "name_en": "Lunch Flag, Snack Flag",
     "order": 6,
     "quantity": "獨家",
     "remaining": "",
@@ -44,7 +45,8 @@
     ]
   },
   "2": {
-    "name": "一次性紙餐墊",
+    "name_zh": "一次性紙餐墊",
+    "name_en": "Disposable Paper Placemat",
     "order": 11,
     "quantity": "獨家",
     "remaining": "1",
@@ -69,7 +71,8 @@
     "sub": []
   },
   "3": {
-    "name": "樓梯欄杆垂掛布條展出",
+    "name_zh": "樓梯欄杆垂掛布條展出",
+    "name_en": "Stair Railing Hanging Banner Display",
     "order": 30,
     "quantity": "max 2",
     "remaining": "2",
@@ -94,7 +97,8 @@
     "sub": []
   },
   "4": {
-    "name": "樓梯打卡牆",
+    "name_zh": "樓梯打卡牆",
+    "name_en": "Staircase Check-in Wall",
     "order": 15,
     "quantity": "獨家",
     "remaining": "1",
@@ -119,7 +123,8 @@
     "sub": []
   },
   "5": {
-    "name": "獨家帆布袋",
+    "name_zh": "獨家帆布袋",
+    "name_en": "Exclusive Canvas Bag",
     "order": 3,
     "quantity": "獨家",
     "remaining": "",
@@ -163,7 +168,8 @@
     ]
   },
   "6": {
-    "name": "Badge 繩廠商 Logo 曝光",
+    "name_zh": "Badge 繩廠商 Logo 曝光",
+    "name_en": "Badge Lanyard Vendor Logo Exposure",
     "order": 1,
     "quantity": "獨家",
     "remaining": "1",
@@ -188,7 +194,8 @@
     "sub": []
   },
   "7": {
-    "name": "年會 T-shirt Logo 曝光",
+    "name_zh": "年會 T-shirt Logo 曝光",
+    "name_en": "Conference T-shirt Logo Exposure",
     "order": 2,
     "quantity": "獨家",
     "remaining": "1",
@@ -213,7 +220,8 @@
     "sub": []
   },
   "8": {
-    "name": "工作人員徽章曝光",
+    "name_zh": "工作人員徽章曝光",
+    "name_en": "Staff Badge Exposure",
     "order": 23,
     "quantity": "獨家",
     "remaining": "1",
@@ -238,7 +246,8 @@
     "sub": []
   },
   "9": {
-    "name": "SITCON 貼紙置入",
+    "name_zh": "SITCON 貼紙置入",
+    "name_en": "SITCON Sticker Placement",
     "order": 9,
     "quantity": "獨家",
     "remaining": "1",
@@ -263,7 +272,8 @@
     "sub": []
   },
   "10": {
-    "name": "面紙包",
+    "name_zh": "面紙包",
+    "name_en": "Tissue Pack",
     "order": 25,
     "quantity": "max 2",
     "remaining": "1",
@@ -288,7 +298,8 @@
     "sub": []
   },
   "11": {
-    "name": "明信片",
+    "name_zh": "明信片",
+    "name_en": "Postcard",
     "order": 24,
     "quantity": "獨家",
     "remaining": "1",
@@ -313,7 +324,8 @@
     "sub": []
   },
   "12": {
-    "name": "網路宣傳",
+    "name_zh": "網路宣傳",
+    "name_en": "Online Promotion",
     "order": 27,
     "quantity": "不限",
     "remaining": "",
@@ -384,7 +396,8 @@
     ]
   },
   "13": {
-    "name": "OPass App 推播公告",
+    "name_zh": "OPass App 推播公告",
+    "name_en": "OPass App Push Notification",
     "order": 29,
     "quantity": "max 5",
     "remaining": "5",
@@ -409,7 +422,8 @@
     "sub": []
   },
   "14": {
-    "name": "獨家議程",
+    "name_zh": "獨家議程",
+    "name_en": "Exclusive Session",
     "order": 7,
     "quantity": "獨家",
     "remaining": "",
@@ -462,7 +476,8 @@
     ]
   },
   "15": {
-    "name": "遠距會議室議程",
+    "name_zh": "遠距會議室議程",
+    "name_en": "Remote Meeting Room Session",
     "order": 8,
     "quantity": "max 2",
     "remaining": "",
@@ -506,7 +521,8 @@
     ]
   },
   "16": {
-    "name": "會場攤位加大",
+    "name_zh": "會場攤位加大",
+    "name_en": "Expanded Booth Space",
     "order": 14,
     "quantity": "不限",
     "remaining": "",
@@ -531,7 +547,8 @@
     "sub": []
   },
   "17": {
-    "name": "R0 影片輪播加時",
+    "name_zh": "R0 影片輪播加時",
+    "name_en": "Extended R0 Video Loop Time",
     "order": 32,
     "quantity": "不限",
     "remaining": "",
@@ -556,7 +573,8 @@
     "sub": []
   },
   "18": {
-    "name": "拍貼機贊助商方案",
+    "name_zh": "拍貼機贊助商方案",
+    "name_en": "Photo Booth Sponsorship Package",
     "order": 12,
     "quantity": "max 3",
     "remaining": "3",
@@ -581,7 +599,8 @@
     "sub": []
   },
   "19": {
-    "name": "SITCON 網站議程表置入",
+    "name_zh": "SITCON 網站議程表置入",
+    "name_en": "SITCON Website Agenda Placement",
     "order": 21,
     "quantity": "不限",
     "remaining": "",
@@ -606,7 +625,8 @@
     "sub": []
   },
   "20": {
-    "name": "洗手間標語曝光",
+    "name_zh": "洗手間標語曝光",
+    "name_en": "Restroom Signage Exposure",
     "order": 16,
     "quantity": "獨家",
     "remaining": "1",
@@ -631,7 +651,8 @@
     "sub": []
   },
   "21": {
-    "name": "「遠道而來票」獨家冠名",
+    "name_zh": "「遠道而來票」獨家冠名",
+    "name_en": "Title Sponsorship of the \"Come From Afar\" Ticket",
     "order": 28,
     "quantity": "獨家",
     "remaining": "1",
@@ -656,7 +677,8 @@
     "sub": []
   },
   "22": {
-    "name": "會議室椅套曝光",
+    "name_zh": "會議室椅套曝光",
+    "name_en": "Conference Room Chair Cover Exposure",
     "order": 5,
     "quantity": "max 3",
     "remaining": "",
@@ -709,7 +731,8 @@
     ]
   },
   "23": {
-    "name": "獨家導遊團行程",
+    "name_zh": "獨家導遊團行程",
+    "name_en": "Exclusive Guided Tour",
     "order": 4,
     "quantity": "獨家",
     "remaining": "1",
@@ -734,7 +757,8 @@
     "sub": []
   },
   "24": {
-    "name": "SITCON 會場指標置入",
+    "name_zh": "SITCON 會場指標置入",
+    "name_en": "SITCON Venue Signage Placement",
     "order": 13,
     "quantity": "獨家",
     "remaining": "1",
@@ -759,7 +783,8 @@
     "sub": []
   },
   "25": {
-    "name": "SITCON 與會者 Email 推播置入",
+    "name_zh": "SITCON 與會者 Email 推播置入",
+    "name_en": "SITCON Attendee Email Promotion Placement",
     "order": 22,
     "quantity": "max 5",
     "remaining": "5",
@@ -784,7 +809,8 @@
     "sub": []
   },
   "26": {
-    "name": "年會開閉幕口播",
+    "name_zh": "年會開閉幕口播",
+    "name_en": "Conference Opening & Closing Ceremony Mentions",
     "order": 10,
     "quantity": "max 3",
     "remaining": "3",
@@ -809,7 +835,8 @@
     "sub": []
   },
   "27": {
-    "name": "會場電視輪播",
+    "name_zh": "會場電視輪播",
+    "name_en": "TV Screen Loop Exposure",
     "order": 19,
     "quantity": "不限",
     "remaining": "",
@@ -834,7 +861,8 @@
     "sub": []
   },
   "28": {
-    "name": "會場攤位",
+    "name_zh": "會場攤位",
+    "name_en": "Exhibition Booth",
     "order": 20,
     "quantity": "打包專屬",
     "remaining": "",
@@ -859,7 +887,8 @@
     "sub": []
   },
   "29": {
-    "name": "R0 影片輪播",
+    "name_zh": "R0 影片輪播",
+    "name_en": "R0 Video Loop",
     "order": 31,
     "quantity": "打包專屬",
     "remaining": "",
@@ -884,7 +913,8 @@
     "sub": []
   },
   "30": {
-    "name": "迎賓袋文宣",
+    "name_zh": "迎賓袋文宣",
+    "name_en": "Welcome Bag Brochure Insertion",
     "order": 36,
     "quantity": "打包專屬",
     "remaining": "",
@@ -909,7 +939,8 @@
     "sub": []
   },
   "31": {
-    "name": "贈票",
+    "name_zh": "贈票",
+    "name_en": "Complimentary Tickets",
     "order": 40,
     "quantity": "打包專屬",
     "remaining": "",
@@ -934,7 +965,8 @@
     "sub": []
   },
   "32": {
-    "name": "接駁車車內廣播",
+    "name_zh": "接駁車車內廣播",
+    "name_en": "Shuttle Bus Onboard Announcement",
     "order": 17,
     "quantity": "打包專屬",
     "remaining": "",
@@ -959,7 +991,8 @@
     "sub": []
   },
   "33": {
-    "name": "R0 議程前夥伴宣讀",
+    "name_zh": "R0 議程前夥伴宣讀",
+    "name_en": "R0 Pre-session Partner Acknowledgment",
     "order": 34,
     "quantity": "打包專屬",
     "remaining": "",
@@ -984,7 +1017,8 @@
     "sub": []
   },
   "34": {
-    "name": "直播模板  Logo 曝光",
+    "name_zh": "直播模板  Logo 曝光",
+    "name_en": "Livestream Template Logo Exposure",
     "order": 35,
     "quantity": "打包專屬",
     "remaining": "",
@@ -1009,7 +1043,8 @@
     "sub": []
   },
   "35": {
-    "name": "門口議程表 Logo 曝光",
+    "name_zh": "門口議程表 Logo 曝光",
+    "name_en": "Entrance Agenda Board Logo Exposure",
     "order": 39,
     "quantity": "打包專屬",
     "remaining": "",
@@ -1034,7 +1069,8 @@
     "sub": []
   },
   "36": {
-    "name": "議程廳講者背板",
+    "name_zh": "議程廳講者背板",
+    "name_en": "Speaker Backdrop in Session Halls",
     "order": 33,
     "quantity": "打包專屬",
     "remaining": "",
@@ -1059,7 +1095,8 @@
     "sub": []
   },
   "37": {
-    "name": "入口落地窗背板",
+    "name_zh": "入口落地窗背板",
+    "name_en": "Entrance Floor-to-ceiling Window Backdrop",
     "order": 18,
     "quantity": "打包專屬",
     "remaining": "",
@@ -1084,7 +1121,8 @@
     "sub": []
   },
   "38": {
-    "name": "年會意象背板",
+    "name_zh": "年會意象背板",
+    "name_en": "Conference Theme Backdrop",
     "order": 26,
     "quantity": "打包專屬",
     "remaining": "",
@@ -1109,7 +1147,8 @@
     "sub": []
   },
   "39": {
-    "name": "年會共筆 Logo 曝光",
+    "name_zh": "年會共筆 Logo 曝光",
+    "name_en": "Conference Collaborative Notes Logo Exposure",
     "order": 38,
     "quantity": "打包專屬",
     "remaining": "",
@@ -1134,7 +1173,8 @@
     "sub": []
   },
   "40": {
-    "name": "網頁 Logo 曝光",
+    "name_zh": "網頁 Logo 曝光",
+    "name_en": "Website Logo Exposure",
     "order": 37,
     "quantity": "打包專屬",
     "remaining": "",

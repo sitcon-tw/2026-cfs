@@ -3,8 +3,9 @@ const { t } = Astro.props;
 import { Container } from "@lucide/astro";
 import planData from "@data/plan.json";
 import { loadItemsData } from "../../utils/items-loader";
+import { getBenefitLocalizedName } from "../../utils/plan-helper";
 
-const lang = Astro.currentLocale || "zh-Hant";
+const lang = Astro.url.pathname.includes("/en") ? "en" : "zh-Hant";
 const itemsData = await loadItemsData(lang);
 
 // Create a lookup map for quick item access by ID
@@ -12,10 +13,30 @@ const itemsMap = new Map(itemsData.map(item => [item.id, item]));
 
 // Transform plan.json data to match the table structure
 const tiers = [
-	{ id: "navigator", name: planData.navigator.name_zh, nameEn: planData.navigator.name_en, price: planData.navigator.price, textColor: "#FF928A" },
-	{ id: "deep_cultivation", name: planData.deep_cultivation.name_zh, nameEn: planData.deep_cultivation.name_en, price: planData.deep_cultivation.price, textColor: "#537FF1" },
-	{ id: "visionary", name: planData.visionary.name_zh, nameEn: planData.visionary.name_en, price: planData.visionary.price, textColor: "#6FD195" },
-	{ id: "new_sprout", name: planData.new_sprout.name_zh, nameEn: planData.new_sprout.name_en, price: planData.new_sprout.price, textColor: "#77B55A" }
+	{
+		id: "navigator",
+		name: lang === "en" ? planData.navigator.name_en : planData.navigator.name_zh,
+		price: planData.navigator.price,
+		textColor: "#FF928A"
+	},
+	{
+		id: "deep_cultivation",
+		name: lang === "en" ? planData.deep_cultivation.name_en : planData.deep_cultivation.name_zh,
+		price: planData.deep_cultivation.price,
+		textColor: "#537FF1"
+	},
+	{
+		id: "visionary",
+		name: lang === "en" ? planData.visionary.name_en : planData.visionary.name_zh,
+		price: planData.visionary.price,
+		textColor: "#6FD195"
+	},
+	{
+		id: "new_sprout",
+		name: lang === "en" ? planData.new_sprout.name_en : planData.new_sprout.name_zh,
+		price: planData.new_sprout.price,
+		textColor: "#77B55A"
+	}
 ];
 
 // Create rows from benefits (assuming all tiers have the same items in same order)
@@ -47,15 +68,21 @@ for (let i = 0; i < maxBenefits; i++) {
 			(sproutBenefit?.quantity && sproutBenefit.quantity !== "")
 		);
 
+	// Get localized names for each benefit
+	const navName = navBenefit ? await getBenefitLocalizedName(navBenefit, lang) : "";
+	const deepName = deepBenefit ? await getBenefitLocalizedName(deepBenefit, lang) : "";
+	const visName = visBenefit ? await getBenefitLocalizedName(visBenefit, lang) : "";
+	const sproutName = sproutBenefit ? await getBenefitLocalizedName(sproutBenefit, lang) : "";
+
 	rows.push({
 		id: rowId,
-		name: navBenefit?.item_name || deepBenefit?.item_name || visBenefit?.item_name || sproutBenefit?.item_name || "",
+		name: navName || deepName || visName || sproutName || "",
 		isAvailable: hasAnyAvailableItem,
 		values: [
-			{ itemId: navBenefit?.item_id || "", quantity: navBenefit?.quantity || "", name: navBenefit?.item_name || "" },
-			{ itemId: deepBenefit?.item_id || "", quantity: deepBenefit?.quantity || "", name: deepBenefit?.item_name || "" },
-			{ itemId: visBenefit?.item_id || "", quantity: visBenefit?.quantity || "", name: visBenefit?.item_name || "" },
-			{ itemId: sproutBenefit?.item_id || "", quantity: sproutBenefit?.quantity || "", name: sproutBenefit?.item_name || "" }
+			{ itemId: navBenefit?.item_id || "", quantity: navBenefit?.quantity || "", name: navName },
+			{ itemId: deepBenefit?.item_id || "", quantity: deepBenefit?.quantity || "", name: deepName },
+			{ itemId: visBenefit?.item_id || "", quantity: visBenefit?.quantity || "", name: visName },
+			{ itemId: sproutBenefit?.item_id || "", quantity: sproutBenefit?.quantity || "", name: sproutName }
 		]
 	});
 }
