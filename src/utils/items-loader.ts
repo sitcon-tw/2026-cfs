@@ -94,7 +94,7 @@ const typeTranslations: Record<string, { zh: string; en: string }> = {
   "數位媒體曝光": {
     zh: "數位媒體曝光",
     en: "Digital Media Exposure"
-  }
+  },
 };
 
 function translateType(type: string, locale: string): string {
