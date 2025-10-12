@@ -6,10 +6,7 @@ import { marked } from "marked";
 
 import type { SubItem } from "../../utils/items-loader";
 
-const { item, t, popupId } = Astro.props;
-
-// Detect language from URL
-const lang = Astro.url.pathname.includes("/en") ? "en" : "zh-Hant";
+const { item, t, lang, popupId } = Astro.props;
 
 // Find this item in plan.json benefits and collect tier info
 const tiers = [

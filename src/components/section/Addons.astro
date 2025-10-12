@@ -1,9 +1,7 @@
 ---
-const { t } = Astro.props;
+const { t, lang } = Astro.props;
 import { Plus, Check } from "@lucide/astro";
 import { loadItemsData, type ItemData } from "../../utils/items-loader";
-
-const lang = Astro.url.pathname.includes("/en") ? "en" : "zh-Hant";
 const itemsData = await loadItemsData(lang);
 
 // Define types

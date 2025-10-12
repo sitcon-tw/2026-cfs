@@ -1,11 +1,9 @@
 ---
-const { t } = Astro.props;
+const { t, lang } = Astro.props;
 import { Container } from "@lucide/astro";
 import planData from "@data/plan.json";
 import { loadItemsData } from "../../utils/items-loader";
 import { getBenefitLocalizedName } from "../../utils/plan-helper";
-
-const lang = Astro.url.pathname.includes("/en") ? "en" : "zh-Hant";
 const itemsData = await loadItemsData(lang);
 
 // Create a lookup map for quick item access by ID

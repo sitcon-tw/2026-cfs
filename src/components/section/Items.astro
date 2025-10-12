@@ -4,8 +4,7 @@ import { loadItemsData } from "../../utils/items-loader";
 import shopConfig from "@data/shop_config.json";
 import ItemCard from "@components/items/ItemCard.astro";
 
-const { t } = Astro.props;
-const lang = Astro.url.pathname.includes("/en") ? "en" : "zh-Hant";
+const { t, lang } = Astro.props;
 const itemsUnsorted = await loadItemsData(lang); // Keep all items including "打包專屬"
 // Sort items by order field for initial "all" category display
 const items = itemsUnsorted.sort((a, b) => {
