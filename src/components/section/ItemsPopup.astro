@@ -4,8 +4,7 @@ import ItemPopup from "@components/items/ItemPopup.astro";
 
 const { t } = Astro.props;
 
-const lang = Astro.currentLocale || "zh-Hant";
-
+const lang = Astro.url.pathname.includes("/en") ? "en" : "zh-Hant";
 const itemsUnsorted = await loadItemsData(lang); // Keep all items including "打包專屬"
 // Sort items by order field for initial "all" category display
 const items = itemsUnsorted.sort((a, b) => {

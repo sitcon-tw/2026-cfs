@@ -265,6 +265,29 @@ function normalizeUnit(chineseUnit) {
 	return unitMap[chineseUnit] || chineseUnit;
 }
 
+/**
+ * Remove Chinese unit suffix from quantity string (e.g., "4 場" -> "4")
+ * @param {string} quantityStr - The quantity string that might contain a Chinese unit
+ * @returns {string} - The quantity without the unit suffix
+ */
+function removeChineseUnit(quantityStr) {
+	if (!quantityStr) return "";
+
+	const str = quantityStr.toString().trim();
+
+	// List of Chinese unit characters to remove
+	const chineseUnits = ["份", "個", "張", "場", "則", "項", "秒", "次"];
+
+	// Remove any trailing Chinese unit
+	let result = str;
+	for (const unit of chineseUnits) {
+		// Remove the unit if it appears at the end (with or without space before it)
+		result = result.replace(new RegExp(`\\s*${unit}\\s*$`), "");
+	}
+
+	return result.trim();
+}
+
 function extractSubItems(itemRow) {
 	const subItems = [];
 	const MAX_SUB_ITEMS = 50; // Safety limit to prevent infinite loops
@@ -337,7 +360,8 @@ function mergeSheetData(sheets) {
 		const mainImageId = extractGoogleDriveId(mainImageUrl);
 
 		items[itemId] = {
-			name: itemRow["項目"] || itemRow["項目名稱"] || "",
+			name_zh: itemRow["項目"] || itemRow["項目名稱"] || "",
+			name_en: itemRow["project"] || "",
 			order: parseInt(itemRow["預設推薦排序"] || "0") || 0,
 			quantity: itemRow["數量"] || "",
 			remaining: itemRow["剩餘數量"] || "",
@@ -517,7 +541,7 @@ function processPlanData(planSheet, itemsData) {
 	// Build dynamic name→ID mapping from items data
 	const itemNameToId = {};
 	Object.keys(itemsData).forEach(id => {
-		const itemName = itemsData[id].name;
+		const itemName = itemsData[id].name_zh;
 		if (itemName) {
 			itemNameToId[itemName] = id;
 		}

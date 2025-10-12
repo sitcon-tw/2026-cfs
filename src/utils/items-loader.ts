@@ -21,7 +21,8 @@ export interface SubItem {
 }
 
 export interface ItemDataRaw {
-	name: string;
+	name_zh: string;
+  name_en: string;
 	order: number;
 	quantity: string;
 	remaining: string;
@@ -87,7 +88,7 @@ function extractLocalizedData(rawData: ItemDataRaw, locale: string, id: string):
 
 	return {
 		id,
-		name: rawData.name,
+		name: suffix === "_zh" ? rawData.name_zh : rawData.name_en,
 		order: rawData.order,
 		quantity: rawData.quantity,
 		remaining: rawData.remaining,
