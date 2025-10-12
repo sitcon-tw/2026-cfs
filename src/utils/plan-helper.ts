@@ -1,4 +1,5 @@
 import planData from "@data/plan.json" with { type: "json" };
+import itemData from "@data/item.json" with { type: "json" };
 import type { ItemDataRaw } from "./items-loader.js";
 
 interface Plan {
@@ -16,28 +17,16 @@ interface Plan {
 
 const plans: Plan[] = Object.values(planData);
 
-// Cache for item data to avoid repeated imports
-let itemDataCache: Record<string, ItemDataRaw> | null = null;
+// Item data is now statically imported at build time
+const items: Record<string, ItemDataRaw> = itemData as Record<string, ItemDataRaw>;
 
-/**
- * Load and cache item data
- */
-async function getItemData(): Promise<Record<string, ItemDataRaw>> {
-	if (!itemDataCache) {
-		const itemModule = await import("../data/item.json");
-		itemDataCache = itemModule.default as Record<string, ItemDataRaw>;
-	}
-	return itemDataCache;
-}
 
 /**
  * Find an item by Chinese name (name_zh) or by ID
  * @param itemNameOrId The Chinese name or ID to search for
  * @returns Object with itemId and itemData (or subItemData for sub-items), or null if not found
  */
-export async function findItemByNameOrId(itemNameOrId: string): Promise<{ itemId: string; itemData: ItemDataRaw; subItemData?: ItemDataRaw['sub'][0] } | null> {
-	const items = await getItemData();
-
+export function findItemByNameOrId(itemNameOrId: string): { itemId: string; itemData: ItemDataRaw; subItemData?: ItemDataRaw['sub'][0] } | null {
 	// First try direct ID match
 	if (items[itemNameOrId]) {
 		return { itemId: itemNameOrId, itemData: items[itemNameOrId] };
@@ -45,13 +34,20 @@ export async function findItemByNameOrId(itemNameOrId: string): Promise<{ itemId
 
 	// Check for sub-item ID format (e.g., "12-sub-0")
 	if (itemNameOrId.includes('-sub-')) {
-		const [parentId, , subIndex] = itemNameOrId.split('-');
+		const [parentId, , subIndexStr] = itemNameOrId.split('-');
+		const subIndex = parseInt(subIndexStr, 10);
+
+		// Validate that subIndex is a valid number
+		if (isNaN(subIndex) || subIndex < 0) {
+			return null;
+		}
+
 		const item = items[parentId];
-		if (item && item.sub[parseInt(subIndex)]) {
+		if (item && item.sub && item.sub[subIndex]) {
 			return {
 				itemId: itemNameOrId,
 				itemData: item,
-				subItemData: item.sub[parseInt(subIndex)]
+				subItemData: item.sub[subIndex]
 			};
 		}
 	}
@@ -63,13 +59,15 @@ export async function findItemByNameOrId(itemNameOrId: string): Promise<{ itemId
 		}
 
 		// Also check sub-items
-		for (let i = 0; i < item.sub.length; i++) {
-			if (item.sub[i].name_zh === itemNameOrId) {
-				return {
-					itemId: `${id}-sub-${i}`,
-					itemData: item,
-					subItemData: item.sub[i]
-				};
+		if (item.sub && Array.isArray(item.sub)) {
+			for (let i = 0; i < item.sub.length; i++) {
+				if (item.sub[i].name_zh === itemNameOrId) {
+					return {
+						itemId: `${id}-sub-${i}`,
+						itemData: item,
+						subItemData: item.sub[i]
+					};
+				}
 			}
 		}
 	}
@@ -83,10 +81,10 @@ export async function findItemByNameOrId(itemNameOrId: string): Promise<{ itemId
  * @param lang Language code ("zh-Hant" or "en")
  * @returns Localized name string
  */
-export async function getBenefitLocalizedName(benefit: { item_id: string; item_name: string; quantity: string }, lang: string = "zh-Hant"): Promise<string> {
+export function getBenefitLocalizedName(benefit: { item_id: string; item_name: string; quantity: string }, lang: string = "zh-Hant"): string {
 	// If we have an item_id, use it to look up the item
 	if (benefit.item_id) {
-		const result = await findItemByNameOrId(benefit.item_id);
+		const result = findItemByNameOrId(benefit.item_id);
 		if (result) {
 			// Use sub-item name if available, otherwise use parent item name
 			if (result.subItemData) {
@@ -98,7 +96,7 @@ export async function getBenefitLocalizedName(benefit: { item_id: string; item_n
 
 	// If no item_id, try to match by Chinese name
 	if (benefit.item_name) {
-		const result = await findItemByNameOrId(benefit.item_name);
+		const result = findItemByNameOrId(benefit.item_name);
 		if (result) {
 			// Use sub-item name if available, otherwise use parent item name
 			if (result.subItemData) {
@@ -143,7 +141,7 @@ export function findMinimalPlanForItem(itemId: string): Plan | null {
 export function getItemDisplayPrice(itemId: string, itemPrice: string, lang: string = "zh-Hant"): string {
 	// Extract parent item ID if this is a sub-item (format: "parentId-sub-index")
 	const parentItemId = itemId.includes("-sub-") ? itemId.split("-sub-")[0] : itemId;
-	
+
 	const minimalPlan = findMinimalPlanForItem(parentItemId);
 
 	if (minimalPlan) {
