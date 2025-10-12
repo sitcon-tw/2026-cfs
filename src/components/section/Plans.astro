@@ -67,10 +67,10 @@ for (let i = 0; i < maxBenefits; i++) {
 		);
 
 	// Get localized names for each benefit
-	const navName = navBenefit ? await getBenefitLocalizedName(navBenefit, lang) : "";
-	const deepName = deepBenefit ? await getBenefitLocalizedName(deepBenefit, lang) : "";
-	const visName = visBenefit ? await getBenefitLocalizedName(visBenefit, lang) : "";
-	const sproutName = sproutBenefit ? await getBenefitLocalizedName(sproutBenefit, lang) : "";
+	const navName = navBenefit ? getBenefitLocalizedName(navBenefit, lang) : "";
+	const deepName = deepBenefit ? getBenefitLocalizedName(deepBenefit, lang) : "";
+	const visName = visBenefit ? getBenefitLocalizedName(visBenefit, lang) : "";
+	const sproutName = sproutBenefit ? getBenefitLocalizedName(sproutBenefit, lang) : "";
 
 	rows.push({
 		id: rowId,
