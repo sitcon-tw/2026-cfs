@@ -20,7 +20,7 @@
 	},
 	"intro": {
 		"sentence1": "SITCON is a student community dedicated to computing education and championing open-source culture.",
-		"sentence2": " It's also a student-run conference that offers a stage for students to share and discuss technology."
+		"sentence2": "It's also a student-run conference that offers a stage for students to share and discuss technology."
 	},
 	"cycle": {
 		"title": "More than a one-off collaboration",
@@ -68,9 +68,21 @@
 			"03/28": "Conference day"
 		},
 		"place_items": [
-			{ "code": "R0", "name": "International Conference Hall", "description": "Total 426 seats\nOpening and Keynote will take place here." },
-			{ "code": "R1 R2", "name": "First / Second Conference Room", "description": "Each room has 112 seats; aisles and the back area can accommodate additional attendees." },
-			{ "code": "R3", "name": "Teleconference Room", "description": "Total 36 seats; additional standing space at both sides of the stage, in front of the first row, and at the back." },
+			{
+				"code": "R0",
+				"name": "International Conference Hall",
+				"description": "Total 426 seats\nOpening and Keynote will take place here."
+			},
+			{
+				"code": "R1 R2",
+				"name": "First / Second Conference Room",
+				"description": "Each room has 112 seats; aisles and the back area can accommodate additional attendees."
+			},
+			{
+				"code": "R3",
+				"name": "Teleconference Room",
+				"description": "Total 36 seats; additional standing space at both sides of the stage, in front of the first row, and at the back."
+			},
 			{
 				"code": "lounge",
 				"name": "Lounge",
@@ -302,13 +314,14 @@
 		},
 		"personal": {
 			"title": "Prefer to support SITCON as an individual?",
-			"cta": "Donate Now"
+			"cta": "Donate Now",
+			"qrcode": "Individual Sponsorship"
 		}
 	},
 	"about": {
-		"detail": "View Audience & Statistics",
+		"detail": "Audience & Statistics",
 		"subtitle": "The largest student community",
-		"title": " in Southeast Asia for 13 years",
+		"title": "in Southeast Asia for 13 years",
 		"stats": [
 			{
 				"number": "14000",
@@ -320,11 +333,11 @@
 			},
 			{
 				"number": "500",
-				"label": "talks"
+				"label": "meetups and talks"
 			},
 			{
 				"number": "10",
-				"label": "camps"
+				"label": "summer camps"
 			},
 			{
 				"number": "1400",
@@ -332,7 +345,7 @@
 			}
 		],
 		"review": {
-			"title": "2025 rewind",
+			"title": "2025 Rewind",
 			"stats": [
 				{
 					"label": "Venue attendance",
@@ -360,46 +373,65 @@
 			"title": "Related Statistics",
 			"chart": {
 				"unit": "People",
-				"attender_role_title": "Attendee Roles",
+				"attender_role_title": "Attendee Role Distribution",
 				"programming_level_title": "Programming Proficiency Distribution",
 				"attender_role": {
 					"Undergraduates": 679,
-					"High school / vocational": 291,
+					"High school / vocational students": 291,
 					"Graduate students": 117,
 					"Working professionals": 87,
 					"Junior high students": 25,
-					"Junior college (5-year program)": 15,
+					"Junior college students": 15,
 					"Others": 6,
 					"Teachers / Professors": 3,
 					"Elementary school students": 1
 				},
+				"attender_role_percentage": {
+					"Undergraduates": 55.47,
+					"High school / vocational students": 23.77,
+					"Graduate students": 9.56,
+					"Working professionals": 7.11,
+					"Junior high students": 2.04,
+					"Junior college students": 1.23,
+					"Others": 0.49,
+					"Teachers / Professors": 0.25,
+					"Elementary school students": 0.08
+				},
 				"programming_level": {
-					"No experience": 54,
-					"Beginner": 182,
-					"Novice": 276,
 					"Intermediate": 476,
+					"Novice": 276,
 					"Proficient": 185,
+					"Beginner": 182,
+					"No programming experience": 54,
 					"Advanced": 51
 				},
+				"programming_level_percentage": {
+					"Intermediate": 38.89,
+					"Novice": 22.55,
+					"Proficient": 15.11,
+					"Beginner": 14.87,
+					"No programming experience": 4.41,
+					"Advanced": 4.17
+				},
 				"level_info": {
-					"Beginner": "Can follow book examples step by step to complete functions.",
-					"Novice": "Understands examples and can modify them to solve problems.",
-					"Intermediate": "Can devise solutions to problems.",
-					"Proficient": "Can evaluate trade-offs among multiple solutions.",
-					"Advanced": "Has rich experience and can advise others effectively."
+					"Beginner": "Can follow book examples step by step to complete functions",
+					"Novice": "Understands examples and can modify them to solve problems",
+					"Intermediate": "Can devise solutions to problems",
+					"Proficient": "Can evaluate trade-offs among multiple solutions",
+					"Advanced": "Has rich experience and can advise others effectively"
 				},
 				"schools_text_title": "Attendee School Distribution",
 				"social_media": {
 					"title": "Social Media Statistics",
 					"facebook": {
-						"name": "Facebook",
+						"name": "Facebook Fans",
 						"stats": {
-							"followers": "12.2K",
+							"followers": "12K",
 							"reach": "15K",
 							"views": "87K"
 						},
 						"labels": {
-							"followers": "Followers",
+							"followers": "Follower Count",
 							"reach": "Reach (Past 90 Days)",
 							"views": "Views (Past 90 Days)",
 							"age_distribution": "Age Distribution",
@@ -419,14 +451,14 @@
 						}
 					},
 					"instagram": {
-						"name": "Instagram",
+						"name": "Instagram Followers",
 						"stats": {
-							"followers": "3.5K",
+							"followers": "~3.5K",
 							"reach": "18K",
 							"views": "357K"
 						},
 						"labels": {
-							"followers": "Followers",
+							"followers": "Fans & Followers",
 							"reach": "Reach (Past 90 Days)",
 							"views": "Views (Past 90 Days)",
 							"age_distribution": "Age Distribution",
@@ -446,6 +478,9 @@
 						}
 					}
 				}
+			},
+			"school_stats": {
+				"title": "SITCON 2025 Attendee School Statistics"
 			}
 		}
 	},
@@ -453,36 +488,48 @@
 		"inline": [
 			"We want to give passionate students the resources, stage, and inspiration they deserve.",
 			"Yet for students, this is not easy.",
-			"SITCON stands where it is today thanks to supporters like you."
+			"SITCON stands where it is today thanks to supporters like you over the past decade."
 		]
 	},
 	"faq": {
 		"questions": [
 			{
-				"question": "Can we negotiate the price?",
-				"answer": "Our plan pricing is carefully calculated and already offers the best value. If you have specific needs or budget considerations, we're happy to discuss."
+				"question": "What makes SITCON different from other tech conferences?",
+				"answer": "SITCON focuses on the student community and educational outreach, making it Taiwan's most representative student computing conference. It's the best platform for companies to connect with young developers and future tech talent—and a concrete way to support open source and education."
 			},
 			{
-				"question": "Can it be cheaper?",
-				"answer": "We understand your concern. While pricing is already quite reasonable, we can explore adjusting deliverables or other collaboration formats to fit your budget."
+				"question": "Can we customize a sponsorship package beyond the standard plans?",
+				"answer": "Absolutely! Feel free to fill out the form or email us to discuss your needs."
 			},
 			{
-				"question": "Why is it so expensive?",
-				"answer": "The pricing reflects the event's scale and impact. If it exceeds your budget, consider a lower tier or talk with us about a customized package."
+				"question": "Can we get an invoice or receipt?",
+				"answer": "By default, we provide a donation receipt issued through the OCF (Open Culture Foundation). If you need a formal \"unified invoice\" (統一發票), an additional 5% business tax will apply."
 			},
 			{
-				"question": "Do you offer discounts?",
-				"answer": "We offer early-bird and multi-year partnership discounts. First-time sponsors or those willing to sign multi-year agreements may receive corresponding offers. Please contact our sponsorship team for details."
+				"question": "Will there be a formal sponsorship contract?",
+				"answer": "We typically use a memorandum of cooperation, but if you require a formal contract, that's no problem!"
+			},
+			{
+				"question": "What kind of report will we receive after the event?",
+				"answer": "We'll provide a post-event report including: attendee count, age and background demographics, media and online exposure metrics, on-site photos, and a roundup of media coverage."
+			},
+			{
+				"question": "What is the collaboration process with SITCON sponsors?",
+				"answer": "The typical flow is: Initial contact → Discuss needs → Confirm package → Finalize memorandum of cooperation → Provide materials (logo, ad copy, etc.) → Pre-event exposure → Event day execution → Post-event report."
 			}
 		]
 	},
 	"footer": {
 		"collaboration": "Future Collaboration",
 		"description": "We welcome various forms of event or media collaboration—co-hosting workshops, hackathons, podcasts, and more. Reach out with your ideas.",
-		"scan_qrcode": "You can scan the QR code to fill out the form in our online sponsorship prospectus to keep in touch.",
+		"scan_qrcode": "You can scan the QR code (sitcon.org/cfs) to fill out the form in our online sponsorship prospectus.",
 		"contact": "Marketing & Media Contacts",
 		"email": "contact@sitcon.org",
-		"contact_list": ["曾煥軒 +886-908-593-538", "巫玟槿 +886-963-584-326", "黃一晉 +886-922-686-223"],
+		"contact_list": [
+			"Panda Wu +886-963-584-326",
+			"Ricky Lu +886-965-508-785",
+			"Denny Huang +886-922-686-223"
+		],
 		"contact_us": "Contact Us",
 		"contact_us_description": "For collaboration:",
 		"contact_us_description2": "For registration:",
