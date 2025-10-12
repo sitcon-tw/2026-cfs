@@ -73,6 +73,38 @@ function getLocaleSuffix(locale: string): string {
 	return locale === "zh-Hant" || locale === "zh" ? "_zh" : "_en";
 }
 
+// Type translations mapping
+const typeTranslations: Record<string, { zh: string; en: string }> = {
+	"現場實體曝光": {
+		zh: "現場實體曝光",
+		en: "On-site Physical Exposure"
+	},
+	"紀念品配件曝光": {
+		zh: "紀念品配件曝光",
+		en: "Souvenir & Accessory Exposure"
+	},
+	"獨家議程": {
+		zh: "獨家議程",
+		en: "Exclusive Session"
+	},
+	"更多曝光方式": {
+		zh: "更多曝光方式",
+		en: "More Exposure Options"
+	},
+  "數位媒體曝光": {
+    zh: "數位媒體曝光",
+    en: "Digital Media Exposure"
+  }
+};
+
+function translateType(type: string, locale: string): string {
+	const translation = typeTranslations[type];
+	if (!translation) {
+		return type; // Fallback to original if no translation found
+	}
+	return locale === "zh-Hant" || locale === "zh" ? translation.zh : translation.en;
+}
+
 function extractLocalizedData(rawData: ItemDataRaw, locale: string, id: string): ItemData {
 	// Determine suffix based on locale
 	const suffix = getLocaleSuffix(locale);
@@ -93,7 +125,7 @@ function extractLocalizedData(rawData: ItemDataRaw, locale: string, id: string):
 		quantity: rawData.quantity,
 		remaining: rawData.remaining,
 		unit: rawData.unit,
-		type: rawData.type,
+		type: translateType(rawData.type, locale),
 		global_description: suffix === "_zh" ? rawData.global_description_zh : rawData.global_description_en,
 		talent_recruitment: suffix === "_zh" ? rawData.talent_recruitment_zh : rawData.talent_recruitment_en,
 		brand_exposure: suffix === "_zh" ? rawData.brand_exposure_zh : rawData.brand_exposure_en,
