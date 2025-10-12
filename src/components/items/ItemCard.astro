@@ -2,6 +2,7 @@
 import { Plus, Check } from "@lucide/astro";
 import { getItemDescription } from "../../utils/items-loader";
 import Stone from "@assets/img/小石.svg";
+import { marked } from "marked";
 
 const { t, card, selectedCategory = "all" } = Astro.props;
 
@@ -82,9 +83,7 @@ const totalRemaining = hasSubItems
 				</span>
 			</button>
 		</div>
-		<div class="description">
-			{currentDescription}
-		</div>
+		<div class="description" set:html={marked.parse(currentDescription)} />
 	</div>
 </div>
 
