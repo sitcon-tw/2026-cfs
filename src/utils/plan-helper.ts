@@ -33,14 +33,27 @@ async function getItemData(): Promise<Record<string, ItemDataRaw>> {
 /**
  * Find an item by Chinese name (name_zh) or by ID
  * @param itemNameOrId The Chinese name or ID to search for
- * @returns Object with itemId and itemData, or null if not found
+ * @returns Object with itemId and itemData (or subItemData for sub-items), or null if not found
  */
-export async function findItemByNameOrId(itemNameOrId: string): Promise<{ itemId: string; itemData: ItemDataRaw } | null> {
+export async function findItemByNameOrId(itemNameOrId: string): Promise<{ itemId: string; itemData: ItemDataRaw; subItemData?: ItemDataRaw['sub'][0] } | null> {
 	const items = await getItemData();
 
 	// First try direct ID match
 	if (items[itemNameOrId]) {
 		return { itemId: itemNameOrId, itemData: items[itemNameOrId] };
+	}
+
+	// Check for sub-item ID format (e.g., "12-sub-0")
+	if (itemNameOrId.includes('-sub-')) {
+		const [parentId, , subIndex] = itemNameOrId.split('-');
+		const item = items[parentId];
+		if (item && item.sub[parseInt(subIndex)]) {
+			return {
+				itemId: itemNameOrId,
+				itemData: item,
+				subItemData: item.sub[parseInt(subIndex)]
+			};
+		}
 	}
 
 	// Then try matching by name_zh
@@ -52,7 +65,11 @@ export async function findItemByNameOrId(itemNameOrId: string): Promise<{ itemId
 		// Also check sub-items
 		for (let i = 0; i < item.sub.length; i++) {
 			if (item.sub[i].name_zh === itemNameOrId) {
-				return { itemId: `${id}-sub-${i}`, itemData: item };
+				return {
+					itemId: `${id}-sub-${i}`,
+					itemData: item,
+					subItemData: item.sub[i]
+				};
 			}
 		}
 	}
@@ -71,6 +88,10 @@ export async function getBenefitLocalizedName(benefit: { item_id: string; item_n
 	if (benefit.item_id) {
 		const result = await findItemByNameOrId(benefit.item_id);
 		if (result) {
+			// Use sub-item name if available, otherwise use parent item name
+			if (result.subItemData) {
+				return lang === "en" ? result.subItemData.name_en : result.subItemData.name_zh;
+			}
 			return lang === "en" ? result.itemData.name_en : result.itemData.name_zh;
 		}
 	}
@@ -79,6 +100,10 @@ export async function getBenefitLocalizedName(benefit: { item_id: string; item_n
 	if (benefit.item_name) {
 		const result = await findItemByNameOrId(benefit.item_name);
 		if (result) {
+			// Use sub-item name if available, otherwise use parent item name
+			if (result.subItemData) {
+				return lang === "en" ? result.subItemData.name_en : result.subItemData.name_zh;
+			}
 			return lang === "en" ? result.itemData.name_en : result.itemData.name_zh;
 		}
 	}
