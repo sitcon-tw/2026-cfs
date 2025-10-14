@@ -329,7 +329,7 @@ const uniqueItemIds = new Set<string>();
 
 	.plans-header {
 		padding-bottom: 1rem;
-		align-items: flex-end;
+		align-items: stretch;
 	}
 
 	.plans-header:hover {
@@ -351,6 +351,9 @@ const uniqueItemIds = new Set<string>();
 		font-weight: 700;
 		margin-bottom: 0.5rem;
 		line-height: 1.2;
+		flex-grow: 1;
+		display: flex;
+		align-items: center;
 	}
 
 	.tier-price {
@@ -523,9 +526,9 @@ const uniqueItemIds = new Set<string>();
 		section {
 			padding: 0 1rem;
 		}
-    .container {
-      padding: 1.5rem;
-    }
+		.container {
+			padding: 1.5rem;
+		}
 
 		.plans-table {
 			padding: 0rem;
