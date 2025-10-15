@@ -78,9 +78,7 @@ import PersonalQR from "@assets/img/qrcode-personal.webp";
 			const interestedItems = getInterestedItems();
 			if (interestedItems.length === 0) return "";
 
-			const itemsList = interestedItems
-				.map(item => item.title)
-				.join("、");
+			const itemsList = interestedItems.map(item => item.title).join("、");
 
 			return `感興趣的項目：${itemsList}`;
 		}

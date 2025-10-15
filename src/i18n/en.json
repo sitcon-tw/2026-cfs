@@ -525,11 +525,7 @@
 		"scan_qrcode": "You can scan the QR code (sitcon.org/cfs) to fill out the form in our online sponsorship prospectus.",
 		"contact": "Marketing & Media Contacts",
 		"email": "contact@sitcon.org",
-		"contact_list": [
-			"Panda Wu +886-963-584-326",
-			"Ricky Lu +886-965-508-785",
-			"Denny Huang +886-922-686-223"
-		],
+		"contact_list": ["Panda Wu +886-963-584-326", "Ricky Lu +886-965-508-785", "Denny Huang +886-922-686-223"],
 		"contact_us": "Contact Us",
 		"contact_us_description": "For collaboration:",
 		"contact_us_description2": "For registration:",

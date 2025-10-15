@@ -217,7 +217,7 @@ const items = itemsUnsorted.sort((a, b) => {
 					}
 					e.stopPropagation();
 					const popupId = `item-popup-${itemIdStr}`;
-					popupCtrl(popupId, "open");
+					window.popupCtrl(popupId, "open");
 				});
 			}
 		});
@@ -374,7 +374,7 @@ const items = itemsUnsorted.sort((a, b) => {
 			if (hasSubItems) {
 				// Open the popup for items with sub-items
 				const popupId = `item-popup-${id}`;
-				popupCtrl(popupId, "open");
+				window.popupCtrl(popupId, "open");
 			} else {
 				// Toggle interested state for items without sub-items
 				const itemTitle = button.getAttribute("data-item-title") || "";

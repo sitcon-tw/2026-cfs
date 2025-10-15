@@ -20,8 +20,8 @@ export default defineConfig({
 					en: "en-US"
 				}
 			},
-			filter: (page) => {
-				return !page.includes('/quotation');
+			filter: page => {
+				return !page.includes("/quotation");
 			}
 		})
 	]

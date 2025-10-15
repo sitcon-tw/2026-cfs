@@ -20,21 +20,20 @@ const plans: Plan[] = Object.values(planData);
 // Item data is now statically imported at build time
 const items: Record<string, ItemDataRaw> = itemData as Record<string, ItemDataRaw>;
 
-
 /**
  * Find an item by Chinese name (name_zh) or by ID
  * @param itemNameOrId The Chinese name or ID to search for
  * @returns Object with itemId and itemData (or subItemData for sub-items), or null if not found
  */
-export function findItemByNameOrId(itemNameOrId: string): { itemId: string; itemData: ItemDataRaw; subItemData?: ItemDataRaw['sub'][0] } | null {
+export function findItemByNameOrId(itemNameOrId: string): { itemId: string; itemData: ItemDataRaw; subItemData?: ItemDataRaw["sub"][0] } | null {
 	// First try direct ID match
 	if (items[itemNameOrId]) {
 		return { itemId: itemNameOrId, itemData: items[itemNameOrId] };
 	}
 
 	// Check for sub-item ID format (e.g., "12-sub-0")
-	if (itemNameOrId.includes('-sub-')) {
-		const [parentId, , subIndexStr] = itemNameOrId.split('-');
+	if (itemNameOrId.includes("-sub-")) {
+		const [parentId, , subIndexStr] = itemNameOrId.split("-");
 		const subIndex = parseInt(subIndexStr, 10);
 
 		// Validate that subIndex is a valid number

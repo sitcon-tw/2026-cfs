@@ -80,10 +80,56 @@ const defaultSchema = {
 				j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
 				f.parentNode.insertBefore(j, f);
 			})(window, document, "script", "dataLayer", "GTM-NPVBCDZ");
+		</script>
+	</head>
+	<body>
+		{
+			sections.map(Component => {
+				// 簡單來說就是複製貼上所有 HTML 上來，只是用 for 迴圈寫比較簡潔。
+				const key = Component.name.toLowerCase();
+				return <Component t={{ ...t[key], ...t.global }} lang={lang} />;
+			})
+		}
+		<script>
+			import Lenis from "lenis";
 
-			// popup 控制
-			const popupCtrl = (id = "", action = "open", updateUrl = true, find) => {
-				const popupBg = find || document.querySelector(`#${id} + .popup-bg`);
+			declare global {
+				interface Window {
+					popupCtrl: (id?: string, action?: "open" | "close", updateUrl?: boolean, find?: Element | null) => void;
+				}
+			}
+
+			const lenis = new Lenis({
+				autoRaf: true
+			});
+
+			const observer = new IntersectionObserver(
+				entries => {
+					entries.forEach(entry => {
+						const el = entry.target;
+						if (entry.isIntersecting) {
+							// 元素進入 viewport
+							el.classList.add("appeared");
+							el.classList.remove("over");
+						} else {
+							// 元素離開 viewport 上方
+							const rect = el.getBoundingClientRect();
+							const isOver = rect.bottom < 0;
+							el.classList.toggle("over", isOver);
+							el.classList.toggle("appeared", false);
+						}
+					});
+				},
+				{
+					threshold: 0.1
+				}
+			);
+
+			document.querySelectorAll(".aos").forEach(el => observer.observe(el));
+
+			window.popupCtrl = (id = "", action = "open", updateUrl = true, find) => {
+				const popupBg = find || (document.querySelector(`#${id} + .popup-bg`) as HTMLElement | null);
+				if (!popupBg || !(popupBg instanceof HTMLElement)) return;
 				if (action === "open") {
 					popupBg.style.display = "flex";
 					setTimeout(() => {
@@ -141,7 +187,7 @@ const defaultSchema = {
 					const popup = popupBg.previousElementSibling;
 					if (popup) {
 						const popupId = popup.id;
-						popupCtrl(popupId, "close", false);
+						window.popupCtrl(popupId, "close", false);
 					}
 				});
 
@@ -154,40 +200,36 @@ const defaultSchema = {
 							itemsSection.scrollIntoView({ behavior: "instant" });
 						}
 					}
-					popupCtrl(event.state.popupId, "open", false);
+					window.popupCtrl(event.state.popupId, "open", false);
 				} else if (window.location.hash) {
-					// Handle anchor-based popups
 					const popupId = window.location.hash.substring(1);
 					const popupElement = document.getElementById(popupId);
 					if (popupElement) {
-						popupCtrl(popupId, "open", false);
+						window.popupCtrl(popupId, "open", false);
 					}
 				} else if (window.location.pathname.includes("/item/")) {
-					// Handle item path
 					const match = window.location.pathname.match(/\/item\/([^\/]+)/);
 					if (match) {
 						const itemId = match[1];
 						const popupId = `item-popup-${itemId}`;
 						const popupElement = document.getElementById(popupId);
 						if (popupElement) {
-							// Scroll to Items section first
 							const itemsSection = document.getElementById("items");
 							if (itemsSection) {
 								itemsSection.scrollIntoView({ behavior: "instant" });
 							}
-							popupCtrl(popupId, "open", false);
+							window.popupCtrl(popupId, "open", false);
 						}
 					}
 				}
 			});
 
-			// Initialize: Check URL on page load and open popup if needed
 			window.addEventListener("DOMContentLoaded", () => {
 				if (window.location.hash) {
 					const popupId = window.location.hash.substring(1);
 					const popupElement = document.getElementById(popupId);
 					if (popupElement) {
-						setTimeout(() => popupCtrl(popupId, "open", false), 100);
+						setTimeout(() => window.popupCtrl(popupId, "open", false), 100);
 					}
 				} else if (window.location.pathname.includes("/item/")) {
 					const match = window.location.pathname.match(/\/item\/([^\/]+)/);
@@ -201,7 +243,7 @@ const defaultSchema = {
 							if (itemsSection) {
 								itemsSection.scrollIntoView({ behavior: "instant" });
 							}
-							setTimeout(() => popupCtrl(popupId, "open", false), 100);
+							setTimeout(() => window.popupCtrl(popupId, "open", false), 100);
 						}
 					}
 				}
@@ -210,34 +252,9 @@ const defaultSchema = {
 			document.addEventListener("keydown", event => {
 				if (event.key === "Escape" || event.key === "Esc") {
 					const openPopups = document.querySelector(".popup-bg.show");
-					openPopups && popupCtrl("", "close", true, openPopups);
+					openPopups && window.popupCtrl("", "close", true, openPopups);
 				}
 			});
-		</script>
-	</head>
-	<body>
-		{
-			sections.map(Component => {
-				// 簡單來說就是複製貼上所有 HTML 上來，只是用 for 迴圈寫比較簡潔。
-				const key = Component.name.toLowerCase();
-				return <Component t={{ ...t[key], ...t.global }} lang={lang} />;
-			})
-		}
-		<script>
-			const addClassToVisibleElements = () => {
-				var aosElements = document.querySelectorAll(".aos");
-				aosElements.forEach(aosElement => {
-					const rect = aosElement.getBoundingClientRect();
-					// const isInViewport = rect.bottom < 0 || rect.top > Math.max(window.innerHeight - 240, window.innerHeight * 0.6);
-					const isInViewport = rect.bottom < 0 || rect.top > window.innerHeight;
-					const isOver = rect.bottom < 0;
-					aosElement.classList.toggle("over", isOver);
-					aosElement.classList.toggle("appeared", !isInViewport);
-				});
-			};
-
-			document.addEventListener("scroll", addClassToVisibleElements);
-			addClassToVisibleElements();
 		</script>
 		<style is:global>
 			/* is: global 代表是全域的 */

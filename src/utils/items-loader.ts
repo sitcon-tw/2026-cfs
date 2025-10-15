@@ -22,7 +22,7 @@ export interface SubItem {
 
 export interface ItemDataRaw {
 	name_zh: string;
-  name_en: string;
+	name_en: string;
 	order: number;
 	quantity: string;
 	remaining: string;
@@ -75,26 +75,26 @@ function getLocaleSuffix(locale: string): string {
 
 // Type translations mapping
 const typeTranslations: Record<string, { zh: string; en: string }> = {
-	"現場實體曝光": {
+	現場實體曝光: {
 		zh: "現場實體曝光",
 		en: "On-site Physical Exposure"
 	},
-	"紀念品配件曝光": {
+	紀念品配件曝光: {
 		zh: "紀念品配件曝光",
 		en: "Souvenir & Accessory Exposure"
 	},
-	"獨家議程": {
+	獨家議程: {
 		zh: "獨家議程",
 		en: "Exclusive Session"
 	},
-	"更多曝光方式": {
+	更多曝光方式: {
 		zh: "更多曝光方式",
 		en: "More Exposure Options"
 	},
-  "數位媒體曝光": {
-    zh: "數位媒體曝光",
-    en: "Digital Media Exposure"
-  },
+	數位媒體曝光: {
+		zh: "數位媒體曝光",
+		en: "Digital Media Exposure"
+	}
 };
 
 function translateType(type: string, locale: string): string {

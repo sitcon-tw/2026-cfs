@@ -109,7 +109,7 @@ const categories = Object.keys(groupedItems);
 					}
 					e.stopPropagation();
 					const popupId = `item-popup-${itemIdStr}`;
-					popupCtrl(popupId, "open");
+					window.popupCtrl(popupId, "open");
 				});
 			}
 		});
@@ -128,7 +128,7 @@ const categories = Object.keys(groupedItems);
 					if (hasSubItems) {
 						// Open the popup for items with sub-items
 						const popupId = `item-popup-${itemId}`;
-						popupCtrl(popupId, "open");
+						window.popupCtrl(popupId, "open");
 					} else if (itemName) {
 						// Toggle interested state for items without sub-items
 						if (isItemInterested(itemId)) {

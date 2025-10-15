@@ -229,17 +229,17 @@ const { title, background, btnText, hero = true, id = Math.random().toString(36)
 </style>
 <script is:inline define:vars={{ id }}>
 	document.getElementById(id)?.addEventListener("click", () => {
-		popupCtrl(id, "open");
+		window.popupCtrl(id, "open");
 	});
 
 	document.querySelector(`#${id} + .popup-bg .close-btn`)?.addEventListener("click", () => {
-		popupCtrl(id, "close");
+		window.popupCtrl(id, "close");
 	});
 
 	// Close popup when clicking on background
 	document.querySelector(`#${id} + .popup-bg`)?.addEventListener("click", e => {
 		if (e.target === e.currentTarget) {
-			popupCtrl(id, "close");
+			window.popupCtrl(id, "close");
 		}
 	});
 </script>

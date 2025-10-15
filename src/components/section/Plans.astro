@@ -217,7 +217,7 @@ const uniqueItemIds = new Set<string>();
 				row.addEventListener("click", function (e) {
 					e.stopPropagation();
 					const popupId = `item-popup-${rowIdStr}`;
-					popupCtrl(popupId, "open");
+					window.popupCtrl(popupId, "open");
 				});
 			}
 		});
