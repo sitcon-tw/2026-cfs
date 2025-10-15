@@ -101,7 +101,7 @@ const defaultSchema = {
 
 			const lenis = new Lenis({
 				autoRaf: true,
-				prevent: node => node.classList.contains("popup-bg") || node.id === "interestPopover"
+				prevent: node => node.classList.contains("lenis-scroll")
 			});
 
 			const observer = new IntersectionObserver(
@@ -132,6 +132,7 @@ const defaultSchema = {
 				const popupBg = find || (document.querySelector(`#${id} + .popup-bg`) as HTMLElement | null);
 				if (!popupBg || !(popupBg instanceof HTMLElement)) return;
 				if (action === "open") {
+					popupBg.style.overflow = "hidden";
 					popupBg.style.display = "flex";
 					setTimeout(() => {
 						popupBg.scrollTo({
@@ -148,14 +149,107 @@ const defaultSchema = {
 							history.pushState({ popupId: id, type: "anchor" }, "", `#${id}`);
 						}
 					}
+					popupBg.style.overflow = "auto";
 				} else {
 					popupBg.classList.remove("show");
 					setTimeout(() => {
 						popupBg.style.display = "none";
+						// dispatch popupClosed after it's hidden
+						const closingPopup = popupBg.previousElementSibling as HTMLElement | null;
+						const closingId = closingPopup ? closingPopup.id : id;
+						document.dispatchEvent(new CustomEvent("popupClosed", { detail: { id: closingId } }));
 					}, 300);
 					if (updateUrl) history.pushState(null, "", window.location.origin + "/2026/cfs/");
 				}
 			};
+
+			let touchStartX = 0;
+			let touchEndX = 0;
+			let activePopupId = "";
+			const SWIPE_THRESHOLD = 50; // px
+
+			function getItemPopupIds() {
+				return Array.from(document.querySelectorAll("[id^=item-popup-]")).map(el => el.id);
+			}
+
+			function navigateToAdjacent(direction: "next" | "prev") {
+				const ids = getItemPopupIds();
+				if (!ids.length || !activePopupId) return;
+				const idx = ids.indexOf(activePopupId);
+				if (idx === -1) return;
+				let nextIdx = direction === "next" ? idx + 1 : idx - 1;
+				const currentBg = document.getElementById(activePopupId)?.nextElementSibling as HTMLElement | null;
+				if (nextIdx < 0 || nextIdx >= ids.length) {
+					if (!currentBg) return;
+					currentBg.classList.add("shake");
+					setTimeout(() => currentBg.classList.remove("shake"), 300);
+					return;
+				} // no wrap
+				const nextId = ids[nextIdx];
+				const nextEl = document.getElementById(nextId);
+				if (nextEl) window.popupCtrl(nextId, "open", true);
+				if (currentBg) window.popupCtrl(activePopupId, "close", false, currentBg);
+			}
+
+			function onKeyDown(e: KeyboardEvent) {
+				if (!activePopupId) return;
+				if (e.key === "ArrowRight") {
+					navigateToAdjacent("next");
+				} else if (e.key === "ArrowLeft") {
+					navigateToAdjacent("prev");
+				}
+			}
+
+			function onTouchStart(e: TouchEvent) {
+				const t = e.touches && e.touches[0];
+				if (t) touchStartX = t.clientX;
+			}
+
+			function onTouchEnd(e: TouchEvent) {
+				const t = e.changedTouches && e.changedTouches[0];
+				if (t) touchEndX = t.clientX;
+				const dx = touchEndX - touchStartX;
+				if (Math.abs(dx) > SWIPE_THRESHOLD) {
+					if (dx < 0) {
+						// swipe left -> next
+						navigateToAdjacent("next");
+					} else {
+						// swipe right -> prev
+						navigateToAdjacent("prev");
+					}
+				}
+			}
+
+			function attachHandlers() {
+				document.addEventListener("keydown", onKeyDown);
+				document.addEventListener("touchstart", onTouchStart, { passive: true });
+				document.addEventListener("touchend", onTouchEnd, { passive: true });
+			}
+
+			function detachHandlers() {
+				document.removeEventListener("keydown", onKeyDown);
+				document.removeEventListener("touchstart", onTouchStart);
+				document.removeEventListener("touchend", onTouchEnd);
+			}
+
+			document.addEventListener("popupOpened", e => {
+				const detail = (e as CustomEvent).detail || {};
+				activePopupId = detail.id || "";
+				// Only attach for item popups
+				if (activePopupId && activePopupId.startsWith("item-popup-")) {
+					attachHandlers();
+				}
+			});
+
+			document.addEventListener("popupClosed", e => {
+				const detail = (e as CustomEvent).detail || {};
+				const closedId = detail.id || "";
+				if (closedId && closedId === activePopupId) {
+					detachHandlers();
+					activePopupId = "";
+				}
+			});
+			// End of Navigation helpers for popups
 
 			// Handle browser back/forward buttons
 			window.addEventListener("popstate", event => {
@@ -262,6 +356,7 @@ const defaultSchema = {
 				margin: 0;
 				padding: 0;
 				box-sizing: border-box;
+				-ms-overflow-style: none;
 			}
 
 			html {
@@ -280,6 +375,7 @@ const defaultSchema = {
 					"Helvetica Neue",
 					Arial,
 					sans-serif;
+				scrollbar-color: hsla(0, 0%, 46%, 0.5) transparent;
 			}
 
 			body:has(.show) {
@@ -343,6 +439,10 @@ const defaultSchema = {
 				word-break: break-word;
 			}
 
+			::-webkit-scrollbar {
+				background-color: transparent;
+			}
+
 			@media screen and (max-width: 45rem) {
 				h2 {
 					font-size: 2.5rem;
@@ -393,6 +493,23 @@ const defaultSchema = {
 				.no-cut {
 					page-break-inside: avoid;
 					break-inside: avoid;
+				}
+			}
+
+			.shake .popup {
+				animation: shake 0.1s infinite;
+			}
+
+			@keyframes shake {
+				0%,
+				100% {
+					transform: translateX(0);
+				}
+				25% {
+					transform: translateX(-5px);
+				}
+				75% {
+					transform: translateX(5px);
 				}
 			}
 		</style>
