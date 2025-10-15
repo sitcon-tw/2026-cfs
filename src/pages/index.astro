@@ -99,9 +99,10 @@ const defaultSchema = {
 				}
 			}
 
-			// const lenis = new Lenis({
-			// 	autoRaf: true
-			// });
+			const lenis = new Lenis({
+				autoRaf: true,
+				prevent: node => node.classList.contains("popup-bg") || node.id === "interestPopover"
+			});
 
 			const observer = new IntersectionObserver(
 				entries => {
