@@ -138,22 +138,13 @@ const defaultSchema = {
 							top: 0
 						});
 						popupBg.classList.add("show");
-						// Dispatch custom event for chart initialization
 						document.dispatchEvent(new CustomEvent("popupOpened", { detail: { id } }));
 					}, 0);
-
-					// Update URL based on popup type
 					if (updateUrl) {
 						if (id.startsWith("item-popup-")) {
-							// Extract item ID and use SPA-style path
 							const itemId = id.replace("item-popup-", "");
-							const currentPath = window.location.pathname;
-							// Remove any existing /item/{id} from the path first
-							const basePath = currentPath.replace(/\/item\/[^\/]+$/, "");
-							const newPath = basePath.endsWith("/") ? `${basePath}item/${itemId}` : `${basePath}/item/${itemId}`;
-							history.pushState({ popupId: id, type: "item" }, "", newPath);
+							history.pushState({ popupId: id, type: "item" }, "", `/2026/cfs/item/${itemId}/`);
 						} else {
-							// Use anchor for other popups
 							history.pushState({ popupId: id, type: "anchor" }, "", `#${id}`);
 						}
 					}
@@ -162,22 +153,7 @@ const defaultSchema = {
 					setTimeout(() => {
 						popupBg.style.display = "none";
 					}, 300);
-
-					// Remove URL hash/path when closing
-					if (updateUrl) {
-						const currentState = history.state;
-						if (currentState && currentState.popupId === id) {
-							if (currentState.type === "item") {
-								// Remove /item/{id} from path
-								const currentPath = window.location.pathname;
-								const basePath = currentPath.replace(/\/item\/[^\/]+$/, "");
-								history.pushState(null, "", basePath || window.location.pathname.split("/item/")[0]);
-							} else {
-								// Remove hash
-								history.pushState(null, "", window.location.pathname);
-							}
-						}
-					}
+					if (updateUrl) history.pushState(null, "", window.location.origin + "/2026/cfs/");
 				}
 			};
 
