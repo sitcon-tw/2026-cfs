@@ -1,5 +1,5 @@
 ---
-const { t } = Astro.props;
+const { t, lang } = Astro.props;
 import Popup from "@components/Popup.astro";
 import r0 from "@assets/img/r0.webp";
 import volunteer from "@assets/img/sitcon-volunteer.webp";
@@ -38,7 +38,7 @@ interface TeamItem {
 	<Popup btnText={t.popup_label} title={t.popup_label} hero={true} id="place-staff-popup" background={r0.src}>
 		<div class="info-container">
 			<h3>{t.activity_schedule}</h3>
-			<div class="timeline">
+			<div class="timeline" class:list={{ "zh-hant": lang === "zh-Hant" }}>
 				{
 					formatted.map(({ date, text }) => (
 						<div>
@@ -191,6 +191,10 @@ interface TeamItem {
 		display: inline-block;
 		width: 12ch;
 		text-align: left;
+	}
+
+	.timeline.zh-hant span.date {
+		width: 10.5ch;
 	}
 
 	.location {
@@ -351,3 +355,4 @@ interface TeamItem {
 		}
 	}
 </style>
+
