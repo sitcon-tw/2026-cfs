@@ -8,6 +8,12 @@ export interface InterestedItem {
 	minimalPlan?: string; // The minimal plan that includes this item (plan id like "navigator")
 }
 
+declare global {
+	interface Window {
+		dataLayer: any[];
+	}
+}
+
 const INTEREST_ITEMS_KEY = "interestItems";
 
 function dispatchItemsChangeEvent(): void {
@@ -40,6 +46,13 @@ export function addInterestedItem(item: InterestedItem): boolean {
 
 		if (existingIndex === -1) {
 			items.push(item);
+			console.log("Added interested item:", item);
+			window.dataLayer.push({
+				event: "save_item",
+				item: item.title || "unknown",
+				lang: document.documentElement.lang || "unknown",
+				page_path: window.location.pathname
+			});
 			localStorage.setItem(INTEREST_ITEMS_KEY, JSON.stringify(items));
 			dispatchItemsChangeEvent();
 			return true;

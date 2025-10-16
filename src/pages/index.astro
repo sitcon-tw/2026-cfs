@@ -82,7 +82,7 @@ const defaultSchema = {
 			})(window, document, "script", "dataLayer", "GTM-NPVBCDZ");
 		</script>
 	</head>
-	<body>
+	<body data-title={t.meta.title}>
 		{
 			sections.map(Component => {
 				// 簡單來說就是複製貼上所有 HTML 上來，只是用 for 迴圈寫比較簡潔。
@@ -93,12 +93,17 @@ const defaultSchema = {
 		<script>
 			import Lenis from "lenis";
 
+			const originalTitle = document.body.getAttribute("data-title") || document.title;
+			const originalSite = " - " + originalTitle.split(" - ")[0] || "SITCON 2026 贊助徵求書";
+
 			declare global {
 				interface Window {
 					popupCtrl: (id?: string, action?: "open" | "close", updateUrl?: boolean, find?: Element | null) => void;
 					dataLayer: any[];
 				}
 			}
+
+			window.dataLayer = window.dataLayer || [];
 
 			const lenis = new Lenis({
 				autoRaf: true,
@@ -145,7 +150,15 @@ const defaultSchema = {
 					if (updateUrl) {
 						if (id.startsWith("item-popup-")) {
 							const itemId = id.replace("item-popup-", "");
+							const itemName = popupBg.querySelector(".title-row h3")?.textContent || "";
+							document.title = itemName + originalSite;
 							history.pushState({ popupId: id, type: "item" }, "", `/2026/cfs/item/${itemId}/`);
+							window.dataLayer.push({
+								event: "open_item",
+								item: itemName || "unknown",
+								lang: document.documentElement.lang || "unknown",
+								page_path: window.location.pathname
+							});
 						} else {
 							history.pushState({ popupId: id, type: "anchor" }, "", `#${id}`);
 						}
@@ -160,7 +173,10 @@ const defaultSchema = {
 						const closingId = closingPopup ? closingPopup.id : id;
 						document.dispatchEvent(new CustomEvent("popupClosed", { detail: { id: closingId } }));
 					}, 300);
-					if (updateUrl) history.pushState(null, "", window.location.origin + "/2026/cfs/");
+					if (updateUrl) {
+						history.pushState(null, "", window.location.origin + "/2026/cfs/");
+						document.title = originalTitle;
+					}
 				}
 			};
 
@@ -335,6 +351,19 @@ const defaultSchema = {
 					page_path: window.location.pathname
 				});
 			});
+
+			function pushVirtualPageView() {
+				window.dataLayer = window.dataLayer || [];
+				window.dataLayer.push({
+					event: "gtm_history", // 關鍵：用 gtm_history 讓 GTM 認為是瀏覽變化
+					page_location: location.href,
+					page_path: location.pathname + location.search,
+					page_title: document.title
+				});
+			}
+
+			document.addEventListener("astro:page-load", pushVirtualPageView);
+			pushVirtualPageView();
 		</script>
 		<style is:global>
 			/* is: global 代表是全域的 */
