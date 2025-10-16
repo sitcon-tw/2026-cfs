@@ -96,6 +96,7 @@ const defaultSchema = {
 			declare global {
 				interface Window {
 					popupCtrl: (id?: string, action?: "open" | "close", updateUrl?: boolean, find?: Element | null) => void;
+					dataLayer: any[];
 				}
 			}
 
@@ -325,6 +326,14 @@ const defaultSchema = {
 					const openPopups = document.querySelector(".popup-bg.show");
 					openPopups && window.popupCtrl("", "close", true, openPopups);
 				}
+			});
+
+			window.addEventListener("beforeprint", () => {
+				window.dataLayer = window.dataLayer || [];
+				window.dataLayer.push({
+					event: "print_triggered",
+					page_path: window.location.pathname
+				});
 			});
 		</script>
 		<style is:global>
