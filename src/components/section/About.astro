@@ -186,25 +186,26 @@ const chartData = JSON.stringify({
 		const isMobile = windowWidth <= 768;
 		const isSmallMobile = windowWidth <= 480;
 
-		const titleFontSize = isSmallMobile ? 16 : isMobile ? 18 : 24;
-		const labelFontSize = isSmallMobile ? 10 : isMobile ? 11 : 12;
-		const legendFontSize = isSmallMobile ? 10 : 12;
-		const legendItemSize = isSmallMobile ? 15 : 20;
-		const legendBottom = isSmallMobile ? 5 : 10;
-		const pieRadius = isMobile ? ["30%", "55%"] : ["35%", "65%"];
-		const pieCenter = isMobile ? ["50%", "50%"] : ["50%", "55%"];
+		const titleFontSize = isSmallMobile ? 14 : isMobile ? 16 : 24;
+		const labelFontSize = isSmallMobile ? 9 : isMobile ? 10 : 12;
+		const legendFontSize = isSmallMobile ? 9 : isMobile ? 10 : 12;
+		const legendItemSize = isSmallMobile ? 12 : isMobile ? 15 : 20;
+		const legendBottom = isSmallMobile ? 5 : isMobile ? 8 : 10;
+		const pieRadius = isSmallMobile ? ["25%", "45%"] : isMobile ? ["28%", "50%"] : ["35%", "65%"];
+		const pieCenter = isMobile ? ["50%", "48%"] : ["50%", "55%"];
+		const titleTop = isSmallMobile ? 5 : isMobile ? 8 : 10;
 
 		return {
 			title: {
 				text: title,
 				left: "center",
-				top: 10,
+				top: titleTop,
 				textStyle: {
 					fontSize: titleFontSize,
 					fontWeight: "bold",
 					color: "#48484A"
 				},
-				padding: [10, 0, isSmallMobile ? 10 : 20, 0]
+				padding: [5, 0, isSmallMobile ? 8 : isMobile ? 12 : 20, 0]
 			},
 			tooltip: {
 				trigger: "item",
@@ -283,7 +284,7 @@ const chartData = JSON.stringify({
 			} else {
 				// Mobile: single column, smaller
 				chartWidth = windowWidth - 80;
-				chartHeight = 350;
+				chartHeight = 280;
 			}
 
 			// Set explicit dimensions
@@ -322,8 +323,8 @@ const chartData = JSON.stringify({
 			chartHeight = 350;
 		} else {
 			// Mobile: single column
-			chartWidth = windowWidth - 60;
-			chartHeight = 300;
+			chartWidth = windowWidth - 80;
+			chartHeight = 250;
 		}
 
 		setTimeout(() => {
@@ -525,7 +526,8 @@ const chartData = JSON.stringify({
 		font-size: 1.5em;
 	}
 
-	canvas {
+	canvas,
+	.chart-container {
 		page-break-inside: avoid;
 	}
 
@@ -579,7 +581,7 @@ const chartData = JSON.stringify({
 		}
 
 		.container {
-			padding: 1rem;
+			padding: .7rem;
 		}
 	}
 
@@ -694,6 +696,33 @@ const chartData = JSON.stringify({
 
 		h2 span {
 			display: inline;
+		}
+
+		.chart-container,
+		.level {
+			width: 0 !important;
+			flex: 1;
+		}
+
+		.chart-container > :global(div),
+		.level > :global(div),
+		.chart-area :global(canvas) {
+			width: 100% !important;
+			height: unset !important;
+		}
+
+		.chart-container :global(canvas) {
+			position: static !important;
+			margin: auto !important;
+			display: block;
+		}
+
+		.chart-area {
+			flex-wrap: nowrap;
+		}
+
+		.chart-area {
+			gap: 0;
 		}
 	}
 </style>
