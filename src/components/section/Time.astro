@@ -142,6 +142,8 @@ interface TeamItem {
 	}
 
 	.timeline {
+		--timeline-date-width-en: 12ch;
+		--timeline-date-width-zh: 10.5ch;
 		white-space: pre;
 		line-height: 2;
 		font-size: 1.6rem;
@@ -189,12 +191,12 @@ interface TeamItem {
 	.timeline span.date {
 		font-family: "firacode", monospace;
 		display: inline-block;
-		width: 12ch;
 		text-align: left;
+		width: var(--timeline-date-width-en);
 	}
 
 	.timeline.zh-hant span.date {
-		width: 10.5ch;
+		width: var(--timeline-date-width-zh);
 	}
 
 	.location {
