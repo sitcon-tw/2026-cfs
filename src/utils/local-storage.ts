@@ -46,7 +46,6 @@ export function addInterestedItem(item: InterestedItem): boolean {
 
 		if (existingIndex === -1) {
 			items.push(item);
-			console.log("Added interested item:", item);
 			window.dataLayer.push({
 				event: "save_item",
 				item: item.title || "unknown",
