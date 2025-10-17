@@ -153,10 +153,12 @@ const defaultSchema = {
 							const itemName = popupBg.querySelector(".title-row h3")?.textContent || "";
 							document.title = itemName + originalSite;
 							history.pushState({ popupId: id, type: "item" }, "", `/2026/cfs/item/${itemId}/`);
+							const price = parseInt(popupBg.querySelector(".sub-item-price")?.textContent || "0");
 							window.dataLayer.push({
-								event: "open_item",
-								item: itemName || "unknown",
-								lang: document.documentElement.lang || "unknown",
+								event: "view_item",
+								currency: "TWD",
+								value: price,
+								items: [{ item_id: itemId, price, item_name: itemName || "unknown", item_category: "2026 CFS" }],
 								page_path: window.location.pathname
 							});
 						} else {
