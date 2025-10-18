@@ -49,16 +49,18 @@ export function addInterestedItem(item: InterestedItem): boolean {
 			const price = item.price ? parseInt(item.price.replace(/[^0-9]/g, "")) : 0;
 			window.dataLayer.push({
 				event: "add_to_cart",
-				currency: "TWD",
-				value: price,
-				items: [
-					{
-						item_id: item.id,
-						item_name: item.title || "unknown",
-						item_category: "2026 CFS",
-						price
-					}
-				],
+				ecommerce: {
+					currency: "TWD",
+					value: price,
+					items: [
+						{
+							item_id: item.id,
+							item_name: item.title || "unknown",
+							item_category: "2026 CFS",
+							price
+						}
+					]
+				},
 				page_path: window.location.pathname
 			});
 			localStorage.setItem(INTEREST_ITEMS_KEY, JSON.stringify(items));

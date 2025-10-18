@@ -156,10 +156,12 @@ const defaultSchema = {
 							const price = parseInt(popupBg.querySelector(".sub-item-price")?.textContent || "0");
 							window.dataLayer.push({
 								event: "view_item",
-								currency: "TWD",
-								value: price,
-								items: [{ item_id: itemId, price, item_name: itemName || "unknown", item_category: "2026 CFS" }],
-								page_path: window.location.pathname
+								ecommerce: {
+									currency: "TWD",
+									value: price,
+									items: [{ item_id: itemId, price, item_name: itemName || "unknown", item_category: "2026 CFS" }],
+									page_path: window.location.pathname
+								}
 							});
 						} else {
 							history.pushState({ popupId: id, type: "anchor" }, "", `#${id}`);
