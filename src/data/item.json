@@ -136,8 +136,8 @@
     "talent_recruitment_en": "Design exclusive welcome bags with your branding, letting students feel your company’s presence from the start.",
     "brand_exposure_zh": "會眾將獲得印有貴單位設計的帆布袋，不僅現場攜帶，會後也能長期使用。",
     "brand_exposure_en": "Every attendee receives a sponsor-designed canvas tote—carried on-site and reused long after the event.",
-    "product_promotion_zh": "於與會者專屬知識袋中置入產品型錄或試用品，讓參與者會後可持續接觸與使用。",
-    "product_promotion_en": "Include product samples or coupons in attendee welcome bags, ensuring direct product trial and long-term usage.",
+    "product_promotion_zh": "將產品元素或 Logo 融入專屬帆布袋設計中，參與者將於會後持續攜帶使用，為您的產品創造長時間曝光。",
+    "product_promotion_en": "Feature your logo or product elements on a custom tote bag for lasting post-event brand exposure.",
     "image": "1wHsSJ5IMcvS4NJ_qorK4D-ETw3Bud3gk.webp",
     "image_description_zh": "獨家帆布袋",
     "image_description_en": "Exclusive Canvas Bag",
@@ -145,7 +145,7 @@
     "deadline": "2026/02/28",
     "talent_recruitment_order": 21,
     "brand_exposure_order": 39,
-    "product_promotion_order": 4,
+    "product_promotion_order": 11,
     "sub": [
       {
         "name_zh": "官方迎賓袋",
@@ -346,7 +346,7 @@
     "deadline": "2026/03/28",
     "talent_recruitment_order": 6,
     "brand_exposure_order": 4,
-    "product_promotion_order": 7,
+    "product_promotion_order": 6,
     "sub": [
       {
         "name_zh": "Facebook 粉絲專頁貼文",
@@ -444,7 +444,7 @@
     "deadline": "2026/03/21",
     "talent_recruitment_order": 3,
     "brand_exposure_order": 20,
-    "product_promotion_order": 8,
+    "product_promotion_order": 7,
     "sub": [
       {
         "name_zh": "R0 中午議程 40 Mins",
@@ -490,7 +490,7 @@
     "brand_exposure_zh": "安排專屬議程於 R3 遠距會議室，讓您的講者直接與學生對話，傳達產業經驗與專業願景。",
     "brand_exposure_en": "Host a sponsor session in the R3 Remote Conference Room for direct dialogue with students and knowledge sharing.",
     "product_promotion_zh": "於遠距會議室投影或錄影中露出產品資訊，觸及線上參與者。",
-    "product_promotion_en": "Extend product reach by featuring it in remote participation channels, ensuring visibility beyond the physical event.",
+    "product_promotion_en": "Exposure of product information within the remote conference room projection or livestreams, reaching online attendees.",
     "image": "1XCP97OqLZGEZHY3yVaftaia7AF6uAIl8.webp",
     "image_description_zh": "遠距會議室議程",
     "image_description_en": "Remote Meeting Room Session",
@@ -498,7 +498,7 @@
     "deadline": "2026/03/21",
     "talent_recruitment_order": 11,
     "brand_exposure_order": 36,
-    "product_promotion_order": 10,
+    "product_promotion_order": 9,
     "sub": [
       {
         "name_zh": "R3 議程中午 30 Mins",
@@ -543,7 +543,7 @@
     "deadline": "2026/03/14",
     "talent_recruitment_order": 22,
     "brand_exposure_order": 28,
-    "product_promotion_order": 9,
+    "product_promotion_order": 8,
     "sub": []
   },
   "17": {
@@ -569,7 +569,7 @@
     "deadline": "2026/03/21",
     "talent_recruitment_order": 19,
     "brand_exposure_order": 8,
-    "product_promotion_order": 6,
+    "product_promotion_order": 5,
     "sub": []
   },
   "18": {
@@ -857,7 +857,7 @@
     "deadline": "2026/03/21",
     "talent_recruitment_order": 10,
     "brand_exposure_order": 26,
-    "product_promotion_order": 11,
+    "product_promotion_order": 10,
     "sub": []
   },
   "28": {
@@ -909,7 +909,7 @@
     "deadline": "2026/02/21",
     "talent_recruitment_order": 4,
     "brand_exposure_order": 7,
-    "product_promotion_order": 5,
+    "product_promotion_order": 4,
     "sub": []
   },
   "30": {
