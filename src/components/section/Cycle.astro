@@ -1,12 +1,16 @@
 ---
-const { t } = Astro.props;
+const { t, lang } = Astro.props;
 import Arrow from "@assets/img/cycle/arrow.svg";
 import SDGs4 from "@assets/img/cycle/SDGs-4.webp";
 import SDGs9 from "@assets/img/cycle/SDGs-9.webp";
 import SDGs10 from "@assets/img/cycle/SDGs-10.webp";
 import SDGs17 from "@assets/img/cycle/SDGs-17.webp";
-import CycleImg from "@assets/img/cycle/Cycle.svg";
-import mobileCycle from "@assets/img/cycle/mobileCycle.svg";
+import CycleImgZH from "@assets/img/cycle/Cycle.svg";
+import mobileCycleZH from "@assets/img/cycle/mobileCycle.svg";
+import CycleImgEN from "@assets/img/cycle/Cycle.en.svg";
+import mobileCycleEN from "@assets/img/cycle/mobileCycle.en.svg";
+const CycleImg = lang === "zh-Hant" ? CycleImgZH : CycleImgEN;
+const mobileCycle = lang === "zh-Hant" ? mobileCycleZH : mobileCycleEN;
 ---
 
 <section id="cycle">
