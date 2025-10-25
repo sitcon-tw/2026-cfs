@@ -120,6 +120,11 @@ export function isDeadlinePassed(deadline: string): boolean {
 	try {
 		// Parse the deadline (format: "YYYY/MM/DD")
 		const deadlineDate = new Date(deadline);
+		// Validate the date
+		if (isNaN(deadlineDate.getTime())) {
+			console.error("Invalid deadline date string:", deadline);
+			return false;
+		}
 		// Set to end of day for the deadline
 		deadlineDate.setHours(23, 59, 59, 999);
 
