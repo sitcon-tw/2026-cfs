@@ -74,7 +74,15 @@ const totalRemaining = hasSubItems
 	<div class="card-content">
 		<div class="title-row">
 			<h3>{card.name}</h3>
-			<button type="button" class="add-button" data-item-id={card.id} data-item-title={card.name} data-item-image={card.image || ""} data-item-price={card.price || ""}>
+			<button
+				type="button"
+				class="add-button"
+				data-item-id={card.id}
+				data-item-title={card.name}
+				data-item-image={card.image || ""}
+				data-item-price={card.price || ""}
+				data-item-deadline={card.deadline || ""}
+			>
 				<span class="add-icon">
 					<Plus />
 				</span>
@@ -217,6 +225,19 @@ const totalRemaining = hasSubItems
 
 	.add-button.added:hover {
 		background-color: var(--items-progress);
+	}
+
+	.add-button:disabled,
+	.add-button.disabled {
+		background-color: var(--gray);
+		cursor: not-allowed;
+		opacity: 0.5;
+	}
+
+	.add-button:disabled:hover,
+	.add-button.disabled:hover {
+		transform: none;
+		background-color: var(--gray);
 	}
 
 	.description {

@@ -9,31 +9,45 @@ const itemsData = await loadItemsData(lang);
 // Create a lookup map for quick item access by ID
 const itemsMap = new Map(itemsData.map(item => [item.id, item]));
 
+// Helper function to get earliest deadline from plan benefits
+const getEarliestDeadline = (benefits: any[]) => {
+	const deadlines = benefits.map(b => (b.item_id ? itemsMap.get(b.item_id)?.deadline : null)).filter((d): d is string => d !== null && d !== undefined && d !== "");
+
+	if (deadlines.length === 0) return "";
+
+	// Sort deadlines and return the earliest one
+	return deadlines.sort((a, b) => new Date(a).getTime() - new Date(b).getTime())[0];
+};
+
 // Transform plan.json data to match the table structure
 const tiers = [
 	{
 		id: "navigator",
 		name: lang === "en" ? planData.navigator.name_en : planData.navigator.name_zh,
 		price: planData.navigator.price,
-		textColor: "#FF928A"
+		textColor: "#FF928A",
+		deadline: getEarliestDeadline(planData.navigator.benefits)
 	},
 	{
 		id: "deep_cultivation",
 		name: lang === "en" ? planData.deep_cultivation.name_en : planData.deep_cultivation.name_zh,
 		price: planData.deep_cultivation.price,
-		textColor: "#537FF1"
+		textColor: "#537FF1",
+		deadline: getEarliestDeadline(planData.deep_cultivation.benefits)
 	},
 	{
 		id: "visionary",
 		name: lang === "en" ? planData.visionary.name_en : planData.visionary.name_zh,
 		price: planData.visionary.price,
-		textColor: "#6FD195"
+		textColor: "#6FD195",
+		deadline: getEarliestDeadline(planData.visionary.benefits)
 	},
 	{
 		id: "new_sprout",
 		name: lang === "en" ? planData.new_sprout.name_en : planData.new_sprout.name_zh,
 		price: planData.new_sprout.price,
-		textColor: "#77B55A"
+		textColor: "#77B55A",
+		deadline: getEarliestDeadline(planData.new_sprout.benefits)
 	}
 ];
 
@@ -110,7 +124,7 @@ const uniqueItemIds = new Set<string>();
 									{tier.name}
 								</div>
 								<div class="tier-price">{tier.price}</div>
-								<button class="tier-interest-button" data-tier-name={tier.id} data-tier-title={tier.name}>
+								<button class="tier-interest-button" data-tier-name={tier.id} data-tier-title={tier.name} data-tier-deadline={tier.deadline || ""}>
 									{t.interested}
 								</button>
 							</div>
@@ -181,7 +195,7 @@ const uniqueItemIds = new Set<string>();
 </section>
 
 <script>
-	import { isItemInterested, addInterestedItem, removeInterestedItem, type InterestedItem } from "../../utils/local-storage.ts";
+	import { isItemInterested, addInterestedItem, removeInterestedItem, isDeadlinePassed, type InterestedItem } from "../../utils/local-storage.ts";
 
 	declare function popupCtrl(id: string, action: string): void;
 
@@ -237,9 +251,16 @@ const uniqueItemIds = new Set<string>();
 		tierButtons.forEach(button => {
 			const tierName = button.getAttribute("data-tier-name");
 			const tierTitle = button.getAttribute("data-tier-title");
+			const tierDeadline = button.getAttribute("data-tier-deadline") || "";
+
 			if (tierName && tierTitle) {
 				button.addEventListener("click", function (e) {
 					e.stopPropagation();
+
+					// Check if deadline has passed
+					if (isDeadlinePassed(tierDeadline)) {
+						return; // Don't allow adding expired plans
+					}
 
 					// Get the tier price from the tier-price element
 					const tierColumn = button.closest(".tier-column");
@@ -274,6 +295,18 @@ const uniqueItemIds = new Set<string>();
 		const tierButtons = document.querySelectorAll(".tier-interest-button");
 		tierButtons.forEach(button => {
 			const tierName = button.getAttribute("data-tier-name");
+			const tierDeadline = button.getAttribute("data-tier-deadline") || "";
+
+			// Check if deadline has passed
+			const expired = isDeadlinePassed(tierDeadline);
+			if (expired) {
+				button.setAttribute("disabled", "true");
+				button.classList.add("disabled");
+			} else {
+				button.removeAttribute("disabled");
+				button.classList.remove("disabled");
+			}
+
 			if (tierName) {
 				const tierId = `tier-${tierName}`;
 				if (isItemInterested(tierId)) {
@@ -393,6 +426,21 @@ const uniqueItemIds = new Set<string>();
 	.tier-interest-button.interested:hover {
 		background-color: var(--items-green);
 		opacity: 0.9;
+	}
+
+	.tier-interest-button:disabled,
+	.tier-interest-button.disabled {
+		background-color: var(--gray);
+		border-color: var(--gray);
+		cursor: not-allowed;
+		opacity: 0.5;
+		color: var(--white);
+	}
+
+	.tier-interest-button:disabled:hover,
+	.tier-interest-button.disabled:hover {
+		transform: none;
+		background-color: var(--gray);
 	}
 
 	.plans-content {
