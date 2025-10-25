@@ -108,3 +108,26 @@ export function clearInterestedItems(): boolean {
 		return false;
 	}
 }
+
+/**
+ * Check if a deadline has passed
+ * @param deadline - Deadline string in format "YYYY/MM/DD"
+ * @returns true if deadline has passed, false otherwise
+ */
+export function isDeadlinePassed(deadline: string): boolean {
+	if (!deadline || deadline === "") return false;
+
+	try {
+		// Parse the deadline (format: "YYYY/MM/DD")
+		const deadlineDate = new Date(deadline);
+		// Set to end of day for the deadline
+		deadlineDate.setHours(23, 59, 59, 999);
+
+		const now = new Date();
+
+		return now > deadlineDate;
+	} catch (error) {
+		console.error("Error parsing deadline:", error);
+		return false;
+	}
+}

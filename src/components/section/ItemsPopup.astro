@@ -15,7 +15,7 @@ const items = itemsUnsorted.sort((a, b) => {
 {items.map(item => <ItemPopup item={item} t={t} lang={lang} popupId={`item-popup-${item.id}`} />)}
 
 <script>
-	import { getInterestedItems, removeInterestedItem, isItemInterested, addInterestedItem } from "../../utils/local-storage.ts";
+	import { getInterestedItems, removeInterestedItem, isItemInterested, addInterestedItem, isDeadlinePassed } from "../../utils/local-storage.ts";
 	import { getItemDisplayPrice } from "../../utils/plan-helper.ts";
 
 	declare function popupCtrl(id: string, action: string): void;
@@ -185,6 +185,17 @@ const items = itemsUnsorted.sort((a, b) => {
 		const ids = new Set(items.map(i => i.id));
 		document.querySelectorAll(".add-button").forEach(btn => {
 			const id = btn.getAttribute("data-item-id") || "";
+			const deadline = btn.getAttribute("data-item-deadline") || "";
+
+			// Check if deadline has passed
+			const expired = isDeadlinePassed(deadline);
+			if (expired) {
+				btn.setAttribute("disabled", "true");
+				btn.classList.add("disabled");
+			} else {
+				btn.removeAttribute("disabled");
+				btn.classList.remove("disabled");
+			}
 
 			// Check if this item or any of its sub-items are in cart
 			let hasItemInCart = ids.has(id);
@@ -366,6 +377,12 @@ const items = itemsUnsorted.sort((a, b) => {
 			e.preventDefault();
 			e.stopPropagation();
 			const id = button.getAttribute("data-item-id") || "";
+			const itemDeadline = button.getAttribute("data-item-deadline") || "";
+
+			// Check if deadline has passed
+			if (isDeadlinePassed(itemDeadline)) {
+				return; // Don't allow adding expired items
+			}
 
 			// Check if this item has sub-items
 			const card = button.closest(".card");

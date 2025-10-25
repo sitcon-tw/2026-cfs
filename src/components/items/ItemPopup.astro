@@ -135,6 +135,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 										data-sub-item-id={subItemId}
 										data-sub-item-name={subItem.name}
 										data-sub-item-price={subItem.price}
+										data-item-deadline={item.deadline || ""}
 										aria-label={`Add ${subItem.name}`}
 									>
 										<span class="add-icon">
@@ -572,6 +573,19 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 		background-color: var(--items-progress);
 	}
 
+	.sub-add-button:disabled,
+	.sub-add-button.disabled {
+		background-color: var(--gray);
+		cursor: not-allowed;
+		opacity: 0.5;
+	}
+
+	.sub-add-button:disabled:hover,
+	.sub-add-button.disabled:hover {
+		transform: none;
+		background-color: var(--gray);
+	}
+
 	.structured-descriptions {
 		margin-top: 1rem;
 	}
@@ -664,15 +678,27 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 </style>
 
 <script>
-	import { addInterestedItem, removeInterestedItem, isItemInterested } from "../../utils/local-storage.ts";
+	import { addInterestedItem, removeInterestedItem, isItemInterested, isDeadlinePassed } from "../../utils/local-storage.ts";
 	import { getItemDisplayPrice } from "../../utils/plan-helper.ts";
 
 	document.addEventListener("DOMContentLoaded", function () {
-		// Sync sub-item button state with localStorage
+		// Sync sub-item button state with localStorage and deadline
 		function syncSubItemButton(subItemId: string) {
 			try {
 				const button = document.querySelector(`.sub-add-button[data-sub-item-id="${subItemId}"]`) as HTMLElement;
 				if (!button) return;
+
+				// Check deadline
+				const deadline = button.getAttribute("data-item-deadline") || "";
+				const expired = isDeadlinePassed(deadline);
+
+				if (expired) {
+					button.setAttribute("disabled", "true");
+					button.classList.add("disabled");
+				} else {
+					button.removeAttribute("disabled");
+					button.classList.remove("disabled");
+				}
 
 				const isAdded = isItemInterested(subItemId);
 				if (isAdded) {
@@ -697,6 +723,12 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 				const btn = target.closest(".sub-add-button") as HTMLButtonElement;
 				const subItemId = btn.getAttribute("data-sub-item-id");
 				if (!subItemId) return;
+
+				// Check if deadline has passed
+				const deadline = btn.getAttribute("data-item-deadline") || "";
+				if (isDeadlinePassed(deadline)) {
+					return; // Don't allow adding expired items
+				}
 
 				const isAdded = isItemInterested(subItemId);
 

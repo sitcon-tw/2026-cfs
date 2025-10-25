@@ -39,7 +39,14 @@ const categories = Object.keys(groupedItems);
 						<div class="items-grid">
 							{groupedItems[category].map((item: ItemData) => (
 								<div class="addon-card" data-item-id={item.id} data-has-sub-items={item.sub && item.sub.length > 0 ? "true" : "false"}>
-									<button type="button" class="add-button" data-item-id={item.id} data-item-name={item.name} data-has-sub-items={item.sub && item.sub.length > 0 ? "true" : "false"}>
+									<button
+										type="button"
+										class="add-button"
+										data-item-id={item.id}
+										data-item-name={item.name}
+										data-has-sub-items={item.sub && item.sub.length > 0 ? "true" : "false"}
+										data-item-deadline={item.deadline || ""}
+									>
 										<span class="add-icon">
 											<Plus />
 										</span>
@@ -61,7 +68,7 @@ const categories = Object.keys(groupedItems);
 </section>
 
 <script>
-	import { isItemInterested, addInterestedItem, removeInterestedItem, getInterestedItems } from "../../utils/local-storage.ts";
+	import { isItemInterested, addInterestedItem, removeInterestedItem, getInterestedItems, isDeadlinePassed } from "../../utils/local-storage.ts";
 
 	declare function popupCtrl(id: string, action: string): void;
 
@@ -72,6 +79,18 @@ const categories = Object.keys(groupedItems);
 		const addButtons = document.querySelectorAll(".addon-card .add-button") as NodeListOf<HTMLButtonElement>;
 		addButtons.forEach(button => {
 			const itemId = button.getAttribute("data-item-id");
+			const deadline = button.getAttribute("data-item-deadline") || "";
+
+			// Check if deadline has passed
+			const expired = isDeadlinePassed(deadline);
+			if (expired) {
+				button.setAttribute("disabled", "true");
+				button.classList.add("disabled");
+			} else {
+				button.removeAttribute("disabled");
+				button.classList.remove("disabled");
+			}
+
 			if (itemId) {
 				// Check if this item or any of its sub-items are in cart
 				let hasItemInCart = ids.has(itemId);
@@ -123,6 +142,12 @@ const categories = Object.keys(groupedItems);
 				const itemId = this.getAttribute("data-item-id");
 				const itemName = this.getAttribute("data-item-name");
 				const hasSubItems = this.getAttribute("data-has-sub-items") === "true";
+				const deadline = this.getAttribute("data-item-deadline") || "";
+
+				// Check if deadline has passed
+				if (isDeadlinePassed(deadline)) {
+					return; // Don't allow adding expired items
+				}
 
 				if (itemId) {
 					if (hasSubItems) {
@@ -276,6 +301,19 @@ const categories = Object.keys(groupedItems);
 
 	.add-button.added:hover {
 		background-color: var(--items-progress);
+	}
+
+	.add-button:disabled,
+	.add-button.disabled {
+		background-color: var(--gray);
+		cursor: not-allowed;
+		opacity: 0.5;
+	}
+
+	.add-button:disabled:hover,
+	.add-button.disabled:hover {
+		transform: none;
+		background-color: var(--gray);
 	}
 
 	@media screen and (max-width: 1024px) {
