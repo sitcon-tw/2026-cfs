@@ -253,7 +253,8 @@
 			"other": "項",
 			"copy": "份",
 			"second": "秒",
-			"time": "次"
+			"time": "次",
+			"式": "式"
 		},
 		"item_categories": {
 			"all": "全部",
