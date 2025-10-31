@@ -253,7 +253,8 @@
 			"other": "items",
 			"copy": "copies",
 			"second": "seconds",
-			"time": "times"
+			"time": "times",
+			"式": "types"
 		},
 		"item_categories": {
 			"all": "All",
