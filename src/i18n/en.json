@@ -254,7 +254,7 @@
 			"copy": "copies",
 			"second": "seconds",
 			"time": "times",
-			"式": "types"
+			"type": "types"
 		},
 		"item_categories": {
 			"all": "All",

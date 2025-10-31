@@ -254,7 +254,7 @@
 			"copy": "份",
 			"second": "秒",
 			"time": "次",
-			"式": "式"
+			"type": "式"
 		},
 		"item_categories": {
 			"all": "全部",
