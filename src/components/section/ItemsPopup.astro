@@ -17,8 +17,17 @@ const items = itemsUnsorted.sort((a, b) => {
 <script>
 	import { getInterestedItems, removeInterestedItem, isItemInterested, addInterestedItem, isDeadlinePassed } from "../../utils/local-storage.ts";
 	import { getItemDisplayPrice } from "../../utils/plan-helper.ts";
+	import { initializeAddToCart, updateAddButtonStates } from "../../utils/add-to-cart-handler.ts";
 
 	declare function popupCtrl(id: string, action: string): void;
+
+	// Initialize add-to-cart functionality with card click handler
+	initializeAddToCart({
+		onCardClick: (itemId: string) => {
+			const popupId = `item-popup-${itemId}`;
+			window.popupCtrl(popupId, "open");
+		}
+	});
 
 	const expandButton = document.getElementById("expandButton");
 	const cardsContainer = document.querySelector(".cards-container");
@@ -180,59 +189,8 @@ const items = itemsUnsorted.sort((a, b) => {
 		updateExpandButtonVisibility(allCards.length);
 	});
 
-	const syncAllAddButtons = () => {
-		const items = getInterestedItems();
-		const ids = new Set(items.map(i => i.id));
-		document.querySelectorAll(".add-button").forEach(btn => {
-			const id = btn.getAttribute("data-item-id") || "";
-			const deadline = btn.getAttribute("data-item-deadline") || "";
-
-			// Check if deadline has passed
-			const expired = isDeadlinePassed(deadline);
-			if (expired) {
-				btn.setAttribute("disabled", "true");
-				btn.classList.add("disabled");
-			} else {
-				btn.removeAttribute("disabled");
-				btn.classList.remove("disabled");
-			}
-
-			// Check if this item or any of its sub-items are in cart
-			let hasItemInCart = ids.has(id);
-
-			// Also check if any sub-items are in cart (sub-items have IDs like "parent-id-sub-0")
-			if (!hasItemInCart) {
-				for (const itemId of ids) {
-					if (itemId.startsWith(id + "-sub-")) {
-						hasItemInCart = true;
-						break;
-					}
-				}
-			}
-
-			if (hasItemInCart) btn.classList.add("added");
-			else btn.classList.remove("added");
-		});
-	};
-
-	const addCardClickHandlers = () => {
-		const cards = document.querySelectorAll(".card") as NodeListOf<HTMLElement>;
-		cards.forEach(card => {
-			const itemIdStr = card.getAttribute("data-card-id");
-			if (itemIdStr) {
-				card.style.cursor = "pointer";
-				card.addEventListener("click", e => {
-					const target = e.target as Element;
-					if (target.closest(".add-button")) {
-						return;
-					}
-					e.stopPropagation();
-					const popupId = `item-popup-${itemIdStr}`;
-					window.popupCtrl(popupId, "open");
-				});
-			}
-		});
-	};
+	// Use the shared utility function for syncing add buttons
+	const syncAllAddButtons = updateAddButtonStates;
 
 	const updateCardHighlighting = () => {
 		const cards = document.querySelectorAll(".card");
@@ -371,56 +329,7 @@ const items = itemsUnsorted.sort((a, b) => {
 		const target = e.target;
 		if (!(target instanceof Element)) return;
 
-		// Handle add button clicks
-		const button = target.closest(".add-button");
-		if (button) {
-			e.preventDefault();
-			e.stopPropagation();
-			const id = button.getAttribute("data-item-id") || "";
-			const itemDeadline = button.getAttribute("data-item-deadline") || "";
-
-			// Check if deadline has passed
-			if (isDeadlinePassed(itemDeadline)) {
-				return; // Don't allow adding expired items
-			}
-
-			// Check if this item has sub-items
-			const card = button.closest(".card");
-			const hasSubItems = card?.getAttribute("data-has-sub-items") === "true";
-
-			if (hasSubItems) {
-				// Open the popup for items with sub-items
-				const popupId = `item-popup-${id}`;
-				window.popupCtrl(popupId, "open");
-			} else {
-				// Toggle interested state for items without sub-items
-				const itemTitle = button.getAttribute("data-item-title") || "";
-				const itemImage = button.getAttribute("data-item-image") || "";
-				const itemPrice = button.getAttribute("data-item-price") || "";
-
-				if (isItemInterested(id)) {
-					// Remove from interested items
-					removeInterestedItem(id);
-				} else {
-					// Add to interested items with quantity 1
-					const deadlineEl = card?.querySelector(".deadline-tag");
-					const itemDeadline = deadlineEl?.textContent || "";
-
-					// Get display price (either actual price or plan inclusion info)
-					const displayPrice = getItemDisplayPrice(id, itemPrice);
-
-					addInterestedItem({
-						id: id,
-						title: itemTitle,
-						category: "all",
-						image: itemImage,
-						deadline: itemDeadline,
-						price: displayPrice
-					});
-				}
-			}
-			return;
-		}
+		// Note: Add button clicks are now handled by the global handler in add-to-cart-handler.ts
 
 		// Handle popover close when clicking outside
 		if (interestPopover?.classList.contains("active") && !interestPopover.contains(e.target as Node) && !interestButton?.contains(e.target as Node)) {
@@ -563,6 +472,5 @@ const items = itemsUnsorted.sort((a, b) => {
 	setTimeout(updateInterestButtonVisibility, 100);
 	window.addEventListener("itemsChange", syncAllAddButtons);
 	document.addEventListener("interested-items-changed", updateCardHighlighting);
-	addCardClickHandlers();
 	updateCardHighlighting();
 </script>
