@@ -259,7 +259,8 @@ function normalizeUnit(chineseUnit) {
 		則: "ad",
 		項: "other",
 		秒: "second",
-		次: "time"
+		次: "time",
+		式: "type"
 	};
 
 	return unitMap[chineseUnit] || chineseUnit;
