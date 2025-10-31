@@ -197,8 +197,6 @@ const uniqueItemIds = new Set<string>();
 <script>
 	import { isItemInterested, addInterestedItem, removeInterestedItem, isDeadlinePassed, type InterestedItem } from "../../utils/local-storage.ts";
 
-	declare function popupCtrl(id: string, action: string): void;
-
 	function updateHighlighting() {
 		const planCells = document.querySelectorAll(".plan-cell");
 		planCells.forEach(cell => {

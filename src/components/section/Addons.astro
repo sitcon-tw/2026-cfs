@@ -44,6 +44,7 @@ const categories = Object.keys(groupedItems);
 										class="add-button"
 										data-item-id={item.id}
 										data-item-name={item.name}
+										data-item-price={item.price || ""}
 										data-has-sub-items={item.sub && item.sub.length > 0 ? "true" : "false"}
 										data-item-deadline={item.deadline || ""}
 									>
@@ -68,121 +69,19 @@ const categories = Object.keys(groupedItems);
 </section>
 
 <script>
-	import { isItemInterested, addInterestedItem, removeInterestedItem, getInterestedItems, isDeadlinePassed } from "../../utils/local-storage.ts";
-
-	declare function popupCtrl(id: string, action: string): void;
-
-	function updateAddButtons() {
-		const items = getInterestedItems();
-		const ids = new Set(items.map(i => i.id));
-
-		const addButtons = document.querySelectorAll(".addon-card .add-button") as NodeListOf<HTMLButtonElement>;
-		addButtons.forEach(button => {
-			const itemId = button.getAttribute("data-item-id");
-			const deadline = button.getAttribute("data-item-deadline") || "";
-
-			// Check if deadline has passed
-			const expired = isDeadlinePassed(deadline);
-			if (expired) {
-				button.setAttribute("disabled", "true");
-				button.classList.add("disabled");
-			} else {
-				button.removeAttribute("disabled");
-				button.classList.remove("disabled");
-			}
-
-			if (itemId) {
-				// Check if this item or any of its sub-items are in cart
-				let hasItemInCart = ids.has(itemId);
-
-				// Also check if any sub-items are in cart (sub-items have IDs like "parent-id-sub-0")
-				if (!hasItemInCart) {
-					for (const id of ids) {
-						if (id.startsWith(itemId + "-sub-")) {
-							hasItemInCart = true;
-							break;
-						}
-					}
-				}
-
-				if (hasItemInCart) {
-					button.classList.add("added");
-				} else {
-					button.classList.remove("added");
-				}
-			}
-		});
-	}
-
-	function addCardClickHandlers() {
-		const addonCards = document.querySelectorAll(".addon-card") as NodeListOf<HTMLElement>;
-		addonCards.forEach(card => {
-			const itemIdStr = card.getAttribute("data-item-id");
-			if (itemIdStr) {
-				card.style.cursor = "pointer";
-				card.addEventListener("click", function (e) {
-					// Check if click was on the add button or its children
-					const target = e.target as HTMLElement;
-					if (target.closest(".add-button")) {
-						return; // Let the button handle its own click
-					}
-					e.stopPropagation();
-					const popupId = `item-popup-${itemIdStr}`;
-					window.popupCtrl(popupId, "open");
-				});
-			}
-		});
-	}
-
-	function addButtonClickHandlers() {
-		const addButtons = document.querySelectorAll(".addon-card .add-button") as NodeListOf<HTMLButtonElement>;
-		addButtons.forEach(button => {
-			button.addEventListener("click", function (e) {
-				e.stopPropagation();
-				const itemId = this.getAttribute("data-item-id");
-				const itemName = this.getAttribute("data-item-name");
-				const hasSubItems = this.getAttribute("data-has-sub-items") === "true";
-				const deadline = this.getAttribute("data-item-deadline") || "";
-
-				// Check if deadline has passed
-				if (isDeadlinePassed(deadline)) {
-					return; // Don't allow adding expired items
-				}
-
-				if (itemId) {
-					if (hasSubItems) {
-						// Open the popup for items with sub-items
-						const popupId = `item-popup-${itemId}`;
-						window.popupCtrl(popupId, "open");
-					} else if (itemName) {
-						// Toggle interested state for items without sub-items
-						if (isItemInterested(itemId)) {
-							removeInterestedItem(itemId);
-						} else {
-							addInterestedItem({
-								id: itemId,
-								title: itemName,
-								category: "addon",
-								image: "",
-								deadline: ""
-							});
-						}
-						updateAddButtons();
-					}
-				}
-			});
-		});
-	}
+	import { initializeAddToCart } from "../../utils/add-to-cart-handler.ts";
 
 	document.addEventListener("DOMContentLoaded", function () {
-		updateAddButtons();
-		addCardClickHandlers();
-		addButtonClickHandlers();
+		// Initialize add-to-cart functionality with card click handler
+		initializeAddToCart({
+			onCardClick: (itemId: string) => {
+				const popupId = `item-popup-${itemId}`;
+				if (typeof window.popupCtrl === "function") {
+					window.popupCtrl(popupId, "open");
+				}
+			}
+		});
 	});
-
-	window.addEventListener("itemsChange", updateAddButtons);
-
-	document.addEventListener("interested-items-changed", updateAddButtons);
 </script>
 
 <style>

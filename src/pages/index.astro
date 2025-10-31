@@ -107,7 +107,8 @@ const defaultSchema = {
 
 			window.dataLayer = window.dataLayer || [];
 
-			const lenis = new Lenis({
+			// Initialize Lenis for smooth scrolling (runs automatically with autoRaf: true)
+			const _lenis = new Lenis({
 				autoRaf: true,
 				prevent: node => node.classList.contains("lenis-scroll")
 			});
@@ -136,7 +137,7 @@ const defaultSchema = {
 
 			document.querySelectorAll(".aos").forEach(el => observer.observe(el));
 
-			window.popupCtrl = (id = "", action = "open", updateUrl = true, find) => {
+			window.popupCtrl = (id = "", action = "open", updateUrl = true, find = null) => {
 				const popupBg = find || (document.querySelector(`#${id} + .popup-bg`) as HTMLElement | null);
 				if (!popupBg || !(popupBg instanceof HTMLElement)) return;
 				if (action === "open") {
