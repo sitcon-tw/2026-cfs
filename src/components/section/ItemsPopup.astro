@@ -18,12 +18,15 @@ const items = itemsUnsorted.sort((a, b) => {
 	import { getInterestedItems, removeInterestedItem, isItemInterested } from "../../utils/local-storage.ts";
 	import { initializeAddToCart, updateAddButtonStates } from "../../utils/add-to-cart-handler.ts";
 
-	// Initialize add-to-cart functionality with card click handler
-	initializeAddToCart({
-		onCardClick: (itemId: string) => {
-			const popupId = `item-popup-${itemId}`;
-			window.popupCtrl(popupId, "open");
-		}
+	// Wait for DOM to be ready before initializing add-to-cart functionality
+	document.addEventListener("DOMContentLoaded", function () {
+		// Initialize add-to-cart functionality with card click handler
+		initializeAddToCart({
+			onCardClick: (itemId: string) => {
+				const popupId = `item-popup-${itemId}`;
+				window.popupCtrl(popupId, "open");
+			}
+		});
 	});
 
 	const expandButton = document.getElementById("expandButton");
