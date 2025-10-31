@@ -48,8 +48,11 @@ export function handleAddButtonClick(button: HTMLElement, event: Event): void {
 			const deadlineEl = card?.querySelector(".deadline-tag");
 			const displayDeadline = deadlineEl?.textContent || "";
 
+			// Get user's language preference (default to zh-Hant if not available)
+			const userLang = document.documentElement.lang || navigator.language || "zh-Hant";
+
 			// Get display price (either actual price or plan inclusion info)
-			const displayPrice = getItemDisplayPrice(id, itemPrice);
+			const displayPrice = getItemDisplayPrice(id, itemPrice, userLang);
 
 			addInterestedItem({
 				id: id,
@@ -110,7 +113,8 @@ export function updateAddButtonStates(): void {
 
 // Track if global handlers have been set up to avoid duplicates
 let globalHandlersInitialized = false;
-let cardClickCallbacks: Array<(itemId: string, event: Event) => void> = [];
+// Use Set for better duplicate prevention and to avoid memory leaks
+let cardClickCallbacks: Set<(itemId: string, event: Event) => void> = new Set();
 // Track which cards have been initialized to prevent duplicate handlers
 const initializedCards = new WeakSet<HTMLElement>();
 // Track registered event listeners to prevent duplicates
@@ -140,12 +144,11 @@ function setupGlobalClickHandlers(): void {
 /**
  * Registers a callback for card clicks
  * @param callback - Function to call when a card is clicked
+ * @note Function references must be identical to prevent duplicates. If you pass a new function instance each time, it will be registered as a separate callback.
  */
 export function registerCardClickHandler(callback: (itemId: string, event: Event) => void): void {
-	// Prevent duplicate callbacks
-	if (!cardClickCallbacks.includes(callback)) {
-		cardClickCallbacks.push(callback);
-	}
+	// Use Set to automatically prevent duplicate callbacks
+	cardClickCallbacks.add(callback);
 }
 
 /**
@@ -172,7 +175,7 @@ export function setupCardClickHandlers(): void {
 				}
 				e.stopPropagation();
 
-				// Call all registered callbacks
+				// Call all registered callbacks (Set iteration works the same as Array)
 				cardClickCallbacks.forEach(callback => callback(itemId, e));
 			});
 
