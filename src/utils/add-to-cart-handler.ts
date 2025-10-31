@@ -3,7 +3,7 @@ import { getItemDisplayPrice } from "./plan-helper.js";
 
 declare global {
 	interface Window {
-		popupCtrl: (id: string, action: string) => void;
+		popupCtrl: (id?: string, action?: "open" | "close", updateUrl?: boolean, find?: Element | null) => void;
 	}
 }
 
