@@ -111,6 +111,10 @@ export function updateAddButtonStates(): void {
 // Track if global handlers have been set up to avoid duplicates
 let globalHandlersInitialized = false;
 let cardClickCallbacks: Array<(itemId: string, event: Event) => void> = [];
+// Track which cards have been initialized to prevent duplicate handlers
+const initializedCards = new WeakSet<HTMLElement>();
+// Track registered event listeners to prevent duplicates
+let eventListenersRegistered = false;
 
 /**
  * Sets up global click handlers for add buttons (only once)
@@ -138,7 +142,10 @@ function setupGlobalClickHandlers(): void {
  * @param callback - Function to call when a card is clicked
  */
 export function registerCardClickHandler(callback: (itemId: string, event: Event) => void): void {
-	cardClickCallbacks.push(callback);
+	// Prevent duplicate callbacks
+	if (!cardClickCallbacks.includes(callback)) {
+		cardClickCallbacks.push(callback);
+	}
 }
 
 /**
@@ -148,14 +155,16 @@ export function registerCardClickHandler(callback: (itemId: string, event: Event
 export function setupCardClickHandlers(): void {
 	const cards = document.querySelectorAll(".card, .addon-card") as NodeListOf<HTMLElement>;
 	cards.forEach(card => {
+		// Skip if this card has already been initialized
+		if (initializedCards.has(card)) {
+			return;
+		}
+
 		const itemId = card.getAttribute("data-card-id") || card.getAttribute("data-item-id");
 		if (itemId) {
 			card.style.cursor = "pointer";
-			// Remove any existing click handlers by cloning the element
-			const newCard = card.cloneNode(true) as HTMLElement;
-			card.parentNode?.replaceChild(newCard, card);
 
-			newCard.addEventListener("click", e => {
+			card.addEventListener("click", e => {
 				// Don't trigger card click if clicking the add button
 				const target = e.target as Element;
 				if (target.closest(".add-button")) {
@@ -166,6 +175,9 @@ export function setupCardClickHandlers(): void {
 				// Call all registered callbacks
 				cardClickCallbacks.forEach(callback => callback(itemId, e));
 			});
+
+			// Mark this card as initialized
+			initializedCards.add(card);
 		}
 	});
 }
@@ -191,7 +203,10 @@ export function initializeAddToCart(
 	// Update button states initially
 	updateAddButtonStates();
 
-	// Listen for cart changes (these won't duplicate as they use the same function reference)
-	window.addEventListener("itemsChange", updateAddButtonStates);
-	document.addEventListener("interested-items-changed", updateAddButtonStates);
+	// Listen for cart changes only once to prevent duplicate event listeners
+	if (!eventListenersRegistered) {
+		window.addEventListener("itemsChange", updateAddButtonStates);
+		document.addEventListener("interested-items-changed", updateAddButtonStates);
+		eventListenersRegistered = true;
+	}
 }
