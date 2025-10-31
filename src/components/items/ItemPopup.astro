@@ -8,6 +8,15 @@ import type { SubItem } from "../../utils/items-loader";
 
 const { item, t, lang, popupId } = Astro.props;
 
+// Calculate total remaining for items with sub-items
+const hasSubItems = item.sub && item.sub.length > 0;
+const totalRemaining = hasSubItems
+	? item.sub.reduce((sum: number, sub: SubItem) => {
+			const remaining = parseInt(sub.remaining, 10);
+			return sum + (isNaN(remaining) ? 0 : remaining);
+		}, 0)
+	: parseInt(item.remaining, 10) || 0;
+
 // Find this item in plan.json benefits and collect tier info
 const tiers = [
 	{
@@ -100,9 +109,9 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 				{item.quantity === "獨家" && <span class="exclusive">{t.exclusive}</span>}
 				{item.quantity === "打包專屬" && <span class="package-exclusive">{t.package_exclusive}</span>}
 				{
-					item.quantity !== "獨家" && item.quantity !== "打包專屬" && (
-						<span class="remaining" data-initial-remaining={item.remaining} data-unit={t.unit[item.unit] || item.unit}>
-							{t.remaining} {item.remaining} {t.unit[item.unit] || item.unit}
+					item.quantity !== "獨家" && item.quantity !== "打包專屬" && item.quantity !== "不限" && totalRemaining > 0 && (
+						<span class="remaining" data-initial-remaining={totalRemaining} data-unit={t.unit[item.unit] || item.unit}>
+							{t.remaining} {totalRemaining} {t.unit[item.unit] || item.unit}
 						</span>
 					)
 				}
