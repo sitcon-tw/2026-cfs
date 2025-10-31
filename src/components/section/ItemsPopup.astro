@@ -15,11 +15,8 @@ const items = itemsUnsorted.sort((a, b) => {
 {items.map(item => <ItemPopup item={item} t={t} lang={lang} popupId={`item-popup-${item.id}`} />)}
 
 <script>
-	import { getInterestedItems, removeInterestedItem, isItemInterested, addInterestedItem, isDeadlinePassed } from "../../utils/local-storage.ts";
-	import { getItemDisplayPrice } from "../../utils/plan-helper.ts";
+	import { getInterestedItems, removeInterestedItem, isItemInterested } from "../../utils/local-storage.ts";
 	import { initializeAddToCart, updateAddButtonStates } from "../../utils/add-to-cart-handler.ts";
-
-	declare function popupCtrl(id: string, action: string): void;
 
 	// Initialize add-to-cart functionality with card click handler
 	initializeAddToCart({
