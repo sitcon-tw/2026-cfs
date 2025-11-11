@@ -21,7 +21,7 @@
     "price": "",
     "deadline": "2025/12/30",
     "talent_recruitment_order": 17,
-    "brand_exposure_order": 10,
+    "brand_exposure_order": 7,
     "product_promotion_order": 13,
     "sub": [
       {
@@ -66,7 +66,7 @@
     "price": "$45,000",
     "deadline": "2026/03/14",
     "talent_recruitment_order": 14,
-    "brand_exposure_order": 9,
+    "brand_exposure_order": 3,
     "product_promotion_order": 14,
     "sub": []
   },
@@ -92,7 +92,7 @@
     "price": "$48,000",
     "deadline": "2026/03/07",
     "talent_recruitment_order": 12,
-    "brand_exposure_order": 31,
+    "brand_exposure_order": 10,
     "product_promotion_order": 16,
     "sub": []
   },
@@ -118,7 +118,7 @@
     "price": "$48,000",
     "deadline": "2026/01/09",
     "talent_recruitment_order": 20,
-    "brand_exposure_order": 16,
+    "brand_exposure_order": 8,
     "product_promotion_order": 17,
     "sub": []
   },
@@ -144,7 +144,7 @@
     "price": "",
     "deadline": "2026/02/28",
     "talent_recruitment_order": 21,
-    "brand_exposure_order": 25,
+    "brand_exposure_order": 6,
     "product_promotion_order": 11,
     "sub": [
       {
@@ -189,7 +189,7 @@
     "price": "$66,000",
     "deadline": "2026/01/07",
     "talent_recruitment_order": 31,
-    "brand_exposure_order": 2,
+    "brand_exposure_order": 1,
     "product_promotion_order": 20,
     "sub": []
   },
@@ -215,7 +215,7 @@
     "price": "$66,000",
     "deadline": "2026/01/07",
     "talent_recruitment_order": 39,
-    "brand_exposure_order": 1,
+    "brand_exposure_order": 5,
     "product_promotion_order": 21,
     "sub": []
   },
@@ -241,7 +241,7 @@
     "price": "$33,000",
     "deadline": "2026/01/06",
     "talent_recruitment_order": 36,
-    "brand_exposure_order": 24,
+    "brand_exposure_order": 28,
     "product_promotion_order": 22,
     "sub": []
   },
@@ -267,7 +267,7 @@
     "price": "$40,000",
     "deadline": "2026/01/02",
     "talent_recruitment_order": 28,
-    "brand_exposure_order": 32,
+    "brand_exposure_order": 33,
     "product_promotion_order": 23,
     "sub": []
   },
@@ -293,7 +293,7 @@
     "price": "$11,000",
     "deadline": "2026/01/02",
     "talent_recruitment_order": 16,
-    "brand_exposure_order": 33,
+    "brand_exposure_order": 34,
     "product_promotion_order": 15,
     "sub": []
   },
@@ -319,7 +319,7 @@
     "price": "$15,000",
     "deadline": "2026/01/09",
     "talent_recruitment_order": 23,
-    "brand_exposure_order": 38,
+    "brand_exposure_order": 12,
     "product_promotion_order": 24,
     "sub": []
   },
@@ -345,7 +345,7 @@
     "price": "",
     "deadline": "2026/03/21",
     "talent_recruitment_order": 6,
-    "brand_exposure_order": 4,
+    "brand_exposure_order": 15,
     "product_promotion_order": 6,
     "sub": [
       {
@@ -417,7 +417,7 @@
     "price": "$4,000",
     "deadline": "2026/03/21",
     "talent_recruitment_order": 7,
-    "brand_exposure_order": 13,
+    "brand_exposure_order": 20,
     "product_promotion_order": 12,
     "sub": []
   },
@@ -443,7 +443,7 @@
     "price": "",
     "deadline": "2026/03/21",
     "talent_recruitment_order": 3,
-    "brand_exposure_order": 20,
+    "brand_exposure_order": 24,
     "product_promotion_order": 7,
     "sub": [
       {
@@ -497,7 +497,7 @@
     "price": "",
     "deadline": "2026/03/21",
     "talent_recruitment_order": 11,
-    "brand_exposure_order": 37,
+    "brand_exposure_order": 38,
     "product_promotion_order": 9,
     "sub": [
       {
@@ -542,7 +542,7 @@
     "price": "$35,000",
     "deadline": "2026/03/14",
     "talent_recruitment_order": 22,
-    "brand_exposure_order": 29,
+    "brand_exposure_order": 31,
     "product_promotion_order": 8,
     "sub": []
   },
@@ -568,7 +568,7 @@
     "price": "$18,000",
     "deadline": "2026/03/21",
     "talent_recruitment_order": 19,
-    "brand_exposure_order": 8,
+    "brand_exposure_order": 19,
     "product_promotion_order": 5,
     "sub": []
   },
@@ -594,7 +594,7 @@
     "price": "$52,000",
     "deadline": "2026/01/07",
     "talent_recruitment_order": 24,
-    "brand_exposure_order": 28,
+    "brand_exposure_order": 4,
     "product_promotion_order": 37,
     "sub": []
   },
@@ -620,7 +620,7 @@
     "price": "$8,000",
     "deadline": "2026/03/21",
     "talent_recruitment_order": 8,
-    "brand_exposure_order": 3,
+    "brand_exposure_order": 14,
     "product_promotion_order": 3,
     "sub": []
   },
@@ -646,7 +646,7 @@
     "price": "$28,000",
     "deadline": "2026/02/21",
     "talent_recruitment_order": 18,
-    "brand_exposure_order": 12,
+    "brand_exposure_order": 9,
     "product_promotion_order": 39,
     "sub": []
   },
@@ -698,7 +698,7 @@
     "price": "",
     "deadline": "2026/01/30",
     "talent_recruitment_order": 29,
-    "brand_exposure_order": 15,
+    "brand_exposure_order": 2,
     "product_promotion_order": 19,
     "sub": [
       {
@@ -752,7 +752,7 @@
     "price": "$16,000",
     "deadline": "2026/02/21",
     "talent_recruitment_order": 2,
-    "brand_exposure_order": 36,
+    "brand_exposure_order": 37,
     "product_promotion_order": 38,
     "sub": []
   },
@@ -778,7 +778,7 @@
     "price": "$18,000",
     "deadline": "2026/02/28",
     "talent_recruitment_order": 25,
-    "brand_exposure_order": 14,
+    "brand_exposure_order": 13,
     "product_promotion_order": 18,
     "sub": []
   },
@@ -830,7 +830,7 @@
     "price": "$5,000",
     "deadline": "2026/03/21",
     "talent_recruitment_order": 15,
-    "brand_exposure_order": 22,
+    "brand_exposure_order": 26,
     "product_promotion_order": 35,
     "sub": []
   },
@@ -856,7 +856,7 @@
     "price": "$4,000",
     "deadline": "2026/03/21",
     "talent_recruitment_order": 10,
-    "brand_exposure_order": 27,
+    "brand_exposure_order": 29,
     "product_promotion_order": 10,
     "sub": []
   },
@@ -882,7 +882,7 @@
     "price": "",
     "deadline": "2026/02/21",
     "talent_recruitment_order": 1,
-    "brand_exposure_order": 21,
+    "brand_exposure_order": 25,
     "product_promotion_order": 2,
     "sub": []
   },
@@ -908,7 +908,7 @@
     "price": "",
     "deadline": "2026/02/21",
     "talent_recruitment_order": 4,
-    "brand_exposure_order": 7,
+    "brand_exposure_order": 18,
     "product_promotion_order": 4,
     "sub": []
   },
@@ -934,7 +934,7 @@
     "price": "",
     "deadline": "2026/02/21",
     "talent_recruitment_order": 9,
-    "brand_exposure_order": 34,
+    "brand_exposure_order": 35,
     "product_promotion_order": 32,
     "sub": []
   },
@@ -986,7 +986,7 @@
     "price": "",
     "deadline": "2026/02/21",
     "talent_recruitment_order": 13,
-    "brand_exposure_order": 26,
+    "brand_exposure_order": 30,
     "product_promotion_order": 33,
     "sub": []
   },
@@ -1012,7 +1012,7 @@
     "price": "",
     "deadline": "2026/02/21",
     "talent_recruitment_order": 27,
-    "brand_exposure_order": 17,
+    "brand_exposure_order": 21,
     "product_promotion_order": 28,
     "sub": []
   },
@@ -1038,7 +1038,7 @@
     "price": "",
     "deadline": "2026/02/21",
     "talent_recruitment_order": 37,
-    "brand_exposure_order": 23,
+    "brand_exposure_order": 27,
     "product_promotion_order": 27,
     "sub": []
   },
@@ -1064,7 +1064,7 @@
     "price": "",
     "deadline": "2026/02/21",
     "talent_recruitment_order": 34,
-    "brand_exposure_order": 18,
+    "brand_exposure_order": 22,
     "product_promotion_order": 30,
     "sub": []
   },
@@ -1090,7 +1090,7 @@
     "price": "",
     "deadline": "2026/02/21",
     "talent_recruitment_order": 32,
-    "brand_exposure_order": 19,
+    "brand_exposure_order": 23,
     "product_promotion_order": 31,
     "sub": []
   },
@@ -1116,7 +1116,7 @@
     "price": "",
     "deadline": "2026/02/21",
     "talent_recruitment_order": 38,
-    "brand_exposure_order": 30,
+    "brand_exposure_order": 32,
     "product_promotion_order": 29,
     "sub": []
   },
@@ -1142,7 +1142,7 @@
     "price": "",
     "deadline": "2026/02/21",
     "talent_recruitment_order": 40,
-    "brand_exposure_order": 6,
+    "brand_exposure_order": 17,
     "product_promotion_order": 34,
     "sub": []
   },
@@ -1168,7 +1168,7 @@
     "price": "",
     "deadline": "2026/02/21",
     "talent_recruitment_order": 35,
-    "brand_exposure_order": 35,
+    "brand_exposure_order": 36,
     "product_promotion_order": 26,
     "sub": []
   },
@@ -1194,7 +1194,7 @@
     "price": "",
     "deadline": "2026/02/21",
     "talent_recruitment_order": 33,
-    "brand_exposure_order": 5,
+    "brand_exposure_order": 16,
     "product_promotion_order": 25,
     "sub": []
   }
