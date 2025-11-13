@@ -229,7 +229,6 @@
 		"hours": "小時",
 		"minutes": "分鐘",
 		"seconds": "秒",
-		"deadline": "截止",
 		"price": "價格",
 		"expandAll": "展開所有項目",
 		"showLess": "收起",
@@ -242,6 +241,7 @@
 		"contactUs": "聯絡我們"
 	},
 	"global": {
+	  "deadline": "截止",
 		"remaining": "剩餘",
 		"exclusive": "獨家",
 		"package_exclusive": "打包專屬",

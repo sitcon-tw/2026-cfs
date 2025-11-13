@@ -229,7 +229,6 @@
 		"hours": "hours",
 		"minutes": "minutes",
 		"seconds": "seconds",
-		"deadline": "Deadline",
 		"price": "Price",
 		"expandAll": "Expand All",
 		"showLess": "Show Less",
@@ -242,6 +241,7 @@
 		"contactUs": "Contact Us"
 	},
 	"global": {
+	  "deadline": "Deadline",
 		"remaining": "Remaining",
 		"exclusive": "Exclusive",
 		"package_exclusive": "Package-exclusive",
