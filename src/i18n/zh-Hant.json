@@ -241,7 +241,7 @@
 		"contactUs": "聯絡我們"
 	},
 	"global": {
-	  "deadline": "截止",
+		"deadline": "截止",
 		"remaining": "剩餘",
 		"exclusive": "獨家",
 		"package_exclusive": "打包專屬",
