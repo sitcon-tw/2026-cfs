@@ -241,7 +241,7 @@
 		"contactUs": "Contact Us"
 	},
 	"global": {
-	  "deadline": "Deadline",
+		"deadline": "Deadline",
 		"remaining": "Remaining",
 		"exclusive": "Exclusive",
 		"package_exclusive": "Package-exclusive",
