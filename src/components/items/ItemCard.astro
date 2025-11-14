@@ -31,14 +31,18 @@ const subItemsData = hasSubItems
 // Calculate total remaining for items with sub-items
 const totalRemaining = hasSubItems
 	? card.sub.reduce((sum: number, sub: any) => {
-			const remaining = parseInt(sub.remaining, 10);
-			return sum + (isNaN(remaining) ? 0 : remaining);
+			const remaining = sub.remaining === "" ? null : parseInt(sub.remaining, 10);
+			return sum + (remaining === null || isNaN(remaining) ? 0 : remaining);
 		}, 0)
 	: parseInt(card.remaining, 10) || 0;
+
+// Check if item is sold out - only when remaining is explicitly "0"
+// Empty string ("") or null should NOT be treated as sold out
+const isSoldOut = card.remaining === "0" || (hasSubItems && card.sub.every((sub: any) => sub.remaining === "0") && card.sub.length > 0);
 ---
 
 <div
-	class={`card ${card.quantity === "打包專屬" ? "package-exclusive-item" : ""}`}
+	class={`card ${card.quantity === "打包專屬" ? "package-exclusive-item" : ""} ${isSoldOut ? "sold-out" : ""}`}
 	data-card-id={card.id}
 	data-descriptions={descriptionData}
 	data-order={card.order}
@@ -47,6 +51,7 @@ const totalRemaining = hasSubItems
 	data-product-promotion-order={card.product_promotion_order}
 	data-has-sub-items={hasSubItems ? "true" : "false"}
 	data-sub-items={subItemsData}
+	data-is-sold-out={isSoldOut ? "true" : "false"}
 >
 	<div class="card-image">
 		{
@@ -59,10 +64,11 @@ const totalRemaining = hasSubItems
 			)
 		}
 		<div class="tag">
-			{card.quantity === "獨家" && <div class="exclusive-tag">{t.exclusive}</div>}
-			{card.quantity === "打包專屬" && <div class="package-exclusive-tag">{t.package_exclusive}</div>}
+			{isSoldOut && <div class="sold-out-tag">{t.sold_out}</div>}
+			{!isSoldOut && card.quantity === "獨家" && <div class="exclusive-tag">{t.exclusive}</div>}
+			{!isSoldOut && card.quantity === "打包專屬" && <div class="package-exclusive-tag">{t.package_exclusive}</div>}
 			{
-				card.quantity !== "獨家" && card.quantity !== "打包專屬" && card.quantity !== "不限" && totalRemaining > 0 && (
+				!isSoldOut && card.quantity !== "獨家" && card.quantity !== "打包專屬" && card.quantity !== "不限" && totalRemaining > 0 && (
 					<div class="remaining-tag" data-initial-remaining={totalRemaining} data-unit={t.unit[card.unit] || card.unit}>
 						{t.remaining} {totalRemaining} {t.unit[card.unit] || card.unit}
 					</div>
@@ -74,22 +80,26 @@ const totalRemaining = hasSubItems
 	<div class="card-content">
 		<div class="title-row">
 			<h3>{card.name}</h3>
-			<button
-				type="button"
-				class="add-button"
-				data-item-id={card.id}
-				data-item-title={card.name}
-				data-item-image={card.image || ""}
-				data-item-price={card.price || ""}
-				data-item-deadline={card.deadline || ""}
-			>
-				<span class="add-icon">
-					<Plus />
-				</span>
-				<span class="added-icon">
-					<Check />
-				</span>
-			</button>
+			{
+				!isSoldOut && (
+					<button
+						type="button"
+						class="add-button"
+						data-item-id={card.id}
+						data-item-title={card.name}
+						data-item-image={card.image || ""}
+						data-item-price={card.price || ""}
+						data-item-deadline={card.deadline || ""}
+					>
+						<span class="add-icon">
+							<Plus />
+						</span>
+						<span class="added-icon">
+							<Check />
+						</span>
+					</button>
+				)
+			}
 		</div>
 		<div class="description" set:html={marked.parse(currentDescription)} />
 	</div>
@@ -158,6 +168,29 @@ const totalRemaining = hasSubItems
 		border-radius: 20px;
 		font-size: 0.9rem;
 		font-weight: 500;
+	}
+
+	.sold-out-tag {
+		background-color: #999;
+		color: var(--white);
+		padding: 0.1rem 0.7rem;
+		border-radius: 20px;
+		font-size: 0.9rem;
+		font-weight: 500;
+	}
+
+	.card.sold-out {
+		opacity: 0.6;
+		filter: grayscale(0.5);
+	}
+
+	.card.sold-out .card-image {
+		opacity: 0.7;
+	}
+
+	.card.sold-out .card-content h3,
+	.card.sold-out .description {
+		color: #666;
 	}
 
 	.card-content {

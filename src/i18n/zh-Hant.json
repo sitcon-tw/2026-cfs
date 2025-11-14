@@ -245,6 +245,7 @@
 		"remaining": "剩餘",
 		"exclusive": "獨家",
 		"package_exclusive": "打包專屬",
+		"sold_out": "已售完",
 		"unit": {
 			"ticket": "張",
 			"booth": "個",

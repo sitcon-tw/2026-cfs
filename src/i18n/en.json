@@ -245,6 +245,7 @@
 		"remaining": "Remaining",
 		"exclusive": "Exclusive",
 		"package_exclusive": "Package-exclusive",
+		"sold_out": "Sold Out",
 		"unit": {
 			"ticket": "tickets",
 			"booth": "booths",
