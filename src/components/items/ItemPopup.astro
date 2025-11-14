@@ -12,12 +12,11 @@ const { item, t, lang, popupId } = Astro.props;
 const hasSubItems = item.sub && item.sub.length > 0;
 const totalRemaining = hasSubItems
 	? item.sub.reduce((sum: number, sub: SubItem) => {
-			const remaining = parseInt(sub.remaining, 10);
-			return sum + (isNaN(remaining) ? 0 : remaining);
+			const remaining = sub.remaining === "" ? null : parseInt(sub.remaining, 10);
+			return sum + (remaining === null || isNaN(remaining) ? 0 : remaining);
 		}, 0)
 	: parseInt(item.remaining, 10) || 0;
-
-// Find this item in plan.json benefits and collect tier info
+const isSoldOut = item.remaining === "0" || (hasSubItems && item.sub.every((sub: SubItem) => sub.remaining === "0") && item.sub.length > 0);
 const tiers = [
 	{
 		id: "navigator",
@@ -106,10 +105,11 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 		</div>
 		<div class="item-details lenis-scroll">
 			<div class="item-meta">
-				{item.quantity === "獨家" && <span class="exclusive">{t.exclusive}</span>}
-				{item.quantity === "打包專屬" && <span class="package-exclusive">{t.package_exclusive}</span>}
+				{isSoldOut && <span class="sold-out">{t.sold_out}</span>}
+				{!isSoldOut && item.quantity === "獨家" && <span class="exclusive">{t.exclusive}</span>}
+				{!isSoldOut && item.quantity === "打包專屬" && <span class="package-exclusive">{t.package_exclusive}</span>}
 				{
-					item.quantity !== "獨家" && item.quantity !== "打包專屬" && item.quantity !== "不限" && totalRemaining > 0 && (
+					!isSoldOut && item.quantity !== "獨家" && item.quantity !== "打包專屬" && item.quantity !== "不限" && totalRemaining > 0 && (
 						<span class="remaining" data-initial-remaining={totalRemaining} data-unit={t.unit[item.unit] || item.unit}>
 							{t.remaining} {totalRemaining} {t.unit[item.unit] || item.unit}
 						</span>
@@ -133,27 +133,31 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 					<div class="sub-items-section">
 						{item.sub.map((subItem: SubItem, index: number) => {
 							const subItemId = `${item.id}-sub-${index}`;
+							const isSubItemSoldOut = subItem.remaining === "0";
 
 							return (
-								<div class="sub-item" data-sub-item-id={subItemId}>
+								<div class={`sub-item ${isSubItemSoldOut ? "sold-out" : ""}`} data-sub-item-id={subItemId}>
 									<span class={"sub-item-name" + (subItem.name.length > 8 ? " long" : "")}>{subItem.name}</span>
 									<span class="sub-item-price">{subItem.price}</span>
-									<button
-										type="button"
-										class="sub-add-button"
-										data-sub-item-id={subItemId}
-										data-sub-item-name={subItem.name}
-										data-sub-item-price={subItem.price}
-										data-item-deadline={item.deadline || ""}
-										aria-label={`Add ${subItem.name}`}
-									>
-										<span class="add-icon">
-											<Plus />
-										</span>
-										<span class="added-icon">
-											<Check />
-										</span>
-									</button>
+									{isSubItemSoldOut && <span class="sub-item-sold-out">{t.sold_out}</span>}
+									{!isSubItemSoldOut && (
+										<button
+											type="button"
+											class="sub-add-button"
+											data-sub-item-id={subItemId}
+											data-sub-item-name={subItem.name}
+											data-sub-item-price={subItem.price}
+											data-item-deadline={item.deadline || ""}
+											aria-label={`Add ${subItem.name}`}
+										>
+											<span class="add-icon">
+												<Plus />
+											</span>
+											<span class="added-icon">
+												<Check />
+											</span>
+										</button>
+									)}
 								</div>
 							);
 						})}
@@ -354,6 +358,15 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 		font-weight: 500;
 	}
 
+	.sold-out {
+		background-color: #999;
+		color: var(--white);
+		padding: 0.1rem 0.7rem;
+		border-radius: 20px;
+		font-size: 0.9rem;
+		font-weight: 500;
+	}
+
 	.item-image {
 		display: flex;
 		align-items: center;
@@ -528,6 +541,24 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 	.sub-item-price {
 		color: rgba(0, 0, 0, 0.6);
 		font-size: 1.1rem;
+	}
+
+	.sub-item-sold-out {
+		color: #999;
+		font-size: 0.9rem;
+		font-weight: 500;
+		padding: 0.2rem 0.6rem;
+		background-color: #f0f0f0;
+		border-radius: 12px;
+	}
+
+	.sub-item.sold-out {
+		opacity: 0.6;
+	}
+
+	.sub-item.sold-out .sub-item-name,
+	.sub-item.sold-out .sub-item-price {
+		color: #999;
 	}
 
 	.sub-add-button {
