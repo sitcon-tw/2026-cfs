@@ -723,11 +723,6 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 	import { getItemDisplayPrice } from "../../utils/plan-helper.ts";
 	import { openVenueDetails } from "../../utils/venue-linkify.ts";
 
-	// Attach openVenueDetails to window for inline onclick handlers
-	if (!window.openVenueDetails) {
-		window.openVenueDetails = openVenueDetails;
-	}
-
 	document.addEventListener("DOMContentLoaded", function () {
 		// Sync sub-item button state with localStorage and deadline
 		function syncSubItemButton(subItemId: string) {
