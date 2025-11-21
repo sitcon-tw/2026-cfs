@@ -19,11 +19,10 @@ export function linkifyVenueCodes(text: string): string {
 
 	// Create a regex pattern that matches venue codes as whole words
 	// This ensures we don't match R0 inside other words
-	VENUE_CODES.forEach(code => {
-		const regex = new RegExp(`\\b(${code})\\b`, "gi");
-		result = result.replace(regex, match => {
-			return `<a href="#" class="venue-link" data-venue-code="${match.toUpperCase()}">${match}</a>`;
-		});
+	const venuePattern = `\\b(${VENUE_CODES.join("|")})\\b`;
+	const regex = new RegExp(venuePattern, "gi");
+	result = result.replace(regex, match => {
+		return `<a href="#" class="venue-link" data-venue-code="${match.toUpperCase()}" onclick="event.preventDefault(); event.stopPropagation(); window.openVenueDetails && window.openVenueDetails('${match.toUpperCase()}');">${match}</a>`;
 	});
 
 	return result;
