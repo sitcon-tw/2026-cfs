@@ -48,17 +48,17 @@ interface TeamItem {
 				}
 				<div class="line"><div class="circle"></div><ChevronDown size={38} /></div>
 			</div>
-			<h3>{t.place_detail}</h3>
+			<h3 class="place-section-title">{t.place_detail}</h3>
 			<div class="location">
 				<div class="location-name" set:html={t.location_name} />
 				<div class="location-info">{t.max_people}<div>{t.people_count_unit}</div></div>
 			</div>
 		</div>
 
-		<div class="venue-container">
+		<div class="venue-container" id="venue-details-section">
 			{
 				t.place_items.map((item: PlaceItem) => (
-					<div class="venue">
+					<div class="venue" data-venue-code={item.code}>
 						<div class="venue-text-container">
 							<div class="venue-text">
 								<h4>
@@ -357,4 +357,3 @@ interface TeamItem {
 		}
 	}
 </style>
-
