@@ -3,6 +3,7 @@ import Popup from "../Popup.astro";
 import { X, Plus, ChevronLeft, ChevronRight, Check } from "@lucide/astro";
 import planData from "@data/plan.json";
 import { marked } from "marked";
+import { linkifyVenueCodes } from "../../utils/venue-linkify";
 
 import type { SubItem } from "../../utils/items-loader";
 
@@ -118,7 +119,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 				<span class="category">{`${new Date(item.deadline).getMonth() + 1}/${new Date(item.deadline).getDate()}`} {t.deadline}</span>
 			</div>
 			<div class="title-row">
-				<h3>{item.name}</h3>
+				<h3 set:html={linkifyVenueCodes(item.name)} />
 			</div>
 			{
 				item.price && (
@@ -196,13 +197,13 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 			}
 
 			<div class="structured-descriptions">
-				{item.global_description && <div set:html={marked.parse(item.global_description)} />}
+				{item.global_description && <div set:html={linkifyVenueCodes(marked.parse(item.global_description) as string)} />}
 
 				{
 					item.talent_recruitment && (
 						<>
 							<h2>{t.item_categories.talent_recruitment}</h2>
-							<div set:html={marked.parse(item.talent_recruitment)} />
+							<div set:html={linkifyVenueCodes(marked.parse(item.talent_recruitment) as string)} />
 						</>
 					)
 				}
@@ -211,7 +212,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 					item.brand_exposure && (
 						<>
 							<h2>{t.item_categories.brand_exposure}</h2>
-							<div set:html={marked.parse(item.brand_exposure)} />
+							<div set:html={linkifyVenueCodes(marked.parse(item.brand_exposure) as string)} />
 						</>
 					)
 				}
@@ -220,7 +221,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 					item.product_promotion && (
 						<>
 							<h2>{t.item_categories.product_promotion}</h2>
-							<div set:html={marked.parse(item.product_promotion)} />
+							<div set:html={linkifyVenueCodes(marked.parse(item.product_promotion) as string)} />
 						</>
 					)
 				}
@@ -720,6 +721,12 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 <script>
 	import { addInterestedItem, removeInterestedItem, isItemInterested, isDeadlinePassed } from "../../utils/local-storage.ts";
 	import { getItemDisplayPrice } from "../../utils/plan-helper.ts";
+	import { openVenueDetails } from "../../utils/venue-linkify.ts";
+
+	// Attach openVenueDetails to window for inline onclick handlers
+	if (!window.openVenueDetails) {
+		window.openVenueDetails = openVenueDetails;
+	}
 
 	document.addEventListener("DOMContentLoaded", function () {
 		// Sync sub-item button state with localStorage and deadline
