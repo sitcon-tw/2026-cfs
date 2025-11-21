@@ -196,6 +196,10 @@ const uniqueItemIds = new Set<string>();
 
 <script>
 	import { isItemInterested, addInterestedItem, removeInterestedItem, isDeadlinePassed, type InterestedItem } from "../../utils/local-storage.ts";
+	import { openVenueDetails } from "../../utils/venue-linkify.ts";
+
+	// Attach openVenueDetails to window for inline onclick handlers
+	window.openVenueDetails = openVenueDetails;
 
 	function updateHighlighting() {
 		const planCells = document.querySelectorAll(".plan-cell");
@@ -647,4 +651,45 @@ const uniqueItemIds = new Set<string>();
 	}
 </style>
 
-<style is:global></style>
+<style is:global>
+	/* Venue link styles */
+	.venue-link {
+		color: #0171e3;
+		text-decoration: underline;
+		text-decoration-style: dotted;
+		text-underline-offset: 2px;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		font-weight: 600;
+	}
+
+	.venue-link:hover {
+		color: var(--items-green);
+		text-decoration-style: solid;
+	}
+
+	/* Venue highlight animation */
+	.venue-highlight {
+		animation: venue-pulse 2s ease-in-out;
+	}
+
+	@keyframes venue-pulse {
+		0%,
+		100% {
+			background-color: transparent;
+		}
+		50% {
+			background-color: var(--items-green);
+			color: var(--white);
+			padding: 0.25rem 0.5rem;
+			border-radius: 4px;
+		}
+	}
+
+	@media print {
+		.venue-link {
+			text-decoration: none;
+			font-weight: inherit;
+		}
+	}
+</style>
