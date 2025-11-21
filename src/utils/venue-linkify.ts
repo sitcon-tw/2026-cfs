@@ -22,7 +22,7 @@ export function linkifyVenueCodes(text: string): string {
 	VENUE_CODES.forEach(code => {
 		const regex = new RegExp(`\\b(${code})\\b`, "gi");
 		result = result.replace(regex, match => {
-			return `<a href="#" class="venue-link" data-venue-code="${match.toUpperCase()}" onclick="event.preventDefault(); event.stopPropagation(); window.openVenueDetails && window.openVenueDetails('${match.toUpperCase()}');">${match}</a>`;
+			return `<a href="#" class="venue-link" data-venue-code="${match.toUpperCase()}">${match}</a>`;
 		});
 	});
 
