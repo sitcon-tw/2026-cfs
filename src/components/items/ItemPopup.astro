@@ -119,7 +119,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 				<span class="category">{`${new Date(item.deadline).getMonth() + 1}/${new Date(item.deadline).getDate()}`} {t.deadline}</span>
 			</div>
 			<div class="title-row">
-				<h3 set:html={linkifyVenueCodes(item.name)} />
+				<h3>{item.name}</h3>
 			</div>
 			{
 				item.price && (
