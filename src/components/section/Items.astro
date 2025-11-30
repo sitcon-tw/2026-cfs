@@ -13,14 +13,14 @@ const items = itemsUnsorted.sort((a, b) => {
 	// Empty string ("") or null should NOT be treated as sold out
 	const aHasSubItems = a.sub && a.sub.length > 0;
 	const bHasSubItems = b.sub && b.sub.length > 0;
-	
+
 	const aIsSoldOut = a.remaining === "0" || (aHasSubItems && a.sub.every((sub: any) => sub.remaining === "0") && a.sub.length > 0);
 	const bIsSoldOut = b.remaining === "0" || (bHasSubItems && b.sub.every((sub: any) => sub.remaining === "0") && b.sub.length > 0);
-	
+
 	// Sold out items go to bottom
 	if (aIsSoldOut && !bIsSoldOut) return 1;
 	if (!aIsSoldOut && bIsSoldOut) return -1;
-	
+
 	// Otherwise sort by order
 	const orderA = a.order || 0;
 	const orderB = b.order || 0;

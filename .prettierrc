@@ -1,6 +1,6 @@
 {
 	"printWidth": 200,
-	"tabWidth": 4,
+	"tabWidth": 2,
 	"useTabs": true,
 	"semi": true,
 	"singleQuote": false,
@@ -10,6 +10,12 @@
 	"requirePragma": false,
 	"insertPragma": false,
 	"proseWrap": "never",
+	"endOfLine": "lf",
+	"htmlWhitespaceSensitivity": "ignore",
+	"embeddedLanguageFormatting": "auto",
+	"quoteProps": "as-needed",
+	"jsxSingleQuote": false,
+	"singleAttributePerLine": false,
 	"plugins": ["prettier-plugin-astro"],
 	"overrides": [
 		{

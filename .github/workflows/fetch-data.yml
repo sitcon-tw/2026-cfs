@@ -1,43 +1,43 @@
 name: Fetch Data from Google Sheets
 
 on:
-    schedule:
-        - cron: "0 * * * *"
-    workflow_dispatch:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
 
 jobs:
-    fetch-and-commit:
-        name: Fetch and commit data
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout repo
-              uses: actions/checkout@v4
+  fetch-and-commit:
+    name: Fetch and commit data
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 22
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-            - name: Fetch data from Google Sheets
-              run: pnpm fetch-data
+      - name: Fetch data from Google Sheets
+        run: pnpm fetch-data
 
-            - name: Setup SSH
-              run: |
-                  mkdir -p ~/.ssh
-                  echo "${{ secrets.PUSH_KEY }}" > ~/.ssh/id_ed25519
-                  chmod 600 ~/.ssh/id_ed25519
-                  ssh-keyscan github.com >> ~/.ssh/known_hosts
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PUSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-            - name: Commit and push changes
-              run: |
-                  git config --local user.email "github-actions[bot]@users.noreply.github.com"
-                  git config --local user.name "github-actions[bot]"
-                  git add src/data/item.json src/data/plan.json public/items/
-                  git diff --staged --quiet || git commit -m "chore: update data from Google Sheets"
-                  git push git@github.com:${{ github.repository }} HEAD:${{ github.ref }}
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add src/data/item.json src/data/plan.json public/items/
+          git diff --staged --quiet || git commit -m "chore: update data from Google Sheets"
+          git push git@github.com:${{ github.repository }} HEAD:${{ github.ref }}

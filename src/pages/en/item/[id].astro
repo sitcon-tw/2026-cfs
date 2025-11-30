@@ -35,8 +35,7 @@ const productSchema = {
 		"@type": "Offer",
 		price: item.price ? parseFloat(item.price.toString().replace(/[^0-9.]/g, "")) : 0,
 		priceCurrency: "TWD",
-		availability:
-			item.remaining && parseInt(item.remaining) > 0 ? "https://schema.org/InStock" : item.quantity === "不限" ? "https://schema.org/InStock" : "https://schema.org/LimitedAvailability",
+		availability: item.remaining && parseInt(item.remaining) > 0 ? "https://schema.org/InStock" : item.quantity === "不限" ? "https://schema.org/InStock" : "https://schema.org/LimitedAvailability",
 		priceValidUntil: item.deadline || undefined,
 		seller: {
 			"@type": "Organization",
