@@ -1,25 +1,21 @@
 ---
 import { X, Heart } from "@lucide/astro";
 import { loadItemsData } from "../../utils/items-loader";
+import { isInactive } from "../../utils/item-status";
 import shopConfig from "@data/shop_config.json";
 import ItemCard from "@components/items/ItemCard.astro";
 
 const { t, lang } = Astro.props;
 const itemsUnsorted = await loadItemsData(lang); // Keep all items including "打包專屬"
 // Sort items by order field for initial "all" category display
-// Sold-out items (remaining === "0") go to the bottom
+// Sold-out OR expired items (deadline passed) go to the bottom
 const items = itemsUnsorted.sort((a, b) => {
-	// Check if items are sold out - only when remaining is explicitly "0"
-	// Empty string ("") or null should NOT be treated as sold out
-	const aHasSubItems = a.sub && a.sub.length > 0;
-	const bHasSubItems = b.sub && b.sub.length > 0;
+	const aInactive = isInactive(a);
+	const bInactive = isInactive(b);
 
-	const aIsSoldOut = a.remaining === "0" || (aHasSubItems && a.sub.every((sub: any) => sub.remaining === "0") && a.sub.length > 0);
-	const bIsSoldOut = b.remaining === "0" || (bHasSubItems && b.sub.every((sub: any) => sub.remaining === "0") && b.sub.length > 0);
-
-	// Sold out items go to bottom
-	if (aIsSoldOut && !bIsSoldOut) return 1;
-	if (!aIsSoldOut && bIsSoldOut) return -1;
+	// Inactive (sold-out or expired) items go to bottom
+	if (aInactive && !bInactive) return 1;
+	if (!aInactive && bInactive) return -1;
 
 	// Otherwise sort by order
 	const orderA = a.order || 0;

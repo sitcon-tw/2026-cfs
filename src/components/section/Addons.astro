@@ -2,6 +2,7 @@
 const { t, lang } = Astro.props;
 import { Plus, Check } from "@lucide/astro";
 import { loadItemsData, type ItemData } from "../../utils/items-loader";
+import { isInactive, isSoldOut } from "../../utils/item-status";
 const itemsData = await loadItemsData(lang);
 
 // Define types
@@ -24,6 +25,21 @@ itemsData.forEach((item: ItemData) => {
 	groupedItems[displayCategory].push(item);
 });
 
+// Sort each category so active items first, then by order
+Object.keys(groupedItems).forEach(category => {
+	groupedItems[category].sort((a, b) => {
+		const aInactive = isInactive(a);
+		const bInactive = isInactive(b);
+
+		if (aInactive && !bInactive) return 1;
+		if (!aInactive && bInactive) return -1;
+
+		const orderA = a.order || 0;
+		const orderB = b.order || 0;
+		return orderA - orderB;
+	});
+});
+
 const categories = Object.keys(groupedItems);
 ---
 
@@ -38,7 +54,13 @@ const categories = Object.keys(groupedItems);
 						<h3 class="category-title">{category}</h3>
 						<div class="items-grid">
 							{groupedItems[category].map((item: ItemData) => (
-								<div class="addon-card" data-item-id={item.id} data-has-sub-items={item.sub && item.sub.length > 0 ? "true" : "false"}>
+								<div
+									class="addon-card"
+									data-item-id={item.id}
+									data-has-sub-items={item.sub && item.sub.length > 0 ? "true" : "false"}
+									data-is-sold-out={isSoldOut(item) ? "true" : "false"}
+									data-deadline={item.deadline || ""}
+								>
 									<button
 										type="button"
 										class="add-button"

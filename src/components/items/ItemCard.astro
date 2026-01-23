@@ -52,6 +52,7 @@ const isSoldOut = card.remaining === "0" || (hasSubItems && card.sub.every((sub:
 	data-has-sub-items={hasSubItems ? "true" : "false"}
 	data-sub-items={subItemsData}
 	data-is-sold-out={isSoldOut ? "true" : "false"}
+	data-deadline={card.deadline || ""}
 >
 	<div class="card-image">
 		{

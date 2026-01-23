@@ -15,7 +15,7 @@ const items = itemsUnsorted.sort((a, b) => {
 {items.map(item => <ItemPopup item={item} t={t} lang={lang} popupId={`item-popup-${item.id}`} />)}
 
 <script>
-	import { getInterestedItems, removeInterestedItem, isItemInterested } from "../../utils/local-storage.ts";
+	import { getInterestedItems, removeInterestedItem, isItemInterested, isDeadlinePassed } from "../../utils/local-storage.ts";
 	import { initializeAddToCart, updateAddButtonStates } from "../../utils/add-to-cart-handler.ts";
 
 	// Wait for DOM to be ready before initializing add-to-cart functionality
@@ -76,6 +76,12 @@ const items = itemsUnsorted.sort((a, b) => {
 
 	const getVisibleCards = (cards: HTMLElement[]): HTMLElement[] => cards.filter(card => !card.classList.contains("package-exclusive-item"));
 
+	const isCardInactive = (card: HTMLElement) => {
+		const soldOut = card.getAttribute("data-is-sold-out") === "true";
+		const deadline = card.getAttribute("data-deadline") || "";
+		return soldOut || isDeadlinePassed(deadline);
+	};
+
 	const sortCards = (selectedCategory: string) => {
 		const cardsGrid = document.querySelector(".cards-grid");
 		if (!cardsGrid) return;
@@ -84,30 +90,27 @@ const items = itemsUnsorted.sort((a, b) => {
 		// Count only visible cards (exclude package-exclusive-item)
 		let visibleCount = getVisibleCards(cards).length;
 
-		if (selectedCategory === "all") {
-			// For "all", sort by order field
-			cards.sort((a, b) => {
-				const orderA = parseInt(a.getAttribute("data-order") || "0");
-				const orderB = parseInt(b.getAttribute("data-order") || "0");
-				return orderA - orderB;
-			});
-		} else {
-			// Sort by category-specific order field
-			let orderAttr = "data-order";
-			if (selectedCategory === "talent_recruitment") {
-				orderAttr = "data-talent-recruitment-order";
-			} else if (selectedCategory === "brand_exposure") {
-				orderAttr = "data-brand-exposure-order";
-			} else if (selectedCategory === "product_promotion") {
-				orderAttr = "data-product-promotion-order";
-			}
-
-			cards.sort((a, b) => {
-				const orderA = parseInt(a.getAttribute(orderAttr) || "999999");
-				const orderB = parseInt(b.getAttribute(orderAttr) || "999999");
-				return orderA - orderB;
-			});
+		let orderAttr = "data-order";
+		if (selectedCategory === "talent_recruitment") {
+			orderAttr = "data-talent-recruitment-order";
+		} else if (selectedCategory === "brand_exposure") {
+			orderAttr = "data-brand-exposure-order";
+		} else if (selectedCategory === "product_promotion") {
+			orderAttr = "data-product-promotion-order";
 		}
+
+		cards.sort((a, b) => {
+			const aInactive = isCardInactive(a);
+			const bInactive = isCardInactive(b);
+
+			// Inactive items (sold out or deadline passed) should always go last
+			if (aInactive && !bInactive) return 1;
+			if (!aInactive && bInactive) return -1;
+
+			const orderA = parseInt(a.getAttribute(orderAttr) || (selectedCategory === "all" ? "0" : "999999"));
+			const orderB = parseInt(b.getAttribute(orderAttr) || (selectedCategory === "all" ? "0" : "999999"));
+			return orderA - orderB;
+		});
 
 		// Update ItemCard descriptions based on selected category
 		cards.forEach(card => {
