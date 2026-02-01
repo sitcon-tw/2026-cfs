@@ -447,10 +447,10 @@
     "product_promotion_order": 7,
     "sub": [
       {
-        "name_zh": "R0 中午議程 40 Mins",
-        "name_en": "R0 Noon Agenda (40 minutes)",
+        "name_zh": "R0 中午議程 40 Mins （已售完）",
+        "name_en": "R0 Noon Agenda (40 minutes) (sold out)",
         "price": "$72,000",
-        "remaining": "1",
+        "remaining": "0",
         "image": "",
         "image_description_zh": "",
         "image_description_en": ""
