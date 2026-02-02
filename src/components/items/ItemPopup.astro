@@ -137,7 +137,7 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 							const isSubItemSoldOut = subItem.remaining === "0";
 
 							return (
-								<div class={`sub-item ${isSubItemSoldOut ? "sold-out" : ""}`} data-sub-item-id={subItemId}>
+								<div class={"sub-item"} data-sub-item-id={subItemId}>
 									<span class={"sub-item-name" + (subItem.name.length > 8 ? " long" : "")}>{subItem.name}</span>
 									<span class="sub-item-price">{subItem.price}</span>
 									{isSubItemSoldOut && <span class="sub-item-sold-out">{t.sold_out}</span>}
@@ -551,15 +551,6 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 		padding: 0.2rem 0.6rem;
 		background-color: #f0f0f0;
 		border-radius: 12px;
-	}
-
-	.sub-item.sold-out {
-		opacity: 0.6;
-	}
-
-	.sub-item.sold-out .sub-item-name,
-	.sub-item.sold-out .sub-item-price {
-		color: #999;
 	}
 
 	.sub-add-button {
