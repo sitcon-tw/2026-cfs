@@ -18,14 +18,15 @@ export function handleAddButtonClick(button: HTMLElement, event: Event): void {
 
 	const id = button.getAttribute("data-item-id") || "";
 	const itemDeadline = button.getAttribute("data-item-deadline") || "";
+	const card = button.closest(".card") || button.closest(".addon-card");
+	const isSoldOut = card?.getAttribute("data-is-sold-out") === "true";
 
-	// Check if deadline has passed
-	if (isDeadlinePassed(itemDeadline)) {
+	// Disallow interactions for sold-out or expired items
+	if (isSoldOut || isDeadlinePassed(itemDeadline)) {
 		return; // Don't allow adding expired items
 	}
 
 	// Check if this item has sub-items
-	const card = button.closest(".card") || button.closest(".addon-card");
 	const hasSubItems = card?.getAttribute("data-has-sub-items") === "true" || button.getAttribute("data-has-sub-items") === "true";
 
 	if (hasSubItems) {
@@ -77,12 +78,15 @@ export function updateAddButtonStates(): void {
 	addButtons.forEach(button => {
 		const itemId = button.getAttribute("data-item-id");
 		const deadline = button.getAttribute("data-item-deadline") || "";
+		const card = button.closest(".card, .addon-card") as HTMLElement | null;
+		const soldOut = card?.getAttribute("data-is-sold-out") === "true";
 
-		// Check if deadline has passed
+		// Check if deadline has passed or item sold out
 		const expired = isDeadlinePassed(deadline);
-		if (expired) {
+		if (expired || soldOut) {
 			button.setAttribute("disabled", "true");
 			button.classList.add("disabled");
+			button.classList.remove("added");
 		} else {
 			button.removeAttribute("disabled");
 			button.classList.remove("disabled");

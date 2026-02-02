@@ -712,7 +712,6 @@ const shouldShowPlanTiers = tierBenefits.some(tb => tb.benefit !== undefined);
 <script>
 	import { addInterestedItem, removeInterestedItem, isItemInterested, isDeadlinePassed } from "../../utils/local-storage.ts";
 	import { getItemDisplayPrice } from "../../utils/plan-helper.ts";
-	import { openVenueDetails } from "../../utils/venue-linkify.ts";
 
 	document.addEventListener("DOMContentLoaded", function () {
 		// Sync sub-item button state with localStorage and deadline
